@@ -1,0 +1,387 @@
+import { CSSProperties } from 'react';
+
+export const C = {
+  roseQuartz: '#F7CAC9',
+  serenity: '#92A8D1',
+  navy: '#3a4a6b',
+  muted: '#9aa8c4',
+  faint: '#b0bcd4',
+  border: '#dde4f0',
+  bgSidebar: 'linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%)',
+  bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
+  bgTopbar: 'rgba(253,250,251,0.92)',
+};
+
+// shared style for clamped text cells
+export const clampedCell: React.CSSProperties = {
+  padding: '14px 20px',
+  fontSize: '13px',
+  color: '#6a7fa8',
+  maxWidth: '120px',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+};
+
+// font
+export const fontType: React.CSSProperties = {
+  fontFamily: "'DM Sans', sans-serif",
+};
+
+// base styles
+export const td: React.CSSProperties = {
+  padding: '14px 16px',
+  fontSize: '12px',
+  color: '#6a7fa8',
+  maxWidth: '200px',
+};
+
+export const styles: Record<string, CSSProperties> = {
+  container: {
+    maxWidth: '520px',
+  },
+
+  headerRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    marginBottom: '22px',
+  },
+
+  // parent div of content
+  mainDiv: { display: 'flex', gap: '18px', alignItems: 'flex-start' },
+
+  div: {
+    background: 'white',
+    borderRadius: '14px',
+    border: '1px solid #eef2f9',
+    boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+    marginBottom: '30px',
+  },
+
+  allDocDiv: {
+    background: 'white',
+    borderRadius: '14px',
+    border: '1px solid #eef2f9',
+    boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+    marginBottom: '30px',
+    flex: '1 1 0',
+    minWidth: 0,
+    overflow: 'hidden',
+  },
+
+  miniDiv: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '20px 24px',
+    borderBottom: '1px solid #eef2f9',
+    gap: '12px',
+  },
+
+  allDocHeader: { display: 'flex', gap: '10px', alignItems: 'center' },
+
+  allDocTotal: {
+    padding: '14px 24px',
+    borderTop: '1px solid #eef2f9',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  allDocTotalSpan: { fontSize: '12px', color: C.faint },
+
+  searchSpan: {
+    position: 'absolute',
+    left: '10px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+  },
+
+  bottomButtonDiv: {
+    paddingTop: '15px',
+  },
+
+  iconBox: {
+    width: '44px',
+    height: '44px',
+    borderRadius: '12px',
+    background: 'rgba(146,168,209,0.15)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: C.serenity,
+  },
+
+  header1: {
+    fontWeight: 700,
+    fontSize: '24px',
+    color: C.navy,
+  },
+
+  title: {
+    fontWeight: 700,
+    fontSize: '18px',
+    color: C.navy,
+  },
+
+  subtitle: {
+    fontSize: '12px',
+    color: C.faint,
+    marginTop: '2px',
+  },
+
+  errorTextStyle: {
+    color: '#FF0000',
+    fontSize: '12px',
+    paddingBottom: '10px',
+  },
+
+  form: {
+    background: 'white',
+    borderRadius: '14px',
+    border: `1px solid ${C.border}`,
+    boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+    padding: '24px',
+  },
+
+  label: {
+    display: 'block',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: C.muted,
+    marginBottom: '6px',
+  },
+
+  pText: {
+    marginTop: 0,
+    marginBottom: 10,
+    color: C.navy,
+  },
+
+  input: {
+    width: '100%',
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '14px',
+    marginBottom: '14px',
+    fontFamily: 'inherit',
+    color: '#000',
+  },
+
+  preInput: {
+    width: '100%',
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '14px',
+    marginBottom: '14px',
+    fontFamily: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    background: '#f8f8fb',
+    color: C.navy,
+  },
+
+  textarea: {
+    width: '100%',
+    minHeight: '96px', // ~4 lines at default line height
+    padding: '10px 12px',
+    borderRadius: '8px',
+    border: `1px solid ${C.border}`,
+    fontSize: '14px',
+    fontFamily: 'inherit',
+    color: C.navy,
+    background: 'white',
+    resize: 'vertical', // lets user resize taller if needed
+    boxSizing: 'border-box',
+    outline: 'none',
+  },
+
+  select: {
+    width: '100%',
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '14px',
+    marginBottom: '14px',
+    fontFamily: 'inherit',
+    background: 'white',
+    color: '#000', // ← makes dropdown text black
+  },
+
+  button: {
+    width: '100%',
+    padding: '12px',
+    borderRadius: '10px',
+    border: 'none',
+    fontWeight: 600,
+    fontSize: '14px',
+    fontFamily: 'inherit',
+    color: 'white',
+    background: `linear-gradient(130deg, ${C.roseQuartz}, ${C.serenity})`,
+  },
+
+  // for in mini div
+  button2: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '9px 18px',
+    borderRadius: '10px',
+    border: 'none',
+    fontWeight: 600,
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    color: 'white',
+    cursor: 'pointer',
+    background: `linear-gradient(130deg, ${C.roseQuartz}, ${C.serenity})`,
+    whiteSpace: 'nowrap',
+  },
+
+  // button in table
+  buttonTable: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '5px 10px',
+    borderRadius: '8px',
+    border: `1px solid ${C.border}`,
+    background: 'white',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: C.serenity,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    whiteSpace: 'nowrap',
+  },
+
+  search: {
+    paddingLeft: '34px',
+    paddingRight: '12px',
+    paddingTop: '9px',
+    paddingBottom: '9px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    color: C.navy,
+    outline: 'none',
+    width: '180px',
+  },
+
+  dropdown: {
+    padding: '9px 12px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '13px',
+    fontFamily: 'inherit',
+    color: C.navy,
+    background: 'white',
+    outline: 'none',
+    cursor: 'pointer',
+  },
+
+  statusLabel: {
+    borderRadius: '20px',
+    padding: '3px 10px',
+    fontSize: '11px',
+    fontWeight: 600,
+    whiteSpace: 'nowrap',
+  },
+
+  // loading style
+  loadingText: {
+    padding: '20px',
+    textAlign: 'center',
+    color: C.faint,
+    fontSize: '13px',
+  },
+
+  loadingTd: {
+    padding: '40px',
+    textAlign: 'center',
+    color: C.faint,
+    fontSize: '14px',
+  },
+
+  // table styles
+  allDocsTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    tableLayout: 'fixed',
+  },
+
+  tableHeader: {
+    padding: '10px 16px',
+    textAlign: 'left',
+    fontSize: '11px',
+    fontWeight: 600,
+    color: C.faint,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    background: '#fafbfd',
+  },
+
+  emptyTd: {
+    padding: '24px',
+    textAlign: 'center',
+    color: C.faint,
+    fontSize: '13px',
+  },
+
+  faintTd: {
+    ...td,
+    color: C.faint,
+  },
+
+  tdButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
+    padding: '6px 12px',
+    borderRadius: '8px',
+    border: `1px solid ${C.border}`,
+    background: 'white',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: C.serenity,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+    whiteSpace: 'nowrap',
+    transition: 'all 0.12s',
+  },
+
+  // for smaller tables
+  narrowBoldTd: {
+    fontWeight: 600,
+    padding: '10px 16px',
+    fontSize: '12px',
+    color: C.navy,
+    marginBottom: '2px',
+  },
+
+  narrowTd: {
+    padding: '10px 16px',
+    fontSize: '12px',
+    color: C.faint,
+  },
+
+  singleIconButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '5px 8px',
+    borderRadius: '8px',
+    border: `1px solid ${C.border}`,
+    background: 'white',
+    color: C.serenity,
+    cursor: 'pointer',
+    transition: 'background 0.12s',
+  },
+};
