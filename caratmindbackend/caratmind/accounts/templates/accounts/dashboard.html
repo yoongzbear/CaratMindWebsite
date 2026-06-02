@@ -1,0 +1,30 @@
+{% extends 'authentication/base.html' %} {% block title %}Dashboard - Cognito
+Django App{% endblock %} {% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h2>Dashboard</h2>
+    <p>Welcome to your protected dashboard!</p>
+
+    <div class="card">
+      <div class="card-header">
+        <h5>User Information</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p>
+          <strong>First Name:</strong> {{ user.first_name|default:"Not provided"
+          }}
+        </p>
+        <p>
+          <strong>Last Name:</strong> {{ user.last_name|default:"Not provided"
+          }}
+        </p>
+        <p>
+          <strong>Last Login:</strong> {{ user.last_login|date:"F d, Y H:i" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
