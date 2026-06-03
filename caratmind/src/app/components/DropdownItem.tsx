@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { C } from '@/app/styles/styles';
+import { C, navBarStyle } from '@/app/styles/styles';
 
 type NavItem = {
   label: string;
@@ -17,29 +17,6 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
 
   const hasChildren = !!item.children?.length;
   const active = item.href ? pathname === item.href : false;
-
-  const commonStyle: React.CSSProperties = {
-    textDecoration: 'none',
-    padding: '9px 16px',
-    borderRadius: '8px',
-    fontSize: '13.5px',
-    fontWeight: active ? 600 : 500,
-    color: active ? C.navy : C.muted,
-    background: active
-      ? 'linear-gradient(130deg, rgba(247,202,201,0.4), rgba(146,168,209,0.3))'
-      : 'transparent',
-    border: active
-      ? '1px solid rgba(146,168,209,0.25)'
-      : '1px solid transparent',
-    transition: 'all 0.15s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '8px',
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
-    width: 'max-content',
-  };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (!active) {
@@ -65,7 +42,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       {item.href ? (
         <Link
           href={item.href}
-          style={commonStyle}
+          style={navBarStyle}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -75,7 +52,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       ) : (
         <button
           style={{
-            ...commonStyle,
+            ...navBarStyle,
             backgroundColor: 'transparent',
             border: active ? '1px solid rgba(146,168,209,0.25)' : 'none',
           }}
@@ -90,18 +67,8 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       {/* Dropdown Menu */}
       {hasChildren && open && (
         <div
-          style={{
-            position: 'absolute',
-            top: level === 0 ? '110%' : 0,
-            left: level === 0 ? 0 : '100%',
-            background: 'white',
-            border: `1px solid ${C.border}`,
-            borderRadius: '12px',
-            boxShadow: '0 8px 24px rgba(146,168,209,0.18)',
-            minWidth: '200px',
-            padding: '6px',
-            zIndex: 100,
-          }}
+          className="absolute bg-white rounded-xl shadow-[0_8px_24px_rgba(146,168,209,0.18)] min-w-50 p-1.5 z-100 border border-[C.border]
+  top-[110%] left-0 peer-hover:top-0 peer-hover:left-full"
         >
           {item.children?.map((child) => (
             <DropdownItem key={child.label} item={child} level={level + 1} />

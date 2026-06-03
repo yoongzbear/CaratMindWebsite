@@ -23,10 +23,51 @@ export const clampedCell: React.CSSProperties = {
   textOverflow: 'ellipsis',
 };
 
+// nav bar style
+export const navBarStyle: React.CSSProperties = {
+  textDecoration: 'none',
+  padding: '9px 16px',
+  borderRadius: '8px',
+  fontSize: '13.5px',
+  fontWeight: 500,
+  color: C.muted,
+  background: 'transparent',
+  border: '1px solid transparent',
+  transition: 'all 0.15s ease',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '8px',
+  whiteSpace: 'nowrap',
+  cursor: 'pointer',
+  width: 'max-content',
+};
+
 // font
 export const fontType: React.CSSProperties = {
   fontFamily: "'DM Sans', sans-serif",
 };
+
+// button
+export const buttonBase = `
+  w-full
+  px-5 py-2
+  rounded-[10px]
+  font-semibold
+  text-[13px]
+  text-white
+  no-underline
+  ml-2
+  transition-opacity
+  duration-150
+`;
+
+export const buttonGradientColor = `bg-[linear-gradient(130deg,#F7CAC9,#92A8D1)] 
+  hover:[background:linear-gradient(#fff,#fff)_padding-box,_linear-gradient(130deg,#F7CAC9,#92A8D1)_border-box]
+  hover:border-2
+  hover:border-transparent
+  hover:text-[#1B2A41]
+`;
 
 // base styles
 export const td: React.CSSProperties = {
@@ -217,14 +258,18 @@ export const styles: Record<string, CSSProperties> = {
 
   button: {
     width: '100%',
-    padding: '12px',
+    padding: '8px 20px',
     borderRadius: '10px',
     border: 'none',
     fontWeight: 600,
-    fontSize: '14px',
+    fontSize: '13px',
     fontFamily: 'inherit',
     color: 'white',
     background: `linear-gradient(130deg, ${C.roseQuartz}, ${C.serenity})`,
+    textDecoration: 'none',
+    marginLeft: '8px',
+    cursor: 'pointer',
+    transition: 'opacity 0.15s',
   },
 
   // for in mini div
