@@ -13,9 +13,7 @@ export default function HomePage() {
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <header style={{ marginBottom: '28px' }}>
-          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
-            Emergency Helplines
-          </h1>
+          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>HOME!!</h1>
           <p style={{ ...styles.subtitle, fontSize: '14px' }}>
             If you are in crisis or need urgent support, reach out to a
             qualified professional or emergency service. CaratMind is not a

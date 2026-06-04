@@ -3,13 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import {
-  buttonBase,
-  buttonGradientColor,
-  C,
-} from '@/app/styles/styles';
+import { buttonBase, buttonGradientColor, C } from '@/app/styles/styles';
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
+import { SessionUser } from '@/lib/auth/session-response';
+import { useEffect, useRef, useState } from 'react';
 
 const NAV_LINKS = [
   {
@@ -30,36 +28,46 @@ const NAV_LINKS = [
   { label: 'Helpline', href: '/helpline' },
 ];
 
-function ProfileIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      aria-hidden
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M20 21a8 8 0 10-16 0"
-      />
-      <circle cx="12" cy="8" r="4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export default function Header() {
   const router = useRouter();
   const { user, loading, signOut } = useAuth();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   async function handleLogout() {
     await signOut();
     router.push('/login');
     router.refresh();
   }
+
+  function avatarInitials(user: SessionUser | null) {
+    const n = user?.username?.trim();
+    if (n) {
+      const parts = n.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return n.slice(0, 2).toUpperCase();
+    }
+    return '?';
+  }
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setProfileOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header
@@ -88,35 +96,100 @@ export default function Header() {
 
           {!loading && user ? (
             <>
-              <Link
-                href="/profile"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  marginLeft: '8px',
-                  padding: '9px 16px',
-                  borderRadius: '10px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: C.navy,
-                  background: 'white',
-                  border: `1px solid ${C.border}`,
-                  textDecoration: 'none',
-                }}
-                aria-label="Profile"
-              >
-                <ProfileIcon />
-                Profile
-              </Link>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className={`${buttonBase} ${buttonGradientColor}`}
-                style={{ width: 'auto' }}
-              >
-                Log Out
-              </button>
+              <div ref={profileRef} style={{ position: 'relative' }}>
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen((val) => !val)}
+                  className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer text-white font-bold text-[14px] transition-all duration-150 ease-in-out"
+                  style={{
+                    border: profileOpen
+                      ? `1px solid ${C.serenity}`
+                      : `1px solid ${C.border}`,
+                    background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
+                    boxShadow: profileOpen
+                      ? '0 4px 16px rgba(146,168,209,0.18)'
+                      : 'none',
+                  }}
+                  aria-label="Profile"
+                >
+                  {loading ? '…' : avatarInitials(user)}
+                </button>
+
+                {profileOpen && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute top-12 right-0 w-55 bg-white border rounded-[14px] shadow-[0_16px_48px_rgba(92,112,160,0.16)] overflow-hidden z-50"
+                    style={{
+                      border: `1px solid ${C.border}`,
+                    }}
+                  >
+                    {/* user info */}
+                    <div
+                      className="px-3.25 py-4"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, rgba(247,202,201,0.15), rgba(146,168,209,0.12))',
+                      }}
+                    >
+                      <div
+                        className="font-bold text-[13px]"
+                        style={{
+                          color: C.navy,
+                        }}
+                      >
+                        {user.preferredUsername}
+                      </div>
+
+                      <div
+                        className="text-[11px] mt-0.5"
+                        style={{
+                          color: C.serenity,
+                        }}
+                      >
+                        {user.email || '—'}
+                      </div>
+                    </div>
+
+                    {/* buttons */}
+                    <div className="p-2">
+                      <button
+                        type="button"
+                        onClick={() => router.push('/profile')}
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[13px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        style={{
+                          color: C.navy,
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background =
+                            'rgba(146,168,209,0.08)')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = 'transparent')
+                        }
+                      >
+                        Profile
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[13px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        style={{
+                          color: '#dc2626',
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background =
+                            'rgba(220,38,38,0.06)')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = 'transparent')
+                        }
+                      >
+                        Log Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <Link

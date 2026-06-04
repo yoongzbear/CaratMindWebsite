@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { buttonGradientColor } from './styles/styles';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const cards = [
   {
@@ -83,8 +86,27 @@ const cards = [
 ];
 
 export default function SplashPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (user) {
+      router.replace('/home'); // if got user session, go to home page
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        Loading...
+      </main>
+    );
+  }
+
   return (
-    // if not logged in, show the splash page, if logged in, show the home page
+    // splash page - not logged in
     <main className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)">
       {/* ── Background decoration ─────────────────────────────── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">

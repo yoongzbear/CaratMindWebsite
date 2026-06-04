@@ -30,8 +30,13 @@ export async function POST(request: Request) {
 
     return NextResponse.json(buildSessionPayload(tokens, profile));
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
-      { error: mapCognitoError(error) },
+      {
+        error: mapCognitoError(error),
+        raw: String(error),
+      },
       { status: 401 },
     );
   }

@@ -18,7 +18,10 @@ type AuthContextValue = {
   signIn: (identifier: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<boolean>;
-  authFetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+  authFetch: (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ) => Promise<Response>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -68,7 +71,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [applySession]);
 
   useEffect(() => {
-    refreshSession().finally(() => setLoading(false));
+    const init = async () => {
+      await refreshSession();
+      setLoading(false);
+    };
+
+    init();
   }, [refreshSession]);
 
   const signIn = useCallback(
@@ -123,9 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, accessToken, loading, signIn, signOut, refreshSession, authFetch],
   );
 
-  return (
-    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

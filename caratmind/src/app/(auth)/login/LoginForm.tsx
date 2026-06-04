@@ -8,6 +8,7 @@ import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
 import { useAuth } from '@/context/AuthContext';
 import { C, styles } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 function resolvePostLoginPath(requestedNext: string | null): string {
   if (
@@ -64,12 +65,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
         />
 
         <label style={styles.label}>Password</label>
-        <div
-          style={{
-            position: 'relative',
-            marginBottom: styles.input.marginBottom,
-          }}
-        >
+        <div className="relative mb-3.5">
           <input
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
@@ -81,22 +77,13 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           />
           <button
             type="button"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
             onClick={() => setShowPassword((p) => !p)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
             style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
               color: C.faint,
-              fontSize: '12px',
-              fontWeight: 600,
             }}
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
 
@@ -116,10 +103,8 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
       <SocialAuthButtons nextPath={requestedNext} />
 
       <p
+        className="mt-5.5 text-center text-[13px]"
         style={{
-          marginTop: '22px',
-          textAlign: 'center',
-          fontSize: '13px',
           color: C.faint,
         }}
       >
