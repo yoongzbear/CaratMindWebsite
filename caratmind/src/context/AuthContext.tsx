@@ -22,6 +22,7 @@ type AuthContextValue = {
     input: RequestInfo | URL,
     init?: RequestInit,
   ) => Promise<Response>;
+  refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -118,6 +119,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const refreshUser = useCallback(async () => {
+    await refreshSession();
+  }, [refreshSession]);
+
   const value = useMemo(
     () => ({
       user,
@@ -127,8 +132,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       refreshSession,
       authFetch,
+      refreshUser,
     }),
-    [user, accessToken, loading, signIn, signOut, refreshSession, authFetch],
+    [
+      user,
+      accessToken,
+      loading,
+      signIn,
+      signOut,
+      refreshSession,
+      authFetch,
+      refreshUser,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

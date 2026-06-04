@@ -126,7 +126,7 @@ export default function SplashPage() {
         </p>
       </div>
 
-      {/* ── Cards ────────────────────────────────────────────── */}
+      {/* cards */}
       <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-5 px-2">
         {cards.map((card) => (
           <div

@@ -41,7 +41,7 @@ export default function Header() {
   }
 
   function avatarInitials(user: SessionUser | null) {
-    const n = user?.username?.trim();
+    const n = user?.preferredUsername?.trim();
     if (n) {
       const parts = n.split(/\s+/).filter(Boolean);
       if (parts.length >= 2) {

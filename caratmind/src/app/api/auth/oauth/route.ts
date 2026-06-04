@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const provider = searchParams.get('provider');
   const next = searchParams.get('next') ?? '/home';
 
-  if (provider !== 'Google' && provider !== 'Facebook') {
+  if (provider !== 'Google') {
     return NextResponse.json({ error: 'Invalid provider' }, { status: 400 });
   }
 

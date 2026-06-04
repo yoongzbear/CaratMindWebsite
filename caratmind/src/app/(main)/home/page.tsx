@@ -1,115 +1,176 @@
+'use client';
 import Link from 'next/link';
-import { C, styles } from '@/app/styles/styles';
-import { HELPLINES } from '@/app/copywriting/helpline';
+import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { useAuth } from '@/context/AuthContext';
+import { Eye } from 'lucide-react';
 
 export default function HomePage() {
+  const { user, loading } = useAuth();
   return (
     <section
+      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
       style={{
-        minHeight: 'calc(100vh - 140px)',
-        padding: '32px 24px 48px',
         background: C.bgPage,
       }}
     >
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        <header style={{ marginBottom: '28px' }}>
-          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>HOME!!</h1>
+      <div className="w-[90%] mx-auto">
+        <header className="mb-7">
+          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
+            Welcome back, {user?.preferredUsername}!
+          </h1>
+          {/* banner for basic habits */}
           <p style={{ ...styles.subtitle, fontSize: '14px' }}>
-            If you are in crisis or need urgent support, reach out to a
-            qualified professional or emergency service. CaratMind is not a
-            substitute for licensed care or emergency response.
+            Basic habits hoho
           </p>
         </header>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: '18px',
-          }}
-        >
-          {HELPLINES.map((line) => (
-            <article
-              // key={`${line.region}-${line.name}`}
-              key={line.name}
-              style={{
-                ...styles.div,
-                marginBottom: 0,
-                padding: '22px 24px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-              }}
-            >
+        {/* cards */}
+        <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5 mx-auto">
+          {/* journal */}
+          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+            <div className="flex flex-col flex-1 p-6 gap-3">
+              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+                Journal
+              </h2>
+              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+                Current Journal Streak
+              </h2>
+              {/* journal streak */}
               <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  gap: '12px',
-                }}
+                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
               >
-                <h2 style={{ ...styles.title, margin: 0, fontSize: '16px' }}>
-                  {line.name}
-                </h2>
-                {/* <span
-                  style={{
-                    ...styles.statusLabel,
-                    background: 'rgba(146,168,209,0.12)',
-                    color: C.serenity,
-                    flexShrink: 0,
-                  }}
+                {/* Decorative pattern */}
+                <div className="absolute inset-0 opacity-20">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute rounded-full border border-current"
+                      style={{
+                        width: `${60 + i * 30}px`,
+                        height: `${60 + i * 30}px`,
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        opacity: 1 - i * 0.14,
+                      }}
+                    />
+                  ))}
+                </div>
+                {/* Center icon */}
+                <div
+                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
                 >
-                  {line.region}
-                </span> */}
+                  <Eye size={16} />
+                </div>
               </div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: '13px',
-                  color: C.muted,
-                  lineHeight: 1.65,
-                  flex: 1,
-                }}
-              >
-                {line.description}
+              <p className="text-slate-400 text-sm leading-relaxed flex-1">
+                You have not written an entry today. Write one to continue your
+                streak!
+                {/* if not written yet */}
               </p>
-              {line.available && (
-                <p style={{ margin: 0, fontSize: '11px', color: C.faint }}>
-                  {line.available}
-                </p>
-              )}
-              <a
-                href={line.href}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  marginTop: '4px',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  color: C.navy,
-                  textDecoration: 'none',
-                }}
+              <Link
+                href="/journal/new"
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
-                {line.contact}
-              </a>
-            </article>
-          ))}
-        </div>
+                Write an entry
+              </Link>
+            </div>
+          </div>
 
-        <p
-          style={{
-            marginTop: '28px',
-            fontSize: '12px',
-            color: C.faint,
-            textAlign: 'center',
-            lineHeight: 1.7,
-          }}
-        >
-          Numbers and availability may change. Verify details with the service
-          provider.
-        </p>
+          {/* mood */}
+          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+            <div className="flex flex-col flex-1 p-6 gap-3">
+              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+                Mood
+              </h2>
+              {/* mood chart */}
+              <div
+                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
+              >
+                {/* Decorative pattern */}
+                <div className="absolute inset-0 opacity-20">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute rounded-full border border-current"
+                      style={{
+                        width: `${60 + i * 30}px`,
+                        height: `${60 + i * 30}px`,
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        opacity: 1 - i * 0.14,
+                      }}
+                    />
+                  ))}
+                </div>
+                {/* Center icon */}
+                <div
+                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300`}
+                >
+                  <Eye size={16} />
+                </div>
+              </div>
+              <Link
+                href="/mood"
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                View more
+              </Link>
+            </div>
+          </div>
+
+          {/* exercise */}
+          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+            <div className="flex flex-col flex-1 p-6 gap-3">
+              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+                Coping Exercise
+              </h2>
+              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+                Current Exercise Streak
+              </h2>
+              {/* exercise streak */}
+              <div
+                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
+              >
+                {/* Decorative pattern */}
+                <div className="absolute inset-0 opacity-20">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute rounded-full border border-current"
+                      style={{
+                        width: `${60 + i * 30}px`,
+                        height: `${60 + i * 30}px`,
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        opacity: 1 - i * 0.14,
+                      }}
+                    />
+                  ))}
+                </div>
+                {/* Center icon */}
+                <div
+                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
+                >
+                  <Eye size={16} />
+                </div>
+              </div>
+              <p className="text-slate-400 text-sm leading-relaxed flex-1">
+                You have not performed a coping exercise today. Complete one to
+                continue your streak!
+                {/* if not done yet */}
+              </p>
+              <Link
+                href="/exercise_catalogue"
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                Browse exercise
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
