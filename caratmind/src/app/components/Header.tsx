@@ -62,6 +62,7 @@ export default function Header() {
           ))}
 
           {/* login */}
+          {/* if logged in, change button to log out */}
           <Link
             href="/login"
             className={`${buttonBase} ${buttonGradientColor}`}

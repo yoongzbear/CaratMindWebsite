@@ -84,6 +84,7 @@ const cards = [
 
 export default function SplashPage() {
   return (
+    // if not logged in, show the splash page, if logged in, show the home page
     <main className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)">
       {/* ── Background decoration ─────────────────────────────── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -161,3 +162,17 @@ export default function SplashPage() {
     </main>
   );
 }
+
+// first page when accessing the site
+// - change to decide to bring to home page or splash page
+
+// import { redirect } from 'next/navigation';
+// import { getServerProfile } from '@/utils/auth';
+
+// export default async function Home() {
+//   const profile = await getServerProfile();
+//   if (profile) {
+//     redirect(profile.role === 'admin' ? '/admin' : '/home');
+//   }
+//   redirect('/login');
+// }
