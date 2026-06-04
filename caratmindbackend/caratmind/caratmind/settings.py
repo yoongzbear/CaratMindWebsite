@@ -25,17 +25,26 @@ SECRET_KEY = 'django-insecure-v57=r_zu8-t0!zj71b71@1x#2piej!@kw=gf+7t5p*hc=lab3i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # AWS Cognito Configuration
 AWS_COGNITO_USER_POOL_ID = os.getenv('AWS_COGNITO_USER_POOL_ID', 'your-user-pool-id')
 AWS_COGNITO_APP_CLIENT_ID = os.getenv('AWS_COGNITO_APP_CLIENT_ID', 'your-app-client-id')
 AWS_COGNITO_APP_CLIENT_SECRET = os.getenv('AWS_COGNITO_APP_CLIENT_SECRET', 'your-app-client-secret')
 AWS_COGNITO_REGION = os.getenv('AWS_COGNITO_REGION', 'us-east-1')
-# Cognito URLs
-COGNITO_DOMAIN = f"https://your-domain.auth.{AWS_COGNITO_REGION}.amazoncognito.com"
+COGNITO_DOMAIN = os.getenv(
+    'COGNITO_DOMAIN',
+    f'https://your-domain.auth.{AWS_COGNITO_REGION}.amazoncognito.com',
+)
 COGNITO_REDIRECT_URI = os.getenv('COGNITO_REDIRECT_URI', 'http://localhost:8000/auth/callback/')
 COGNITO_LOGOUT_URI = os.getenv('COGNITO_LOGOUT_URI', 'http://localhost:8000/')
+
+# CORS — Next.js frontend sends Authorization: Bearer <JWT>
+CORS_ALLOWED_ORIGINS = os.getenv(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000',
+).split(',')
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -46,7 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',  # auth custom app
+    'corsheaders',
+    'accounts',
 ]
 
 # Session configuration for token storage
@@ -55,6 +65,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

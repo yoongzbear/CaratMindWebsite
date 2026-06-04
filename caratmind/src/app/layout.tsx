@@ -1,14 +1,9 @@
-// This is the ROOT layout. It wraps EVERY page in the app.
-// The MainLayout component (sidebar + topbar) lives here.
-
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
-// import Web3ContextProvider from '@/context/web3';
-// import { ClientToastContainer } from '@/app/components/ClientToastContainer';
-// import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { AuthProvider } from '@/context/AuthContext';
+import { LayoutShell } from './components/LayoutShell';
+import { ClientToastContainer } from './components/ClientToastContainer';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -17,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Mental Health Support System',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -35,11 +30,10 @@ export default async function RootLayout({
           background: '#fff8f8',
         }}
       >
-        <Header />
-        <main style={{ flex: 1 }}>{children}</main>
-        <Footer />
-        {/* <Web3ContextProvider cookies={cookies}>{children}</Web3ContextProvider> */}
-        {/* <ClientToastContainer /> */}
+        <AuthProvider>
+          <LayoutShell>{children}</LayoutShell>
+          <ClientToastContainer />
+        </AuthProvider>
       </body>
     </html>
   );

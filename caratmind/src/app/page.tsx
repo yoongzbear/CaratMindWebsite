@@ -97,7 +97,7 @@ export default function SplashPage() {
       <div className="relative z-10 text-center mb-8 flex flex-col items-center gap-4">
         {/* Logo */}
         <h1 className="text-[clamp(3rem,8vw,5.5rem)] font-light leading-none tracking-tight text-slate-800">
-          CaratMind
+          Welcome to CaratMind
         </h1>
         <p className="text-slate-500 text-base max-w-sm leading-relaxed">
           A thoughtful space for your mental wellbeing.

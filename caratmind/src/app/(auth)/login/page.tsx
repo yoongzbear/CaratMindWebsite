@@ -1,6 +1,5 @@
 import { LoginForm } from './LoginForm';
 
-/** Valid explicit `?next=` path, or `null` to use role-based default after login. */
 function parseRequestedNext(
   next: string | string[] | undefined,
 ): string | null {
@@ -18,5 +17,6 @@ export default async function LoginPage({
 }) {
   const sp = await searchParams;
   const requestedNext = parseRequestedNext(sp.next);
+
   return <LoginForm requestedNext={requestedNext} />;
 }

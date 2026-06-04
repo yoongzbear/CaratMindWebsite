@@ -1,48 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { AuthCard } from '@/app/components/AuthCard';
+import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
+import { useAuth } from '@/context/AuthContext';
+import { C, styles } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
-// import { C, styles } from '@/styles/styles';
-// import type { Profile } from '@/types/profile';
-// import { Eye, EyeOff } from 'lucide-react';
 
-function resolvePostLoginPath(
-  //   profile: Profile,
-  requestedNext: string | null,
-): string {
-  if (requestedNext) return requestedNext;
-  // Role-based default redirect
+function resolvePostLoginPath(requestedNext: string | null): string {
+  if (
+    requestedNext &&
+    requestedNext.startsWith('/') &&
+    !requestedNext.startsWith('//')
+  ) {
+    return requestedNext;
+  }
   return '/home';
 }
 
 export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   const router = useRouter();
+  const { signIn, user, loading } = useAuth();
 
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace(resolvePostLoginPath(requestedNext));
+    }
+  }, [loading, user, router, requestedNext]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toastError(data.error ?? 'Sign in failed');
-        return;
-      }
-
-      const dest = resolvePostLoginPath(data.profile, requestedNext);
-      router.replace(dest);
+      await signIn(identifier.trim(), password);
+      router.replace(resolvePostLoginPath(requestedNext));
       router.refresh();
     } catch (err) {
       toastError(err instanceof Error ? err.message : 'Sign in failed');
@@ -52,30 +50,15 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   }
 
   return (
-    <div
-      style={{
-        width: '100%',
-        maxWidth: '400px',
-        background: 'white',
-        borderRadius: '16px',
-        border: `1px solid ${C.border}`,
-        boxShadow: '0 8px 40px rgba(146,168,209,0.15)',
-        padding: '32px 28px',
-      }}
-    >
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-        <div style={styles.header1}>SVT Smart Chain</div>
-        <div style={styles.subtitle}>Sign in to continue</div>
-      </div>
-
+    <AuthCard title="Log In">
       <form onSubmit={onSubmit}>
-        <label style={styles.label}>Email</label>
+        <label style={styles.label}>Username or email</label>
         <input
-          type="email"
-          autoComplete="email"
+          type="text"
+          autoComplete="username"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           style={styles.input}
           suppressHydrationWarning
         />
@@ -93,11 +76,12 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ ...styles.input, paddingRight: '40px', marginBottom: 0 }}
+            style={{ ...styles.input, paddingRight: '44px', marginBottom: 0 }}
             suppressHydrationWarning
           />
           <button
             type="button"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
             onClick={() => setShowPassword((p) => !p)}
             style={{
               position: 'absolute',
@@ -108,12 +92,11 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
               border: 'none',
               cursor: 'pointer',
               color: C.faint,
-              padding: 0,
-              display: 'flex',
-              alignItems: 'center',
+              fontSize: '12px',
+              fontWeight: 600,
             }}
           >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
 
@@ -121,34 +104,37 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           type="submit"
           disabled={submitting}
           style={{
-            width: '100%',
-            padding: '13px',
-            borderRadius: '10px',
-            border: 'none',
-            fontWeight: 600,
-            fontSize: '14px',
-            cursor: submitting ? 'wait' : 'pointer',
-            fontFamily: 'inherit',
-            color: 'white',
-            background: `linear-gradient(130deg, ${C.roseQuartz}, ${C.serenity})`,
+            ...styles.button,
             opacity: submitting ? 0.75 : 1,
+            cursor: submitting ? 'wait' : 'pointer',
           }}
         >
-          {submitting ? 'Signing in…' : 'Sign in'}
+          {submitting ? 'Signing in…' : 'Log In'}
         </button>
       </form>
+
+      <SocialAuthButtons nextPath={requestedNext} />
 
       <p
         style={{
           marginTop: '22px',
           textAlign: 'center',
-          fontSize: '12px',
+          fontSize: '13px',
           color: C.faint,
         }}
       >
-        New accounts are created by the admin. Please contact your admin for
-        registration.
+        Don&apos;t have an account?{' '}
+        <Link
+          href={
+            requestedNext
+              ? `/register?next=${encodeURIComponent(requestedNext)}`
+              : '/register'
+          }
+          style={{ color: C.serenity, fontWeight: 600 }}
+        >
+          Register here
+        </Link>
       </p>
-    </div>
+    </AuthCard>
   );
 }
