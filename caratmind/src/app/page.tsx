@@ -90,14 +90,12 @@ export default function SplashPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return;
-
     if (user) {
-      router.replace('/home'); // if got user session, go to home page
+      router.replace('/home');
     }
-  }, [user, loading, router]);
+  }, [user, router]);
 
-  if (loading) {
+  if (loading || user) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         Loading...
@@ -184,17 +182,3 @@ export default function SplashPage() {
     </main>
   );
 }
-
-// first page when accessing the site
-// - change to decide to bring to home page or splash page
-
-// import { redirect } from 'next/navigation';
-// import { getServerProfile } from '@/utils/auth';
-
-// export default async function Home() {
-//   const profile = await getServerProfile();
-//   if (profile) {
-//     redirect(profile.role === 'admin' ? '/admin' : '/home');
-//   }
-//   redirect('/login');
-// }

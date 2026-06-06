@@ -11,7 +11,7 @@ export default function HelplinePage() {
       }}
     >
       <div className="w-[90%] mx-auto">
-        <header className="mb-7">
+        <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
             Emergency Helplines
           </h1>
@@ -22,14 +22,7 @@ export default function HelplinePage() {
           </p>
         </header>
 
-        <div
-          className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-[18px]"
-          // style={{
-          //   display: 'grid',
-          //   gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          //   gap: '18px',
-          // }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4.5">
           {HELPLINES.map((line) => (
             <article
               key={line.name}
@@ -42,15 +35,7 @@ export default function HelplinePage() {
                 gap: '10px',
               }}
             >
-              <div
-                className="flex justify-between items-start gap-3"
-                // style={{
-                //   display: 'flex',
-                //   justifyContent: 'space-between',
-                //   alignItems: 'flex-start',
-                //   gap: '12px',
-                // }}
-              >
+              <div className="flex justify-between items-start gap-3">
                 <h2 style={{ ...styles.title, margin: 0, fontSize: '16px' }}>
                   {line.name}
                 </h2>

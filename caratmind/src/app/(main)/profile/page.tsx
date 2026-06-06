@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 
 export default function ProfilePage() {
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                   onClick={handleEditClick}
                   className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                 >
-                  Edit name
+                  Edit Name
                 </button>
               )}
             </dd>
@@ -174,6 +174,14 @@ export default function ProfilePage() {
                 <dd className="mt-1">{user.email}</dd>
               </>
             )}
+
+            {/* Delete account */}
+            <button
+              onClick={handleEditClick}
+              className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            >
+              Delete Account
+            </button>
           </dl>
         </div>
       </div>

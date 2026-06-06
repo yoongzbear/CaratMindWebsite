@@ -7,9 +7,30 @@ import {
   styles,
 } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
+import { useRef, useState } from 'react';
 
 export default function EditEntryPage() {
   const { user, loading } = useAuth();
+  const [entry, setEntry] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const handleReset = () => {
+    setEntry('');
+    textareaRef.current?.focus(); // make the text area active
+  };
+
+  const handleSubmit = () => {
+    // submit into database - determine mood etc
+  };
+
+  const handleSave = () => {
+    // save as draft - save into db only
+  };
+
+  const handleCancel = () => {
+    // go back to previous page
+  };
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -18,7 +39,7 @@ export default function EditEntryPage() {
       }}
     >
       <div className="w-[90%] mx-auto">
-        <header className="mb-5">
+        <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0' }}>Edit Journal Entry</h1>
 
           <h3 className="underline" style={styles.header3}>
@@ -41,6 +62,9 @@ export default function EditEntryPage() {
         >
           <textarea
             className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[14px] bg-white box-border outline-none font-inherit"
+            value={entry}
+            ref={textareaRef}
+            onChange={(e) => setEntry(e.target.value)}
             style={{
               border: `1px solid ${C.border}`,
               fontFamily: 'inherit',
@@ -49,10 +73,9 @@ export default function EditEntryPage() {
           ></textarea>
 
           <div className="flex items-center justify-center gap-30 mt-4">
-            {/* reset button */}
+            {/* cancel button */}
             <button
-              // onClick={handleSave}
-              // disabled={saving}
+              onClick={handleCancel}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Cancel Edit'}
@@ -60,8 +83,7 @@ export default function EditEntryPage() {
 
             {/* reset button */}
             <button
-              // onClick={handleSave}
-              // disabled={saving}
+              onClick={handleReset}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Reset'}
@@ -69,8 +91,7 @@ export default function EditEntryPage() {
 
             {/* submit button */}
             <button
-              // onClick={handleSave}
-              // disabled={saving}
+              onClick={handleSubmit}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Submit'}
@@ -78,8 +99,7 @@ export default function EditEntryPage() {
 
             {/* save draft button */}
             <button
-              // onClick={handleSave}
-              // disabled={saving}
+              onClick={handleSave}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Save as Draft'}

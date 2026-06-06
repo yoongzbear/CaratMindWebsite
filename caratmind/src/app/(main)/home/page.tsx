@@ -14,15 +14,33 @@ export default function HomePage() {
       }}
     >
       <div className="w-[90%] mx-auto">
-        <header className="mb-7">
+        <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
             Welcome back, {user?.preferredUsername}!
           </h1>
-          {/* banner for basic habits */}
+        </header>
+
+        {/* banner for basic habits */}
+        <div
+          className="rounded-[10px] border mb-4 p-2.5 flex gap-3"
+          style={{
+            backgroundColor: 'white',
+            boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+            border: '1px solid #eef2f9',
+          }}
+        >
           <p style={{ ...styles.subtitle, fontSize: '14px' }}>
             Basic habits hoho
           </p>
-        </header>
+
+          <button
+            // onClick={handleSave}
+            // disabled={saving}
+            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+          >
+            {'Action Button'}
+          </button>
+        </div>
 
         {/* cards */}
         <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5 mx-auto">

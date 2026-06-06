@@ -243,6 +243,20 @@ export const styles: Record<string, CSSProperties> = {
     color: C.navy,
   },
 
+  dateInput: {
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: `1px solid ${C.border}`,
+    fontSize: '14px',
+    fontFamily: 'inherit',
+    color: C.navy,
+    background: 'white',
+    outline: 'none',
+    cursor: 'pointer',
+    appearance: 'none',
+  },
+
   textarea: {
     width: '100%',
     minHeight: '96px',
