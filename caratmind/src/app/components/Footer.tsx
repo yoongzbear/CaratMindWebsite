@@ -62,8 +62,8 @@ export default function Footer() {
             Journal
           </div>
           {[
-            { label: 'New Entry', href: '/entry/new' },
-            { label: 'Past Entry', href: '/entry/past' },
+            { label: 'New Entry', href: '/journal/new' },
+            { label: 'Past Entry', href: '/journal/past' },
           ].map(({ label, href }) => (
             <Link
               key={href}

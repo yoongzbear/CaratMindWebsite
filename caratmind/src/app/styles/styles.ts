@@ -69,6 +69,14 @@ export const buttonGradientColor = `bg-[linear-gradient(130deg,#92A8D1,#F7CAC9)]
   hover:text-[#1B2A41]
 `;
 
+export const buttonOutlined = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#9aa8c4] border border-[#dde4f0] bg-white 
+hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+
+export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white 
+hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+
 // base styles
 export const td: React.CSSProperties = {
   padding: '14px 16px',
@@ -97,7 +105,8 @@ export const styles: Record<string, CSSProperties> = {
     borderRadius: '14px',
     border: '1px solid #eef2f9',
     boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-    marginBottom: '30px',
+    marginBottom: '15px',
+    padding: '10px',
   },
 
   allDocDiv: {
@@ -157,6 +166,12 @@ export const styles: Record<string, CSSProperties> = {
   header1: {
     fontWeight: 700,
     fontSize: '24px',
+    color: C.navy,
+  },
+
+  header3: {
+    fontWeight: 700,
+    fontSize: '20px',
     color: C.navy,
   },
 
@@ -230,7 +245,7 @@ export const styles: Record<string, CSSProperties> = {
 
   textarea: {
     width: '100%',
-    minHeight: '96px', // ~4 lines at default line height
+    minHeight: '96px',
     padding: '10px 12px',
     borderRadius: '8px',
     border: `1px solid ${C.border}`,
@@ -238,7 +253,7 @@ export const styles: Record<string, CSSProperties> = {
     fontFamily: 'inherit',
     color: C.navy,
     background: 'white',
-    resize: 'vertical', // lets user resize taller if needed
+    resize: 'vertical',
     boxSizing: 'border-box',
     outline: 'none',
   },
@@ -253,7 +268,7 @@ export const styles: Record<string, CSSProperties> = {
     marginBottom: '14px',
     fontFamily: 'inherit',
     background: 'white',
-    color: '#000', // ← makes dropdown text black
+    color: '#000',
   },
 
   button: {

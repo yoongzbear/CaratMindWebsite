@@ -79,93 +79,103 @@ export default function ProfilePage() {
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
       style={{ background: C.bgPage }}
     >
-      <div className="w-[90%] mx-auto" style={{ ...styles.form }}>
-        <h1 style={{ ...styles.header1, marginTop: 0 }}>Profile</h1>
+      <div className="w-[90%] mx-auto">
+        <header className="mb-3">
+          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>User Profile</h1>
+        </header>
+        <div
+          className="rounded-[10px] border mb-3.75 p-2.5"
+          style={{
+            backgroundColor: 'white',
+            boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+            border: '1px solid #eef2f9',
+          }}
+        >
+          <h3 style={{ ...styles.header3, marginTop: 0 }}>User Details</h3>
 
-        <dl style={{ margin: 0, fontSize: '14px', color: C.navy }}>
-          {/* Username */}
-          <dt style={{ color: C.faint, fontSize: '12px' }}>Username</dt>
-          <dd style={{ margin: '4px 0 16px' }}>{user.username}</dd>
+          <dl className="m-0 text-[14px]" style={{ color: C.navy }}>
+            {/* Username */}
+            <dt style={{ color: C.faint, fontSize: '12px' }}>Username</dt>
+            <dd className="mt-1 mb-4">{user.username}</dd>
 
-          {/* Preferred username — editable */}
-          <dt style={{ color: C.faint, fontSize: '12px', marginBottom: '4px' }}>
-            Preferred username
-          </dt>
-          <dd style={{ margin: '0 0 4px' }}>
-            {editing ? (
-              <input
-                autoFocus
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSave();
-                  if (e.key === 'Escape') handleCancel();
-                }}
-                style={{
-                  border: `1.5px solid ${C.serenity}`,
-                  borderRadius: '8px',
-                  padding: '6px 10px',
-                  fontSize: '14px',
-                  color: C.navy,
-                  outline: 'none',
-                  width: '220px',
-                }}
-              />
-            ) : (
-              <span>{user.preferredUsername ?? '—'}</span>
-            )}
-          </dd>
-
-          {/* Error */}
-          {error && (
-            <dd
-              style={{ margin: '4px 0 8px', fontSize: '12px', color: '#e05' }}
+            {/* Preferred username — editable */}
+            <dt
+              style={{ color: C.faint, fontSize: '12px', marginBottom: '4px' }}
             >
-              {error}
+              Preferred username
+            </dt>
+            <dd className="mb-1">
+              {editing ? (
+                <input
+                  autoFocus
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSave();
+                    if (e.key === 'Escape') handleCancel();
+                  }}
+                  className="rounded-lg px-2.5 py-1.5 text-[14px] outline-none w-55"
+                  style={{
+                    border: `1.5px solid ${C.serenity}`,
+                    color: C.navy,
+                  }}
+                />
+              ) : (
+                <span>{user.preferredUsername ?? '—'}</span>
+              )}
             </dd>
-          )}
 
-          {/* Action buttons */}
-          <dd style={{ margin: '8px 0 16px', display: 'flex', gap: '8px' }}>
-            {editing ? (
-              <>
+            {/* Error */}
+            {error && (
+              <dd
+                style={{ margin: '4px 0 8px', fontSize: '12px', color: '#e05' }}
+              >
+                {error}
+              </dd>
+            )}
+
+            {/* Action buttons */}
+            <dd style={{ margin: '8px 0 16px', display: 'flex', gap: '8px' }}>
+              {editing ? (
+                <>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  >
+                    {saving ? 'Saving…' : 'Save'}
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    disabled={saving}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                    style={{
+                      color: C.muted,
+                      border: `1px solid ${C.border}`,
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={handleSave}
-                  disabled={saving}
+                  onClick={handleEditClick}
                   className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                 >
-                  {saving ? 'Saving…' : 'Save'}
+                  Edit name
                 </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={saving}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                  style={{
-                    color: C.muted,
-                    border: `1px solid ${C.border}`,
-                  }}
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={handleEditClick}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                Edit name
-              </button>
-            )}
-          </dd>
+              )}
+            </dd>
 
-          {/* Email */}
-          {user.email && (
-            <>
-              <dt style={{ color: C.faint, fontSize: '12px' }}>Email</dt>
-              <dd style={{ margin: '4px 0 0' }}>{user.email}</dd>
-            </>
-          )}
-        </dl>
+            {/* Email */}
+            {user.email && (
+              <>
+                <dt style={{ color: C.faint, fontSize: '12px' }}>Email</dt>
+                <dd className="mt-1">{user.email}</dd>
+              </>
+            )}
+          </dl>
+        </div>
       </div>
     </section>
   );
