@@ -1,4 +1,7 @@
 'use client';
+import EntryDetailModal, {
+  DeleteEntryModal,
+} from '@/app/components/modal/EntryModal';
 import {
   buttonGradientColor,
   buttonOutlined,
@@ -14,14 +17,17 @@ import Swal from 'sweetalert2';
 export default function MoodInsightPage() {
   const { user, loading } = useAuth();
   const [entry, setEntry] = useState('');
+  const [openDetail, setopenDetail] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const entryDetail = () => {
     Swal.fire({
       title: 'Date (Last Updated: Date)',
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget lectus lectus. Vestibulum id nisi odio. Maecenas nisi lectus, tempor in augue quis, dapibus viverra ligula. Nunc vitae varius velit. Maecenas elementum, arcu quis iaculis sollicitudin, mauris mauris consectetur nulla, sit amet venenatis mi urna quis risus. Aliquam erat volutpat. Nam interdum lorem felis, id malesuada dolor pharetra pharetra. Donec a cursus lorem. Duis quam erat, interdum sit amet nulla vel, lobortis egestas justo. Quisque convallis id felis et laoreet. Cras egestas, arcu a aliquet bibendum, risus diam vestibulum nulla, eu egestas dolor odio eu turpis. Nunc quis dapibus arcu. Mauris pellentesque, quam ut imperdiet cursus, eros dolor consequat ipsum, vitae porta felis nisi at dolor. Ut sollicitudin mauris non neque malesuada facilisis.',
       confirmButtonText: 'Edit Entry',
-      showCancelButton: true,
-      cancelButtonText: 'Delete Entry',
+      // showCancelButton: true,
+      showDenyButton: true,
+      denyButtonText: 'Delete Entry',
       width: 1000,
       didOpen: () => {
         const title = Swal.getTitle();
@@ -29,15 +35,30 @@ export default function MoodInsightPage() {
         if (title) title.style.textAlign = 'left';
         if (content) content.style.textAlign = 'justify';
       },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire('Saved!', '', 'success'); // TODO
+      } else if (result.isDenied) {
+        Swal.fire({
+          title: 'Cannot delete entry',
+          text: 'You are not allowed to delete a journal entry after submitted. Do not worry, no one will see your entry!',
+          icon: 'warning',
+          confirmButtonText: 'OK',
+        });
+      }
     });
   };
 
-  const handleSave = () => {
+  const handleEdit = () => {
     // save as draft - save into db only
   };
 
-  const handleCancel = () => {
-    // go back to previous page
+  const performExercise = () => {
+    // save as draft - save into db only
+  };
+
+  const moodDashboard = () => {
+    // save as draft - save into db only
   };
 
   return (
@@ -75,15 +96,23 @@ export default function MoodInsightPage() {
           <div className="flex gap-10 mt-3">
             {/* view more button */}
             <button
-              onClick={entryDetail}
+              onClick={() => setopenDetail(true)}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'View More'}
             </button>
 
+            <EntryDetailModal
+              open={openDetail}
+              onClose={() => setopenDetail(false)}
+              date="05 April 2026"
+              lastUpdated="05 April 2026"
+              entry="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget lectus lectus. Vestibulum id nisi odio. Maecenas nisi lectus, tempor in augue quis, dapibus viverra ligula. Nunc vitae varius velit. Maecenas elementum, arcu quis iaculis sollicitudin, mauris mauris consectetur nulla, sit amet venenatis mi urna quis risus. Aliquam erat volutpat. Nam interdum lorem felis, id malesuada dolor pharetra pharetra. Donec a cursus lorem. Duis quam erat, interdum sit amet nulla vel, lobortis egestas justo. Quisque convallis id felis et laoreet. Cras egestas, arcu a aliquet bibendum, risus diam vestibulum nulla, eu egestas dolor odio eu turpis. Nunc quis dapibus arcu. Mauris pellentesque, quam ut imperdiet cursus, eros dolor consequat ipsum, vitae porta felis nisi at dolor. Ut sollicitudin mauris non neque malesuada facilisis."
+            />
+
             {/* edit entry button */}
             <button
-              onClick={handleSave}
+              onClick={handleEdit}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Edit Entry'}
@@ -92,17 +121,23 @@ export default function MoodInsightPage() {
             {/* delete button */}
             <button
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              onClick={() =>
-                Swal.fire({
-                  title: 'Cannot delete entry',
-                  text: 'You are not allowed to delete a journal entry after submitted. Do not worry, no one will see your entry!',
-                  icon: 'warning',
-                  confirmButtonText: 'OK',
-                })
-              }
+              // onClick={() =>
+              //   Swal.fire({
+              //     title: 'Cannot delete entry',
+              //     text: 'You are not allowed to delete a journal entry after submitted. Do not worry, no one will see your entry!',
+              //     icon: 'warning',
+              //     confirmButtonText: 'OK',
+              //   })
+              // }
+              onClick={() => setOpenDelete(true)}
             >
               {'Delete Entry'}
             </button>
+
+            <DeleteEntryModal
+              open={openDelete}
+              onClose={() => setOpenDelete(false)}
+            />
           </div>
         </div>
 
@@ -171,7 +206,7 @@ export default function MoodInsightPage() {
           </p>
           {/* perform exercise button */}
           <button
-            onClick={handleSave}
+            onClick={performExercise}
             className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
           >
             {'Perform Exercise'}
@@ -190,7 +225,7 @@ export default function MoodInsightPage() {
           {/* mood chart here */}
           {/* mood dashboard button */}
           <button
-            onClick={handleSave}
+            onClick={moodDashboard}
             className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
           >
             {'View Mood Dashboard'}

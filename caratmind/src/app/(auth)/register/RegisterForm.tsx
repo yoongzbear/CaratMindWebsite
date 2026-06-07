@@ -59,7 +59,11 @@ export function RegisterForm({
 
       if (data.userConfirmed) {
         toastSuccess('Account created. You can sign in now.');
-        router.push(requestedNext ? `/login?next=${encodeURIComponent(requestedNext)}` : '/login');
+        router.push(
+          requestedNext
+            ? `/login?next=${encodeURIComponent(requestedNext)}`
+            : '/login',
+        );
       } else {
         setNeedsConfirmation(true);
         toastSuccess('Check your email and enter the verification code below.');
@@ -128,8 +132,11 @@ export function RegisterForm({
           </>
         ) : (
           <>
-            <p style={{ fontSize: '13px', color: C.muted, marginTop: 0 }}>
+            <p className="text-[13px] mt-0" style={{ color: C.navy }}>
               Enter the verification code sent to <strong>{email}</strong>.
+            </p>
+            <p className="text-[11px] mt-0" style={{ color: C.muted }}>
+              You may check your spam emails for the code.
             </p>
             <label style={styles.label}>Verification code</label>
             <input
@@ -164,10 +171,8 @@ export function RegisterForm({
       {!needsConfirmation && <SocialAuthButtons nextPath={requestedNext} />}
 
       <p
+        className="mt-5.5 text-center text-[13px]"
         style={{
-          marginTop: '22px',
-          textAlign: 'center',
-          fontSize: '13px',
           color: C.faint,
         }}
       >
