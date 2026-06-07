@@ -77,6 +77,10 @@ export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-c
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white 
 hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
 
+export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
+hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
+
 // base styles
 export const td: React.CSSProperties = {
   padding: '14px 16px',
