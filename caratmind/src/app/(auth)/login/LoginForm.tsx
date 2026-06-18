@@ -100,7 +100,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
         </button>
       </form>
 
-      <SocialAuthButtons nextPath={requestedNext} />
+      {/* <SocialAuthButtons nextPath={requestedNext} /> */}
 
       <p
         className="mt-5.5 text-center text-[13px]"

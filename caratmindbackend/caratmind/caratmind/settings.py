@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -38,6 +40,11 @@ COGNITO_DOMAIN = os.getenv(
 )
 COGNITO_REDIRECT_URI = os.getenv('COGNITO_REDIRECT_URI', 'http://localhost:8000/auth/callback/')
 COGNITO_LOGOUT_URI = os.getenv('COGNITO_LOGOUT_URI', 'http://localhost:8000/')
+
+# AWS DynamoDB
+DYNAMODB_REGION = AWS_COGNITO_REGION  # or its own env var if Dynamo lives in a different region
+DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
+INTERNAL_API_KEY = os.getenv('INTERNAL_API_KEY')
 
 # CORS — Next.js frontend sends Authorization: Bearer <JWT>
 CORS_ALLOWED_ORIGINS = os.getenv(

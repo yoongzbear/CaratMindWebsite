@@ -7,9 +7,11 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from .authentication import authenticate_bearer
 from .services import CognitoService
+from .dynamodb_service import create_user_if_not_exists
 
 
 def login_view(request):
@@ -124,3 +126,31 @@ def api_protected_example_view(request):
             'username': principal.username,
         }
     )
+
+@csrf_exempt
+@require_POST
+def provision_user_view(request):
+    # Server-to-server call from Next.js, not a user-authenticated request —
+    # no Cognito access token yet 
+    internal_key = request.META.get('HTTP_X_INTERNAL_API_KEY', '')
+    if not internal_key or internal_key != settings.INTERNAL_API_KEY:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    sub = (body.get('sub') or '').strip()
+    email = (body.get('email') or '').strip()
+    preferred_name = (body.get('preferredUsername') or '').strip()
+
+    if not sub or not email:
+        return JsonResponse({'error': 'sub and email are required'}, status=400)
+
+    created = create_user_if_not_exists(
+        user_id=sub,
+        email=email,
+        preferred_name=preferred_name,
+    )
+    return JsonResponse({'created': created}, status=201 if created else 200)

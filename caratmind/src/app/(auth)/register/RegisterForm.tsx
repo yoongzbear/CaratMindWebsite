@@ -22,6 +22,7 @@ export function RegisterForm({
   const [confirmationCode, setConfirmationCode] = useState('');
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [sub, setSub] = useState('');
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,14 +33,8 @@ export function RegisterForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
           needsConfirmation
-            ? { username, confirmationCode }
-            : {
-                username,
-                preferredUsername,
-                email,
-                password,
-                confirmPassword,
-              },
+            ? { username, confirmationCode, sub, email, preferredUsername }
+            : { username, preferredUsername, email, password, confirmPassword },
         ),
       });
       const data = await res.json();
@@ -65,8 +60,9 @@ export function RegisterForm({
             : '/login',
         );
       } else {
+        setSub(data.sub ?? '');
         setNeedsConfirmation(true);
-        toastSuccess('Check your email and enter the verification code below.');
+        toastSuccess('Check your email for the verification code.');
       }
     } catch (err) {
       toastError(err instanceof Error ? err.message : 'Registration failed');
@@ -168,7 +164,7 @@ export function RegisterForm({
         </button>
       </form>
 
-      {!needsConfirmation && <SocialAuthButtons nextPath={requestedNext} />}
+      {/* {!needsConfirmation && <SocialAuthButtons nextPath={requestedNext} />} */}
 
       <p
         className="mt-5.5 text-center text-[13px]"
