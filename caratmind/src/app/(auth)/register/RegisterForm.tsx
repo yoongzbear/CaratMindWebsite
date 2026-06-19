@@ -23,51 +23,65 @@ export function RegisterForm({
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sub, setSub] = useState('');
+  const [consent, setConsent] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(
-          needsConfirmation
-            ? { username, confirmationCode, sub, email, preferredUsername }
-            : { username, preferredUsername, email, password, confirmPassword },
-        ),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Registration failed');
-        return;
-      }
+    if (consent) {
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(
+            needsConfirmation
+              ? { username, confirmationCode, sub, email, preferredUsername }
+              : {
+                  username,
+                  preferredUsername,
+                  email,
+                  password,
+                  confirmPassword,
+                },
+          ),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Registration failed');
+          return;
+        }
 
-      if (needsConfirmation) {
-        toastSuccess('Email confirmed. You can sign in now.');
-        const loginHref = requestedNext
-          ? `/login?next=${encodeURIComponent(requestedNext)}`
-          : '/login';
-        router.push(loginHref);
-        return;
-      }
-
-      if (data.userConfirmed) {
-        toastSuccess('Account created. You can sign in now.');
-        router.push(
-          requestedNext
+        if (needsConfirmation) {
+          toastSuccess('Email confirmed. You can sign in now.');
+          const loginHref = requestedNext
             ? `/login?next=${encodeURIComponent(requestedNext)}`
-            : '/login',
-        );
-      } else {
-        setSub(data.sub ?? '');
-        setNeedsConfirmation(true);
-        toastSuccess('Check your email for the verification code.');
+            : '/login';
+          router.push(loginHref);
+          return;
+        }
+
+        if (data.userConfirmed) {
+          toastSuccess('Account created. You can sign in now.');
+          router.push(
+            requestedNext
+              ? `/login?next=${encodeURIComponent(requestedNext)}`
+              : '/login',
+          );
+        } else {
+          setSub(data.sub ?? '');
+          setNeedsConfirmation(true);
+          toastSuccess('Check your email for the verification code.');
+        }
+      } catch (err) {
+        toastError(err instanceof Error ? err.message : 'Registration failed');
+      } finally {
+        setSubmitting(false);
       }
-    } catch (err) {
-      toastError(err instanceof Error ? err.message : 'Registration failed');
-    } finally {
-      setSubmitting(false);
+    } else {
+      // no consent - cannot register
+      toastError(
+        'Unable to register due to no acknowledgement, tick the checkbox to acknowledge.',
+      );
     }
   }
 
@@ -125,6 +139,17 @@ export function RegisterForm({
               onChange={(e) => setConfirmPassword(e.target.value)}
               style={styles.input}
             />
+
+            {/* consent checkbox */}
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+            />
+            <label style={styles.label}>
+              I acknowledge my data such as journal entries will be used for
+              data processing by AI
+            </label>
           </>
         ) : (
           <>
