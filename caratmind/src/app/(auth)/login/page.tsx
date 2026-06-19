@@ -10,10 +10,12 @@ function parseRequestedNext(
   return raw;
 }
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
   searchParams: { next?: string };
 }) {
-  return <LoginForm requestedNext={searchParams.next ?? null} />;
+  const params = await searchParams;
+
+  return <LoginForm requestedNext={params.next ?? null} />;
 }

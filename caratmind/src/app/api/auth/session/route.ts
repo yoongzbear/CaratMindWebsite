@@ -21,9 +21,16 @@ export async function GET() {
 
     return NextResponse.json(buildSessionPayload(tokens, profile));
   } catch (error) {
-    return NextResponse.json(
-      { error: mapCognitoError(error), user: null },
-      { status: 401 },
-    );
+    // return NextResponse.json(
+    //   { error: mapCognitoError(error), user: null },
+    //   { status: 401 },
+    // );
+    // ❌ refresh failed → logout
+    const res = NextResponse.json({ user: null }, { status: 401 });
+
+    res.cookies.set('cm_access_token', '', { maxAge: 0 });
+    res.cookies.set('cm_refresh_token', '', { maxAge: 0 });
+
+    return res;
   }
 }

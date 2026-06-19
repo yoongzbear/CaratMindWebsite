@@ -12,6 +12,9 @@ const PUBLIC_PATHS = [
 ];
 
 export async function middleware(request: NextRequest) {
+  const access = request.cookies.get('cm_access_token')?.value;
+  const refresh = request.cookies.get('cm_refresh_token')?.value;
+
   const { pathname } = request.nextUrl;
 
   // Allow public paths and static assets through

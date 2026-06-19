@@ -95,12 +95,17 @@ export default function SplashPage() {
     }
   }, [user, router]);
 
-  if (loading || user) {
+  if (loading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         Loading...
       </main>
     );
+  }
+
+  if (user) {
+    router.replace('/home');
+    return null;
   }
 
   return (
