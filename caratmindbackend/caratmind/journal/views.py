@@ -10,6 +10,9 @@ from django.views.decorators.http import require_POST
 from accounts.authentication import authenticate_bearer
 from .dynamodb_service import create_journal_entry
 from .s3_service import upload_entry_text
+from django.views.decorators.http import require_GET
+from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
+from .s3_service import get_entry_text
 
 VALID_STATUSES = {'draft', 'submitted'}
 
@@ -72,3 +75,45 @@ def create_journal_view(request):
         },
         status=201,
     )
+
+# by date
+@require_GET
+def list_journals_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    date_str = request.GET.get('date')  # 'YYYY-MM-DD'
+    if not date_str:
+        return JsonResponse({'error': 'date query param is required'}, status=400)
+
+    try:
+        entries = get_entries_for_user_on_date(sub, date_str)
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load entries: {e}'}, status=500)
+
+    # Most recent first
+    entries.sort(key=lambda e: e.get('jrnl_created_at', ''), reverse=True)
+
+    return JsonResponse({'entries': entries})
+
+# by ID
+@require_GET
+def get_journal_view(request, jrnl_id):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    entry = get_entry_by_id(jrnl_id)
+
+    if not entry or entry.get('user_id') != sub:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+    try:
+        full_text = get_entry_text(entry['jrnl_entry_key'])
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load entry text: {e}'}, status=500)
+
+    return JsonResponse({**entry, 'entryText': full_text})

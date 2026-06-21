@@ -40,15 +40,32 @@ export default function EditEntryPage() {
     >
       <div className="w-[90%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0' }}>Edit Journal Entry</h1>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"
+            style={{ color: C.navy }}
+          >
+            Edit Journal Entry
+          </h1>
 
-          <h3 className="underline" style={styles.header3}>
+          <h5
+            className="sm:text-[20px] md:text-[24px] underline mb-1"
+            style={{ color: C.navy }}
+          >
             Date
-          </h3>
+          </h5>
 
-          <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+          <p
+            className="sm:text-[14px] md:text-[16px] mt-0.5 mb-2"
+            style={{ color: C.navy }}
+          >
             Write out your thoughts and feelings with no limits. Feel free to
             write about your day or any experiences you faced!
+          </p>
+          <p
+            className="sm:text-[11px] md:text-[13px] mt-0.5 mb-2"
+            style={{ color: C.faint }}
+          >
+            Entry shall be analyzed using AI to identify your mood.
           </p>
         </header>
 
@@ -61,7 +78,7 @@ export default function EditEntryPage() {
           }}
         >
           <textarea
-            className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[14px] bg-white box-border outline-none font-inherit"
+            className="w-full min-h-64 px-3 py-2.5 rounded-lg sm:text-[14px] md:text-[16px] bg-white box-border outline-none font-inherit"
             value={entry}
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
@@ -76,7 +93,7 @@ export default function EditEntryPage() {
             {/* cancel button */}
             <button
               onClick={handleCancel}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Cancel Edit'}
             </button>
@@ -84,7 +101,7 @@ export default function EditEntryPage() {
             {/* reset button */}
             <button
               onClick={handleReset}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Reset'}
             </button>
@@ -92,7 +109,7 @@ export default function EditEntryPage() {
             {/* submit button */}
             <button
               onClick={handleSubmit}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Submit'}
             </button>
@@ -100,7 +117,7 @@ export default function EditEntryPage() {
             {/* save draft button */}
             <button
               onClick={handleSave}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Save as Draft'}
             </button>

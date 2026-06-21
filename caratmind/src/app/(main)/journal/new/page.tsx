@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+
 import {
   buttonGradientColor,
   buttonOutlined,
@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
 import router from 'next/router';
+import { StatusKey } from '@/app/types/journal';
 
 export default function NewEntryPage() {
   const { user, loading, accessToken } = useAuth();
@@ -23,7 +24,8 @@ export default function NewEntryPage() {
     textareaRef.current?.focus(); // make the text area active
   };
 
-  async function saveEntry(status: 'draft' | 'submitted') {
+  // async function saveEntry(status: 'draft' | 'submitted') {
+  async function saveEntry(status: StatusKey) {
     if (!entry.trim()) return;
     setSubmitting(true);
     try {
@@ -62,13 +64,25 @@ export default function NewEntryPage() {
     >
       <div className="w-[90%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
             New Journal Entry
           </h1>
 
-          <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+          <p
+            className="sm:text-[14px] md:text-[16px] mt-0.5 mb-2"
+            style={{ color: C.navy }}
+          >
             Write out your thoughts and feelings with no limits. Feel free to
             write about your day or any experiences you faced!
+          </p>
+          <p
+            className="sm:text-[11px] md:text-[13px] mt-0.5 mb-2"
+            style={{ color: C.faint }}
+          >
+            Entry shall be analyzed using AI to identify your mood.
           </p>
         </header>
 
@@ -81,7 +95,7 @@ export default function NewEntryPage() {
           }}
         >
           <textarea
-            className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[14px] bg-white box-border outline-none font-inherit"
+            className="w-full min-h-64 px-3 py-2.5 rounded-lg sm:text-[14px] md:text-[16px] bg-white box-border outline-none font-inherit"
             value={entry}
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
@@ -96,7 +110,7 @@ export default function NewEntryPage() {
             {/* reset button */}
             <button
               onClick={handleReset}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Reset'}
             </button>
@@ -104,7 +118,7 @@ export default function NewEntryPage() {
             {/* submit button */}
             <button
               onClick={handleSubmit}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Submit'}
             </button>
@@ -112,7 +126,7 @@ export default function NewEntryPage() {
             {/* save draft button */}
             <button
               onClick={handleSave}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'Save as Draft'}
             </button>

@@ -24,24 +24,24 @@ export const clampedCell: React.CSSProperties = {
 };
 
 // nav bar style
-export const navBarStyle: React.CSSProperties = {
-  textDecoration: 'none',
-  padding: '9px 16px',
-  borderRadius: '8px',
-  fontSize: '13.5px',
-  fontWeight: 500,
-  color: C.muted,
-  background: 'transparent',
-  border: '1px solid transparent',
-  transition: 'all 0.15s ease',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: '8px',
-  whiteSpace: 'nowrap',
-  cursor: 'pointer',
-  width: 'max-content',
-};
+// export const navBarStyle: React.CSSProperties = {
+//   textDecoration: 'none',
+//   padding: '9px 16px',
+//   borderRadius: '8px',
+//   fontSize: '13.5px',
+//   fontWeight: 500,
+//   color: C.muted,
+//   background: 'transparent',
+//   border: '1px solid transparent',
+//   transition: 'all 0.15s ease',
+//   display: 'flex',
+//   alignItems: 'center',
+//   justifyContent: 'space-between',
+//   gap: '8px',
+//   whiteSpace: 'nowrap',
+//   cursor: 'pointer',
+//   width: 'max-content',
+// };
 
 // font
 export const fontType: React.CSSProperties = {
@@ -173,6 +173,9 @@ export const styles: Record<string, CSSProperties> = {
     color: C.navy,
   },
 
+  // className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+  // style={{ color: C.navy }}
+
   header3: {
     fontWeight: 700,
     fontSize: '20px',
@@ -190,6 +193,9 @@ export const styles: Record<string, CSSProperties> = {
     color: C.faint,
     marginTop: '2px',
   },
+
+  // className="sm:text-[11px] md:text-[13px] mt-0.5 mb-2"
+  //           style={{ color: C.faint }}
 
   errorTextStyle: {
     color: '#FF0000',

@@ -101,7 +101,7 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={() => setProfileOpen((val) => !val)}
-                  className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer text-white font-bold text-[14px] transition-all duration-150 ease-in-out"
+                  className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer text-white font-bold sm:text-sm md:text-base transition-all duration-150 ease-in-out"
                   style={{
                     border: profileOpen
                       ? `1px solid ${C.serenity}`
@@ -133,7 +133,7 @@ export default function Header() {
                       }}
                     >
                       <div
-                        className="font-bold text-[13px]"
+                        className="font-bold sm:text-[14px] md:text-[16px]"
                         style={{
                           color: C.navy,
                         }}
@@ -142,7 +142,7 @@ export default function Header() {
                       </div>
 
                       <div
-                        className="text-[11px] mt-0.5"
+                        className="sm:text-[11px] md:text-[13px] mt-0.5"
                         style={{
                           color: C.serenity,
                         }}
@@ -156,7 +156,7 @@ export default function Header() {
                       <button
                         type="button"
                         onClick={() => router.push('/profile')}
-                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[13px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer sm:text-[14px] md:text-[16px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: C.navy,
                         }}
@@ -173,7 +173,7 @@ export default function Header() {
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[13px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer sm:text-[14px] md:text-[16px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: '#dc2626',
                         }}
@@ -195,7 +195,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className={`${buttonBase} ${buttonGradientColor}`}
+              className={`${buttonBase} ${buttonGradientColor} sm:text-[14px] md:text-[16px]`}
             >
               Log In
             </Link>
