@@ -30,3 +30,21 @@ def create_user_if_not_exists(user_id: str, email: str, preferred_name: str) -> 
         if e.response.get('Error', {}).get('Code') == 'ConditionalCheckFailedException':
             return False
         raise
+
+# update name 
+def update_preferred_name(user_id: str, preferred_name: str):
+    table = _get_table()
+
+    table.update_item(
+        Key={
+            'user_id': user_id,
+        },
+        UpdateExpression='SET preferred_name = :name',
+        ExpressionAttributeValues={':name': preferred_name},
+        ConditionExpression='attribute_exists(user_id)',
+    )
+
+def get_user(user_id: str) -> dict | None:
+    table = _get_table()
+    response = table.get_item(Key={'user_id': user_id})
+    return response.get('Item')

@@ -6,12 +6,12 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .authentication import authenticate_bearer
 from .services import CognitoService
-from .dynamodb_service import create_user_if_not_exists
+from .dynamodb_service import create_user_if_not_exists, get_user, update_preferred_name
 
 
 def login_view(request):
@@ -102,17 +102,21 @@ def api_me_view(request):
     if not principal:
         return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
 
+    sub = principal.claims.get('sub')
+    dynamo_user = get_user(sub) if sub else None
+
     return JsonResponse(
         {
             'allowed': True,
             'user': {
                 'username': principal.username,
                 'email': principal.email,
-                'sub': principal.claims.get('sub'),
+                'sub': sub,
+                'preferredUsername': dynamo_user.get('preferred_name') if dynamo_user else None,
+                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
             },
         }
     )
-
 
 @require_GET
 def api_protected_example_view(request):
@@ -154,3 +158,34 @@ def provision_user_view(request):
         preferred_name=preferred_name,
     )
     return JsonResponse({'created': created}, status=201 if created else 200)
+
+@csrf_exempt
+@require_http_methods(['PATCH'])
+def update_preferred_name_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    preferred_name = (body.get('preferredUsername') or '').strip()
+    if not preferred_name:
+        return JsonResponse({'error': 'preferredUsername is required'}, status=400)
+
+    sub = principal.claims.get('sub')
+    if not sub:
+        return JsonResponse({'error': 'Missing sub claim'}, status=400)
+
+    try:
+        update_preferred_name(user_id=sub, preferred_name=preferred_name)
+        CognitoService().admin_update_preferred_username(
+            username=principal.username,
+            preferred_username=preferred_name,
+        )
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'preferredUsername': preferred_name})

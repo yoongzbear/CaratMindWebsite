@@ -124,3 +124,14 @@ class CognitoService:
         if response.status_code == 200:
             return response.json()
         return None
+
+    def admin_update_preferred_username(self, username: str, preferred_username: str) -> None:
+        import boto3
+        client = boto3.client('cognito-idp', region_name=self.region)
+        client.admin_update_user_attributes(
+            UserPoolId=self.user_pool_id,
+            Username=username,
+            UserAttributes=[
+                {'Name': 'preferred_username', 'Value': preferred_username},
+            ],
+        )

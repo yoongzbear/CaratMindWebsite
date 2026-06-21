@@ -7,6 +7,7 @@ import { AuthCard } from '@/app/components/AuthCard';
 import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
 import { C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
+import { Dices, Eye, EyeOff } from 'lucide-react';
 
 export function RegisterForm({
   requestedNext,
@@ -24,6 +25,43 @@ export function RegisterForm({
   const [submitting, setSubmitting] = useState(false);
   const [sub, setSub] = useState('');
   const [consent, setConsent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const adjectives = [
+    'Happy',
+    'Brave',
+    'Calm',
+    'Gentle',
+    'Sunny',
+    'Bright',
+    'Kind',
+    'Peaceful',
+    'Hopeful',
+    'Serene',
+    'Quiet',
+  ];
+
+  const nouns = [
+    'Cat',
+    'Panda',
+    'Otter',
+    'Cloud',
+    'River',
+    'Star',
+    'Moon',
+    'Fox',
+    'Dolphin',
+    'Fish',
+    'Sun',
+  ];
+
+  function generateRandomName() {
+    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    const number = Math.floor(Math.random() * 1000);
+
+    return `${adjective}${noun}${number}`;
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,8 +118,9 @@ export function RegisterForm({
     } else {
       // no consent - cannot register
       toastError(
-        'Unable to register due to no acknowledgement, tick the checkbox to acknowledge.',
+        'Unable to register due to no acknowledgement, click the checkbox to acknowledge.',
       );
+      setSubmitting(false);
     }
   }
 
@@ -101,14 +140,30 @@ export function RegisterForm({
             />
 
             <label style={styles.label}>Preferred username</label>
-            <input
-              type="text"
-              autoComplete="nickname"
-              required
-              value={preferredUsername}
-              onChange={(e) => setPreferredUsername(e.target.value)}
-              style={styles.input}
-            />
+            <div className="relative mb-3.5">
+              <input
+                type="text"
+                autoComplete="nickname"
+                required
+                value={preferredUsername}
+                onChange={(e) => setPreferredUsername(e.target.value)}
+                style={{
+                  ...styles.input,
+                  paddingRight: '44px',
+                  marginBottom: 0,
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setPreferredUsername(generateRandomName())}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                style={{
+                  color: C.faint,
+                }}
+              >
+                <Dices size={16} />
+              </button>
+            </div>
 
             <label style={styles.label}>Email</label>
             <input
@@ -121,35 +176,62 @@ export function RegisterForm({
             />
 
             <label style={styles.label}>Password</label>
-            <input
-              type="password"
-              autoComplete="new-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-            />
+            <div className="relative mb-3.5">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((p) => !p)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                style={{
+                  color: C.faint,
+                }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
 
             <label style={styles.label}>Confirm password</label>
-            <input
-              type="password"
-              autoComplete="new-password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              style={styles.input}
-            />
+            <div className="relative mb-3.5">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((p) => !p)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                style={{
+                  color: C.faint,
+                }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
 
             {/* consent checkbox */}
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-            />
-            <label style={styles.label}>
-              I acknowledge my data such as journal entries will be used for
-              data processing by AI
-            </label>
+            <div className="flex items-start gap-3 mb-3.5">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-7 w-7 cursor-pointer"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+              />
+              <label style={styles.label}>
+                I acknowledge my data such as journal entries will be used for
+                data processing by AI
+              </label>
+            </div>
           </>
         ) : (
           <>
