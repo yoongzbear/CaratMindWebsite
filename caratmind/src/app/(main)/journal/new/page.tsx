@@ -21,11 +21,11 @@ export default function NewEntryPage() {
   };
 
   const handleSubmit = () => {
-    // submit into database - determine mood etc
+    // submit into db and storage - determine mood etc
   };
 
   const handleSave = () => {
-    // save as draft - save into db only
+    // save as draft - save into db and storage only
   };
 
   return (

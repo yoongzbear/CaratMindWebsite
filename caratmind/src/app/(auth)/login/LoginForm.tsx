@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
-import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
+// import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
 import { useAuth } from '@/context/AuthContext';
 import { C, styles } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
