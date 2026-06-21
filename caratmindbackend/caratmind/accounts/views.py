@@ -95,7 +95,6 @@ def dashboard_view(request):
 def home_view(request):
     return render(request, 'accounts/home.html')
 
-
 @require_GET
 def api_me_view(request):
     principal = authenticate_bearer(request)
@@ -105,18 +104,56 @@ def api_me_view(request):
     sub = principal.claims.get('sub')
     dynamo_user = get_user(sub) if sub else None
 
+    if not dynamo_user:
+        # Provisioning never ran for this user — fall back to Cognito claims
+        # rather than returning blank fields.
+        return JsonResponse(
+            {
+                'allowed': True,
+                'user': {
+                    'username': principal.username,
+                    'email': principal.email,
+                    'sub': sub,
+                    'preferredUsername': None,
+                    'completedOnboarding': None,
+                },
+            }
+        )
+
     return JsonResponse(
         {
             'allowed': True,
             'user': {
-                'username': principal.username,
-                'email': principal.email,
+                'username': dynamo_user.get('username') or principal.username,
+                'email': dynamo_user.get('user_email') or principal.email,
                 'sub': sub,
-                'preferredUsername': dynamo_user.get('preferred_name') if dynamo_user else None,
-                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+                'preferredUsername': dynamo_user.get('preferred_name'),
+                'completedOnboarding': dynamo_user.get('user_complete_onboarding'),
             },
         }
     )
+
+# @require_GET
+# def api_me_view(request):
+#     principal = authenticate_bearer(request)
+#     if not principal:
+#         return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
+
+#     sub = principal.claims.get('sub')
+#     dynamo_user = get_user(sub) if sub else None
+
+#     return JsonResponse(
+#         {
+#             'allowed': True,
+#             'user': {
+#                 'username': principal.username,
+#                 'email': principal.email,
+#                 'sub': sub,
+#                 'preferredUsername': dynamo_user.get('preferred_name') if dynamo_user else None,
+#                 'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+#             },
+#         }
+#     )
 
 @require_GET
 def api_protected_example_view(request):
@@ -147,14 +184,16 @@ def provision_user_view(request):
 
     sub = (body.get('sub') or '').strip()
     email = (body.get('email') or '').strip()
+    username = (body.get('username') or '').strip()
     preferred_name = (body.get('preferredUsername') or '').strip()
 
-    if not sub or not email:
-        return JsonResponse({'error': 'sub and email are required'}, status=400)
+    if not sub or not username or not email:
+        return JsonResponse({'error': 'sub, username and email are required'}, status=400)
 
     created = create_user_if_not_exists(
         user_id=sub,
         email=email,
+        username=username,
         preferred_name=preferred_name,
     )
     return JsonResponse({'created': created}, status=201 if created else 200)

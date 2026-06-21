@@ -1,13 +1,4 @@
-// TODO: replace with database
-
-type Helpline = {
-  name: string;
-  description: string;
-  contact: string;
-  href: string;
-  // region: string;
-  available?: string;
-};
+import { Helpline } from '../types/helpline';
 
 export const HELPLINES: Helpline[] = [
   {
@@ -49,7 +40,7 @@ export const HELPLINES: Helpline[] = [
   {
     name: 'IMH Mental Health Helpline',
     description:
-      'Professional mental health support from the Institute of Mental Health.',
+      'Professional mental health support from the Institute of Mental Health Singapore.',
     contact: '6389 2222',
     href: 'tel:+6563892222',
     // region: 'Singapore',

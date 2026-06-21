@@ -1,5 +1,6 @@
 'use client';
 
+import { SessionUser } from '@/app/types/user';
 import {
   createContext,
   useCallback,
@@ -9,7 +10,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { SessionUser } from '@/lib/auth/session-response';
 
 type AuthContextValue = {
   user: SessionUser | null;

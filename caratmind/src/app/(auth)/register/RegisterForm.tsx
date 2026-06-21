@@ -4,10 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
-import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
 import { C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
+import { generateRandomName } from '@/app/utils/generateName';
 
 export function RegisterForm({
   requestedNext,
@@ -26,42 +26,6 @@ export function RegisterForm({
   const [sub, setSub] = useState('');
   const [consent, setConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const adjectives = [
-    'Happy',
-    'Brave',
-    'Calm',
-    'Gentle',
-    'Sunny',
-    'Bright',
-    'Kind',
-    'Peaceful',
-    'Hopeful',
-    'Serene',
-    'Quiet',
-  ];
-
-  const nouns = [
-    'Cat',
-    'Panda',
-    'Otter',
-    'Cloud',
-    'River',
-    'Star',
-    'Moon',
-    'Fox',
-    'Dolphin',
-    'Fish',
-    'Sun',
-  ];
-
-  function generateRandomName() {
-    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-    const noun = nouns[Math.floor(Math.random() * nouns.length)];
-    const number = Math.floor(Math.random() * 1000);
-
-    return `${adjective}${noun}${number}`;
-  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();

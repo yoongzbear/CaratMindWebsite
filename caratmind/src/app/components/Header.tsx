@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { buttonBase, buttonGradientColor, C } from '@/app/styles/styles';
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
-import { SessionUser } from '@/lib/auth/session-response';
+
 import { useEffect, useRef, useState } from 'react';
+import { SessionUser } from '../types/user';
 
 const NAV_LINKS = [
   {

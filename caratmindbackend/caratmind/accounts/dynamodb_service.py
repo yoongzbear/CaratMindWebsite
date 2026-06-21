@@ -8,7 +8,7 @@ def _get_table():
     return resource.Table(settings.DYNAMODB_USERS_TABLE)
 
 # add record into USER table
-def create_user_if_not_exists(user_id: str, email: str, preferred_name: str) -> bool:
+def create_user_if_not_exists(user_id: str, username: str, email: str, preferred_name: str) -> bool:
     """
     Creates a new user record in DynamoDB keyed by Cognito sub.
     Returns True if created, False if a record already existed (idempotent —
@@ -19,6 +19,7 @@ def create_user_if_not_exists(user_id: str, email: str, preferred_name: str) -> 
         table.put_item(
             Item={
                 'user_id': user_id,
+                'username': username,
                 'user_email': email,
                 'preferred_name': preferred_name,
                 'user_complete_onboarding': False,

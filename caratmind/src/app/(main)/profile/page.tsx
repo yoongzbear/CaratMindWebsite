@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
+import { Dices } from 'lucide-react';
+import { generateRandomName } from '@/app/utils/generateName';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -98,28 +100,41 @@ export default function ProfilePage() {
             <dt style={{ color: C.faint, fontSize: '12px' }}>Username</dt>
             <dd className="mt-1 mb-4">{user.username}</dd>
 
-            {/* Preferred username — editable */}
+            {/* Preferred name — editable */}
             <dt
               style={{ color: C.faint, fontSize: '12px', marginBottom: '4px' }}
             >
-              Preferred username
+              Preferred Name
             </dt>
             <dd className="mb-1">
               {editing ? (
-                <input
-                  autoFocus
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSave();
-                    if (e.key === 'Escape') handleCancel();
-                  }}
-                  className="rounded-lg px-2.5 py-1.5 text-[14px] outline-none w-55"
-                  style={{
-                    border: `1.5px solid ${C.serenity}`,
-                    color: C.navy,
-                  }}
-                />
+                <>
+                  <div className="relative mb-3.5 w-55">
+                    <input
+                      autoFocus
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSave();
+                        if (e.key === 'Escape') handleCancel();
+                      }}
+                      className="w-full rounded-lg px-2.5 py-1.5 pr-8 text-[14px] outline-none"
+                      style={{
+                        border: `1.5px solid ${C.serenity}`,
+                        color: C.navy,
+                      }}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setDraft(generateRandomName())}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center"
+                      style={{ color: C.faint }}
+                    >
+                      <Dices size={16} />
+                    </button>
+                  </div>
+                </>
               ) : (
                 <span>{user.preferredUsername ?? '—'}</span>
               )}

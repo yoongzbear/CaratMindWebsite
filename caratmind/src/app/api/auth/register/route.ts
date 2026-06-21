@@ -24,6 +24,7 @@ function validatePassword(password: string): string | null {
 async function provisionUser(input: {
   sub: string;
   email: string;
+  username: string;
   preferredUsername: string;
 }): Promise<void> {
   const baseUrl = process.env.DJANGO_API_BASE_URL;
@@ -32,8 +33,6 @@ async function provisionUser(input: {
     console.error('Missing DJANGO_API_BASE_URL or INTERNAL_API_KEY');
     return;
   }
-
-  console.log('Sending key:', JSON.stringify(internalKey));
 
   try {
     const res = await fetch(`${baseUrl}/api/users/provision/`, {
@@ -71,6 +70,7 @@ export async function POST(request: Request) {
     if (body.confirmationCode && body.username) {
       const sub = body.sub?.trim();
       const email = body.email?.trim();
+      const username = body.username.trim();
       const preferredUsername = body.preferredUsername?.trim();
 
       if (!sub || !email || !preferredUsername) {
@@ -81,7 +81,12 @@ export async function POST(request: Request) {
       }
 
       await confirmSignUp(body.username, body.confirmationCode);
-      await provisionUser({ sub, email, preferredUsername });
+      await provisionUser({
+        sub,
+        email,
+        preferredUsername,
+        username,
+      });
       return NextResponse.json({ confirmed: true });
     }
 
@@ -118,7 +123,12 @@ export async function POST(request: Request) {
     });
 
     if (result.userConfirmed) {
-      await provisionUser({ sub: result.userSub, email, preferredUsername });
+      await provisionUser({
+        sub: result.userSub,
+        username,
+        email,
+        preferredUsername,
+      });
     }
 
     return NextResponse.json({
