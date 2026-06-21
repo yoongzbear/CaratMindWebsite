@@ -29,22 +29,27 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# AWS configuration
+AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION')
+
 # AWS Cognito Configuration
 AWS_COGNITO_USER_POOL_ID = os.getenv('AWS_COGNITO_USER_POOL_ID', 'your-user-pool-id')
 AWS_COGNITO_APP_CLIENT_ID = os.getenv('AWS_COGNITO_APP_CLIENT_ID', 'your-app-client-id')
 AWS_COGNITO_APP_CLIENT_SECRET = os.getenv('AWS_COGNITO_APP_CLIENT_SECRET', 'your-app-client-secret')
-AWS_COGNITO_REGION = os.getenv('AWS_COGNITO_REGION', 'us-east-1')
-COGNITO_DOMAIN = os.getenv(
-    'COGNITO_DOMAIN',
-    f'https://your-domain.auth.{AWS_COGNITO_REGION}.amazoncognito.com',
-)
+AWS_COGNITO_REGION = AWS_DEFAULT_REGION
+COGNITO_DOMAIN = os.getenv('COGNITO_DOMAIN')
 COGNITO_REDIRECT_URI = os.getenv('COGNITO_REDIRECT_URI', 'http://localhost:8000/auth/callback/')
 COGNITO_LOGOUT_URI = os.getenv('COGNITO_LOGOUT_URI', 'http://localhost:8000/')
 
 # AWS DynamoDB
-DYNAMODB_REGION = AWS_COGNITO_REGION  # or its own env var if Dynamo lives in a different region
-DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
+DYNAMODB_REGION = AWS_DEFAULT_REGION  
 INTERNAL_API_KEY = os.getenv('INTERNAL_API_KEY')
+DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
+DYNAMODB_JOURNAL_TABLE = os.getenv('DYNAMODB_JOURNAL_TABLE')
+
+# AWS S3
+AWS_S3_REGION = AWS_DEFAULT_REGION  
+AWS_S3_JOURNAL_BUCKET = os.getenv('AWS_S3_JOURNAL_BUCKET')
 
 # CORS — Next.js frontend sends Authorization: Bearer <JWT>
 CORS_ALLOWED_ORIGINS = os.getenv(

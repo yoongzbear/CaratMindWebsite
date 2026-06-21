@@ -9,10 +9,13 @@ import {
 } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
+import { toastError, toastSuccess } from '@/utils/toast';
+import router from 'next/router';
 
 export default function NewEntryPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, accessToken } = useAuth();
   const [entry, setEntry] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleReset = () => {
@@ -20,13 +23,35 @@ export default function NewEntryPage() {
     textareaRef.current?.focus(); // make the text area active
   };
 
-  const handleSubmit = () => {
-    // submit into db and storage - determine mood etc
-  };
+  async function saveEntry(status: 'draft' | 'submitted') {
+    if (!entry.trim()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/journal/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ entry, status }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save.');
+        return;
+      }
+      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
+      // navigate to view journal entry
+      router.push('/past');
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
-  const handleSave = () => {
-    // save as draft - save into db and storage only
-  };
+  const handleSubmit = () => saveEntry('submitted');
+  const handleSave = () => saveEntry('draft');
 
   return (
     <section
