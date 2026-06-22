@@ -4,7 +4,7 @@ from django.conf import settings
 def _get_s3_client():
     return boto3.client('s3', region_name=settings.AWS_S3_REGION)
 
-# upload into S3
+# upload/update into S3
 def upload_entry_text(entry_key: str, content: str) -> None:
     client = _get_s3_client()
     client.put_object(

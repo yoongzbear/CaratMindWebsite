@@ -1,1 +1,67 @@
-// edit entry
+import { StatusKey } from '@/app/types/journal';
+import { NextResponse } from 'next/server';
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ jrnl_id: string }> },
+) {
+  try {
+    const { jrnl_id } = await params;
+
+    const { entry, status } = (await request.json()) as {
+      entry?: string;
+      status?: StatusKey;
+    };
+
+    if (!entry?.trim()) {
+      return NextResponse.json(
+        { error: 'Entry cannot be empty.' },
+        { status: 400 },
+      );
+    }
+
+    if (status !== 'draft' && status !== 'submitted') {
+      return NextResponse.json({ error: 'Invalid status.' }, { status: 400 });
+    }
+
+    const authHeader = request.headers.get('authorization');
+    const accessToken = authHeader?.replace('Bearer ', '');
+
+    if (!accessToken) {
+      return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+    }
+
+    const baseUrl = process.env.DJANGO_API_BASE_URL;
+
+    const res = await fetch(`${baseUrl}/api/journals/${jrnl_id}/update/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        entry,
+        status,
+      }),
+      cache: 'no-store',
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: data.error ?? 'Failed to update entry.' },
+        { status: res.status },
+      );
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { error: 'Something went wrong.' },
+      { status: 500 },
+    );
+  }
+}

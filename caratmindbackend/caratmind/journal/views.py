@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
-from .dynamodb_service import create_journal_entry
+from .dynamodb_service import create_journal_entry, update_journal_entry
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -121,3 +121,61 @@ def get_journal_view(request, jrnl_id):
         return JsonResponse({'error': f'Failed to load entry text: {e}'}, status=500)
 
     return JsonResponse({**entry, 'entryText': full_text})
+
+# update entry
+@csrf_exempt
+@require_POST
+def update_journal_view(request, jrnl_id):
+    principal = authenticate_bearer(request)
+
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    entry = get_entry_by_id(jrnl_id)
+
+    if not entry or entry.get('user_id') != sub:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+    if entry.get("jrnl_status") == "submitted":
+        return JsonResponse(
+            {"error": "Submitted journals cannot be edited"},
+            status=400,
+        )
+    
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    entry_text = body.get('entry', '')
+    jrnl_status = body.get('status', entry['jrnl_status'])
+
+    if not entry_text.strip():
+        return JsonResponse({'error': 'Entry text is required'}, status=400)
+
+    jrnl_preview = entry_text.strip()[:150]
+
+    try:
+        upload_entry_text(
+            entry['jrnl_entry_key'],
+            entry_text,
+        )
+
+        update_journal_entry(
+            jrnl_id,
+            jrnl_preview,
+            jrnl_status,
+        )
+
+    except Exception as e:
+        return JsonResponse(
+            {'error': str(e)},
+            status=500,
+        )
+
+    return JsonResponse({
+        'success': True,
+        'jrnl_id': jrnl_id,
+    })

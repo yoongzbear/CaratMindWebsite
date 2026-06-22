@@ -25,7 +25,6 @@ export default function NewEntryPage() {
     textareaRef.current?.focus(); // make the text area active
   };
 
-  // async function saveEntry(status: 'draft' | 'submitted') {
   async function saveEntry(status: StatusKey) {
     if (!entry.trim()) return;
     setSubmitting(true);

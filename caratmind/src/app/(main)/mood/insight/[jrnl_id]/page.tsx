@@ -10,7 +10,7 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
-import { JournalDetail } from '@/app/types/journal';
+import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
@@ -34,7 +34,6 @@ export default function MoodInsightPage() {
 
   useEffect(() => {
     if (!accessToken || !jrnl_id) return;
-    console.log('at detail', jrnl_id);
 
     async function loadEntry() {
       setFetchingJournal(true);
@@ -50,6 +49,7 @@ export default function MoodInsightPage() {
           return;
         }
         setJournal(data);
+        setEntry(data.entryText);
       } catch {
         toastError('Something went wrong loading the entry.');
       } finally {
@@ -60,50 +60,53 @@ export default function MoodInsightPage() {
     loadEntry();
   }, [jrnl_id, accessToken]);
 
-  const entryDetail = () => {
-    Swal.fire({
-      title: 'Date (Last Updated: Date)',
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget lectus lectus. Vestibulum id nisi odio. Maecenas nisi lectus, tempor in augue quis, dapibus viverra ligula. Nunc vitae varius velit. Maecenas elementum, arcu quis iaculis sollicitudin, mauris mauris consectetur nulla, sit amet venenatis mi urna quis risus. Aliquam erat volutpat. Nam interdum lorem felis, id malesuada dolor pharetra pharetra. Donec a cursus lorem. Duis quam erat, interdum sit amet nulla vel, lobortis egestas justo. Quisque convallis id felis et laoreet. Cras egestas, arcu a aliquet bibendum, risus diam vestibulum nulla, eu egestas dolor odio eu turpis. Nunc quis dapibus arcu. Mauris pellentesque, quam ut imperdiet cursus, eros dolor consequat ipsum, vitae porta felis nisi at dolor. Ut sollicitudin mauris non neque malesuada facilisis.',
-      confirmButtonText: 'Edit Entry',
-      // showCancelButton: true,
-      showDenyButton: true,
-      denyButtonText: 'Delete Entry',
-      width: 1000,
-      didOpen: () => {
-        const title = Swal.getTitle();
-        const content = Swal.getHtmlContainer();
-        if (title) title.style.textAlign = 'left';
-        if (content) content.style.textAlign = 'justify';
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Saved!', '', 'success'); // TODO
-      } else if (result.isDenied) {
-        Swal.fire({
-          title: 'Cannot delete entry',
-          text: 'You are not allowed to delete a journal entry after submitted. Do not worry, no one will see your entry!',
-          icon: 'warning',
-          confirmButtonText: 'OK',
-        });
-      }
-    });
-  };
+  // update entry
+  async function updateEntry(status: StatusKey) {
+    const content = entry.trim() || journal?.entryText;
 
-  const handleEdit = () => {
-    // save as draft - save into db only
-  };
+    if (!content) {
+      toastError('Entry text is required.');
+      return;
+    }
 
-  const handleSubmit = async () => {
-    if (!journal) return;
     setSubmitting(true);
+
     try {
-      // TODO: call a submit endpoint once it exists (PATCH status -> submitted)
-      toastSuccess('Entry submitted.');
+      const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ entry: content, status }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save.');
+        return;
+      }
+      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
+      setJournal((prev) =>
+        prev
+          ? {
+              ...prev,
+              jrnl_status: status,
+              jrnl_preview: content.slice(0, 150),
+            }
+          : prev,
+      );
     } catch {
-      toastError('Failed to submit entry.');
+      toastError('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
+  }
+
+  const handleSubmit = () => updateEntry('submitted');
+  const handleSave = () => updateEntry('draft');
+
+  const handleEdit = () => {
+    // save as draft - save into db only
   };
 
   const performExercise = () => {
@@ -121,8 +124,6 @@ export default function MoodInsightPage() {
       </section>
     );
   }
-
-  console.log(journal);
 
   if (!journal) {
     return (
