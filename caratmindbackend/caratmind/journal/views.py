@@ -138,11 +138,11 @@ def update_journal_view(request, jrnl_id):
     if not entry or entry.get('user_id') != sub:
         return JsonResponse({'error': 'Not found'}, status=404)
 
-    if entry.get("jrnl_status") == "submitted":
-        return JsonResponse(
-            {"error": "Submitted journals cannot be edited"},
-            status=400,
-        )
+    # if entry.get("jrnl_status") == "submitted":
+    #     return JsonResponse(
+    #         {"error": "Submitted journals cannot be edited"},
+    #         status=400,
+    #     )
     
     try:
         body = json.loads(request.body)

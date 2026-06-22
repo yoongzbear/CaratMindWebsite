@@ -7,29 +7,127 @@ import {
   styles,
 } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { toastError, toastSuccess } from '@/utils/toast';
+import { JournalDetail, StatusKey } from '@/app/types/journal';
+import { format } from 'date-fns';
 
 export default function EditEntryPage() {
-  const { user, loading } = useAuth();
+  const router = useRouter();
+  const { user, loading, accessToken } = useAuth();
+  const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [fetchingJournal, setFetchingJournal] = useState(false);
+  const [journal, setJournal] = useState<JournalDetail | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!accessToken || !jrnl_id) return;
+
+    async function loadEntry() {
+      setFetchingJournal(true);
+      try {
+        const res = await fetch(`/api/journal/${jrnl_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load entry.');
+          setJournal(null);
+          return;
+        }
+
+        setJournal(data);
+        setEntry(data.entryText);
+      } catch {
+        toastError('Something went wrong loading the entry.');
+      } finally {
+        setFetchingJournal(false);
+      }
+    }
+
+    loadEntry();
+  }, [jrnl_id, accessToken]);
+
+  const originalText = journal?.entryText ?? '';
+  const isDirty = entry !== originalText;
+
+  // update entry
+  async function updateEntry(status: StatusKey) {
+    const content = entry.trim() || journal?.entryText;
+
+    if (!content) {
+      toastError('Entry text is required.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ entry: content, status }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save.');
+        return;
+      }
+      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
+      router.back();
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const handleSubmit = () => updateEntry('submitted');
+  const handleSave = () => updateEntry('draft');
 
   const handleReset = () => {
-    setEntry('');
-    textareaRef.current?.focus(); // make the text area active
-  };
+    setEntry(originalText);
 
-  const handleSubmit = () => {
-    // submit into database - determine mood etc
-  };
-
-  const handleSave = () => {
-    // save as draft - save into db only
+    requestAnimationFrame(() => {
+      const el = textareaRef.current;
+      if (el) {
+        el.focus();
+        el.selectionStart = originalText.length;
+        el.selectionEnd = originalText.length;
+      }
+    });
   };
 
   const handleCancel = () => {
     // go back to previous page
+    router.back();
   };
+
+  if (loading || fetchingJournal) {
+    return (
+      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
+        Loading…
+      </section>
+    );
+  }
+
+  if (!journal) {
+    return (
+      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
+        Entry not found.
+      </section>
+    );
+  }
+
+  const isDraft = journal.jrnl_status === 'draft';
 
   return (
     <section
@@ -51,7 +149,7 @@ export default function EditEntryPage() {
             className="sm:text-[20px] md:text-[24px] underline mb-1"
             style={{ color: C.navy }}
           >
-            Date
+            {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
           </h5>
 
           <p

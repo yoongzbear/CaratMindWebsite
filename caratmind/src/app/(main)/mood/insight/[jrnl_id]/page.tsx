@@ -105,8 +105,8 @@ export default function MoodInsightPage() {
   const handleSubmit = () => updateEntry('submitted');
   const handleSave = () => updateEntry('draft');
 
-  const handleEdit = () => {
-    // save as draft - save into db only
+  const handleEdit = (jrnl_id: string) => {
+    router.push(`/journal/edit/${jrnl_id}`);
   };
 
   const performExercise = () => {
@@ -220,7 +220,7 @@ export default function MoodInsightPage() {
 
             {/* edit entry */}
             <button
-              onClick={handleEdit}
+              onClick={() => handleEdit(journal.jrnl_id)}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               Edit Entry
@@ -261,42 +261,60 @@ export default function MoodInsightPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <p style={styles.pText}>From your entry, you felt:</p>
+          <p
+            className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65] font-semibold"
+            style={{ color: C.navy }}
+          >
+            From your entry, you felt:
+          </p>
           <div className="flex flex-col items-center">
             {/* mood icon */}
-            {isDraft ? (
-              <p style={styles.pText}>
+            {!journal?.mood_id ? (
+              <h5
+                className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
+                style={{ color: C.navy }}
+              >
                 Mood not available yet. Submit your entry to see your mood
                 insight.
-              </p>
+              </h5>
             ) : (
               <>
+                {/* mood emoji */}
                 <div className="relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
                   <Eye size={16} />
                 </div>
-                <p style={styles.pText}>{journal.mood_id ?? 'Unknown'}</p>
+                <h5
+                  className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
+                  style={{ color: C.navy }}
+                >
+                  {journal.mood_id ?? 'Unknown'}
+                </h5>
               </>
             )}
           </div>
 
-          <div
-            className="rounded-[10px] border mb-3.75 p-2.5"
-            style={{
-              backgroundColor: 'white',
-              boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-              border: '1px solid #eef2f9',
-            }}
-          >
-            {/* explanation mood */}
-            <p style={styles.pText}>
-              <b>Your happy mood was because of </b>nec ipsum blandit, sed
-              ullamcorper sapien accumsan. Aliquam eget augue fringilla,
-              porttitor purus nec, venenatis ex. Donec ut tortor lectus.
-              Pellentesque sed malesuada turpis. Donec semper aliquet ipsum eu
-              auctor. Duis ut diam nisl. Maecenas suscipit tempor nibh vel
-              egestas.
-            </p>
-          </div>
+          {journal?.mood_id && (
+            <>
+              <div
+                className="rounded-[10px] border mb-3.75 p-2.5"
+                style={{
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                  border: '1px solid #eef2f9',
+                }}
+              >
+                {/* explanation mood  */}
+                <p style={styles.pText}>
+                  <b>Your happy mood was because of </b>nec ipsum blandit, sed
+                  ullamcorper sapien accumsan. Aliquam eget augue fringilla,
+                  porttitor purus nec, venenatis ex. Donec ut tortor lectus.
+                  Pellentesque sed malesuada turpis. Donec semper aliquet ipsum
+                  eu auctor. Duis ut diam nisl. Maecenas suscipit tempor nibh
+                  vel egestas.
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         {/* coping exercise recommendation */}
@@ -308,28 +326,24 @@ export default function MoodInsightPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h3 style={{ ...styles.header3, fontWeight: 500 }}>
+          <h3
+            className="sm:text-[24px] md:text-[28px] font-semibold"
+            style={{ color: C.navy }}
+          >
             Recommended Coping Exercise:
           </h3>
-          {/* recommended exercise */}
-          {isDraft ? (
-            <p style={styles.pText}>
-              Exercise recommendation not available yet — submit your entry
-              first.
-            </p>
-          ) : (
-            <>
-              <div className="flex flex-col items-center">
-                <h3 style={styles.header3}>{journal.uex_id ?? 'Unknown'}</h3>
-              </div>
-              <button
-                onClick={performExercise}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+          <div className="flex flex-col items-center">
+            {/* recommended exercise */}
+            {!journal.uex_id && (
+              <h5
+                className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
+                style={{ color: C.navy }}
               >
-                Perform Exercise
-              </button>
-            </>
-          )}
+                Exercise recommendation not available yet. Submit your entry
+                first.
+              </h5>
+            )}
+          </div>
 
           <p style={styles.pText}>
             <b>Your happy mood was because of </b>nec ipsum blandit, sed
@@ -341,7 +355,7 @@ export default function MoodInsightPage() {
           {/* perform exercise button */}
           <button
             onClick={performExercise}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
           >
             {'Perform Exercise'}
           </button>
@@ -360,7 +374,7 @@ export default function MoodInsightPage() {
           {/* mood dashboard button */}
           <button
             onClick={moodDashboard}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
           >
             {'View Mood Dashboard'}
           </button>

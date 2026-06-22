@@ -55,7 +55,6 @@ export default function PastEntryPage() {
   }
 
   const handleViewMore = (jrnl_id: string) => {
-    console.log('at past', jrnl_id);
     router.push(`/mood/insight/${jrnl_id}`);
   };
 
@@ -155,25 +154,27 @@ export default function PastEntryPage() {
                       border: '1px solid #eef2f9',
                     }}
                   >
-                    <h5
-                      className="sm:text-[20px] md:text-[24px] font-medium"
-                      style={{ color: C.navy }}
-                    >
-                      {format(new Date(entry.jrnl_created_at), 'p')}
-                    </h5>
-                    <Pill
-                      bgColor={
-                        entry.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
-                      }
-                      textColor={
-                        entry.jrnl_status === 'draft' ? '#c62828' : '#2e7d32'
-                      }
-                      borderColor={
-                        entry.jrnl_status === 'draft' ? '#f3caca' : '#c8e6c9'
-                      }
-                    >
-                      {entry.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
-                    </Pill>
+                    <div className="w-full flex gap-3">
+                      <h5
+                        className="sm:text-[20px] md:text-[24px] font-medium"
+                        style={{ color: C.navy }}
+                      >
+                        {format(new Date(entry.jrnl_created_at), 'p')}
+                      </h5>
+                      <Pill
+                        bgColor={
+                          entry.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
+                        }
+                        textColor={
+                          entry.jrnl_status === 'draft' ? '#c62828' : '#2e7d32'
+                        }
+                        borderColor={
+                          entry.jrnl_status === 'draft' ? '#f3caca' : '#c8e6c9'
+                        }
+                      >
+                        {entry.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
+                      </Pill>
+                    </div>
                     <p
                       className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65]"
                       style={{ color: C.navy }}
