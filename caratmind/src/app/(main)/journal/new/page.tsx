@@ -10,7 +10,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { StatusKey } from '@/app/types/journal';
 
 export default function NewEntryPage() {
@@ -18,6 +18,7 @@ export default function NewEntryPage() {
   const [entry, setEntry] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const router = useRouter();
 
   const handleReset = () => {
     setEntry('');
@@ -44,7 +45,7 @@ export default function NewEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // navigate to view journal entry
-      router.push('/past');
+      router.push('/journal/past');
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

@@ -11,7 +11,7 @@ h4 - sm:text-[22px] md:text-[26px]
 h5 - sm:text-[20px] md:text-[24px]
 normal text - sm:text-[14px] md:text-[16px]
 subtitle text - sm:text-[11px] md:text-[13px]
-button - sm:text-[14px] md:text-[16px]
+button - sm:text-[12px] md:text-[14px]
 */
 
 // texts

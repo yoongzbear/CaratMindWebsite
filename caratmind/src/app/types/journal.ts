@@ -5,6 +5,7 @@ export type Journal = {
   jrnl_submitted_at: string;
   jrnl_updated_at: string;
   jrnl_status: StatusKey;
+  jrnl_preview?: string;
   mood_id?: string;
   uex_id?: string;
   user_id: string;

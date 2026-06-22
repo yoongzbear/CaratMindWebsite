@@ -50,6 +50,9 @@ def create_journal_view(request):
         upload_entry_text(entry_key, entry_text)
     except Exception as e:
         return JsonResponse({'error': f'Failed to store entry: {e}'}, status=500)
+    
+    PREVIEW_LENGTH = 150
+    preview_text = entry_text.strip()[:PREVIEW_LENGTH]
 
     item = {
         'jrnl_id': jrnl_id,
@@ -58,6 +61,7 @@ def create_journal_view(request):
         'jrnl_updated_at': now,
         'jrnl_submitted_at': now if status == 'submitted' else None,
         'jrnl_status': status,
+        'jrnl_preview': preview_text,
         'user_id': sub,
     }
 
