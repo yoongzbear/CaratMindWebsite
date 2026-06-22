@@ -23,6 +23,7 @@ export default function Pill({
     //     whiteSpace: 'nowrap',
     //   },
     <span
+      className="sm:text-[12px] md:text-[14px]"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -34,7 +35,6 @@ export default function Pill({
         color: textColor,
         fontWeight: 600,
         whiteSpace: 'nowrap',
-        fontSize: size === 'sm' ? '11px' : '12px',
         padding: size === 'sm' ? '4px 10px' : '6px 12px',
       }}
     >

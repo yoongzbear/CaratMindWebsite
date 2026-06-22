@@ -55,6 +55,7 @@ export default function PastEntryPage() {
   }
 
   const handleViewMore = (jrnl_id: string) => {
+    console.log('at past', jrnl_id);
     router.push(`/mood/insight/${jrnl_id}`);
   };
 

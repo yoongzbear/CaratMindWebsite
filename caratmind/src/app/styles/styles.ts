@@ -69,15 +69,15 @@ export const buttonGradientColor = `bg-[linear-gradient(130deg,#92A8D1,#F7CAC9)]
   hover:text-[#1B2A41]
 `;
 
-export const buttonOutlined = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+export const buttonOutlined = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[12px] md:text-[14px] font-medium 
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#9aa8c4] border border-[#dde4f0] bg-white 
 hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
 
-export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[12px] md:text-[14px] font-medium 
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white 
 hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
 
-export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[12px] md:text-[14px] font-medium 
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
 hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
 

@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ jrnlId: string }> },
+  { params }: { params: Promise<{ jrnl_id: string }> },
 ) {
-  const { jrnlId } = await params;
+  const { jrnl_id } = await params;
 
   const authHeader = request.headers.get('authorization');
   const accessToken = authHeader?.replace('Bearer ', '');
@@ -13,7 +13,8 @@ export async function GET(
   }
 
   const baseUrl = process.env.DJANGO_API_BASE_URL;
-  const res = await fetch(`${baseUrl}/api/journals/${jrnlId}/`, {
+  console.log('at route', jrnl_id);
+  const res = await fetch(`${baseUrl}/api/journals/${jrnl_id}/`, {
     headers: { Authorization: `Bearer ${accessToken}` },
     cache: 'no-store',
   });

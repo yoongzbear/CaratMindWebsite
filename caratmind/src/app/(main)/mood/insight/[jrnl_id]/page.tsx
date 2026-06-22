@@ -2,6 +2,7 @@
 import EntryDetailModal, {
   DeleteEntryModal,
 } from '@/app/components/modal/EntryModal';
+import Pill from '@/app/components/Pill';
 import {
   buttonGradientColor,
   buttonOutlined,
@@ -33,6 +34,7 @@ export default function MoodInsightPage() {
 
   useEffect(() => {
     if (!accessToken || !jrnl_id) return;
+    console.log('at detail', jrnl_id);
 
     async function loadEntry() {
       setFetchingJournal(true);
@@ -41,12 +43,13 @@ export default function MoodInsightPage() {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const data = await res.json();
+        console.log('Response:', data);
         if (!res.ok) {
           toastError(data.error ?? 'Failed to load entry.');
-          setEntry('');
+          setJournal(null);
           return;
         }
-        setEntry(data.entry ?? '');
+        setJournal(data);
       } catch {
         toastError('Something went wrong loading the entry.');
       } finally {
@@ -119,6 +122,8 @@ export default function MoodInsightPage() {
     );
   }
 
+  console.log(journal);
+
   if (!journal) {
     return (
       <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
@@ -138,7 +143,12 @@ export default function MoodInsightPage() {
     >
       <div className="w-[90%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0' }}>Mood Insights</h1>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
+            Mood Insights
+          </h1>
         </header>
 
         {/* journal summary */}
@@ -150,12 +160,30 @@ export default function MoodInsightPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h3 style={styles.header3}>
+          <h3
+            className="sm:text-[22px] md:text-[26px] font-semibold"
+            style={{ color: C.navy }}
+          >
             {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
           </h3>
+
+          <div className="mt-0 mb-2">
+            <Pill
+              bgColor={journal.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'}
+              textColor={
+                journal.jrnl_status === 'draft' ? '#c62828' : '#2e7d32'
+              }
+              borderColor={
+                journal.jrnl_status === 'draft' ? '#f3caca' : '#c8e6c9'
+              }
+            >
+              {journal.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
+            </Pill>
+          </div>
+
           <textarea
             disabled
-            className="w-full h-24 px-3 py-2.5 border-none resize-none rounded-lg text-[14px] bg-white box-border outline-none font-inherit"
+            className="w-full h-24 px-3 py-2.5 border-none resize-none rounded-lg sm:text-[14px] md:text-[16px] bg-white box-border outline-none font-inherit"
             value={
               journal.jrnl_preview
                 ? journal.jrnl_preview.length >= 150
@@ -173,7 +201,7 @@ export default function MoodInsightPage() {
             {/* view more button */}
             <button
               onClick={() => setopenDetail(true)}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {'View More'}
             </button>
@@ -181,43 +209,36 @@ export default function MoodInsightPage() {
             <EntryDetailModal
               open={openDetail}
               onClose={() => setopenDetail(false)}
-              date={format(new Date(journal.jrnl_created_at), 'd MMMM yyyy')}
+              date={format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
               lastUpdated={format(
                 new Date(journal.jrnl_updated_at),
-                'd MMMM yyyy',
+                'd MMMM yyyy, p',
               )}
               entry={journal.entryText}
             />
 
+            {/* edit entry */}
+            <button
+              onClick={handleEdit}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            >
+              Edit Entry
+            </button>
+
             {/* submit/edit entry button */}
-            {isDraft ? (
+            {isDraft && (
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
-                {submitting ? 'Submitting…' : 'Submit'}
-              </button>
-            ) : (
-              <button
-                onClick={handleEdit}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                Edit Entry
+                {submitting ? 'Submitting…' : 'Submit Entry'}
               </button>
             )}
 
             {/* delete button */}
             <button
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              // onClick={() =>
-              //   Swal.fire({
-              //     title: 'Cannot delete entry',
-              //     text: 'You are not allowed to delete a journal entry after submitted. Do not worry, no one will see your entry!',
-              //     icon: 'warning',
-              //     confirmButtonText: 'OK',
-              //   })
-              // }
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               onClick={() => setOpenDelete(true)}
             >
               {'Delete Entry'}

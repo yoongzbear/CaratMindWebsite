@@ -38,13 +38,10 @@ export default function Modal({
         onClick={(e) => e.stopPropagation()}
         className="w-full rounded-md overflow-hidden"
         style={{
-          //   width: '100%',
           maxWidth: `${width}px`,
           background: 'white',
-          //   borderRadius: '20px',
           border: `1px solid ${C.border}`,
           boxShadow: '0 20px 60px rgba(58,74,107,0.18)',
-          //   overflow: 'hidden',
         }}
       >
         {/* Header */}
@@ -52,11 +49,9 @@ export default function Modal({
           <div>
             {title && (
               <h2
+                className="sm:text-[26px] md:text-[30px] font-bold m-0"
                 style={{
                   color: C.navy,
-                  fontSize: '24px',
-                  fontWeight: 700,
-                  margin: 0,
                 }}
               >
                 {title}
@@ -65,9 +60,8 @@ export default function Modal({
 
             {subtitle && (
               <p
+                className="mt-1 sm:text-[14px] md:text-[16px]"
                 style={{
-                  marginTop: '4px',
-                  fontSize: '13px',
                   color: C.faint,
                 }}
               >
@@ -78,14 +72,14 @@ export default function Modal({
 
           <button
             onClick={onClose}
-            className="cursor-pointer p-2 pt-0 rounded-lg hover:bg-slate-100 transition"
+            className="cursor-pointer pt-0 rounded-lg hover:bg-slate-100 transition"
           >
-            <X size={20} color={C.muted} />
+            <X size={24} color={C.muted} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 pt-2 pb-1">{children}</div>
+        <div className="p-6 py-2">{children}</div>
 
         {/* Footer */}
         {footer && <div className="p-6 pt-0">{footer}</div>}

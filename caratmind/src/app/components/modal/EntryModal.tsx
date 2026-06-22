@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { buttonGradientColor, buttonRed, styles } from '@/app/styles/styles';
+import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 
 type Props = {
   open: boolean;
@@ -37,7 +37,7 @@ export default function EntryDetailModal({
         footer={
           <div className="flex justify-start gap-3">
             <button
-              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               Edit Entry
             </button>
@@ -47,7 +47,12 @@ export default function EntryDetailModal({
           </div>
         }
       >
-        <p style={styles.pText}>{entry}</p>
+        <p
+          className="sm:text-[14px] md:text-[16px] mt-0 mb-2.5"
+          style={{ color: C.navy }}
+        >
+          {entry}
+        </p>
       </Modal>
 
       <DeleteEntryModal
@@ -72,7 +77,10 @@ export function DeleteEntryModal({ open, onClose }: DeleteProps) {
       width={600}
       title="Cannot delete entry"
     >
-      <p style={styles.pText}>
+      <p
+        className="sm:text-[14px] md:text-[16px] mt-0 mb-2.5"
+        style={{ color: C.navy }}
+      >
         You are not allowed to delete a journal entry after submitted. Do not
         worry, no one will see your entry!
       </p>
