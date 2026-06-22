@@ -9,16 +9,53 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
+import { JournalDetail } from '@/app/types/journal';
 import { useAuth } from '@/context/AuthContext';
+import { toastError, toastSuccess } from '@/utils/toast';
+import { format } from 'date-fns';
 import { Eye } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function MoodInsightPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, accessToken } = useAuth();
+  const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
+
+  const router = useRouter();
+  const [journal, setJournal] = useState<JournalDetail | null>(null);
+  const [fetchingJournal, setFetchingJournal] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [openDetail, setopenDetail] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!accessToken || !jrnl_id) return;
+
+    async function loadEntry() {
+      setFetchingJournal(true);
+      try {
+        const res = await fetch(`/api/journal/${jrnl_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load entry.');
+          setEntry('');
+          return;
+        }
+        setEntry(data.entry ?? '');
+      } catch {
+        toastError('Something went wrong loading the entry.');
+      } finally {
+        setFetchingJournal(false);
+      }
+    }
+
+    loadEntry();
+  }, [jrnl_id, accessToken]);
 
   const entryDetail = () => {
     Swal.fire({
@@ -53,6 +90,19 @@ export default function MoodInsightPage() {
     // save as draft - save into db only
   };
 
+  const handleSubmit = async () => {
+    if (!journal) return;
+    setSubmitting(true);
+    try {
+      // TODO: call a submit endpoint once it exists (PATCH status -> submitted)
+      toastSuccess('Entry submitted.');
+    } catch {
+      toastError('Failed to submit entry.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const performExercise = () => {
     // save as draft - save into db only
   };
@@ -60,6 +110,24 @@ export default function MoodInsightPage() {
   const moodDashboard = () => {
     // save as draft - save into db only
   };
+
+  if (loading || fetchingJournal) {
+    return (
+      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
+        Loading…
+      </section>
+    );
+  }
+
+  if (!journal) {
+    return (
+      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
+        Entry not found.
+      </section>
+    );
+  }
+
+  const isDraft = journal.jrnl_status === 'draft';
 
   return (
     <section
@@ -82,11 +150,19 @@ export default function MoodInsightPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h3 style={styles.header3}>Date</h3>
+          <h3 style={styles.header3}>
+            {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
+          </h3>
           <textarea
             disabled
             className="w-full h-24 px-3 py-2.5 border-none resize-none rounded-lg text-[14px] bg-white box-border outline-none font-inherit"
-            value="hello"
+            value={
+              journal.jrnl_preview
+                ? journal.jrnl_preview.length >= 150
+                  ? `${journal.jrnl_preview}…`
+                  : journal.jrnl_preview
+                : 'No preview available.'
+            }
             style={{
               border: `1px solid ${C.border}`,
               color: C.navy,
@@ -105,18 +181,31 @@ export default function MoodInsightPage() {
             <EntryDetailModal
               open={openDetail}
               onClose={() => setopenDetail(false)}
-              date="05 April 2026"
-              lastUpdated="05 April 2026"
-              entry="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget lectus lectus. Vestibulum id nisi odio. Maecenas nisi lectus, tempor in augue quis, dapibus viverra ligula. Nunc vitae varius velit. Maecenas elementum, arcu quis iaculis sollicitudin, mauris mauris consectetur nulla, sit amet venenatis mi urna quis risus. Aliquam erat volutpat. Nam interdum lorem felis, id malesuada dolor pharetra pharetra. Donec a cursus lorem. Duis quam erat, interdum sit amet nulla vel, lobortis egestas justo. Quisque convallis id felis et laoreet. Cras egestas, arcu a aliquet bibendum, risus diam vestibulum nulla, eu egestas dolor odio eu turpis. Nunc quis dapibus arcu. Mauris pellentesque, quam ut imperdiet cursus, eros dolor consequat ipsum, vitae porta felis nisi at dolor. Ut sollicitudin mauris non neque malesuada facilisis."
+              date={format(new Date(journal.jrnl_created_at), 'd MMMM yyyy')}
+              lastUpdated={format(
+                new Date(journal.jrnl_updated_at),
+                'd MMMM yyyy',
+              )}
+              entry={journal.entryText}
             />
 
-            {/* edit entry button */}
-            <button
-              onClick={handleEdit}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-            >
-              {'Edit Entry'}
-            </button>
+            {/* submit/edit entry button */}
+            {isDraft ? (
+              <button
+                onClick={handleSubmit}
+                disabled={submitting}
+                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                {submitting ? 'Submitting…' : 'Submit'}
+              </button>
+            ) : (
+              <button
+                onClick={handleEdit}
+                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                Edit Entry
+              </button>
+            )}
 
             {/* delete button */}
             <button
@@ -153,12 +242,19 @@ export default function MoodInsightPage() {
           <p style={styles.pText}>From your entry, you felt:</p>
           <div className="flex flex-col items-center">
             {/* mood icon */}
-            <div
-              className={`relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
-            >
-              <Eye size={16} />
-            </div>
-            <p style={styles.pText}>Happy</p>
+            {isDraft ? (
+              <p style={styles.pText}>
+                Mood not available yet. Submit your entry to see your mood
+                insight.
+              </p>
+            ) : (
+              <>
+                <div className="relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
+                  <Eye size={16} />
+                </div>
+                <p style={styles.pText}>{journal.mood_id ?? 'Unknown'}</p>
+              </>
+            )}
           </div>
 
           <div
@@ -169,6 +265,7 @@ export default function MoodInsightPage() {
               border: '1px solid #eef2f9',
             }}
           >
+            {/* explanation mood */}
             <p style={styles.pText}>
               <b>Your happy mood was because of </b>nec ipsum blandit, sed
               ullamcorper sapien accumsan. Aliquam eget augue fringilla,
@@ -192,10 +289,25 @@ export default function MoodInsightPage() {
           <h3 style={{ ...styles.header3, fontWeight: 500 }}>
             Recommended Coping Exercise:
           </h3>
-          <div className="flex flex-col items-center">
-            {/* recommended exercise */}
-            <h3 style={styles.header3}>Happy</h3>
-          </div>
+          {/* recommended exercise */}
+          {isDraft ? (
+            <p style={styles.pText}>
+              Exercise recommendation not available yet — submit your entry
+              first.
+            </p>
+          ) : (
+            <>
+              <div className="flex flex-col items-center">
+                <h3 style={styles.header3}>{journal.uex_id ?? 'Unknown'}</h3>
+              </div>
+              <button
+                onClick={performExercise}
+                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                Perform Exercise
+              </button>
+            </>
+          )}
 
           <p style={styles.pText}>
             <b>Your happy mood was because of </b>nec ipsum blandit, sed

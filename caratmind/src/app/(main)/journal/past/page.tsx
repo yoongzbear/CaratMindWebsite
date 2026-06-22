@@ -54,6 +54,10 @@ export default function PastEntryPage() {
     );
   }
 
+  const handleViewMore = (jrnl_id: string) => {
+    router.push(`/mood/insight/${jrnl_id}`);
+  };
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -191,6 +195,7 @@ export default function PastEntryPage() {
                     {/* button to insights page */}
                     <button
                       className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      onClick={() => handleViewMore(entry.jrnl_id)}
                     >
                       View More
                     </button>

@@ -17,3 +17,5 @@ export const STATUS_LABEL: Record<StatusKey, string> = {
   draft: 'Draft',
   submitted: 'Submitted',
 };
+
+export type JournalDetail = Journal & { entryText: string };
