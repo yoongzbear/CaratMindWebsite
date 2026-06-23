@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
+from mood.services import detect_store_mood
 from .dynamodb_service import create_journal_entry, update_journal_entry
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
@@ -62,12 +63,20 @@ def create_journal_view(request):
         'jrnl_submitted_at': now if status == 'submitted' else None,
         'jrnl_status': status,
         'jrnl_preview': preview_text,
+        'mood_id': None,
+        'mood_name': None,
+        'uex_id': None,
         'user_id': sub,
     }
 
     # upload into database
     try:
         create_journal_entry(item)
+        # detect mood if entry submitted
+        if status == 'submitted':            
+            detect_store_mood(jrnl_id, sub, entry_text)
+            # TODO: update journal table for mood
+            
     except Exception as e:
         return JsonResponse({'error': f'Failed to save entry metadata: {e}'}, status=500)
 
@@ -168,6 +177,10 @@ def update_journal_view(request, jrnl_id):
             jrnl_preview,
             jrnl_status,
         )
+
+        # detect mood if entry submitted
+        if jrnl_status == 'submitted':
+            detect_store_mood(jrnl_id, sub, entry_text)
 
     except Exception as e:
         return JsonResponse(

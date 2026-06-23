@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'journal',
+    'mood',
 ]
 
 # Session configuration for token storage

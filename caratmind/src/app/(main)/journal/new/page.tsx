@@ -44,7 +44,7 @@ export default function NewEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // navigate to view journal entry
-      router.push('/journal/past');
+      // router.push('/journal/past');
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

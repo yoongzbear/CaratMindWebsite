@@ -73,3 +73,5 @@ def update_journal_entry(
         UpdateExpression=update_expr,
         ExpressionAttributeValues=values,
     )
+
+# update mood id and mood name 
