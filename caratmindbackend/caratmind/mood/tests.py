@@ -13,6 +13,10 @@ samples = [
     "I will get my semester results later this week, I am so afraid of the results"
 ]
 
+samples = [    
+    "I am very happy today because I got to eat potato chips.", 
+]
+
 # annoyance
 # happy
 # anxious 
