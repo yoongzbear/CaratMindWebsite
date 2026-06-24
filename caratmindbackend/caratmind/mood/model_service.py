@@ -83,10 +83,18 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     else:
         top_label, top_score = scored[0]
 
-    above_threshold = [{"label": lbl, "score": round(s, 4)} for lbl, s in scored if s >= threshold]
+    # above_threshold = [{"label": lbl, "score": round(s, 4)} for lbl, s in scored if s >= threshold]
 
-    is_mixed = top_score < CONFIDENCE_THRESHOLD
-    top_3 = [{"label": lbl, "score": round(s, 4)} for lbl, s in non_neutral[:3]] # TODO: only include when above explain threshold
+    is_mixed = top_score < CONFIDENCE_THRESHOLD # true if the label with highest score has less than confidence threshold 
+    top_3 = [
+        {"label": lbl, "score": round(s, 4)}
+        for lbl, s in non_neutral
+        if s >= threshold
+    ][:3]
+
+    if not top_3 and non_neutral:
+        # fallback: still show the single highest-scoring non-neutral emotion
+        top_3 = [{"label": non_neutral[0][0], "score": round(non_neutral[0][1], 4)}]
 
     explanation = generate_mood_explanation(
         text,
@@ -98,7 +106,6 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
         "mood_confidence": round(top_score, 4),
         "is_mixed": is_mixed,
         "mood_top3": top_3,           
-        # "mood_explain": above_threshold,  # TODO: FLAN-T5 small model for clearer explanation
         "mood_explain": explanation, 
     }
 
@@ -150,8 +157,9 @@ def generate_mood_explanation(text, moods):
                 "Rules:\n"
                 "- 1 to 2 sentences only\n"
                 "- Must reference or quote exact phrases from the journal\n"
-                "- Do not mention the confidence scores\n"
+                "- Do not mention the confidence scores explicitly\n"
                 "- Refer to the author as 'you'\n"
+                "- Ensure the grammar is proper\n"
             )
         }
     ]
@@ -164,102 +172,3 @@ def generate_mood_explanation(text, moods):
     )
 
     return output["choices"][0]["message"]["content"]
-
-# def generate_mood_explanation(text, moods):
-#     tokenizer, model = _loadExplain()
-
-#     mood_text = ", ".join(
-#         [f"{m['label']} ({m['score']:.2f})" for m in moods]
-#     )
-
-#     messages = [
-#         {
-#             "role": "system",
-#             "content": "You are a strict emotion analyst. You explain emotions only using evidence from the text."
-#         },
-#         {
-#             "role": "user",
-#             "content": (
-#                 f"Journal Entry:\n{text}\n\n"
-#                 f"Detected emotions:\n{mood_text}\n\n"
-#                 "Task:\n"
-#                 "Explain why these emotions appear.\n\n"
-#                 "Rules:\n"
-#                 "- 1 to 2 sentences only\n"
-#                 "- Must reference or quote exact phrases from the journal\n"
-#             )
-#         }
-#     ]
-
-#     # Qwen chat template
-#     input_ids = tokenizer.apply_chat_template(
-#         messages,
-#         tokenize=True,
-#         add_generation_prompt=True,
-#         return_tensors="pt"
-#     ).to(model.device)
-
-#     with torch.no_grad():
-#         outputs = model.generate(
-#             input_ids,
-#             max_new_tokens=120,
-#             temperature=0.7,
-#             top_p=0.9,
-#             do_sample=True
-#         )
-
-#     return tokenizer.decode(
-#         outputs[0][input_ids.shape[-1]:],
-#         skip_special_tokens=True
-#     )
-
-# def generate_mood_explanation(text, moods):
-#     tokenizer, model = _loadExplain()
-#     # prompt = build_prompt(text, moods)
-#     # print("Prompt:", prompt)
-
-#     mood_text = ", ".join(
-#         [f"{m['label']} ({m['score']:.2f})" for m in moods]
-#     )
-
-#     messages = [
-#         {
-#             "role": "system",
-#             "content": "You explain emotions strictly based on provided journal entries."
-#         },
-#         {
-#             "role": "user",
-#             "content": f"""
-# Journal Entry:
-# {text}
-
-# Detected emotions:
-# {mood_text}
-
-# Task:
-# Explain why these emotions appear using only evidence from the journal.
-
-# Rules:
-# - 1 to 2 sentences
-# - must quote or refer to phrases in text
-# """
-#         }
-#     ]
-
-#     inputs = tokenizer.apply_chat_template(
-#         messages,
-#         add_generation_prompt=True,
-#         return_tensors="pt"
-#     ).to(model.device)
-
-#     outputs = model.generate(
-#         inputs,
-#         max_new_tokens=120,
-#         do_sample=True,
-#         temperature=0.7
-#     )
-
-#     return tokenizer.decode(
-#         outputs[0][inputs.shape[-1]:],
-#         skip_special_tokens=True
-#     )
