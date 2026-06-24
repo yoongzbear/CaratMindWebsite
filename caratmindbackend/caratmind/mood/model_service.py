@@ -22,7 +22,7 @@ EXPLAIN_MODEL_PATH = "./models/qwen2.5-1.5b-instruct-q4_k_m.gguf"
 NEUTRAL_LABEL = "neutral"
 SECONDARY_THRESHOLD = 0.10 # below value considered as neutral
 CONFIDENCE_THRESHOLD = 0.5 # below value considered as mixed feelings 
-EXPLAIN_THRESHOLD = 0.3 # mood included in explanation 
+EXPLAIN_THRESHOLD = 0.3 # mood included in explanation = 0.15/0.2
 
 def _loadDetect():
     global _tokenizerDetect, _modelDetect
@@ -43,7 +43,7 @@ def _loadExplain():
                     model_path=EXPLAIN_MODEL_PATH,
                     n_ctx=2048,        # context window
                     # n_threads=4,       # tune to EC2 vCPU count
-                    n_threads=os.cpu_count(),       # tune to EC2 vCPU count
+                    n_threads=os.cpu_count(),
                     verbose=False,
                 )
     return _llmExplain
@@ -51,10 +51,7 @@ def _loadExplain():
 def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     """
     Multi-label emotion classification (go_emotions style).
-    - If the model is confident (top score >= CONFIDENCE_THRESHOLD), returns
-      a single dominant mood.
-    - If not confident, returns is_mixed=True with the top 3 labels instead
-      of forcing one label.
+    - returns a single dominant mood
     """
     tokenizer, model = _loadDetect()
 
@@ -86,78 +83,58 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     # above_threshold = [{"label": lbl, "score": round(s, 4)} for lbl, s in scored if s >= threshold]
 
     is_mixed = top_score < CONFIDENCE_THRESHOLD # true if the label with highest score has less than confidence threshold 
-    top_3 = [
-        {"label": lbl, "score": round(s, 4)}
-        for lbl, s in non_neutral
-        if s >= threshold
-    ][:3]
+    # top_3 = [
+    #     {"label": lbl, "score": round(s, 4)}
+    #     for lbl, s in non_neutral
+    #     if s >= threshold
+    # ][:3]
 
-    if not top_3 and non_neutral:
-        # fallback: still show the single highest-scoring non-neutral emotion
-        top_3 = [{"label": non_neutral[0][0], "score": round(non_neutral[0][1], 4)}]
+    # if not top_3 and non_neutral:
+    #     # fallback: still show the single highest-scoring non-neutral emotion
+    #     top_3 = [{"label": non_neutral[0][0], "score": round(non_neutral[0][1], 4)}]
 
     explanation = generate_mood_explanation(
         text,
-        top_3
+        top_label, 
+        top_score, 
+        is_mixed
     )
 
-    return {
-        "mood": top_label if not is_mixed else None,
-        "mood_confidence": round(top_score, 4),
-        "is_mixed": is_mixed,
-        "mood_top3": top_3,           
-        "mood_explain": explanation, 
-    }
-
-# analyze based on each sentence in entry instead of whole entry at once
-def predict_mood_aggregated(text: str, threshold: float = 0.3) -> dict:
-    sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if s.strip()]
-    tokenizer, model = _loadDetect()
-    all_probs = []
-
-    for sent in sentences:
-        inputs = tokenizer(sent, return_tensors="pt", truncation=True, max_length=512)
-        with torch.no_grad():
-            logits = model(**inputs).logits
-            all_probs.append(torch.sigmoid(logits)[0])
-
-    avg_probs = torch.stack(all_probs).mean(dim=0)
-    id2label = model.config.id2label
-    scored = sorted(
-        ((id2label[i], float(p)) for i, p in enumerate(avg_probs)),
-        key=lambda x: x[1], reverse=True,
-    )
-    top_label, top_score = scored[0]
     return {
         "mood": top_label,
         "mood_confidence": round(top_score, 4),
-        "mood_explain": [{"label": l, "score": s} for l, s in scored if s >= threshold],
+        "is_mixed": is_mixed,
+        # "mood_top3": top_3,           
+        "mood_explain": explanation, 
     }
 
 # generate feedback
-def generate_mood_explanation(text, moods):
+def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
     llm = _loadExplain()
 
-    mood_text = ", ".join(
-        [f"{m['label']} ({m['score']:.2f})" for m in moods]
-    )
+    # mood_text = ", ".join(
+    #     [f"{m['label']} ({m['score']:.2f})" for m in moods]
+    # )
 
     messages = [
         {
             "role": "system",
-            "content": "You are a strict emotion analyst. You explain emotions only using evidence from the text."
+            "content": "You are a strict mood analyst. You explain moods only using evidence from the text."
         },
         {
             "role": "user",
             "content": (
                 f"Journal Entry:\n{text}\n\n"
-                f"Detected emotions:\n{mood_text}\n\n"
+                f"Detected mood:\n{mood_label}\n\n"
+                f"Detected mood confidence score:\n{mood_score}\n\n"
+                f"Is mood mixed:\n{is_mixed}\n\n"
                 "Task:\n"
-                "Explain why these emotions appear.\n\n"
+                "Explain why this mood appear.\n\n"
                 "Rules:\n"
                 "- 1 to 2 sentences only\n"
                 "- Must reference or quote exact phrases from the journal\n"
                 "- Do not mention the confidence scores explicitly\n"
+                "- If the mood is mixed, mention it is the closest but do not assume what mood other than the actual detected mood\n"
                 "- Refer to the author as 'you'\n"
                 "- Ensure the grammar is proper\n"
             )
