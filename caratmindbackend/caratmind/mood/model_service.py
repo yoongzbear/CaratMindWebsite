@@ -1,8 +1,10 @@
+import os
 import re
 import threading
 from functools import lru_cache
 from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer, AutoModelForSequenceClassification
 import torch
+from llama_cpp import Llama
 
 # detect mood
 _lockDetect = threading.Lock()
@@ -40,26 +42,11 @@ def _loadExplain():
                 _llmExplain = Llama(
                     model_path=EXPLAIN_MODEL_PATH,
                     n_ctx=2048,        # context window
-                    n_threads=4,       # tune to EC2 vCPU count
+                    # n_threads=4,       # tune to EC2 vCPU count
+                    n_threads=os.cpu_count(),       # tune to EC2 vCPU count
                     verbose=False,
                 )
     return _llmExplain
-
-# def _loadExplain():
-#     global _tokenizerExplain, _modelExplain
-#     if _modelExplain is None:
-#         with _lockExplain:
-#             if _modelExplain is None:  # double-checked locking
-#                 _tokenizerExplain = AutoTokenizer.from_pretrained(EXPLAIN_MODEL_NAME, trust_remote_code=True)
-#                 _modelExplain = AutoModelForCausalLM.from_pretrained(
-#                     EXPLAIN_MODEL_NAME,
-#                     torch_dtype=torch.float32,
-#                     device_map=None, 
-#                     trust_remote_code=True
-#                 )
-#                 _modelExplain.eval()
-#                 _modelExplain.to("cpu")
-#     return _tokenizerExplain, _modelExplain
 
 def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     """
@@ -99,7 +86,7 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     above_threshold = [{"label": lbl, "score": round(s, 4)} for lbl, s in scored if s >= threshold]
 
     is_mixed = top_score < CONFIDENCE_THRESHOLD
-    top_3 = [{"label": lbl, "score": round(s, 4)} for lbl, s in non_neutral[:3]]
+    top_3 = [{"label": lbl, "score": round(s, 4)} for lbl, s in non_neutral[:3]] # TODO: only include when above explain threshold
 
     explanation = generate_mood_explanation(
         text,
@@ -140,13 +127,6 @@ def predict_mood_aggregated(text: str, threshold: float = 0.3) -> dict:
         "mood_explain": [{"label": l, "score": s} for l, s in scored if s >= threshold],
     }
 
-# prompt feedback generation
-# def build_prompt(text, moods):
-#     mood_text = ", ".join(
-#         [f"{m['label']} ({m['score']:.2f})" for m in moods]
-#     )
-
-
 # generate feedback
 def generate_mood_explanation(text, moods):
     llm = _loadExplain()
@@ -170,6 +150,8 @@ def generate_mood_explanation(text, moods):
                 "Rules:\n"
                 "- 1 to 2 sentences only\n"
                 "- Must reference or quote exact phrases from the journal\n"
+                "- Do not mention the confidence scores\n"
+                "- Refer to the author as 'you'\n"
             )
         }
     ]
