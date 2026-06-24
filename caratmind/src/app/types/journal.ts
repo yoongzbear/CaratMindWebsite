@@ -1,5 +1,3 @@
-import { MoodName } from './mood';
-
 export type Journal = {
   jrnl_id: string;
   jrnl_entry_key: string;
@@ -9,7 +7,7 @@ export type Journal = {
   jrnl_status: StatusKey;
   jrnl_preview?: string;
   mood_id?: string;
-  mood_name?: MoodName;
+  mood_name?: string;
   uex_id?: string;
   user_id: string;
 };

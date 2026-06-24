@@ -75,3 +75,13 @@ def update_journal_entry(
     )
 
 # update mood id and mood name 
+def update_journal_mood(jrnl_id: str, mood_id: str, mood_name: str) -> None:
+    table = _get_table()
+    table.update_item(
+        Key={'jrnl_id': jrnl_id},
+        UpdateExpression="SET mood_id = :mood_id, mood_name = :mood_name",
+        ExpressionAttributeValues={
+            ':mood_id': mood_id,
+            ':mood_name': mood_name,
+        },
+    )

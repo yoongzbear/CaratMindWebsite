@@ -9,8 +9,8 @@ from mood.model_service import predict_mood, predict_mood_aggregated
 
 samples = [
     "Today I went to my class and learned something new. I only have one class today and I had to spend more than 2 hours to go to class. It is so tiring to go to only one class a day.", 
-    "I am very happy today because I got to eat potato chips.", 
-    "I will get my semester results later this week, I am so afraid of the results",    
+    "I am very happy today because I got to eat potato chips.", # joy
+    "I will get my semester results later this week, I am so afraid of the results", 
 ]
 
 samples = [    

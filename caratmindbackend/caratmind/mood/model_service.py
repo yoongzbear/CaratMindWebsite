@@ -101,9 +101,9 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     )
 
     return {
-        "mood": top_label,
+        "mood_name": top_label,
         "mood_confidence": round(top_score, 4),
-        "is_mixed": is_mixed,
+        # "is_mixed": is_mixed,
         # "mood_top3": top_3,           
         "mood_explain": explanation, 
     }

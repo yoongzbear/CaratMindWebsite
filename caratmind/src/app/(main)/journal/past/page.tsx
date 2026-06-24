@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { DayPicker } from '@daypicker/react';
 import Pill from '@/app/components/Pill';
 import { useRouter } from 'next/navigation';
+import { toTitleCase } from '@/app/utils/format';
 
 export default function PastEntryPage() {
   const { user, loading, accessToken } = useAuth();
@@ -191,7 +192,9 @@ export default function PastEntryPage() {
                       className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65]"
                       style={{ color: C.navy }}
                     >
-                      {entry.mood_id ? `Mood: ${entry.mood_id}` : 'Mood: -'}
+                      {entry.mood_name
+                        ? `Mood: ${toTitleCase(entry.mood_name)}`
+                        : 'Mood: -'}
                     </p>
 
                     {/* button to insights page */}

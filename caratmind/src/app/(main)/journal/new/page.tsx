@@ -17,6 +17,7 @@ export default function NewEntryPage() {
   const { user, loading, accessToken } = useAuth();
   const [entry, setEntry] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [saving, setSaving] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
 
@@ -27,7 +28,11 @@ export default function NewEntryPage() {
 
   async function saveEntry(status: StatusKey) {
     if (!entry.trim()) return;
-    setSubmitting(true);
+    if (status === 'draft') {
+      setSaving(true);
+    } else {
+      setSubmitting(true);
+    }
     try {
       const res = await fetch('/api/journal/new', {
         method: 'POST',
@@ -44,11 +49,16 @@ export default function NewEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // navigate to view journal entry
-      // router.push('/journal/past');
+      // TODO: navigate to mood insight page
+      router.push('/journal/past');
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
-      setSubmitting(false);
+      if (status === 'draft') {
+        setSaving(false);
+      } else {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -118,17 +128,19 @@ export default function NewEntryPage() {
             {/* submit button */}
             <button
               onClick={handleSubmit}
+              disabled={submitting}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
-              {'Submit'}
+              {submitting ? 'Submitting...' : 'Submit Entry'}
             </button>
 
             {/* save draft button */}
             <button
               onClick={handleSave}
+              disabled={saving}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
-              {'Save as Draft'}
+              {saving ? 'Saving...' : 'Save as Draft'}
             </button>
           </div>
         </div>

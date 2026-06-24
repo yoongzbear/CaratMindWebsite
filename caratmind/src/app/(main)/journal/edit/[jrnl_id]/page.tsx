@@ -22,6 +22,7 @@ export default function EditEntryPage() {
   const [fetchingJournal, setFetchingJournal] = useState(false);
   const [journal, setJournal] = useState<JournalDetail | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!accessToken || !jrnl_id) return;
@@ -65,7 +66,11 @@ export default function EditEntryPage() {
       return;
     }
 
-    setSubmitting(true);
+    if (status === 'draft') {
+      setSaving(true);
+    } else {
+      setSubmitting(true);
+    }
 
     try {
       const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
@@ -86,7 +91,11 @@ export default function EditEntryPage() {
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
-      setSubmitting(false);
+      if (status === 'draft') {
+        setSaving(false);
+      } else {
+        setSubmitting(false);
+      }
     }
   }
 
@@ -207,17 +216,19 @@ export default function EditEntryPage() {
             {/* submit button */}
             <button
               onClick={handleSubmit}
+              disabled={submitting}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
-              {'Submit'}
+              {submitting ? 'Submitting…' : 'Submit Entry'}
             </button>
 
             {/* save draft button */}
             <button
               onClick={handleSave}
+              disabled={saving}
               className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
-              {'Save as Draft'}
+              {saving ? 'Saving...' : 'Save as Draft'}
             </button>
           </div>
         </div>

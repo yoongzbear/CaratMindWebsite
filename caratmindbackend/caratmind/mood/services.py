@@ -2,8 +2,10 @@
 
 import logging
 
+from journal.dynamodb_service import update_journal_mood
+
 from .model_service import predict_mood
-from .dynamodb_service import create_mood_entry
+from .dynamodb_service import create_mood
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +17,15 @@ def detect_store_mood(jrnl_id: str, user_id: str, entry_text: str) -> None:
     """
     try:
         result = predict_mood(entry_text)
-        create_mood_entry(jrnl_id, user_id, result)
+        # returns "mood_name","mood_confidence", "mood_explain", 
+    
+        mood_item = create_mood(jrnl_id, user_id, result)
+
+        # update mood in journal entry db 
+        update_journal_mood(jrnl_id, mood_item['mood_id'], mood_item['mood_name'])
+
+        # TODO: call exercise recommender here, e.g.
+        # recommend_exercise(user_id, mood_item['mood_name'])
+        
     except Exception:
         logger.exception("Mood detection failed for jrnl_id=%s", jrnl_id)

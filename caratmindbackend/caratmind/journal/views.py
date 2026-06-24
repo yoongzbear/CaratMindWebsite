@@ -16,6 +16,7 @@ from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
 from .s3_service import get_entry_text
 
 VALID_STATUSES = {'draft', 'submitted'}
+PREVIEW_LENGTH = 200 # 200 characters
 
 # new journal
 @csrf_exempt
@@ -51,8 +52,7 @@ def create_journal_view(request):
         upload_entry_text(entry_key, entry_text)
     except Exception as e:
         return JsonResponse({'error': f'Failed to store entry: {e}'}, status=500)
-    
-    PREVIEW_LENGTH = 150
+        
     preview_text = entry_text.strip()[:PREVIEW_LENGTH]
 
     item = {
@@ -164,7 +164,7 @@ def update_journal_view(request, jrnl_id):
     if not entry_text.strip():
         return JsonResponse({'error': 'Entry text is required'}, status=400)
 
-    jrnl_preview = entry_text.strip()[:150]
+    jrnl_preview = entry_text.strip()[:PREVIEW_LENGTH]
 
     try:
         upload_entry_text(

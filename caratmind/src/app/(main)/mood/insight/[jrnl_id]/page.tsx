@@ -11,6 +11,7 @@ import {
   styles,
 } from '@/app/styles/styles';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
+import { toTitleCase } from '@/app/utils/format';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
@@ -56,6 +57,10 @@ export default function MoodInsightPage() {
         setFetchingJournal(false);
       }
     }
+
+    // TODO: loadMood
+
+    // TODO: loadExercise
 
     loadEntry();
   }, [jrnl_id, accessToken]);
@@ -233,7 +238,7 @@ export default function MoodInsightPage() {
                 disabled={submitting}
                 className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
-                {submitting ? 'Submitting…' : 'Submit Entry'}
+                {submitting ? 'Submitting...' : 'Submit Entry'}
               </button>
             )}
 
@@ -287,7 +292,7 @@ export default function MoodInsightPage() {
                   className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                   style={{ color: C.navy }}
                 >
-                  {journal.mood_id ?? 'Unknown'}
+                  {toTitleCase(journal.mood_name) ?? 'Unknown'}
                 </h5>
               </>
             )}
@@ -305,12 +310,8 @@ export default function MoodInsightPage() {
               >
                 {/* explanation mood  */}
                 <p style={styles.pText}>
-                  <b>Your happy mood was because of </b>nec ipsum blandit, sed
-                  ullamcorper sapien accumsan. Aliquam eget augue fringilla,
-                  porttitor purus nec, venenatis ex. Donec ut tortor lectus.
-                  Pellentesque sed malesuada turpis. Donec semper aliquet ipsum
-                  eu auctor. Duis ut diam nisl. Maecenas suscipit tempor nibh
-                  vel egestas.
+                  {/* TODO: retrieve from mood table */}
+                  {toTitleCase(journal.mood_name) ?? 'Unknown'}
                 </p>
               </div>
             </>
