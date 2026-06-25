@@ -213,7 +213,7 @@ export default function MoodInsightPage() {
           </div>
 
           <div
-            className="px-3 py-2.5"
+            className="px-4 py-2 rounded-xl"
             style={{ border: `1px solid ${C.border}` }}
           >
             <p
