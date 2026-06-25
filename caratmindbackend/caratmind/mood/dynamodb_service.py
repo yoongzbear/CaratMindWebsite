@@ -49,7 +49,7 @@ def get_user_mood_on_date(user_id: str, date_str: str) -> list[dict]:
     return items
 
 # by ID
-def get_mood_by_id(mood_id: str) -> dict | None:
+def get_mood_by_id(jrnl_id: str) -> dict | None:
     table = _get_table()
-    response = table.get_item(Key={'mood_id': mood_id})
+    response = table.get_item(Key={'jrnl_id': jrnl_id})
     return response.get('Item')

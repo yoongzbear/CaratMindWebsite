@@ -50,7 +50,8 @@ export default function NewEntryPage() {
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // navigate to view journal entry
       // TODO: navigate to mood insight page
-      router.push('/journal/past');
+      // router.push('/journal/past');
+      router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

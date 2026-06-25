@@ -6,7 +6,6 @@ export type Mood = {
   mood_timestamp: string;
   jrnl_id: string;
   user_id: string;
-  // mood_confidence: number;
 };
 
 // export type MoodName = {

@@ -87,7 +87,9 @@ export default function EditEntryPage() {
         return;
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
+      // route to mood insight page
       router.back();
+      // router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

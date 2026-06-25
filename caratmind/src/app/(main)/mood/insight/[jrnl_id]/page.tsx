@@ -11,6 +11,7 @@ import {
   styles,
 } from '@/app/styles/styles';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
+import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
@@ -32,9 +33,12 @@ export default function MoodInsightPage() {
   const [openDetail, setopenDetail] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [fetchingMoodData, setFetchingMoodData] = useState(false);
+  const [moodData, setMoodData] = useState<Mood | null>(null);
+  const [fetchingExercise, setFetchingExercise] = useState(false);
 
   useEffect(() => {
-    if (!accessToken || !jrnl_id) return;
+    if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
 
     async function loadEntry() {
       setFetchingJournal(true);
@@ -58,11 +62,30 @@ export default function MoodInsightPage() {
       }
     }
 
-    // TODO: loadMood
+    async function loadMood() {
+      setFetchingMoodData(true);
+      try {
+        const res = await fetch(`/api/mood/${jrnl_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load mood.');
+          setMoodData(null);
+          return;
+        }
+        setMoodData(data);
+      } catch {
+        toastError('Something went wrong loading the mood.');
+      } finally {
+        setFetchingMoodData(false);
+      }
+    }
 
     // TODO: loadExercise
 
     loadEntry();
+    loadMood();
   }, [jrnl_id, accessToken]);
 
   // update entry
@@ -220,7 +243,8 @@ export default function MoodInsightPage() {
                 new Date(journal.jrnl_updated_at),
                 'd MMMM yyyy, p',
               )}
-              entry={journal.entryText}
+              // entry={journal.entryText}
+              journal={journal}
             />
 
             {/* edit entry */}
@@ -274,6 +298,7 @@ export default function MoodInsightPage() {
           </p>
           <div className="flex flex-col items-center">
             {/* mood icon */}
+            {/* {!moodData?.mood_id ? ( */}
             {!journal?.mood_id ? (
               <h5
                 className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
@@ -292,13 +317,14 @@ export default function MoodInsightPage() {
                   className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                   style={{ color: C.navy }}
                 >
+                  {/* {toTitleCase(journal.mood_name) ?? 'Unknown'} */}
                   {toTitleCase(journal.mood_name) ?? 'Unknown'}
                 </h5>
               </>
             )}
           </div>
 
-          {journal?.mood_id && (
+          {moodData?.mood_id && (
             <>
               <div
                 className="rounded-[10px] border mb-3.75 p-2.5"
@@ -308,10 +334,19 @@ export default function MoodInsightPage() {
                   border: '1px solid #eef2f9',
                 }}
               >
+                {/* mood confidence */}
+                <p style={{ ...styles.pText, color: C.faint }}>
+                  {/* TODO: retrieve from mood table */}
+                  Confidence:{' '}
+                  {moodData.mood_confidence
+                    ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
+                    : 'Unknown'}
+                </p>
+
                 {/* explanation mood  */}
                 <p style={styles.pText}>
                   {/* TODO: retrieve from mood table */}
-                  {toTitleCase(journal.mood_name) ?? 'Unknown'}
+                  {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
                 </p>
               </div>
             </>
