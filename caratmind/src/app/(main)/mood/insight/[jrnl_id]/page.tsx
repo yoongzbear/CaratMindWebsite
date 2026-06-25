@@ -13,6 +13,7 @@ import {
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
+import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
@@ -243,7 +244,6 @@ export default function MoodInsightPage() {
                 new Date(journal.jrnl_updated_at),
                 'd MMMM yyyy, p',
               )}
-              // entry={journal.entryText}
               journal={journal}
             />
 
@@ -299,7 +299,7 @@ export default function MoodInsightPage() {
           <div className="flex flex-col items-center">
             {/* mood icon */}
             {/* {!moodData?.mood_id ? ( */}
-            {!journal?.mood_id ? (
+            {!moodData?.mood_id ? (
               <h5
                 className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
@@ -311,14 +311,15 @@ export default function MoodInsightPage() {
               <>
                 {/* mood emoji */}
                 <div className="relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
-                  <Eye size={16} />
+                  {/* <Eye size={16} /> */}
+                  {getMoodEmoji(moodData?.mood_name)}
                 </div>
                 <h5
                   className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                   style={{ color: C.navy }}
                 >
                   {/* {toTitleCase(journal.mood_name) ?? 'Unknown'} */}
-                  {toTitleCase(journal.mood_name) ?? 'Unknown'}
+                  {toTitleCase(moodData.mood_name) ?? 'Unknown'}
                 </h5>
               </>
             )}
