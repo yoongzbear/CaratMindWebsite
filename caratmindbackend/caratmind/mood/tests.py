@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from mood.model_service import predict_mood, predict_mood_aggregated
+from mood.model_service import predict_mood
 
 # Create your tests here.
 
@@ -20,8 +20,6 @@ samples = [
 for text in samples:
     resultA = predict_mood(text)
     print("predict mood", resultA)
-    resultB = predict_mood_aggregated(text)
-    print("aggregated", resultB)
 
 # 160 words
 samples = [    

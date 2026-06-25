@@ -120,7 +120,8 @@ export default function MoodInsightPage() {
           ? {
               ...prev,
               jrnl_status: status,
-              jrnl_preview: content.slice(0, 150),
+              // jrnl_preview: content.slice(0, 150),
+              // jrnl_preview: content,
             }
           : prev,
       );
@@ -211,21 +212,19 @@ export default function MoodInsightPage() {
             </Pill>
           </div>
 
-          <textarea
-            disabled
-            className="w-full h-24 px-3 py-2.5 border-none resize-none rounded-lg sm:text-[14px] md:text-[16px] bg-white box-border outline-none font-inherit"
-            value={
-              journal.jrnl_preview
-                ? journal.jrnl_preview.length >= 150
-                  ? `${journal.jrnl_preview}…`
-                  : journal.jrnl_preview
-                : 'No preview available.'
-            }
-            style={{
-              border: `1px solid ${C.border}`,
-              color: C.navy,
-            }}
-          ></textarea>
+          <div
+            className="px-3 py-2.5"
+            style={{ border: `1px solid ${C.border}` }}
+          >
+            <p
+              className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word sm:text-[14px] md:text-[16px]"
+              style={{
+                color: C.navy,
+              }}
+            >
+              {journal.entryText ? journal.entryText : 'No preview available.'}
+            </p>
+          </div>
 
           <div className="flex gap-10 mt-3">
             {/* view more button */}
@@ -250,7 +249,7 @@ export default function MoodInsightPage() {
             {/* edit entry */}
             <button
               onClick={() => handleEdit(journal.jrnl_id)}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               Edit Entry
             </button>
@@ -301,7 +300,7 @@ export default function MoodInsightPage() {
             {/* {!moodData?.mood_id ? ( */}
             {!moodData?.mood_id ? (
               <h5
-                className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
+                className="m-5 sm:text-[28px] md:text-[32px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
               >
                 Mood not available yet. Submit your entry to see your mood
@@ -310,8 +309,7 @@ export default function MoodInsightPage() {
             ) : (
               <>
                 {/* mood emoji */}
-                <div className="relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
-                  {/* <Eye size={16} /> */}
+                <div className="relative mb-2 sm:text-[20px] md:text-[24px] z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
                   {getMoodEmoji(moodData?.mood_name)}
                 </div>
                 <h5
@@ -337,7 +335,6 @@ export default function MoodInsightPage() {
               >
                 {/* mood confidence */}
                 <p style={{ ...styles.pText, color: C.faint }}>
-                  {/* TODO: retrieve from mood table */}
                   Confidence:{' '}
                   {moodData.mood_confidence
                     ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
@@ -346,7 +343,6 @@ export default function MoodInsightPage() {
 
                 {/* explanation mood  */}
                 <p style={styles.pText}>
-                  {/* TODO: retrieve from mood table */}
                   {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
                 </p>
               </div>

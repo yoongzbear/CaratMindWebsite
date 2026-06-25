@@ -16,7 +16,7 @@ from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
 from .s3_service import get_entry_text
 
 VALID_STATUSES = {'draft', 'submitted'}
-PREVIEW_LENGTH = 200 # 200 characters
+PREVIEW_LENGTH = 150 # 150 characters
 
 # new journal
 @csrf_exempt

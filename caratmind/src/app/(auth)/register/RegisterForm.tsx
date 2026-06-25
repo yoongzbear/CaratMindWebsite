@@ -192,8 +192,8 @@ export function RegisterForm({
                 onChange={(e) => setConsent(e.target.checked)}
               />
               <label style={styles.label}>
-                I acknowledge my data such as journal entries will be used for
-                data processing by AI
+                I am <b>above 18</b> and I acknowledge my data such as journal
+                entries will be used for data processing by AI
               </label>
             </div>
           </>

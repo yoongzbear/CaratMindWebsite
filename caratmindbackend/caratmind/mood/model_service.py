@@ -132,7 +132,7 @@ def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
                 "Explain why this mood appear.\n\n"
                 "Rules:\n"
                 "- 1 to 2 sentences only\n"
-                "- Must reference or quote exact phrases from the journal\n"
+                "- Must reference or quote phrases from the journal within the 2 sentences only\n"
                 "- Do not mention the confidence scores explicitly\n"
                 "- If the mood is mixed, mention it is the closest but do not assume what mood other than the actual detected mood\n"
                 "- Refer to the author as 'you'\n"
