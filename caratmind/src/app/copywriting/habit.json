@@ -1,0 +1,37 @@
+[
+  {
+    "hab_id": { "S": "" },
+    "hab_question": { "S": "Have you done basic breathing technique?" },
+    "hab_actions": {
+      "L": [{ "S": "Yes" }, { "S": "Yes" }, { "S": "Yes" }]
+    }
+  },
+  {
+    "hab_id": { "S": "" },
+    "hab_question": { "S": "Have you drank at least 9 cups of water today?" },
+    "hab_actions": {
+      "L": [{ "S": "Yes" }, { "S": "Halfway" }, { "S": "Not yet" }]
+    }
+  },
+  {
+    "hab_id": { "S": "" },
+    "hab_question": { "S": "" },
+    "hab_actions": {
+      "L": [{ "S": "Yes" }, { "S": "Yes" }, { "S": "Yes" }]
+    }
+  },
+  {
+    "hab_id": { "S": "" },
+    "hab_question": { "S": "" },
+    "hab_actions": {
+      "L": [{ "S": "Yes" }, { "S": "Yes" }, { "S": "Yes" }]
+    }
+  },
+  {
+    "hab_id": { "S": "" },
+    "hab_question": { "S": "" },
+    "hab_actions": {
+      "L": [{ "S": "Yes" }, { "S": "Yes" }, { "S": "Yes" }]
+    }
+  }
+]

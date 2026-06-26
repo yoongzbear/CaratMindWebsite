@@ -108,6 +108,9 @@ export default function ExerciseCatalogPage() {
               amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
               nec cursus turpis, in pretium diam. Aenean vitae placerat ni...
             </p>
+            {/* steps.forEach((step, index) => {
+  console.log(`${index + 1}. ${step}`);
+}); */}
             <button
               onClick={() => setopenDetail(true)}
               className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}

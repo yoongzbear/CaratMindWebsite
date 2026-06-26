@@ -1,0 +1,281 @@
+[
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "Basic Breathing Technique"
+    },
+    "exc_type": {
+      "S": "breathing"
+    },
+    "exc_mood": {
+      "S": "all"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "Stay in a relaxed state and drop your shoulders."
+        },
+        {
+          "S": "Breathe in through your nose and inflate your stomach in 4 to 5 counts."
+        },
+        {
+          "S": "Breathe out in 4 to 5 counts through your nose or mouth and deflate your stomach."
+        },
+        {
+          "S": "Repeat 5 times in a set."
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "Deep Breathing Technique"
+    },
+    "exc_type": {
+      "S": "breathing"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "Sit straight in a relaxed state and drop your shoulders."
+        },
+        {
+          "S": "Breathe in for 4 counts."
+        },
+        {
+          "S": "Hold your breath for 16 counts."
+        },
+        {
+          "S": "Breathe out for 8 counts through your mouth."
+        },
+        {
+          "S": "Repeat 3 times in a set."
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  },
+  {
+    "exc_id": {
+      "S": "value-auto generate"
+    },
+    "exc_name": {
+      "S": "value-auto generate"
+    },
+    "exc_type": {
+      "S": "value-auto generate"
+    },
+    "exc_mood": {
+      "S": "value-auto generate"
+    },
+    "exc_steps": {
+      "L": [
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        },
+        {
+          "S": "value-auto generate"
+        }
+      ]
+    }
+  }
+]
