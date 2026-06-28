@@ -3,5 +3,6 @@ export type Exercise = {
   exc_name: string;
   exc_type: string;
   exc_mood: string;
+  exc_desc: string;
   exc_step: string;
 };

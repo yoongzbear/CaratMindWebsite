@@ -100,6 +100,7 @@ export default function ExerciseCatalogPage() {
               </Pill>
               {/* exercise type */}
               <Pill>Breathing</Pill>
+              {/* TODO: add disclaimer to check with medical professional before starting the exercise */}
             </div>
             {/* desc - max 3 lines*/}
             <p style={styles.pText}>

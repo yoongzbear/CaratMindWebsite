@@ -1,51 +1,33 @@
-// TODO: replace with lucide react icon
 const MOOD_EMOJIS: Record<string, string> = {
-  joy: '😊',
-  happiness: '😊',
-  sadness: '😢',
-  anger: '😠',
-  annoyance: '😒',
-  fear: '😨',
-  surprise: '😲',
-  disgust: '🤢',
-  neutral: '😐',
-  love: '🥰',
-  gratitude: '🙏',
-  excitement: '🤩',
-  anxiety: '😰',
-  confusion: '😕',
-  embarrassment: '😳',
-  pride: '😌',
-  relief: '😅',
-  disappointment: '😞',
-  grief: '😭',
-  nervousness: '😬',
-  optimism: '🙂',
-  caring: '🤗',
-  curiosity: '🤔',
-  admiration: '😍',
+  admiration: '🤩',
   amusement: '😄',
+  anger: '😠',
+  annoyance: '🙄',
   approval: '👍',
-  disapproval: '👎',
+  caring: '🤗',
+  confusion: '😕',
+  curiosity: '🤔',
   desire: '😏',
-  remorse: '😔',
+  disappointment: '😞',
+  disapproval: '👎',
+  disgust: '🤢',
+  embarrassment: '😳',
+  excitement: '🤩',
+  fear: '😱',
+  gratitude: '🙏',
+  grief: '😭',
+  joy: '😊',
+  love: '🥰',
+  nervousness: '😰',
+  neutral: '😐',
+  optimism: '🙂',
+  pride: '👑',
   realization: '💡',
+  relief: '😌',
+  remorse: '😔',
+  sadness: '😢',
+  surprise: '😲',
 };
-
-// Admiration	🤩	Love	❤️
-// Amusement	😄	Nervousness	😰
-// Anger	😠	Optimism	✨
-// Annoyance	🙄	Pride	👑
-// Approval	👍	Realization	💡
-// Caring	🤗	Relief	😌
-// Confusion	😕	Remorse	😔
-// Curiosity	🤔	Sadness	😢
-// Desire	🔥	Surprise	😲
-// Disappointment	😞	Disapproval	👎
-// Disgust	🤢	Gratitude	🙏
-// Embarrassment	😳	Grief	😭
-// Excitement	🎉	Joy	😊
-// Fear	😱	Neutral	😐
 
 export function getMoodEmoji(moodName?: string | null): string {
   if (!moodName) return '🙂';
