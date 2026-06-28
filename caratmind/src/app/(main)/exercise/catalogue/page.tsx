@@ -8,29 +8,48 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
+import { dropdownStyle } from '@/app/styles/ui';
+import { Exercise } from '@/app/types/exercise';
 import { useAuth } from '@/context/AuthContext';
-import { useRef, useState } from 'react';
+import { toastError } from '@/utils/toast';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function ExerciseCatalogPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, accessToken } = useAuth();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [openDetail, setopenDetail] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
+    null,
+  );
+  const [fetching, setFetching] = useState(false);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
-  // const viewMore = () => {
-  //   Swal.fire({
-  //     title: 'Exercise 1',
-  //     // text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget lectus lectus. Vestibulum id nisi odio. Maecenas nisi lectus, tempor in augue quis, dapibus viverra ligula. Nunc vitae varius velit. Maecenas elementum, arcu quis iaculis sollicitudin, mauris mauris consectetur nulla, sit amet venenatis mi urna quis risus. Aliquam erat volutpat. Nam interdum lorem felis, id malesuada dolor pharetra pharetra. Donec a cursus lorem. Duis quam erat, interdum sit amet nulla vel, lobortis egestas justo. Quisque convallis id felis et laoreet. Cras egestas, arcu a aliquet bibendum, risus diam vestibulum nulla, eu egestas dolor odio eu turpis. Nunc quis dapibus arcu. Mauris pellentesque, quam ut imperdiet cursus, eros dolor consequat ipsum, vitae porta felis nisi at dolor. Ut sollicitudin mauris non neque malesuada facilisis.',
-  //     // html:
-  //     width: 1000,
-  //     didOpen: () => {
-  //       const title = Swal.getTitle();
-  //       const content = Swal.getHtmlContainer();
-  //       if (title) title.style.textAlign = 'left';
-  //       if (content) content.style.textAlign = 'justify';
-  //     },
-  //   });
-  // };
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadEntries() {
+      setFetching(true);
+      try {
+        const res = await fetch(`/api/exercise/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load coping exercises.');
+          setExercises([]);
+          return;
+        }
+        setExercises(data.exercises ?? []);
+      } catch {
+        toastError('Something went wrong loading coping exercises.');
+      } finally {
+        setFetching(false);
+      }
+    }
+
+    loadEntries();
+  }, [accessToken]);
 
   return (
     <section
@@ -41,7 +60,10 @@ export default function ExerciseCatalogPage() {
     >
       <div className="w-[90%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0' }}>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
             Coping Exercise Catalogue
           </h1>
         </header>
@@ -57,9 +79,8 @@ export default function ExerciseCatalogPage() {
           <div className="flex w-full gap-5">
             {/* search */}
             <div className="w-50">
-              {/* <label style={styles.label}>Start date</label> */}
               <input
-                className="w-full"
+                className="w-full sm:text-[14px] md:text-[16px]"
                 style={styles.input}
                 type="search"
                 placeholder="Search Exercise..."
@@ -68,8 +89,11 @@ export default function ExerciseCatalogPage() {
 
             {/* mood dropdown */}
             <div className="w-40">
-              {/* <label style={styles.label}>Period</label> */}
-              <select className="w-full" style={styles.dropdown}>
+              <select
+                // className={`w-full sm:text-[14px] md:text-[16px] ${dropdownStyle}`}
+                style={styles.dropdown}
+                // style={{ border: `1px solid ${C.border}`, color: C.navy }}
+              >
                 <option>Select Mood</option>
               </select>
             </div>
@@ -84,53 +108,61 @@ export default function ExerciseCatalogPage() {
           </div>
 
           {/* exercise card */}
-          <div
-            className="rounded-[10px] border mb-3.75 p-2.5"
-            style={{
-              backgroundColor: 'white',
-              boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-              border: '1px solid #eef2f9',
-            }}
-          >
-            <h1 style={styles.header1}>Exercise 1</h1>
-            <div className="flex gap-3 mb-2">
-              {/* mood */}
-              <Pill bgColor="#edf9f0" borderColor="#cdebd5" textColor="#2e7d32">
-                Happy
-              </Pill>
-              {/* exercise type */}
-              <Pill>Breathing</Pill>
-              {/* TODO: add disclaimer to check with medical professional before starting the exercise */}
-            </div>
-            {/* desc - max 3 lines*/}
-            <p style={styles.pText}>
-              Proin in odio sodales, sagittis tortor a, mollis eros. Vestibulum
-              vitae bibendum sapien. In at euismod diam. Vivamus sed tellus sit
-              amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
-              nec cursus turpis, in pretium diam. Aenean vitae placerat ni...
-            </p>
-            {/* steps.forEach((step, index) => {
-  console.log(`${index + 1}. ${step}`);
-}); */}
-            <button
-              onClick={() => setopenDetail(true)}
-              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+          {exercises.map((ex) => (
+            <div
+              key={ex.exc_id}
+              className="rounded-[10px] border mb-3.75 p-2.5"
+              style={{
+                backgroundColor: 'white',
+                boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                border: '1px solid #eef2f9',
+              }}
             >
-              {'View More'}
-            </button>
+              <h1 style={styles.header1}>{ex.exc_name}</h1>
 
+              <div className="flex gap-3 mb-2">
+                <Pill
+                  bgColor="#edf9f0"
+                  borderColor="#cdebd5"
+                  textColor="#2e7d32"
+                >
+                  {Array.isArray(ex.exc_mood) ? ex.exc_mood[0] : ex.exc_mood}
+                </Pill>
+
+                <Pill>{ex.exc_type}</Pill>
+              </div>
+
+              <p style={styles.pText}>
+                {ex.exc_desc.length > 180
+                  ? ex.exc_desc.slice(0, 180) + '...'
+                  : ex.exc_desc}
+              </p>
+
+              <button
+                onClick={() => {
+                  setSelectedExercise(ex);
+                  setOpenDetail(true);
+                }}
+                className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              >
+                View More
+              </button>
+            </div>
+          ))}
+          {selectedExercise && (
             <ExerciseDetailModal
               open={openDetail}
-              onClose={() => setopenDetail(false)}
-              name="Exercise 1"
-              mood="Happy"
-              type="Breathing"
-              steps="Proin in odio sodales, sagittis tortor a, mollis eros. Vestibulum
-              vitae bibendum sapien. In at euismod diam. Vivamus sed tellus sit
-              amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
-              nec cursus turpis, in pretium diam. Aenean vitae placerat ni..."
+              onClose={() => setOpenDetail(false)}
+              name={selectedExercise.exc_name}
+              mood={
+                Array.isArray(selectedExercise.exc_mood)
+                  ? selectedExercise.exc_mood.join(', ')
+                  : selectedExercise.exc_mood
+              }
+              type={selectedExercise.exc_type}
+              steps={selectedExercise.exc_steps}
             />
-          </div>
+          )}
         </div>
       </div>
     </section>

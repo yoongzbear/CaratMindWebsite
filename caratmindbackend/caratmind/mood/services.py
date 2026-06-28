@@ -19,6 +19,7 @@ def detect_store_mood(jrnl_id: str, user_id: str, entry_text: str) -> None:
         result = predict_mood(entry_text)
         # returns "mood_name","mood_confidence", "mood_explain", 
     
+        # save in mood table
         mood_item = create_mood(jrnl_id, user_id, result)
 
         # update mood in journal entry db 

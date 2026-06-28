@@ -10,9 +10,9 @@ type Props = {
   open: boolean;
   onClose: () => void;
   name: string;
-  mood: string; // TODO: change to mood enum
+  mood: string | string[];
   type: string;
-  steps: string; // TODO: check again
+  steps: string[];
 };
 
 export default function ExerciseDetailModal({
@@ -24,7 +24,7 @@ export default function ExerciseDetailModal({
   steps,
 }: Props) {
   return (
-    <Modal open={open} onClose={onClose} width={700} title={name}>
+    <Modal open={open} onClose={onClose} width={900} title={name}>
       <div className="flex gap-3 mb-3">
         <Pill bgColor="#edf9f0" borderColor="#cdebd5" textColor="#2e7d32">
           {mood}
@@ -33,7 +33,13 @@ export default function ExerciseDetailModal({
         <Pill>{type}</Pill>
       </div>
 
-      <p style={styles.pText}>{steps}</p>
+      <ol className="list-decimal pl-5 space-y-2">
+        <p style={styles.pText}>
+          {steps.map((step, index) => (
+            <li key={index}>{step}</li>
+          ))}
+        </p>
+      </ol>
     </Modal>
   );
 }

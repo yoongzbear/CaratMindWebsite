@@ -74,8 +74,7 @@ def create_journal_view(request):
         create_journal_entry(item)
         # detect mood if entry submitted
         if status == 'submitted':            
-            detect_store_mood(jrnl_id, sub, entry_text)
-            # TODO: update journal table for mood
+            detect_store_mood(jrnl_id, sub, entry_text)            
             
     except Exception as e:
         return JsonResponse({'error': f'Failed to save entry metadata: {e}'}, status=500)
