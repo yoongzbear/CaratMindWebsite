@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from exercise.recommender import recommend_exercise
 from mood.model_service import predict_mood
 
 # Create your tests here.
@@ -7,7 +8,7 @@ from mood.model_service import predict_mood
 # python manage.py shell < mood/test_local.py
 # exit()
 
-samples = [
+samples_1 = [
     "Today I went to my class and learned something new. I only have one class today and I had to spend more than 2 hours to go to class. It is so tiring to go to only one class a day.", 
     "I am very happy today because I got to eat potato chips.", # joy
     "I will get my semester results later this week, I am so afraid of the results", 
@@ -17,9 +18,14 @@ samples = [
     "I got chocolate as reward from my lecturer for answering the questions, but I feel a bit bad for stealing my classmate's chance of getting one because I answered the question he was answering"
 ]
 
-for text in samples:
-    resultA = predict_mood(text)
-    print("predict mood", resultA)
+def run_samples(samples):
+    for text in samples:
+        result = predict_mood(text)
+        print("predict mood", result)
+        exercise = recommend_exercise(user_id="test-user-local", jrnl_id=f"test-jrnl", mood_name=result['mood_name'], mood_confidence=result['mood_confidence'])
+        print("recommended:", exercise.get('exc_name') if exercise else None)
+
+run_samples(samples_1)
 
 # 160 words
 samples = [    

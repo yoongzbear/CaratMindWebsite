@@ -47,19 +47,17 @@ DEFAULT_TYPE_PRIORITY = ["breathing", "mindfulness"]
 
 LOW_INTENSITY_TYPES = {"breathing", "mindfulness"}
 
-
 def _type_rank(exc_type: str, priority_list: list[str]) -> int:
     try:
         return priority_list.index(exc_type)
     except ValueError:
         return len(priority_list)
-
-
+    
 def pick_best_exercise(
     candidates: list[dict],
     *,
     mood_name: str,
-    is_mixed: bool,
+    # is_mixed: bool,
     mood_confidence: float,
     recent_exc_names: list[str],
 ) -> dict | None:
@@ -68,8 +66,8 @@ def pick_best_exercise(
     1. Exclude recently-recommended exercises; fall back to allowing
        repeats if everything was filtered out (or pool was empty).
     2. Rank by the mood's preferred exc_type priority order.
-    3. If mood is mixed/low-confidence, bias toward low-intensity types.
-    Returns the single best match, or None if no candidates exist at all.
+    # 3. If mood is mixed/low-confidence, bias toward low-intensity types.
+    Returns the single best match, or None if no candidates exist at all - handled in recommender.py
     """
     if not candidates:
         return None
@@ -79,7 +77,8 @@ def pick_best_exercise(
         pool = candidates
 
     priority_list = MOOD_TYPE_PRIORITY.get(mood_name, DEFAULT_TYPE_PRIORITY)
-    uncertain = is_mixed or mood_confidence < 0.5
+    # uncertain = is_mixed or mood_confidence < 0.5
+    uncertain = mood_confidence < 0.5
 
     def score(c: dict) -> tuple:
         type_score = -_type_rank(c.get('exc_type', ''), priority_list)

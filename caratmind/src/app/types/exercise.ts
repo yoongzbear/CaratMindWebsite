@@ -13,10 +13,12 @@ export type UserExercise = {
   exc_id: string;
   jrnl_id: string;
   exc_name: string;
-  uex_status: string;
+  uex_status: ExerciseStatusKey;
   uex_rating?: string;
   uex_reason?: string;
   uex_created_at: string;
   uex_done_date?: string;
   user_id: string;
 };
+
+export type ExerciseStatusKey = 'incomplete' | 'completed';

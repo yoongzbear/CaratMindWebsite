@@ -5,7 +5,6 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 from caratmind import settings
 
-
 def _get_exercise_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
     return resource.Table(settings.DYNAMODB_EXERCISE_TABLE)
@@ -57,17 +56,37 @@ def get_exercises_for_mood(mood_name: str) -> list[dict]:
 
     return items
 
+# default exercise if no candidate available
+FALLBACK_EXC_NAME = "Basic Breathing Technique"
+def get_default_exercise() -> dict | None:
+    """
+    Universal safe default when no mood-matched candidates exist.
+    Looked up by name rather than hardcoded, so editing the row in
+    DynamoDB is reflected automatically.
+    """
+    table = _get_exercise_table()
+    response = table.scan(
+        FilterExpression=Attr('exc_name').eq(FALLBACK_EXC_NAME)
+    )
+    items = response.get('Items', [])
+    return items[0] if items else None
+
 # save coping exercise recommendation
-def save_exercise_recommendation(user_id: str, jrnl_id: str, mood_name: str, exercise: dict) -> dict:
+def create_exercise_recommendation(user_id: str, jrnl_id: str, exercise: dict) -> dict:
     table = _get_user_exercise_table()
     item = {
         'uex_id': jrnl_id, # use jrnl ID - 1 to 1
         'user_id': user_id,
         'jrnl_id': jrnl_id,
-        'mood_name': mood_name,
+        'exc_id': exercise['exc_id'],
+        # 'mood_name': mood_name,
         'exc_name': exercise['exc_name'],
-        'exercises': exercise,  
-        'rec_timestamp': datetime.now(timezone.utc).isoformat(),
+        # 'exercises': exercise,  
+        'uex_status': 'incomplete',
+        'uex_rating': None,
+        'uex_reason': None,
+        'uex_created_at': datetime.now(timezone.utc).isoformat(),
+        'uex_done_date': None
     }
     table.put_item(Item=item)
     return item
