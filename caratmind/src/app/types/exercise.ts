@@ -6,3 +6,17 @@ export type Exercise = {
   exc_desc: string;
   exc_steps: string[];
 };
+
+// user exercise
+export type UserExercise = {
+  uex_id: string;
+  exc_id: string;
+  jrnl_id: string;
+  exc_name: string;
+  uex_status: string;
+  uex_rating?: string;
+  uex_reason?: string;
+  uex_created_at: string;
+  uex_done_date?: string;
+  user_id: string;
+};

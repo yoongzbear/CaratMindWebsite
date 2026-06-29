@@ -248,7 +248,7 @@ export default function ExerciseCatalogPage() {
                 </div>
 
                 <p
-                  className="w-full overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
+                  className="w-full pb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                   style={{ color: C.navy }}
                 >
                   {ex.exc_desc}

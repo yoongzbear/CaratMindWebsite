@@ -2,6 +2,7 @@
 
 import logging
 
+from exercise.recommender import recommend_exercise
 from journal.dynamodb_service import update_journal_mood
 
 from .model_service import predict_mood
@@ -24,9 +25,18 @@ def detect_store_mood(jrnl_id: str, user_id: str, entry_text: str) -> None:
 
         # update mood in journal entry db 
         update_journal_mood(jrnl_id, mood_item['mood_id'], mood_item['mood_name'])
-
-        # TODO: call exercise recommender here, e.g.
-        # recommend_exercise(user_id, mood_item['mood_name'])
-        
     except Exception:
         logger.exception("Mood detection failed for jrnl_id=%s", jrnl_id)
+        return
+
+    # TODO: call exercise recommender here
+    try:
+        recommend_exercise(
+            user_id=user_id,
+            jrnl_id=jrnl_id,
+            mood_name=mood_item['mood_name'],
+            mood_confidence=float(mood_item['mood_confidence']),
+            is_mixed=result.get('is_mixed', False),
+        )
+    except Exception:
+        logger.exception("Exercise recommendation failed for jrnl_id=%s", jrnl_id)
