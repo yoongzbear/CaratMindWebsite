@@ -10,6 +10,7 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
+import { UserExercise } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
@@ -27,7 +28,6 @@ export default function MoodInsightPage() {
   const { user, loading, accessToken } = useAuth();
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
-
   const router = useRouter();
   const [journal, setJournal] = useState<JournalDetail | null>(null);
   const [fetchingJournal, setFetchingJournal] = useState(false);
@@ -38,6 +38,7 @@ export default function MoodInsightPage() {
   const [fetchingMoodData, setFetchingMoodData] = useState(false);
   const [moodData, setMoodData] = useState<Mood | null>(null);
   const [fetchingExercise, setFetchingExercise] = useState(false);
+  const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
 
   useEffect(() => {
     if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
@@ -84,10 +85,31 @@ export default function MoodInsightPage() {
       }
     }
 
-    // TODO: loadExercise
+    async function loadRecExercise() {
+      setFetchingExercise(true);
+      try {
+        const res = await fetch(`/api/user_exercise/${jrnl_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(
+            data.error ?? 'Failed to load recommended coping exercise.',
+          );
+          setExerciseData(null);
+          return;
+        }
+        setExerciseData(data);
+      } catch {
+        toastError('Something went wrong loading recommended coping exercise.');
+      } finally {
+        setFetchingExercise(false);
+      }
+    }
 
     loadEntry();
     loadMood();
+    loadRecExercise();
   }, [jrnl_id, accessToken]);
 
   // update entry
@@ -346,6 +368,17 @@ export default function MoodInsightPage() {
                 <p style={styles.pText}>
                   {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
                 </p>
+
+                {/* disclaimer */}
+                <p
+                  className="sm:text-[12px] md:text-[14px] mt-0 mb-2.5 italic"
+                  style={{ color: C.faint }}
+                >
+                  Your mood is estimated using AI based on the submitted entry.
+                  The detected mood may not always accurately reflect your
+                  actual emotional state. Please refer to a professional for
+                  further advice or help.
+                </p>
               </div>
             </>
           )}
@@ -368,7 +401,7 @@ export default function MoodInsightPage() {
           </h3>
           <div className="flex flex-col items-center">
             {/* recommended exercise */}
-            {!journal.uex_id && (
+            {!journal.uex_id ? (
               <h5
                 className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
@@ -376,23 +409,39 @@ export default function MoodInsightPage() {
                 Exercise recommendation not available yet. Submit your entry
                 first.
               </h5>
+            ) : (
+              <>
+                <h5
+                  className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
+                  style={{ color: C.navy }}
+                >
+                  {exerciseData?.exc_name}
+                </h5>
+                <p
+                  className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+                  style={{ color: C.navy }}
+                >
+                  {exerciseData?.exercise.exc_desc}
+                </p>
+
+                {/* disclaimer */}
+                <p
+                  className="sm:text-[12px] md:text-[14px] mt-0 mb-2.5 italic w-full"
+                  style={{ color: C.faint }}
+                >
+                  AI-generated recommendation. Suggestions are not a substitute
+                  for professional medical or mental health advice.
+                </p>
+                {/* // perform exercise button */}
+                <button
+                  onClick={performExercise}
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                >
+                  {'Perform Exercise'}
+                </button>
+              </>
             )}
           </div>
-
-          <p style={styles.pText}>
-            <b>Your happy mood was because of </b>nec ipsum blandit, sed
-            ullamcorper sapien accumsan. Aliquam eget augue fringilla, porttitor
-            purus nec, venenatis ex. Donec ut tortor lectus. Pellentesque sed
-            malesuada turpis. Donec semper aliquet ipsum eu auctor. Duis ut diam
-            nisl. Maecenas suscipit tempor nibh vel egestas.
-          </p>
-          {/* perform exercise button */}
-          <button
-            onClick={performExercise}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-          >
-            {'Perform Exercise'}
-          </button>
         </div>
 
         {/* mood chart*/}

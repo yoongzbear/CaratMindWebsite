@@ -130,8 +130,9 @@ def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
                 "- 1 to 2 sentences only\n"
                 "- Must reference or quote phrases from the journal within the 2 sentences only\n"
                 "- Do not mention the confidence scores explicitly\n"
-                "- If the mood is mixed, mention it is the closest but do not assume what mood other than the actual detected mood\n"
-                "- Refer to the author as 'you'\n"
+                "- Only discuss the single detected mood. Never name, list, or reference any other mood/emotion, even to say they are absent or not present\n"
+                + ("- Since the mood is mixed, you may note that this is the closest interpretation, without naming any other specific mood\n" if is_mixed else "")
+                + "- Refer to the author as 'you'\n"
                 "- Ensure the grammar is proper\n"
             )
         }

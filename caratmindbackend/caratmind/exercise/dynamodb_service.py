@@ -102,3 +102,9 @@ def get_recent_exc_names(user_id: str, limit: int = 5) -> list[str]:
     for item in items[:limit]:
         names.extend(item.get('exc_names', []))
     return names
+
+# get user exercise
+def get_user_exercise_by_id(uex_id: str) -> dict | None:
+    table = _get_user_exercise_table()
+    response = table.get_item(Key={'jrnl_id': uex_id})
+    return response.get('Item')

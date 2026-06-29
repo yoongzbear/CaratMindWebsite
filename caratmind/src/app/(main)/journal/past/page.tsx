@@ -12,6 +12,7 @@ import { DayPicker } from '@daypicker/react';
 import Pill from '@/app/components/Pill';
 import { useRouter } from 'next/navigation';
 import { toTitleCase } from '@/app/utils/format';
+import { getMoodStyle } from '@/app/utils/moodEmoji';
 
 export default function PastEntryPage() {
   const { user, loading, accessToken } = useAuth();
@@ -188,14 +189,27 @@ export default function PastEntryPage() {
                     </p>
 
                     {/* mood */}
-                    <p
-                      className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65]"
-                      style={{ color: C.navy }}
-                    >
-                      {entry.mood_name
-                        ? `Mood: ${toTitleCase(entry.mood_name)}`
-                        : 'Mood: -'}
-                    </p>
+                    {entry.mood_name ? (
+                      <div className="my-1.5 leading-[1.65]">
+                        <Pill
+                          bgColor={getMoodStyle(entry.mood_name).bgColor}
+                          borderColor={
+                            getMoodStyle(entry.mood_name).borderColor
+                          }
+                          textColor={getMoodStyle(entry.mood_name).textColor}
+                        >
+                          {getMoodStyle(entry.mood_name).emoji}{' '}
+                          {toTitleCase(entry.mood_name)}
+                        </Pill>
+                      </div>
+                    ) : (
+                      <p
+                        className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65]"
+                        style={{ color: C.navy }}
+                      >
+                        Mood: -
+                      </p>
+                    )}
 
                     {/* button to insights page */}
                     <button
