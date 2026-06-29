@@ -4,6 +4,7 @@ type PillItems = {
   textColor?: string;
   borderColor?: string;
   size?: 'sm' | 'md';
+  title?: string;
 };
 
 export default function Pill({
@@ -12,18 +13,12 @@ export default function Pill({
   textColor = '#3a4a6b',
   borderColor = '#dde4f0',
   size = 'md',
+  title,
 }: PillItems) {
   return (
-    // pill
-    //   pill: {
-    //     borderRadius: '20px',
-    //     padding: '3px 10px',
-    //     fontSize: '11px',
-    //     fontWeight: 600,
-    //     whiteSpace: 'nowrap',
-    //   },
     <span
       className="sm:text-[12px] md:text-[14px]"
+      title={title}
       style={{
         display: 'inline-flex',
         alignItems: 'center',

@@ -10,9 +10,11 @@ import {
 } from '@/app/styles/styles';
 import { dropdownStyle } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
+import { toTitleCase } from '@/app/utils/format';
+import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function ExerciseCatalogPage() {
@@ -24,6 +26,9 @@ export default function ExerciseCatalogPage() {
   );
   const [fetching, setFetching] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [search, setSearch] = useState('');
+  const [selectedMood, setSelectedMood] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
   useEffect(() => {
     if (!accessToken) return;
@@ -50,6 +55,38 @@ export default function ExerciseCatalogPage() {
 
     loadEntries();
   }, [accessToken]);
+
+  const moodOptions = useMemo(() => {
+    return Object.keys(MOOD_EMOJIS)
+      .sort()
+      .map((mood) => ({
+        value: mood,
+        label: `${MOOD_EMOJIS[mood].emoji} ${toTitleCase(mood)}`,
+      }));
+  }, []);
+
+  const typeOptions = useMemo(() => {
+    const set = new Set<string>();
+    exercises.forEach((ex) => {
+      if (ex.exc_type) set.add(ex.exc_type);
+    });
+    return Array.from(set).sort();
+  }, [exercises]);
+
+  const filtered = useMemo(() => {
+    const key = search.trim().toLowerCase();
+
+    return exercises.filter((ex) => {
+      const matchesSearch = !key || ex.exc_name.toLowerCase().includes(key);
+
+      const moods = Array.isArray(ex.exc_mood) ? ex.exc_mood : [ex.exc_mood];
+      const matchesMood = !selectedMood || moods.includes(selectedMood);
+
+      const matchesType = !selectedType || ex.exc_type === selectedType;
+
+      return matchesSearch && matchesMood && matchesType;
+    });
+  }, [exercises, search, selectedMood, selectedType]);
 
   return (
     <section
@@ -83,77 +120,147 @@ export default function ExerciseCatalogPage() {
                 className="w-full sm:text-[14px] md:text-[16px]"
                 style={styles.input}
                 type="search"
-                placeholder="Search Exercise..."
+                placeholder="Search Exercise"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               ></input>
             </div>
 
             {/* mood dropdown */}
-            <div className="w-40">
+            <div className="w-50">
               <select
-                // className={`w-full sm:text-[14px] md:text-[16px] ${dropdownStyle}`}
-                style={styles.dropdown}
-                // style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
+                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                value={selectedMood}
+                onChange={(e) => setSelectedMood(e.target.value)}
               >
-                <option>Select Mood</option>
+                <option value="">Select Mood</option>
+                {moodOptions.map((mood) => (
+                  <option key={mood.value} value={mood.value}>
+                    {toTitleCase(mood.label)}
+                  </option>
+                ))}
               </select>
             </div>
 
             {/* type dropdown */}
             <div className="w-40">
-              {/* <label style={styles.label}>Period</label> */}
-              <select className="w-full" style={styles.dropdown}>
-                <option>Select Type</option>
+              <select
+                className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
+                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Select Type</option>
+                {typeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {toTitleCase(type)}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
-          {/* exercise card */}
-          {exercises.map((ex) => (
-            <div
-              key={ex.exc_id}
-              className="rounded-[10px] border mb-3.75 p-2.5"
-              style={{
-                backgroundColor: 'white',
-                boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-                border: '1px solid #eef2f9',
-              }}
+          {fetching && (
+            <p
+              className="sm:text-[20px] md:text-[24px]"
+              style={{ color: C.faint }}
             >
-              <h1 style={styles.header1}>{ex.exc_name}</h1>
+              Loading coping exercises...
+            </p>
+          )}
 
-              <div className="flex gap-3 mb-2">
-                <Pill
-                  bgColor="#edf9f0"
-                  borderColor="#cdebd5"
-                  textColor="#2e7d32"
-                >
-                  {Array.isArray(ex.exc_mood) ? ex.exc_mood[0] : ex.exc_mood}
-                </Pill>
+          {!fetching && filtered.length === 0 && (
+            <p
+              className="sm:text-[20px] md:text-[24px]"
+              style={{ color: C.faint }}
+            >
+              {exercises.length === 0
+                ? 'No exercise is available.'
+                : 'No exercise matches your search.'}
+            </p>
+          )}
 
-                <Pill>{ex.exc_type}</Pill>
-              </div>
-
-              <p style={styles.pText}>
-                {ex.exc_desc.length > 180
-                  ? ex.exc_desc.slice(0, 180) + '...'
-                  : ex.exc_desc}
-              </p>
-
-              <button
-                onClick={() => {
-                  setSelectedExercise(ex);
-                  setOpenDetail(true);
+          {/* exercise card */}
+          {filtered.map((ex) => {
+            const moods = Array.isArray(ex.exc_mood)
+              ? ex.exc_mood
+              : [ex.exc_mood];
+            const MAX_VISIBLE_MOODS = 3;
+            const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
+            const remainingCount = moods.length - visibleMoods.length;
+            return (
+              <div
+                key={ex.exc_id}
+                className="rounded-[10px] border mb-3.75 p-2.5"
+                style={{
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                  border: '1px solid #eef2f9',
                 }}
-                className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
-                View More
-              </button>
-            </div>
-          ))}
+                <h1 style={styles.header1}>{ex.exc_name}</h1>
+
+                <div className="flex gap-3 mb-2">
+                  {visibleMoods.map((mood) => {
+                    const moodStyle = getMoodStyle(mood);
+                    return (
+                      <Pill
+                        key={mood}
+                        bgColor={moodStyle.bgColor}
+                        borderColor={moodStyle.borderColor}
+                        textColor={moodStyle.textColor}
+                      >
+                        {moodStyle.emoji} {toTitleCase(mood)}
+                      </Pill>
+                    );
+                  })}
+
+                  {/* TODO: make this pill clickable to show the View More modal */}
+                  {remainingCount > 0 && (
+                    <Pill
+                      bgColor="#f1f3f8"
+                      borderColor="#dde1ea"
+                      textColor={C.faint}
+                      title={moods
+                        .slice(MAX_VISIBLE_MOODS)
+                        .map(toTitleCase)
+                        .join(', ')}
+                    >
+                      +{remainingCount} more
+                    </Pill>
+                  )}
+
+                  <Pill>{toTitleCase(ex.exc_type)}</Pill>
+                </div>
+
+                <p
+                  className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+                  style={{ color: C.navy }}
+                >
+                  {ex.exc_desc.length > 180
+                    ? ex.exc_desc.slice(0, 180) + '...'
+                    : ex.exc_desc}
+                </p>
+
+                <button
+                  onClick={() => {
+                    setSelectedExercise(ex);
+                    setOpenDetail(true);
+                  }}
+                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                >
+                  View More
+                </button>
+              </div>
+            );
+          })}
           {selectedExercise && (
             <ExerciseDetailModal
               open={openDetail}
               onClose={() => setOpenDetail(false)}
               name={selectedExercise.exc_name}
+              // TODO: show all moods each in one pill
               mood={
                 Array.isArray(selectedExercise.exc_mood)
                   ? selectedExercise.exc_mood.join(', ')

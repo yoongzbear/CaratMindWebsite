@@ -137,7 +137,7 @@ export default function PastEntryPage() {
 
             {/* scroll */}
             <div className="mt-3 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
-              {fetching && <p style={{ color: C.faint }}>Loading entries…</p>}
+              {fetching && <p style={{ color: C.faint }}>Loading entries...</p>}
 
               {!fetching && entries.length === 0 && (
                 <p style={{ color: C.faint }}>No entries for this date.</p>
