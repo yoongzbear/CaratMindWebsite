@@ -13,7 +13,8 @@ import {
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
-import { getMoodEmoji } from '@/app/utils/moodEmoji';
+import { getMoodStyle } from '@/app/utils/moodEmoji';
+// import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
@@ -309,8 +310,8 @@ export default function MoodInsightPage() {
             ) : (
               <>
                 {/* mood emoji */}
-                <div className="relative mb-2 sm:text-[20px] md:text-[24px] z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
-                  {getMoodEmoji(moodData?.mood_name)}
+                <div className="relative mb-2 sm:text-[24px] md:text-[28px] z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300">
+                  {getMoodStyle(moodData?.mood_name).emoji}
                 </div>
                 <h5
                   className="m-0 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"

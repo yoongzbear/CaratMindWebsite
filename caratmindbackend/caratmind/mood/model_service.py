@@ -112,10 +112,6 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
 def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
     llm = _loadExplain()
 
-    # mood_text = ", ".join(
-    #     [f"{m['label']} ({m['score']:.2f})" for m in moods]
-    # )
-
     messages = [
         {
             "role": "system",

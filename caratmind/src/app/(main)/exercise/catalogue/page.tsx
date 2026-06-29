@@ -14,6 +14,7 @@ import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -98,7 +99,7 @@ export default function ExerciseCatalogPage() {
       <div className="w-[90%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"
             style={{ color: C.navy }}
           >
             Coping Exercise Catalogue
@@ -117,7 +118,7 @@ export default function ExerciseCatalogPage() {
             {/* search */}
             <div className="w-50">
               <input
-                className="w-full sm:text-[14px] md:text-[16px]"
+                className="w-full pl-10 sm:text-[14px] md:text-[16px]"
                 style={styles.input}
                 type="search"
                 placeholder="Search Exercise"
@@ -199,7 +200,12 @@ export default function ExerciseCatalogPage() {
                   border: '1px solid #eef2f9',
                 }}
               >
-                <h1 style={styles.header1}>{ex.exc_name}</h1>
+                <h3
+                  className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-0.5"
+                  style={{ color: C.navy }}
+                >
+                  {ex.exc_name}
+                </h3>
 
                 <div className="flex gap-3 mb-2">
                   {visibleMoods.map((mood) => {
@@ -216,31 +222,36 @@ export default function ExerciseCatalogPage() {
                     );
                   })}
 
-                  {/* TODO: make this pill clickable to show the View More modal */}
                   {remainingCount > 0 && (
-                    <Pill
-                      bgColor="#f1f3f8"
-                      borderColor="#dde1ea"
-                      textColor={C.faint}
-                      title={moods
-                        .slice(MAX_VISIBLE_MOODS)
-                        .map(toTitleCase)
-                        .join(', ')}
+                    <div
+                      onClick={() => {
+                        setSelectedExercise(ex);
+                        setOpenDetail(true);
+                      }}
+                      className="cursor-pointer"
                     >
-                      +{remainingCount} more
-                    </Pill>
+                      <Pill
+                        bgColor="#f1f3f8"
+                        borderColor="#dde1ea"
+                        textColor={C.faint}
+                        title={moods
+                          .slice(MAX_VISIBLE_MOODS)
+                          .map(toTitleCase)
+                          .join(', ')}
+                      >
+                        +{remainingCount} more
+                      </Pill>
+                    </div>
                   )}
 
                   <Pill>{toTitleCase(ex.exc_type)}</Pill>
                 </div>
 
                 <p
-                  className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+                  className="w-full overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                   style={{ color: C.navy }}
                 >
-                  {ex.exc_desc.length > 180
-                    ? ex.exc_desc.slice(0, 180) + '...'
-                    : ex.exc_desc}
+                  {ex.exc_desc}
                 </p>
 
                 <button
@@ -260,12 +271,12 @@ export default function ExerciseCatalogPage() {
               open={openDetail}
               onClose={() => setOpenDetail(false)}
               name={selectedExercise.exc_name}
-              // TODO: show all moods each in one pill
-              mood={
+              moods={
                 Array.isArray(selectedExercise.exc_mood)
-                  ? selectedExercise.exc_mood.join(', ')
-                  : selectedExercise.exc_mood
+                  ? selectedExercise.exc_mood
+                  : [selectedExercise.exc_mood]
               }
+              desc={selectedExercise.exc_desc}
               type={selectedExercise.exc_type}
               steps={selectedExercise.exc_steps}
             />
