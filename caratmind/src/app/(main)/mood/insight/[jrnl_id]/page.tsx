@@ -50,7 +50,6 @@ export default function MoodInsightPage() {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const data = await res.json();
-        console.log('Response:', data);
         if (!res.ok) {
           toastError(data.error ?? 'Failed to load entry.');
           setJournal(null);

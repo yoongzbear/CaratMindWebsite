@@ -188,3 +188,23 @@ export function getMoodStyle(mood?: string | null): MoodStyle {
 
   return MOOD_EMOJIS[mood.toLowerCase()] ?? DEFAULT_MOOD_STYLE;
 }
+
+// negative mood
+export const NEGATIVE_MOOD = [
+  'anger',
+  'annoyance',
+  'disappointment',
+  'disapproval',
+  'disgust',
+  'embarrassment',
+  'fear',
+  'grief',
+  'nervousness',
+  'remorse',
+  'sadness',
+];
+
+export function isNegativeMood(moodName: string | null | undefined): boolean {
+  if (!moodName) return false;
+  return NEGATIVE_MOOD.includes(moodName.toLowerCase());
+}

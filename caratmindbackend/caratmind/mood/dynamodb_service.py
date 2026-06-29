@@ -1,6 +1,6 @@
 import uuid
-from datetime import datetime, timezone
-from xml.dom.minidom import Attr
+from datetime import datetime, timedelta, timezone
+from boto3.dynamodb.conditions import Attr
 
 import boto3
 from django.conf import settings
@@ -53,3 +53,27 @@ def get_mood_by_id(jrnl_id: str) -> dict | None:
     table = _get_table()
     response = table.get_item(Key={'jrnl_id': jrnl_id})
     return response.get('Item')
+
+# get last 7 days moods
+def get_user_recent_moods(user_id: str, days: int = 7) -> list[dict]:
+    """
+    Returns the user's mood entries from the last 7 days,
+    sorted newest first. Used to compute negative-mood streaks.
+    """
+    table = _get_table()
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+
+    response = table.scan(
+        FilterExpression=Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    items.sort(key=lambda i: i.get('mood_timestamp', ''), reverse=True)
+    return items

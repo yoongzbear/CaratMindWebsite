@@ -4,6 +4,9 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { LayoutShell } from './components/LayoutShell';
 import { ClientToastContainer } from './components/ClientToastContainer';
+import HelplineModal from './components/modal/HelplineModal';
+import { useMoodStreakAlert } from './hooks/negativeMoodStreak';
+import { HelplineModalProvider } from './components/HelplineModalProvider';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -31,7 +34,10 @@ export default function RootLayout({
         }}
       >
         <AuthProvider>
-          <LayoutShell>{children}</LayoutShell>
+          <LayoutShell>
+            {children}
+            <HelplineModalProvider />
+          </LayoutShell>
           <ClientToastContainer />
         </AuthProvider>
       </body>

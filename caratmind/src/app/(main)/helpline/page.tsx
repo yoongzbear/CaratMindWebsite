@@ -12,10 +12,16 @@ export default function HelplinePage() {
     >
       <div className="w-[80%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"
+            style={{ color: C.navy }}
+          >
             Emergency Helplines
           </h1>
-          <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+          <p
+            className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+            style={{ color: C.navy }}
+          >
             If you are in crisis or need urgent support, reach out to a
             qualified professional or emergency service. CaratMind is not a
             substitute for licensed care or emergency response.
@@ -36,38 +42,53 @@ export default function HelplinePage() {
               }}
             >
               <div className="flex justify-between items-start gap-3">
-                <h2 style={{ ...styles.title, margin: 0, fontSize: '16px' }}>
+                <h4
+                  className="font-semibold sm:text-[22px] md:text-[26px]"
+                  style={{ color: C.navy }}
+                >
                   {line.name}
-                </h2>
+                </h4>
               </div>
               <p
-                className="m-0 text-[13px] leading-[1.65] flex-1"
+                className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65] flex-1"
                 style={{
-                  color: C.muted,
+                  color: C.navy,
                 }}
               >
                 {line.description}
               </p>
               {line.available && (
-                <p className="m-0 text-[11px]" style={{ color: C.faint }}>
+                <p
+                  className="m-0 sm:text-[12px] md:text-[14px]"
+                  style={{ color: C.muted }}
+                >
                   {line.available}
                 </p>
               )}
               <a
-                href={line.href}
-                className="inline-flex items-center gap-1.5 mt-1 text-[15px] font-bold no-underline"
+                href={line.tel}
+                className="inline-flex items-center gap-1.5 mt-1 sm:text-[12px] md:text-[14px] font-bold no-underline"
                 style={{
                   color: C.navy,
                 }}
               >
                 {line.contact}
               </a>
+              <a
+                href={line.href}
+                className="inline-flex items-center gap-1.5 mt-1 sm:text-[12px] md:text-[14px] font-bold underline"
+                style={{
+                  color: C.serenity,
+                }}
+              >
+                {line.web}
+              </a>
             </article>
           ))}
         </div>
 
         <p
-          className="mt-7 text-[12px] text-center leading-[1.7]"
+          className="mt-7 sm:text-[16px] md:text-[18px] text-center leading-[1.7]"
           style={{
             color: C.faint,
           }}

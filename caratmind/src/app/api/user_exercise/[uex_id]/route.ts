@@ -20,7 +20,6 @@ export async function GET(
   });
 
   const data = await res.json();
-  console.log(data);
   if (!res.ok) {
     return NextResponse.json(
       { error: data.error ?? 'Failed to load entry.' },
