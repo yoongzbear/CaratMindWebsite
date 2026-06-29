@@ -30,7 +30,7 @@ export default function ExerciseTrackingPage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[90%] mx-auto">
+      <div className="w-[80%] mx-auto">
         <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0' }}>
             Coping Exercise Tracking
@@ -135,7 +135,7 @@ export default function ExerciseTrackingPage() {
               </button>
             </div>
 
-            <ExerciseDetailModal
+            {/* <ExerciseDetailModal
               open={openDetail}
               onClose={() => setopenDetail(false)}
               name="Exercise 1"
@@ -145,7 +145,7 @@ export default function ExerciseTrackingPage() {
               vitae bibendum sapien. In at euismod diam. Vivamus sed tellus sit
               amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
               nec cursus turpis, in pretium diam. Aenean vitae placerat ni..."
-            />
+            /> */}
           </div>
         </div>
 

@@ -66,7 +66,7 @@ export default function PastEntryPage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[90%] mx-auto">
+      <div className="w-[80%] mx-auto">
         <header className="mb-3 flex items-center justify-between">
           <h1
             className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"

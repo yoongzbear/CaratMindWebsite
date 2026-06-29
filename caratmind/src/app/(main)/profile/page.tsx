@@ -81,7 +81,7 @@ export default function ProfilePage() {
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
       style={{ background: C.bgPage }}
     >
-      <div className="w-[90%] mx-auto">
+      <div className="w-[80%] mx-auto">
         <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>User Profile</h1>
         </header>

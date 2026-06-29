@@ -12,7 +12,7 @@ export default function MoodPage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[90%] mx-auto">
+      <div className="w-[80%] mx-auto">
         <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0' }}>Mood Dashboard</h1>
         </header>

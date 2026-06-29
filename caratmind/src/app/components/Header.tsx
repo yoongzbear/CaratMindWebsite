@@ -79,7 +79,7 @@ export default function Header() {
         boxShadow: '0 2px 12px rgba(146,168,209,0.10)',
       }}
     >
-      <div className="max-w-300 mx-auto px-8 h-17 items-center flex justify-between">
+      <div className="w-[90%] mx-auto px-8 h-17 items-center flex justify-between">
         <Link href="/" className="no-underline flex items-center">
           <Image
             src="/assets/CM_long.png"
