@@ -114,17 +114,21 @@ export default function StackedBarChart({
         />
         <Legend
           formatter={(value) => (
-            <span style={{ fontSize: 12, color: C.navy }}>
+            <span
+              className="sm:text-[12px] md:text-[14px]"
+              style={{ color: C.navy }}
+            >
               {getMoodStyle(value).emoji} {toTitleCase(value)}
             </span>
           )}
         />
+        {/* TODO: make the texts more bold or use darker color */}
         {moods.map((mood) => (
           <Bar
             key={mood}
             dataKey={mood}
             stackId="a"
-            fill={getMoodStyle(mood).bgColor}
+            fill={getMoodStyle(mood).borderColor}
             radius={
               mood === moods[moods.length - 1] ? [4, 4, 0, 0] : [0, 0, 0, 0]
             }

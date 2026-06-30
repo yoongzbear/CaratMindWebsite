@@ -1,4 +1,5 @@
 'use client';
+import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import EntryDetailModal, {
   DeleteEntryModal,
@@ -40,6 +41,11 @@ export default function MoodInsightPage() {
   const [moodData, setMoodData] = useState<Mood | null>(null);
   const [fetchingExercise, setFetchingExercise] = useState(false);
   const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
+
+  const [barRange, setBarRange] = useState<DateRangeValue>({
+    mode: 'days',
+    days: 7,
+  });
 
   useEffect(() => {
     if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
@@ -460,7 +466,8 @@ export default function MoodInsightPage() {
           >
             Mood This Week
           </h3>
-          <StackedBarChart />
+          {/* TODO: show the dates */}
+          <StackedBarChart range={barRange} />
           {/* mood dashboard button */}
           <button
             onClick={moodDashboard}
