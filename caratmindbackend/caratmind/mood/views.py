@@ -1,3 +1,6 @@
+from collections import defaultdict
+from datetime import date, datetime, timedelta, timezone
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
@@ -54,3 +57,59 @@ def negative_mood_streak_view(request):
             break
 
     return JsonResponse({'negative_streak_days': streak})
+
+# mood chart data
+@require_GET
+def mood_chart_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    # accept ?days=7 OR ?start_date=2026-06-01&end_date=2026-06-30
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    try:
+        days = int(request.GET.get('days', 7))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid days parameter'}, status=400)
+    
+    # validate custom range if provided
+    if bool(start_date) != bool(end_date):
+        return JsonResponse({'error': 'Provide both start_date and end_date'}, status=400)
+
+    try:
+        moods = get_user_recent_moods(sub, days=days, start_date=start_date, end_date=end_date)
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load mood chart data: {e}'}, status=500)
+
+    # build the date range to display
+    today = datetime.now(timezone.utc).date()
+    if start_date and end_date:
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+    else:
+        end = today
+        start = today - timedelta(days=days - 1)
+
+    total_days = (end - start).days + 1
+    date_range = [(start + timedelta(days=i)).isoformat() for i in range(total_days)]
+
+    # count moods per day
+    counts = defaultdict(lambda: defaultdict(int))  # counts[date][mood_name] += 1
+    for m in moods:
+        date_str = m['mood_timestamp'][:10]
+        mood_name = m.get('mood_name')
+        if mood_name:
+            counts[date_str][mood_name] += 1
+
+    all_moods = sorted({m.get('mood_name') for m in moods if m.get('mood_name')})
+    chart_data = []
+    for date_str in date_range:
+        row = {'date': date_str}
+        for mood in all_moods:
+            row[mood] = counts[date_str].get(mood, 0)
+        chart_data.append(row)
+
+    return JsonResponse({'chart_data': chart_data, 'moods': all_moods})

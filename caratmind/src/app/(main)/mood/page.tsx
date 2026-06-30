@@ -1,10 +1,20 @@
 'use client';
+import DateRangeSelector, {
+  DateRangeValue,
+} from '@/app/components/chart/DateRangeSelector';
+import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import ToggleSwitch from '@/app/components/ToggleSwitch';
 import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
+import { useState } from 'react';
 
 export default function MoodPage() {
   const { user, loading } = useAuth();
+  const [barRange, setBarRange] = useState<DateRangeValue>({
+    mode: 'days',
+    days: 7,
+  });
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -19,9 +29,12 @@ export default function MoodPage() {
 
         {/* cards grid */}
         <div className="grid grid-cols-2 gap-4 mt-4 mb-3.75">
+          {/* stacked bar chart */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
-            <div className="flex w-full gap-5">
-              {/* period dropdown */}
+            {/* time range */}
+            <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
+            {/* <div className="flex w-full gap-5">
+              {/* period dropdown *
               <div className="w-full">
                 <label style={styles.label}>Period</label>
                 <select className="w-full" style={styles.dropdown}>
@@ -29,7 +42,7 @@ export default function MoodPage() {
                 </select>
               </div>
 
-              {/* start and end date */}
+              {/* start and end date *
               <div>
                 <label style={styles.label}>Start date</label>
                 <input style={styles.dateInput} type="date"></input>
@@ -39,19 +52,20 @@ export default function MoodPage() {
                 <label style={styles.label}>End date</label>
                 <input style={styles.dateInput} type="date"></input>
               </div>
-            </div>
+            </div> */}
 
-            <div className="w-full">
+            {/* <div className="w-full">
               <div className="w-full">
                 <label style={styles.label}>Mood</label>
                 <select className="w-40" style={styles.dropdown}>
                   <option>7 days</option>
                 </select>
               </div>
-            </div>
+            </div> */}
 
             <div className="w-full">
               <h1>Stacked bar chart</h1>
+              <StackedBarChart range={barRange} />
             </div>
 
             <div className="w-full flex gap-5">

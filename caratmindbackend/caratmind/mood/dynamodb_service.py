@@ -54,24 +54,34 @@ def get_mood_by_id(jrnl_id: str) -> dict | None:
     response = table.get_item(Key={'jrnl_id': jrnl_id})
     return response.get('Item')
 
-# get last 7 days moods
-def get_user_recent_moods(user_id: str, days: int = 7) -> list[dict]:
+# get last 7 or N days moods
+def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = None, end_date: str | None = None) -> list[dict]:
     """
-    Returns the user's mood entries from the last 7 days,
-    sorted newest first. Used to compute negative-mood streaks.
+    If start_date/end_date (YYYY-MM-DD) are provided, use that range.
+    Otherwise fall back to last `days` days from now.
     """
     table = _get_table()
-    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
 
-    response = table.scan(
-        FilterExpression=Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
-    )
+    if start_date and end_date: 
+        # end of end_date in UTC so the full day is included
+        cutoff_start = f"{start_date}T00:00:00+00:00"
+        cutoff_end = f"{end_date}T23:59:59+00:00"
+        filter = (
+            Attr('user_id').eq(user_id)
+            & Attr('mood_timestamp').gte(cutoff_start)
+            & Attr('mood_timestamp').lte(cutoff_end)
+        )
+    else:
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+        filter = Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
+
+    response = table.scan(FilterExpression=filter)
     items = response.get('Items', [])
 
     while 'LastEvaluatedKey' in response:
         response = table.scan(
-            FilterExpression=Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff),
-            ExclusiveStartKey=response['LastEvaluatedKey'],
+            FilterExpression = filter,
+            ExclusiveStartKey = response['LastEvaluatedKey'],
         )
         items.extend(response.get('Items', []))
 

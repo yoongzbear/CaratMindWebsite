@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-
+// negative mood streak
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization');
   const accessToken = authHeader?.replace('Bearer ', '');

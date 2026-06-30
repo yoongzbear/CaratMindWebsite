@@ -1,4 +1,5 @@
 'use client';
+import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import EntryDetailModal, {
   DeleteEntryModal,
 } from '@/app/components/modal/EntryModal';
@@ -166,7 +167,7 @@ export default function MoodInsightPage() {
   };
 
   const moodDashboard = () => {
-    // save as draft - save into db only
+    router.push('/mood/insight');
   };
 
   if (loading || fetchingJournal) {
@@ -452,7 +453,14 @@ export default function MoodInsightPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          {/* mood chart here */}
+          {/* mood chart */}
+          <h3
+            className="sm:text-[22px] md:text-[26px] font-semibold"
+            style={{ color: C.navy }}
+          >
+            Mood This Week
+          </h3>
+          <StackedBarChart />
           {/* mood dashboard button */}
           <button
             onClick={moodDashboard}
