@@ -3,9 +3,18 @@ import Link from 'next/link';
 import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { Eye } from 'lucide-react';
+import StackedBarChart from '@/app/components/chart/StackedBarChart';
+import { useState } from 'react';
+import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
+
+  const [barRange, setBarRange] = useState<DateRangeValue>({
+    mode: 'days',
+    days: 7,
+  });
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -102,33 +111,7 @@ export default function HomePage() {
                 Mood
               </h2>
               {/* mood chart */}
-              <div
-                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
-              >
-                {/* Decorative pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  {[...Array(6)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute rounded-full border border-current"
-                      style={{
-                        width: `${60 + i * 30}px`,
-                        height: `${60 + i * 30}px`,
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        opacity: 1 - i * 0.14,
-                      }}
-                    />
-                  ))}
-                </div>
-                {/* Center icon */}
-                <div
-                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300`}
-                >
-                  <Eye size={16} />
-                </div>
-              </div>
+              <StackedBarChart range={barRange} height={280} />
               <Link
                 href="/mood"
                 className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}

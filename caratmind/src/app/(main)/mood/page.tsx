@@ -32,40 +32,11 @@ export default function MoodPage() {
           {/* stacked bar chart */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
             {/* time range */}
+            {/* TODO: preset the dates to today and 7 days */}
             <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
-            {/* <div className="flex w-full gap-5">
-              {/* period dropdown *
-              <div className="w-full">
-                <label style={styles.label}>Period</label>
-                <select className="w-full" style={styles.dropdown}>
-                  <option>7 days</option>
-                </select>
-              </div>
-
-              {/* start and end date *
-              <div>
-                <label style={styles.label}>Start date</label>
-                <input style={styles.dateInput} type="date"></input>
-              </div>
-
-              <div>
-                <label style={styles.label}>End date</label>
-                <input style={styles.dateInput} type="date"></input>
-              </div>
-            </div> */}
-
-            {/* <div className="w-full">
-              <div className="w-full">
-                <label style={styles.label}>Mood</label>
-                <select className="w-40" style={styles.dropdown}>
-                  <option>7 days</option>
-                </select>
-              </div>
-            </div> */}
 
             <div className="w-full">
-              <h1>Stacked bar chart</h1>
-              <StackedBarChart range={barRange} />
+              <StackedBarChart range={barRange} height={240} />
             </div>
 
             <div className="w-full flex gap-5">

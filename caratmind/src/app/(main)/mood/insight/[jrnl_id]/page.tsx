@@ -15,15 +15,16 @@ import {
 import { UserExercise } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
+import { getRangeLabel } from '@/app/utils/dateFormat';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodEmoji';
 // import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { format } from 'date-fns';
+import { format, subDays, isAfter, startOfDay } from 'date-fns';
 import { Eye } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function MoodInsightPage() {
@@ -42,10 +43,10 @@ export default function MoodInsightPage() {
   const [fetchingExercise, setFetchingExercise] = useState(false);
   const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
 
-  const [barRange, setBarRange] = useState<DateRangeValue>({
-    mode: 'days',
-    days: 7,
-  });
+  // const [barRange, setBarRange] = useState<DateRangeValue>({
+  //   mode: 'days',
+  //   days: 7,
+  // });
 
   useEffect(() => {
     if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
@@ -149,8 +150,6 @@ export default function MoodInsightPage() {
           ? {
               ...prev,
               jrnl_status: status,
-              // jrnl_preview: content.slice(0, 150),
-              // jrnl_preview: content,
             }
           : prev,
       );
@@ -160,6 +159,27 @@ export default function MoodInsightPage() {
       setSubmitting(false);
     }
   }
+
+  const barRange: DateRangeValue = useMemo(() => {
+    if (!journal) return { mode: 'days', days: 7 };
+
+    const journalDate = startOfDay(new Date(journal.jrnl_created_at));
+    const sevenDaysAgo = startOfDay(subDays(new Date(), 6));
+
+    if (
+      isAfter(journalDate, sevenDaysAgo) ||
+      journalDate.getTime() === sevenDaysAgo.getTime()
+    ) {
+      return { mode: 'days', days: 7 };
+    }
+
+    const start = subDays(journalDate, 6);
+    return {
+      mode: 'range',
+      startDate: format(start, 'yyyy-MM-dd'),
+      endDate: format(journalDate, 'yyyy-MM-dd'),
+    };
+  }, [journal]);
 
   const handleSubmit = () => updateEntry('submitted');
   const handleSave = () => updateEntry('draft');
@@ -173,7 +193,7 @@ export default function MoodInsightPage() {
   };
 
   const moodDashboard = () => {
-    router.push('/mood/insight');
+    router.push('/mood/');
   };
 
   if (loading || fetchingJournal) {
@@ -329,7 +349,7 @@ export default function MoodInsightPage() {
             {/* {!moodData?.mood_id ? ( */}
             {!moodData?.mood_id ? (
               <h5
-                className="m-5 sm:text-[28px] md:text-[32px] leading-[1.65] font-semibold"
+                className="m-5 text-center sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
               >
                 Mood not available yet. Submit your entry to see your mood
@@ -461,17 +481,24 @@ export default function MoodInsightPage() {
         >
           {/* mood chart */}
           <h3
-            className="sm:text-[22px] md:text-[26px] font-semibold"
+            className="sm:text-[22px] md:text-[26px] font-semibold w-full"
             style={{ color: C.navy }}
           >
-            Mood This Week
+            {barRange.mode === 'days'
+              ? 'Mood This Week'
+              : 'Mood Around This Entry'}
           </h3>
-          {/* TODO: show the dates */}
+          <p
+            className="sm:text-[16px] md:text-[18px] mb-2 w-full"
+            style={{ color: C.faint }}
+          >
+            {getRangeLabel(barRange)}
+          </p>
           <StackedBarChart range={barRange} />
           {/* mood dashboard button */}
           <button
             onClick={moodDashboard}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-2 mb-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
           >
             {'View Mood Dashboard'}
           </button>
