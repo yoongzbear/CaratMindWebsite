@@ -1,3 +1,5 @@
+// stacked bar chart
+
 'use client';
 
 import {
@@ -10,12 +12,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useAuth } from '@/context/AuthContext';
-import { getMoodStyle } from '@/app/utils/moodEmoji';
+import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { C } from '@/app/styles/styles';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';
+import { getRangeLabel } from '@/app/utils/dateFormat';
+import { useRouter } from 'next/navigation';
 
 type ChartRow = { date: string; [mood: string]: string | number };
 
@@ -35,11 +39,15 @@ export default function StackedBarChart({
 }: Props) {
   const { accessToken } = useAuth();
   const { chartData, moods, loading, error } = useMoodChartData(range);
+  const router = useRouter();
 
   if (loading) {
     return (
-      <p className="text-center text-sm" style={{ color: C.faint }}>
-        Loading chart…
+      <p
+        className="text-center sm:text-[14px] md:text-[16px]"
+        style={{ color: C.faint }}
+      >
+        Loading mood bar chart...
       </p>
     );
   }
@@ -50,7 +58,7 @@ export default function StackedBarChart({
         className="text-center sm:text-[14px] md:text-[16px]"
         style={{ color: C.faint }}
       >
-        No mood data for the past 7 days.
+        No mood data available for this period.
       </p>
     );
   }
@@ -58,7 +66,8 @@ export default function StackedBarChart({
   // format 'YYYY-MM-DD' to 'Mon 23'
   const formatted = chartData.map((row) => ({
     ...row,
-    date: format(parseISO(row.date), 'EEE d'),
+    date: format(parseISO(row.date), 'dd/MM'),
+    // date: format(parseISO(row.date), 'EEE d'),
   }));
 
   // fit bars 100% to the height
@@ -69,7 +78,7 @@ export default function StackedBarChart({
   //   );
 
   //   const normalizedRow: ChartRow = {
-  //     date: format(parseISO(row.date), 'EEE d'),
+  //     date: format(parseISO(row.date), 'dd/MM'),
   //   };
   //   moods.forEach((mood) => {
   //     const count = Number(row[mood]) || 0;
@@ -80,10 +89,22 @@ export default function StackedBarChart({
   //   return normalizedRow;
   // });
 
+  const handleBarClick = (point: any) => {
+    router.push(`/mood/insight/${point.jrnl_id}`);
+  };
+
   return (
     <ResponsiveContainer width="100%" height={height}>
+      {/* TODO: add dates here */}
+      <p
+        className="sm:text-[16px] md:text-[18px] mb-2 w-full"
+        style={{ color: C.faint }}
+      >
+        {/* {getRangeLabel(barRange)} */}
+      </p>
       <BarChart
         data={formatted}
+        responsive
         margin={{ top: 10, right: 16, left: 5, bottom: 5 }}
       >
         <XAxis
@@ -163,6 +184,8 @@ export default function StackedBarChart({
             // radius={
             //   mood === moods[moods.length - 1] ? [4, 4, 0, 0] : [0, 0, 0, 0]
             // }
+            // TODO: bring to the journal entry
+            onClick={() => console.log('hello')}
           />
         ))}
       </BarChart>

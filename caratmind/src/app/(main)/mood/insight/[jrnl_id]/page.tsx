@@ -17,7 +17,7 @@ import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
 import { getRangeLabel } from '@/app/utils/dateFormat';
 import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodEmoji';
+import { getMoodStyle } from '@/app/utils/moodUtils';
 // import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';

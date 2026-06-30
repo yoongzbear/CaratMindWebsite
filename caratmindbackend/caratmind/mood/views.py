@@ -113,3 +113,40 @@ def mood_chart_view(request):
         chart_data.append(row)
 
     return JsonResponse({'chart_data': chart_data, 'moods': all_moods})
+
+# get each mood per timestamp for scatter plot
+@require_GET
+def mood_scatter_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    try:
+        days = int(request.GET.get('days', 30))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid days parameter'}, status=400)
+
+    if bool(start_date) != bool(end_date):
+        return JsonResponse({'error': 'Provide both start_date and end_date'}, status=400)
+
+    try:
+        moods = get_user_recent_moods(sub, days=days, start_date=start_date, end_date=end_date)
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load mood scatter data: {e}'}, status=500)
+
+    # one point per journal entry
+    points = [
+        {
+            'jrnl_id': m.get('jrnl_id'),
+            'mood_name': m.get('mood_name'),
+            'mood_timestamp': m.get('mood_timestamp'),
+        }
+        for m in moods
+        if m.get('mood_name')
+    ]
+
+    return JsonResponse({'points': points})

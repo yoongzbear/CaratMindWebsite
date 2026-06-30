@@ -11,7 +11,7 @@ import {
 import { dropdownStyle } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
 import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodEmoji';
+import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { Search } from 'lucide-react';

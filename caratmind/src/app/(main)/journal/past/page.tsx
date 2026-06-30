@@ -12,7 +12,7 @@ import { DayPicker } from '@daypicker/react';
 import Pill from '@/app/components/Pill';
 import { useRouter } from 'next/navigation';
 import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodEmoji';
+import { getMoodStyle } from '@/app/utils/moodUtils';
 
 export default function PastEntryPage() {
   const { user, loading, accessToken } = useAuth();

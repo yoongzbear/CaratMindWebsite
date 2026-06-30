@@ -208,3 +208,39 @@ export function isNegativeMood(moodName: string | null | undefined): boolean {
   if (!moodName) return false;
   return NEGATIVE_MOOD.includes(moodName.toLowerCase());
 }
+
+// order of mood - most positive to most negative
+export const MOOD_ORDER = [
+  'love',
+  'gratitude',
+  'joy',
+  'admiration',
+  'caring',
+  'optimism',
+  'approval',
+  'pride',
+  'relief',
+  'amusement',
+  'excitement',
+  'desire',
+  'curiosity',
+  'realization',
+  'surprise',
+  'neutral',
+  'confusion',
+  'nervousness',
+  'fear',
+  'embarrassment',
+  'remorse',
+  'disappointment',
+  'sadness',
+  'grief',
+  'annoyance',
+  'disapproval',
+  'anger',
+  'disgust',
+] as const;
+
+export const MOOD_ORDER_MAP = Object.fromEntries(
+  MOOD_ORDER.map((mood, index) => [mood, index]),
+);

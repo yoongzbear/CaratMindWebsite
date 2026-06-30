@@ -6,7 +6,7 @@ import Modal from './Modal';
 import Pill from '../Pill';
 import { styles } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodEmoji';
+import { getMoodStyle } from '@/app/utils/moodUtils';
 
 type Props = {
   open: boolean;

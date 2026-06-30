@@ -2,6 +2,7 @@
 import DateRangeSelector, {
   DateRangeValue,
 } from '@/app/components/chart/DateRangeSelector';
+import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import ToggleSwitch from '@/app/components/ToggleSwitch';
 import { buttonGradientColor, C, styles } from '@/app/styles/styles';
@@ -11,6 +12,10 @@ import { useState } from 'react';
 export default function MoodPage() {
   const { user, loading } = useAuth();
   const [barRange, setBarRange] = useState<DateRangeValue>({
+    mode: 'days',
+    days: 7,
+  });
+  const [scatterRange, setScatterRange] = useState<DateRangeValue>({
     mode: 'days',
     days: 7,
   });
@@ -35,7 +40,7 @@ export default function MoodPage() {
             {/* TODO: preset the dates to today and 7 days */}
             <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
 
-            <div className="w-full">
+            <div className="w-full mt-2">
               <StackedBarChart range={barRange} height={240} />
             </div>
 
@@ -50,9 +55,16 @@ export default function MoodPage() {
             </div>
           </div>
 
+          {/* scatter plot */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
-            <div className="flex w-full gap-5">
-              {/* period dropdown */}
+            {/* time range */}
+            {/* TODO: preset the dates to today and 7 days */}
+            <DateRangeSelector
+              presets={[7, 30, 90]}
+              onChange={setScatterRange}
+            />
+            {/* <div className="flex w-full gap-5">
+              {/* period dropdown *
               <div className="w-full">
                 <label style={styles.label}>Period</label>
                 <select className="w-full" style={styles.dropdown}>
@@ -60,7 +72,7 @@ export default function MoodPage() {
                 </select>
               </div>
 
-              {/* start and end date */}
+              {/* start and end date *
               <div>
                 <label style={styles.label}>Start date</label>
                 <input style={styles.dateInput} type="date"></input>
@@ -70,19 +82,19 @@ export default function MoodPage() {
                 <label style={styles.label}>End date</label>
                 <input style={styles.dateInput} type="date"></input>
               </div>
-            </div>
+            </div> */}
 
-            <div className="w-full">
+            {/* <div className="w-full">
               <div className="w-full">
                 <label style={styles.label}>Mood</label>
                 <select className="w-40" style={styles.dropdown}>
                   <option>7 days</option>
                 </select>
               </div>
-            </div>
+            </div> */}
 
-            <div className="w-full">
-              <h1>Scatter plot</h1>
+            <div className="w-full mt-2">
+              <DayScatterPlot range={scatterRange} height={1000} />
             </div>
 
             <div className="w-full flex gap-5">
@@ -104,7 +116,7 @@ export default function MoodPage() {
               <input style={styles.dateInput} type="date"></input>
             </div>
 
-            <div className="w-full">
+            <div className="w-full mt-2">
               <h1>daily line chart</h1>
             </div>
 
