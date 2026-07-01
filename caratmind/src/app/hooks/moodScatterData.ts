@@ -26,7 +26,7 @@ export function useMoodScatterData(range: DateRangeValue): Result {
   const cacheKey =
     range.mode === 'days'
       ? `days=${range.days}`
-      : `start=${range.startDate}&end=${range.endDate}`;
+      : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
   useEffect(() => {
     if (!accessToken) return;
@@ -40,7 +40,7 @@ export function useMoodScatterData(range: DateRangeValue): Result {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/mood/scatter?${query}`, {
+        const res = await fetch(`/api/mood/chart/scatter?${query}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         const data = await res.json();

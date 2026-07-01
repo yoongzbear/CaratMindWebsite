@@ -36,10 +36,6 @@ type Props = {
   height?: number;
 };
 
-// type ScatterClickData = {
-//   scatterData: MoodPoint;
-// };
-
 export default function DayScatterPlot({
   range = { mode: 'days', days: 30 },
   height = 320,
@@ -97,21 +93,6 @@ export default function DayScatterPlot({
     jrnl_id: p.jrnl_id,
     timestamp: p.mood_timestamp,
   }));
-
-  // x = timestamp (ms), y = mood rank (inverted so "most positive" is on top)
-  // old ver
-  // const data = points.map((p) => ({
-  //   x: new Date(p.mood_timestamp).getTime(),
-  //   y:
-  //     MOOD_ORDER.length -
-  //     1 -
-  //     (MOOD_ORDER_MAP[p.mood_name] ?? MOOD_ORDER.length - 1),
-  //   mood: p.mood_name,
-  //   jrnl_id: p.jrnl_id,
-  //   timestamp: p.mood_timestamp,
-  // }));
-
-  // const maxY = MOOD_ORDER.length - 1;
 
   return (
     <div className="w-full">
