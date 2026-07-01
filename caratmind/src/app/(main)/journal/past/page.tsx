@@ -6,20 +6,31 @@ import { toastError } from '@/utils/toast';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DayPicker } from '@daypicker/react';
 import Pill from '@/app/components/Pill';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 
 export default function PastEntryPage() {
   const { user, loading, accessToken } = useAuth();
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [entries, setEntries] = useState<Journal[]>([]);
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // read ?date=YYYY-MM-DD from URL, fall back to today
+  const initialDate = (() => {
+    const param = searchParams.get('date');
+    if (!param) return new Date();
+    const parsed = parseISO(param);
+    return isValid(parsed) ? parsed : new Date();
+  })();
+
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -104,6 +115,7 @@ export default function PastEntryPage() {
               <DayPicker
                 mode="single"
                 selected={selectedDate}
+                month={selectedDate}
                 onSelect={(date) => date && setSelectedDate(date)}
                 className="w-full"
                 style={{ color: C.navy }}

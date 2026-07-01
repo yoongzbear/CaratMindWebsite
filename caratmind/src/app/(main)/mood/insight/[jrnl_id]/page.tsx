@@ -488,12 +488,12 @@ export default function MoodInsightPage() {
               ? 'Mood This Week'
               : 'Mood Around This Entry'}
           </h3>
-          <p
+          {/* <p
             className="sm:text-[16px] md:text-[18px] mb-2 w-full"
             style={{ color: C.faint }}
           >
             {getRangeLabel(barRange)}
-          </p>
+          </p> */}
           <StackedBarChart range={barRange} />
           {/* mood dashboard button */}
           <button

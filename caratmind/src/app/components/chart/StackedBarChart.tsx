@@ -21,7 +21,12 @@ import { useMoodChartData } from '@/app/hooks/moodChartData';
 import { getRangeLabel } from '@/app/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 
-type ChartRow = { date: string; [mood: string]: string | number };
+type ChartRow = {
+  date: string;
+  jrnl_ids?: string[];
+  [mood: string]: string | number | string[] | undefined;
+  // [mood: string]: string | number;
+};
 
 type Props = {
   range?: DateRangeValue;
@@ -63,9 +68,9 @@ export default function StackedBarChart({
     );
   }
 
-  // format 'YYYY-MM-DD' to 'Mon 23'
   const formatted = chartData.map((row) => ({
     ...row,
+    raw_date: row.date, // for navigation
     date: format(parseISO(row.date), 'dd/MM'),
     // date: format(parseISO(row.date), 'EEE d'),
   }));
@@ -89,31 +94,47 @@ export default function StackedBarChart({
   //   return normalizedRow;
   // });
 
-  const handleBarClick = (point: any) => {
-    router.push(`/mood/insight/${point.jrnl_id}`);
+  const handleBarClick = (barData: any) => {
+    const ids: string[] = barData?.jrnl_ids ?? [];
+    if (ids.length === 0) return;
+    if (ids.length === 1) {
+      router.push(`/mood/insight/${ids[0]}`);
+    } else {
+      // multiple entries that day — go to journal list filtered by date
+      // barData.date is already formatted ('25/06') so we need the raw date
+      // store raw date separately (see step 4 below)
+      router.push(`/journal/past?date=${barData.raw_date}`);
+    }
   };
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
-      {/* TODO: add dates here */}
+    <div className="w-full">
       <p
         className="sm:text-[16px] md:text-[18px] mb-2 w-full"
         style={{ color: C.faint }}
       >
-        {/* {getRangeLabel(barRange)} */}
+        {getRangeLabel(range)}
       </p>
-      <BarChart
-        data={formatted}
-        responsive
-        margin={{ top: 10, right: 16, left: 5, bottom: 5 }}
-      >
-        <XAxis
-          dataKey="date"
-          tick={{ fontSize: 15, fill: C.navy }}
-          axisLine={false}
-          tickLine={false}
-        />
-        {/* <YAxis
+      <ResponsiveContainer width="100%" height={height}>
+        {/* TODO: add dates here */}
+        <p
+          className="sm:text-[16px] md:text-[18px] mb-2 w-full"
+          style={{ color: C.faint }}
+        >
+          {/* {getRangeLabel(barRange)} */}
+        </p>
+        <BarChart
+          data={formatted}
+          responsive
+          margin={{ top: 10, right: 16, left: 5, bottom: 5 }}
+        >
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 15, fill: C.navy }}
+            axisLine={false}
+            tickLine={false}
+          />
+          {/* <YAxis
           allowDecimals={false}
           tick={{ fontSize: 13, fill: C.faint }}
           axisLine={false}
@@ -122,73 +143,80 @@ export default function StackedBarChart({
           // domain={[0, 100]}
           // tickFormatter={(v) => `${v}%`} // the number format
         /> */}
-        <Tooltip
-          formatter={(value, name, props) => {
-            const rawCount = props.payload?.[`${name}_count`] ?? value;
-            return [rawCount, toTitleCase(String(name))];
-          }}
-          contentStyle={{
-            borderRadius: 10,
-            border: `1px solid ${C.navy}`,
-            fontSize: 13,
-            // color: C.navy,
-          }}
-          // date label
-          labelStyle={{
-            color: C.serenity,
-            fontWeight: 700,
-          }}
-          itemStyle={{
-            color: C.navy,
-            fontWeight: 600,
-          }}
-          wrapperStyle={{ zIndex: 100 }} // make it above the legend
-        />
-        <Legend
-          content={({ payload }) => (
-            <div className="flex flex-wrap gap-3 justify-center mt-2">
-              {payload?.map((entry) => (
-                <div key={entry.value} className="flex items-center gap-1.5">
-                  <span
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: 3,
-                      backgroundColor: entry.color,
-                      border: `1.5px solid ${C.muted}`,
-                      display: 'inline-block',
-                    }}
-                  />
-                  <span
-                    className="sm:text-[14px] md:text-[16px]"
-                    style={{ color: C.navy, fontWeight: 500 }}
-                  >
-                    {getMoodStyle(String(entry.value)).emoji}{' '}
-                    {toTitleCase(String(entry.value))}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        />
-
-        {moods.map((mood) => (
-          <Bar
-            key={mood}
-            dataKey={mood}
-            stackId="a"
-            fill={getMoodStyle(mood).borderColor}
-            // stroke={getMoodStyle(mood).borderColor}
-            stroke={C.navy}
-            strokeWidth={1.5}
-            // radius={
-            //   mood === moods[moods.length - 1] ? [4, 4, 0, 0] : [0, 0, 0, 0]
-            // }
-            // TODO: bring to the journal entry
-            onClick={() => console.log('hello')}
+          <Tooltip
+            labelFormatter={(_, payload) => {
+              const raw = payload?.[0]?.payload?.raw_date;
+              return raw ? format(parseISO(String(raw)), 'dd/MM/yyyy') : '';
+            }}
+            formatter={(value, name, props) => {
+              const rawCount = props.payload?.[`${name}_count`] ?? value;
+              return [rawCount, toTitleCase(String(name))];
+            }}
+            contentStyle={{
+              borderRadius: 10,
+              border: `1px solid ${C.navy}`,
+              fontSize: 13,
+              // color: C.navy,
+            }}
+            // date label
+            labelStyle={{
+              color: C.serenity,
+              fontWeight: 700,
+            }}
+            itemStyle={{
+              color: C.navy,
+              fontWeight: 600,
+            }}
+            wrapperStyle={{ zIndex: 100 }} // make it above the legend
           />
-        ))}
-      </BarChart>
-    </ResponsiveContainer>
+          <Legend
+            content={({ payload }) => (
+              <div className="flex flex-wrap gap-3 justify-center mt-2">
+                {payload?.map((entry) => (
+                  <div key={entry.value} className="flex items-center gap-1.5">
+                    <span
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 3,
+                        backgroundColor: entry.color,
+                        border: `1.5px solid ${C.muted}`,
+                        display: 'inline-block',
+                      }}
+                    />
+                    <span
+                      className="sm:text-[14px] md:text-[16px]"
+                      style={{
+                        color: getMoodStyle(entry.value).textColor,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {getMoodStyle(String(entry.value)).emoji}{' '}
+                      {toTitleCase(String(entry.value))}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          />
+
+          {moods.map((mood) => (
+            <Bar
+              key={mood}
+              dataKey={mood}
+              stackId="a"
+              fill={getMoodStyle(mood).borderColor}
+              // stroke={getMoodStyle(mood).borderColor}
+              stroke={getMoodStyle(mood).textColor}
+              strokeWidth={1.5}
+              // radius={
+              //   mood === moods[moods.length - 1] ? [4, 4, 0, 0] : [0, 0, 0, 0]
+              // }
+              onClick={handleBarClick}
+            />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

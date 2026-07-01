@@ -72,7 +72,10 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
             & Attr('mood_timestamp').lte(cutoff_end)
         )
     else:
-        cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+        # cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
+        cutoff = (
+            datetime.now(timezone.utc) - timedelta(days=days - 1)
+        ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
         filter = Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
 
     response = table.scan(FilterExpression=filter)

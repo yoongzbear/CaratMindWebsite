@@ -110,6 +110,10 @@ def mood_chart_view(request):
         row = {'date': date_str}
         for mood in all_moods:
             row[mood] = counts[date_str].get(mood, 0)
+        row['jrnl_ids'] = [
+            m['jrnl_id'] for m in moods
+            if m['mood_timestamp'][:10] == date_str and m.get('jrnl_id')
+        ]
         chart_data.append(row)
 
     return JsonResponse({'chart_data': chart_data, 'moods': all_moods})

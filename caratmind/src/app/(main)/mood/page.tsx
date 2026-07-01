@@ -19,6 +19,7 @@ export default function MoodPage() {
     mode: 'days',
     days: 7,
   });
+  const chartHeight = 320;
 
   return (
     <section
@@ -41,10 +42,10 @@ export default function MoodPage() {
             <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
 
             <div className="w-full mt-2">
-              <StackedBarChart range={barRange} height={240} />
+              <StackedBarChart range={barRange} height={chartHeight} />
             </div>
 
-            <div className="w-full flex gap-5">
+            {/* <div className="w-full flex gap-5">
               <p style={styles.pText}>Selected Date: XX </p>
               <button
                 //   onClick={handleSubmit}
@@ -52,7 +53,7 @@ export default function MoodPage() {
               >
                 {'View Entries'}
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* scatter plot */}
@@ -94,10 +95,10 @@ export default function MoodPage() {
             </div> */}
 
             <div className="w-full mt-2">
-              <DayScatterPlot range={scatterRange} height={1000} />
+              <DayScatterPlot range={scatterRange} height={chartHeight} />
             </div>
 
-            <div className="w-full flex gap-5">
+            {/* <div className="w-full flex gap-5">
               <p style={styles.pText}>Selected Date: XX </p>
               <button
                 //   onClick={handleSubmit}
@@ -105,7 +106,7 @@ export default function MoodPage() {
               >
                 {'View Entries'}
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
