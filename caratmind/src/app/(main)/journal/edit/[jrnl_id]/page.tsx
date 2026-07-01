@@ -12,6 +12,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { format } from 'date-fns';
+import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
 
 export default function EditEntryPage() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function EditEntryPage() {
   const [journal, setJournal] = useState<JournalDetail | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [detecting, setDetecting] = useState(false);
 
   useEffect(() => {
     if (!accessToken || !jrnl_id) return;
@@ -70,6 +72,7 @@ export default function EditEntryPage() {
       setSaving(true);
     } else {
       setSubmitting(true);
+      setDetecting(true);
     }
 
     try {
@@ -88,8 +91,8 @@ export default function EditEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // route to mood insight page
-      router.back();
-      // router.push(`/mood/insight/${data.jrnl_id}`);
+      // router.back();
+      router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -97,6 +100,7 @@ export default function EditEntryPage() {
         setSaving(false);
       } else {
         setSubmitting(false);
+        setDetecting(false);
       }
     }
   }
@@ -235,6 +239,7 @@ export default function EditEntryPage() {
           </div>
         </div>
       </div>
+      <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />
     </section>
   );
 }

@@ -14,13 +14,15 @@ export default function DetectMoodModal({ open, onClose }: Props) {
   return (
     <Modal open={open} onClose={onClose} width={900} hideClose>
       {/* loading spinner */}
-      <div
-        className="w-24 h-24 rounded-full animate-spin mb-6"
-        style={{
-          border: `4px solid ${C.border}`,
-          borderTopColor: C.navy,
-        }}
-      />
+      <div className="flex items-center justify-center mb-6">
+        <div
+          className="w-20 h-20 rounded-full animate-spin"
+          style={{
+            border: `4px solid ${C.serenity}`,
+            borderTopColor: C.roseQuartz,
+          }}
+        />
+      </div>
       <h2
         className="mt-0 mb-2.5 sm:text-[26px] md:text-[30px]"
         style={{ color: C.navy }}
