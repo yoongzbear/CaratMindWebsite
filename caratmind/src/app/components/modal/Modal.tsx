@@ -12,6 +12,7 @@ type ModalProps = {
   width?: number;
   children: ReactNode;
   footer?: ReactNode;
+  hideClose?: boolean;
 };
 
 export default function Modal({
@@ -22,12 +23,13 @@ export default function Modal({
   width = 700,
   children,
   footer,
+  hideClose = false,
 }: ModalProps) {
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center px-4 modal-backdrop"
       style={{
         background: 'rgba(20,30,50,0.35)',
         backdropFilter: 'blur(3px)',
@@ -36,7 +38,7 @@ export default function Modal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full rounded-md overflow-hidden"
+        className="w-full rounded-md overflow-hidden modal-pop"
         style={{
           maxWidth: `${width}px`,
           background: 'white',
@@ -70,12 +72,14 @@ export default function Modal({
             )}
           </div>
 
-          <button
-            onClick={onClose}
-            className="cursor-pointer pt-0 rounded-lg hover:bg-slate-100 transition"
-          >
-            <X size={24} color={C.muted} />
-          </button>
+          {!hideClose && (
+            <button
+              onClick={onClose}
+              className="cursor-pointer pt-0 rounded-lg hover:bg-slate-100 transition"
+            >
+              <X size={24} color={C.muted} />
+            </button>
+          )}
         </div>
 
         {/* Body */}
@@ -84,6 +88,41 @@ export default function Modal({
         {/* Footer */}
         {footer && <div className="p-6 pt-0">{footer}</div>}
       </div>
+
+      {/* animation like sweetalert2 */}
+      <style jsx>{`
+        .modal-backdrop {
+          animation: fadeIn 0.18s ease-out;
+        }
+
+        .modal-pop {
+          animation: popIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes popIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.75) translateY(10px);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.03) translateY(0);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }

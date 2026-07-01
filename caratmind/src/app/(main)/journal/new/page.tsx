@@ -12,12 +12,14 @@ import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { useRouter } from 'next/navigation';
 import { StatusKey } from '@/app/types/journal';
+import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
 
 export default function NewEntryPage() {
   const { user, loading, accessToken } = useAuth();
   const [entry, setEntry] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [detecting, setDetecting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
 
@@ -32,6 +34,7 @@ export default function NewEntryPage() {
       setSaving(true);
     } else {
       setSubmitting(true);
+      setDetecting(true);
     }
     try {
       const res = await fetch('/api/journal/new', {
@@ -49,8 +52,6 @@ export default function NewEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // navigate to view journal entry
-      // TODO: navigate to mood insight page
-      // router.push('/journal/past');
       router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
@@ -59,6 +60,7 @@ export default function NewEntryPage() {
         setSaving(false);
       } else {
         setSubmitting(false);
+        setDetecting(false);
       }
     }
   }
@@ -146,6 +148,7 @@ export default function NewEntryPage() {
           </div>
         </div>
       </div>
+      <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />
     </section>
   );
 }

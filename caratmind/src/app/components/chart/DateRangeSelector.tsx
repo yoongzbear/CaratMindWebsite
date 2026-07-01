@@ -1,6 +1,6 @@
 'use client';
 
-import { styles } from '@/app/styles/styles';
+import { C, styles } from '@/app/styles/styles';
 import { useEffect, useState } from 'react';
 
 export type DateRangeValue =
@@ -42,8 +42,14 @@ export default function DateRangeSelector({
   return (
     <div className="flex flex-wrap w-full gap-4 items-end">
       <div>
-        <label style={styles.label}>Period</label>
+        <label
+          className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
+          style={{ color: C.navy }}
+        >
+          Period
+        </label>
         <select
+          className="sm:text-[14px] md:text-[16px]"
           style={styles.dropdown}
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
@@ -60,8 +66,14 @@ export default function DateRangeSelector({
       {selected === 'custom' && (
         <>
           <div>
-            <label style={styles.label}>Start date</label>
+            <label
+              className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
+              style={{ color: C.muted }}
+            >
+              Start Date
+            </label>
             <input
+              className="sm:text-[14px] md:text-[16px]"
               style={styles.dateInput}
               type="date"
               value={startDate}
@@ -70,8 +82,14 @@ export default function DateRangeSelector({
             />
           </div>
           <div>
-            <label style={styles.label}>End date</label>
+            <label
+              className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
+              style={{ color: C.muted }}
+            >
+              End Date
+            </label>
             <input
+              className="sm:text-[14px] md:text-[16px]"
               style={styles.dateInput}
               type="date"
               value={endDate}

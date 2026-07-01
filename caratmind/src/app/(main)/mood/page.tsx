@@ -28,7 +28,7 @@ export default function MoodPage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[80%] mx-auto">
+      <div className="w-[85%] mx-auto">
         <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0' }}>Mood Dashboard</h1>
         </header>
@@ -44,16 +44,6 @@ export default function MoodPage() {
             <div className="w-full mt-2">
               <StackedBarChart range={barRange} height={chartHeight} />
             </div>
-
-            {/* <div className="w-full flex gap-5">
-              <p style={styles.pText}>Selected Date: XX </p>
-              <button
-                //   onClick={handleSubmit}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-xs font-medium rounded-xl px-3 py-1.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'View Entries'}
-              </button>
-            </div> */}
           </div>
 
           {/* scatter plot */}

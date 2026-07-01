@@ -116,13 +116,6 @@ export default function StackedBarChart({
         {getRangeLabel(range)}
       </p>
       <ResponsiveContainer width="100%" height={height}>
-        {/* TODO: add dates here */}
-        <p
-          className="sm:text-[16px] md:text-[18px] mb-2 w-full"
-          style={{ color: C.faint }}
-        >
-          {/* {getRangeLabel(barRange)} */}
-        </p>
         <BarChart
           data={formatted}
           responsive
@@ -180,7 +173,7 @@ export default function StackedBarChart({
                         height: 16,
                         borderRadius: 3,
                         backgroundColor: entry.color,
-                        border: `1.5px solid ${C.muted}`,
+                        border: `1.5px solid ${C.navy}`,
                         display: 'inline-block',
                       }}
                     />
