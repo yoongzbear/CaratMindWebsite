@@ -18,8 +18,8 @@ export default function DetectMoodModal({ open, onClose }: Props) {
         <div
           className="w-20 h-20 rounded-full animate-spin"
           style={{
-            border: `4px solid ${C.serenity}`,
-            borderTopColor: C.roseQuartz,
+            border: `4px solid ${C.roseQuartz}`, //the majority part
+            borderTopColor: C.serenity, // the smaller part
           }}
         />
       </div>

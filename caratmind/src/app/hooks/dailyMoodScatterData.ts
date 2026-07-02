@@ -17,24 +17,30 @@ type Result = {
   error: string | null;
 };
 
-export function useMoodScatterData(range: DateRangeValue): Result {
+export function useDailyMoodScatterData(
+  // range: DateRangeValue,
+  moodDate: string,
+  // endDate: string,
+): Result {
   const { accessToken } = useAuth();
   const [points, setPoints] = useState<MoodPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const cacheKey =
-    range.mode === 'days'
-      ? `days=${range.days}`
-      : `start_date=${range.startDate}&end_date=${range.endDate}`;
+  // day = 1
+  const cacheKey = `start_date=${moodDate}&end_date=${moodDate}`;
+  // const cacheKey =
+  //   range.mode === 'days'
+  //     ? `days=${range.days}`
+  //     : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
   useEffect(() => {
     if (!accessToken) return;
 
-    const query =
-      range.mode === 'days'
-        ? `days=${range.days}`
-        : `start_date=${range.startDate}&end_date=${range.endDate}`;
+    const query = `start_date=${moodDate}&end_date=${moodDate}`;
+    // range.mode === 'days'
+    //   ? `days=${range.days}`
+    //   : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
     async function fetch_() {
       setLoading(true);

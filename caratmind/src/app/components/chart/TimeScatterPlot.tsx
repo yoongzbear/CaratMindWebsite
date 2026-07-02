@@ -14,38 +14,33 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  CartesianGrid,
 } from 'recharts';
-import { format, parseISO, startOfDay } from 'date-fns';
+import { addDays, format, parseISO, startOfDay } from 'date-fns';
 import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
-import { DateRangeValue } from './DateRangeSelector';
-import { MoodPoint, useMoodScatterData } from '@/app/hooks/moodScatterData';
 import { useRouter } from 'next/navigation';
-import {
-  getMoodStyle,
-  MOOD_ORDER,
-  MOOD_ORDER_MAP,
-} from '@/app/utils/moodUtils';
-import { getRangeLabel, resolveLocalDateRange } from '@/app/utils/dateFormat';
+import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
+import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
 
 type Props = {
-  range?: DateRangeValue;
+  // range?: DateRangeValue;
+  moodDate: string;
   height?: number;
 };
 
 export default function TimeScatterPlot({
-  range = { mode: 'days', days: 1 },
+  // range = { mode: 'days', days: 1 },
+  moodDate,
   height = 320,
 }: Props) {
-  const { points, loading, error } = useMoodScatterData(range);
+  const { points, loading, error } = useDailyMoodScatterData(moodDate);
   const router = useRouter();
 
-  //   TODO: change to the start time and end time, show all times?
-  const { startDate, endDate } = resolveLocalDateRange(range);
-  const xStart = startOfDay(parseISO(startDate)).getTime();
-  const xEnd = startOfDay(parseISO(endDate)).getTime();
+  // time for start and end of the day
+  // const { startDate, endDate } = resolveLocalDateRange(range);
+  const xStart = startOfDay(parseISO(moodDate)).getTime();
+  const xEnd = addDays(startOfDay(parseISO(moodDate)), 1).getTime();
 
   //   ES Lint error
   const handleScatterClick = (point: any) => {
@@ -58,7 +53,7 @@ export default function TimeScatterPlot({
         className="text-center sm:text-[14px] md:text-[16px]"
         style={{ color: C.faint }}
       >
-        Loading mood daily scatter plot chart..
+        Loading daily mood scatter plot chart...
       </p>
     );
   }
@@ -79,7 +74,6 @@ export default function TimeScatterPlot({
     points.some((p) => p.mood_name === mood),
   );
 
-  // map each present mood to a Y index (0 = most negative present, top = most positive present)
   const presentMoodRankMap = Object.fromEntries(
     presentMoods.map((mood, i) => [mood, presentMoods.length - 1 - i]),
   );
@@ -87,12 +81,22 @@ export default function TimeScatterPlot({
   const maxY = presentMoods.length - 1;
 
   const data = points.map((p) => ({
-    x: startOfDay(new Date(p.mood_timestamp)).getTime(), // not considering actual time of the day
+    x: new Date(p.mood_timestamp).getTime(),
     y: presentMoodRankMap[p.mood_name] ?? 0,
     mood: p.mood_name,
     jrnl_id: p.jrnl_id,
     timestamp: p.mood_timestamp,
   }));
+
+  // show time when mood exists
+  const presentTicks = Array.from(new Set(data.map((d) => d.x))).sort(
+    (a, b) => a - b,
+  );
+
+  // show all time
+  // const presentTicks = Array.from({ length: 24 }, (_, i) =>
+  //   addHours(startOfDay(parseISO(moodDate)), i).getTime(),
+  // );
 
   return (
     <div className="w-full">
@@ -100,8 +104,7 @@ export default function TimeScatterPlot({
         className="sm:text-[16px] md:text-[18px] mb-2 w-full"
         style={{ color: C.faint }}
       >
-        {/* TODO: change to the day's date */}
-        {getRangeLabel(range)}
+        {format(parseISO(moodDate), 'EEEE, dd/MM/yyyy')}
       </p>
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart
@@ -113,7 +116,7 @@ export default function TimeScatterPlot({
             type="number"
             dataKey="x"
             domain={[xStart, xEnd]}
-            tickFormatter={(ts) => format(new Date(ts), 'dd/MM')}
+            tickFormatter={(ts) => format(new Date(ts), 'p')}
             tick={{ fontSize: 13, fill: C.navy }}
             axisLine={false}
             tickLine={false}
