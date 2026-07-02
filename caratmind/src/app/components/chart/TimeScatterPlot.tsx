@@ -116,8 +116,9 @@ export default function TimeScatterPlot({
             type="number"
             dataKey="x"
             domain={[xStart, xEnd]}
+            ticks={presentTicks}
             tickFormatter={(ts) => format(new Date(ts), 'p')}
-            tick={{ fontSize: 13, fill: C.navy }}
+            tick={{ fontSize: 15, fill: C.navy }}
             axisLine={false}
             tickLine={false}
             padding={{ left: 20, right: 20 }}
@@ -133,7 +134,7 @@ export default function TimeScatterPlot({
               // const mood = MOOD_ORDER[maxY - rank];
               // return toTitleCase(mood);
             }}
-            tick={{ fontSize: 11, fill: C.navy }}
+            tick={{ fontSize: 12, fill: C.navy }}
             axisLine={false}
             tickLine={false}
             width={90}
@@ -159,9 +160,9 @@ export default function TimeScatterPlot({
             {data.map((point, i) => (
               <Cell
                 key={i}
-                fill={getMoodStyle(point.mood).bgColor}
+                fill={getMoodStyle(point.mood).borderColor}
                 stroke={getMoodStyle(point.mood).borderColor}
-                strokeWidth={1.5}
+                strokeWidth={4}
               />
             ))}
           </Scatter>

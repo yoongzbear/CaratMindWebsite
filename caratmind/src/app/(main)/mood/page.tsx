@@ -80,7 +80,6 @@ export default function MoodPage() {
             </div>
 
             <div className="w-full mt-2">
-              <h1>daily line chart</h1>
               <TimeScatterPlot moodDate={moodDate} />
             </div>
           </div>
