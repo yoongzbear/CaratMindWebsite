@@ -7,6 +7,7 @@ import { ClientToastContainer } from './components/ClientToastContainer';
 import HelplineModal from './components/modal/HelplineModal';
 import { useMoodStreakAlert } from './hooks/negativeMoodStreak';
 import { HelplineModalProvider } from './components/HelplineModalProvider';
+import '@daypicker/react/style.css';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 

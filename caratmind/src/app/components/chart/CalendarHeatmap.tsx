@@ -30,7 +30,7 @@ type Props = {
 };
 
 export default function CalendarHeatmap({
-  range = { mode: 'days', days: 30 }, // TODO: 30 or 31
+  range = { mode: 'days', days: 30 },
   height = 320,
 }: Props) {
   const { accessToken } = useAuth();
@@ -78,45 +78,122 @@ export default function CalendarHeatmap({
   }
 
   return (
-    <div className="w-full flex justify-center">
-      <DayPicker
-        mode="single"
-        selected={selectedDate}
-        month={calendarMonth}
-        onMonthChange={setCalendarMonth}
-        onSelect={(date) => date && setSelectedDate(date)}
-        className="w-full"
-        style={{ color: C.navy }}
-        components={{
-          DayButton: (props) => (
-            <MoodDayButton
-              {...props}
-              dataByDate={dataByDate}
-              moods={moods}
-              router={router}
-            />
-          ),
-        }}
-        classNames={{
-          month_grid: 'w-fit mx-auto border-collapse',
-          // root: 'w-full',
-          // months: 'w-full',
-          // month: 'w-full',
-          // day_button:
-          //   'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors',
-          today: 'font-semibold text-[#92A8D1]',
-          // selected: 'bg-[#92A8D1] text-white rounded-full',
-          selected: 'ring-2 ring-[#92A8D1] rounded-full',
-          month_caption: 'flex items-center justify-between px-2 mb-4',
-          caption_label: 'text-base font-semibold text-center flex-1',
-          nav: 'flex items-center gap-2',
-          button_previous:
-            'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-          button_next:
-            'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-        }}
-      />
+    <div className="w-full">
+      <div>
+        <DayPicker
+          mode="single"
+          selected={selectedDate}
+          month={calendarMonth}
+          onMonthChange={setCalendarMonth}
+          onSelect={(date) => date && setSelectedDate(date)}
+          captionLayout="dropdown"
+          className="w-full"
+          style={{ color: C.navy }}
+          components={{
+            DayButton: (props) => (
+              <MoodDayButton
+                {...props}
+                dataByDate={dataByDate}
+                moods={moods}
+                router={router}
+              />
+            ),
+          }}
+          classNames={{
+            root: 'w-full',
+            months: 'w-full',
+            month: 'w-full',
+            month_grid: 'w-full table-fixed border-collapse',
+            weekday: 'text-center text-sm font-bold py-1',
+            day: 'p-0 text-center align-middle',
+            today: 'font-semibold text-[#92A8D1]',
+            month_caption:
+              'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
+            caption_label:
+              'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
+            nav: 'flex items-center gap-2',
+            button_previous:
+              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+            button_next:
+              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+          }}
+          // classNames={{
+          //   root: 'w-full',
+          //   months: 'w-full',
+          //   month: 'w-full',
+          //   month_grid: 'w-full mx-auto border-collapse',
+          //   weekday: 'w-11 text-center text-sm font-bold',
+          //   today: 'font-semibold text-[#92A8D1]',
+          //   selected: 'ring-2 ring-[#92A8D1] rounded-full',
+          //   month_caption:
+          //     'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
+          //   caption_label:
+          //     'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
+          //   nav: 'flex items-center gap-2',
+          //   button_previous:
+          //     'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+          //   button_next:
+          //     'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+          // }}
+        />
+        <button
+          className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
+          style={{ color: C.serenity }}
+          onClick={() => setCalendarMonth(new Date())}
+        >
+          Go to Today
+        </button>
+      </div>
     </div>
+    // <div className="w-full justify-center">
+    //   <DayPicker
+    //     mode="single"
+    //     selected={selectedDate}
+    //     month={calendarMonth}
+    //     onMonthChange={setCalendarMonth}
+    //     onSelect={(date) => date && setSelectedDate(date)}
+    //     captionLayout="dropdown"
+    //     className="w-full"
+    //     style={{ color: C.navy }}
+    //     components={{
+    //       DayButton: (props) => (
+    //         <MoodDayButton
+    //           {...props}
+    //           dataByDate={dataByDate}
+    //           moods={moods}
+    //           router={router}
+    //         />
+    //       ),
+    //     }}
+    //     classNames={{
+    //       month_grid: 'w-fit mx-auto border-collapse',
+    //       // root: 'w-full',
+    //       // months: 'w-full',
+    //       // month: 'w-full',
+    //       // day_button:
+    //       //   'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors',
+    //       today: 'font-semibold text-[#92A8D1]',
+    //       // selected: 'bg-[#92A8D1] text-white rounded-full',
+    //       selected: 'ring-2 ring-[#92A8D1] rounded-full',
+    //       month_caption:
+    //         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
+    //       caption_label:
+    //         'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
+    //       nav: 'flex items-center gap-2',
+    //       button_previous:
+    //         'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+    //       button_next:
+    //         'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+    //     }}
+    //   />
+    //   <button
+    //     className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
+    //     style={{ color: C.serenity }}
+    //     onClick={() => setCalendarMonth(new Date())}
+    //   >
+    //     Go to Today
+    //   </button>
+    // </div>
   );
 }
 
@@ -148,6 +225,35 @@ function MoodDayButton({
     : [];
 
   const hasMoods = moodCounts.length > 0;
+  const totalCount = moodCounts.reduce((sum, m) => sum + m.count, 0); // mood total for the day
+
+  // no gradient version
+  // const gradientBackground = useMemo(() => {
+  //   if (!hasMoods) return undefined;
+
+  //   let cursor = 0;
+  //   const stops: string[] = [];
+
+  //   for (const { mood, count } of moodCounts) {
+  //     const start = (cursor / totalCount) * 100;
+  //     cursor += count;
+  //     const end = (cursor / totalCount) * 100;
+  //     const color = getMoodStyle(mood).borderColor;
+  //     stops.push(`${color} ${start}%`, `${color} ${end}%`);
+  //   }
+
+  //   return `linear-gradient(180deg, ${stops.join(', ')})`;
+  // }, [moodCounts, hasMoods, totalCount]);
+
+  // gradient version
+  let cursor = 0;
+  const stops: string[] = [];
+  for (const { mood, count } of moodCounts) {
+    cursor += count;
+    const pos = (cursor / totalCount) * 100;
+    stops.push(`${getMoodStyle(mood).borderColor} ${pos}%`);
+  }
+  const gradientBackground = `linear-gradient(180deg, ${stops.join(', ')})`;
 
   const handleClick = () => {
     const ids = row?.jrnl_ids ?? [];
@@ -162,27 +268,12 @@ function MoodDayButton({
     <button
       {...buttonProps}
       onClick={handleClick}
-      className={`group relative w-11 m-1 h-11 rounded-full overflow-hidden flex items-center justify-center transition-opacity hover:opacity-85 ${className ?? ''}`}
+      className="group relative w-11 m-1 h-11 rounded-full inline-flex items-center justify-center transition-opacity hover:opacity-90"
+      style={{
+        background: hasMoods ? gradientBackground : '#f4f6fb',
+        zIndex: 1,
+      }}
     >
-      {/* mood segments, proportional to count, filling the circle */}
-      {hasMoods && (
-        <div className="absolute inset-0 flex">
-          {moodCounts.map(({ mood, count }) => (
-            <div
-              key={mood}
-              style={{
-                flexGrow: count,
-                flexBasis: 0,
-                backgroundColor: getMoodStyle(mood).bgColor,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* fallback background for days with no data */}
-      {!hasMoods && <div className="absolute inset-0 bg-[#f4f6fb]" />}
-
       <span
         className="relative z-10 text-sm font-medium"
         style={{ color: hasMoods ? C.navy : C.faint }}
@@ -195,7 +286,6 @@ function MoodDayButton({
         <div className="absolute inset-0 rounded-full ring-2 ring-[#92A8D1] pointer-events-none" />
       )}
 
-      {/* mood list for this day */}
       {hasMoods && (
         <div
           className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs shadow-md"
@@ -205,7 +295,7 @@ function MoodDayButton({
             <div key={mood} className="flex items-center gap-1">
               <span>{getMoodStyle(mood).emoji}</span>
               <span className="font-medium">{toTitleCase(mood)}</span>
-              <span style={{ color: C.faint }}>x {count}</span>
+              <span style={{ color: C.faint }}> - {count}</span>
             </div>
           ))}
         </div>

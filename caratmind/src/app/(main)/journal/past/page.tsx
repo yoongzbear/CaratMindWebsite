@@ -111,33 +111,46 @@ export default function PastEntryPage() {
             >
               Calendar
             </h3>
-            <div className="w-[90%] mx-auto">
-              <DayPicker
-                mode="single"
-                selected={selectedDate}
-                month={calendarMonth}
-                onMonthChange={setCalendarMonth}
-                onSelect={(date) => date && setSelectedDate(date)}
-                className="w-full"
-                style={{ color: C.navy }}
-                classNames={{
-                  root: 'w-full',
-                  months: 'w-full',
-                  month: 'w-full',
-                  month_grid: 'w-fit mx-auto border-collapse',
-                  day_button:
-                    'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors',
-                  today: 'font-semibold text-[#92A8D1]',
-                  selected: 'bg-[#92A8D1] text-white rounded-full',
-                  month_caption: 'flex items-center justify-between px-2 mb-4',
-                  caption_label: 'text-base font-semibold text-center flex-1',
-                  nav: 'flex items-center gap-2',
-                  button_previous:
-                    'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-                  button_next:
-                    'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-                }}
-              />
+            <div className="w-full flex justify-center">
+              <div>
+                <DayPicker
+                  mode="single"
+                  selected={selectedDate}
+                  month={calendarMonth}
+                  onMonthChange={setCalendarMonth}
+                  onSelect={(date) => date && setSelectedDate(date)}
+                  captionLayout="dropdown"
+                  className="w-full"
+                  style={{ color: C.navy }}
+                  classNames={{
+                    root: 'w-full',
+                    months: 'w-full',
+                    month: 'w-full',
+                    month_grid: 'w-fit mx-auto',
+                    weekday: 'w-11 text-center text-sm font-bold',
+                    day_button:
+                      'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
+                    today: 'font-semibold text-[#92A8D1]',
+                    selected: 'bg-[#92A8D1] text-white rounded-full',
+                    month_caption:
+                      'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
+                    caption_label:
+                      'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
+                    nav: 'flex items-center gap-2',
+                    button_previous:
+                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+                    button_next:
+                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+                  }}
+                />
+                <button
+                  className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
+                  style={{ color: C.serenity }}
+                  onClick={() => setCalendarMonth(initialDate)}
+                >
+                  Go to Today
+                </button>
+              </div>
             </div>
           </div>
 
