@@ -1,10 +1,12 @@
+import json
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
-from exercise.dynamodb_service import get_all_exercises, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date
+from exercise.dynamodb_service import get_all_exercises, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating
 
 # retrieve coping exercises
 @require_GET
@@ -105,3 +107,35 @@ def list_user_exercises_view(request):
     exercises.sort(key=lambda e: e.get('uex_created_at', ''), reverse=True)
 
     return JsonResponse({'exercises': exercises})
+
+# update rating
+@require_POST
+def rating_user_exercise_view(request, uex_id):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    # ownership check — make sure this exercise record belongs to the caller
+    user_exercise = get_user_exercise_by_id(uex_id)
+    if not user_exercise:
+        return JsonResponse({'error': 'User coping exercise not found'}, status=404)
+    if user_exercise.get('user_id') != sub:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+
+    rating = body.get('rating')
+    if not rating or not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
+        return JsonResponse({'error': 'Rating must be a number between 1 and 5'}, status=400)
+
+    try:
+        updated = update_user_exercise_rating(uex_id, rating)
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to save rating: {e}'}, status=500)
+
+    return JsonResponse(updated)

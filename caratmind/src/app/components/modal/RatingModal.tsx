@@ -10,19 +10,25 @@ import { Star } from 'lucide-react';
 type Props = {
   open: boolean;
   onClose: () => void;
-  date: string;
-  lastUpdated: string;
-  entry: string;
+  onSubmit: (rating: number) => Promise<void>;
 };
 
-export default function EntryDetailModal({
-  open,
-  onClose,
-  date,
-  lastUpdated,
-  entry,
-}: Props) {
+export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
   const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async () => {
+    if (rating === 0) return;
+
+    setLoading(true);
+    try {
+      await onSubmit(rating);
+      onClose();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -33,8 +39,10 @@ export default function EntryDetailModal({
         <div className="flex justify-center">
           <button
             className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            onClick={handleSubmit}
+            disabled={loading || rating === 0}
           >
-            Submit
+            {loading ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       }
@@ -48,8 +56,6 @@ export default function EntryDetailModal({
         ))}
         {/* add Helped a lot */}
       </div>
-
-      {/* <textarea placeholder="Optional feedback..." style={styles.textarea} /> */}
     </Modal>
   );
 }

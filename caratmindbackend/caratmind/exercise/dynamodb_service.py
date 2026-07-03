@@ -133,3 +133,20 @@ def get_user_exercises_on_date(user_id: str, date_str: str) -> list[dict]:
         items.extend(response.get('Items', []))
 
     return items
+
+# update rating 
+def update_user_exercise_rating(uex_id: str, rating: int) -> dict | None:
+    table = _get_user_exercise_table()
+    response = table.update_item(
+        Key={'jrnl_id': uex_id},  
+        UpdateExpression=(
+            'SET uex_status = :status, uex_rating = :rating, uex_done_date = :done_date'
+        ),
+        ExpressionAttributeValues={
+            ':status': 'completed',
+            ':rating': rating,
+            ':done_date': datetime.now(timezone.utc).isoformat(),
+        },
+        ReturnValues='ALL_NEW',
+    )
+    return response.get('Attributes')

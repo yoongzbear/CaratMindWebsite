@@ -150,7 +150,7 @@ export default function PastEntryPage() {
                 <button
                   className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
                   style={{ color: C.serenity }}
-                  onClick={() => setCalendarMonth(initialDate)}
+                  onClick={() => setSelectedDate(initialDate)}
                 >
                   Go to Today
                 </button>

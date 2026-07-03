@@ -119,7 +119,7 @@ export default function CalendarHeatmap({
         <button
           className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
           style={{ color: C.serenity }}
-          onClick={() => setCalendarMonth(new Date())}
+          onClick={() => setSelectedDate(new Date())}
         >
           Go to Today
         </button>

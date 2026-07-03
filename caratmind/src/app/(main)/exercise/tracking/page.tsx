@@ -18,12 +18,13 @@ import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format } from 'date-fns';
 import { Eye, Star } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-import { toastError } from '@/utils/toast';
+import { toastError, toastSuccess } from '@/utils/toast';
+import RatingModal from '@/app/components/modal/RatingModal';
 
 export default function ExerciseTrackingPage() {
   const { user, loading, accessToken } = useAuth();
@@ -31,18 +32,52 @@ export default function ExerciseTrackingPage() {
   const [openDetail, setOpenDetail] = useState(false);
   const router = useRouter();
 
+  const todayDate = useMemo(() => new Date(), []);
+  const [todayExercise, setTodayExercise] = useState<UserExerciseDetail[]>([]);
+  const [fetchingTodayExc, setFetchingTodayExc] = useState(false);
+
+  const [selectedUserExc, setSelectedUserExc] =
+    useState<UserExerciseDetail | null>(null);
+  const [openRating, setOpenRating] = useState(false);
+
   const [excHistoryData, setExcHistoryData] = useState<UserExerciseDetail[]>(
     [],
   );
   const [fetchingExcHistory, setFetchingExcHistory] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date()); // to change month
+  const [selectedDate, setSelectedDate] = useState<Date>(todayDate);
+  const [calendarMonth, setCalendarMonth] = useState<Date>(todayDate); // to change month
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
 
   useEffect(() => {
     if (!accessToken) return;
+
+    async function loadTodayExc() {
+      setFetchingTodayExc(true);
+      try {
+        // const dateStr = format(todayDate, 'yyyy-MM-dd');
+        const dateStr = '2026-07-01';
+        const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(
+            data.error ?? 'Failed to load recommended coping exercises today.',
+          );
+          setTodayExercise([]);
+          return;
+        }
+        setTodayExercise(data.exercises ?? []);
+      } catch {
+        toastError(
+          'Something went wrong loading recommended coping exercises today.',
+        );
+      } finally {
+        setFetchingTodayExc(false);
+      }
+    }
 
     async function loadExcHistory() {
       setFetchingExcHistory(true);
@@ -69,15 +104,46 @@ export default function ExerciseTrackingPage() {
       }
     }
 
+    loadTodayExc();
     loadExcHistory();
-  }, [selectedDate, accessToken]);
-
-  const redirectInsight = () => {};
+  }, [selectedDate, accessToken, todayDate]);
 
   const handleCancel = () => {};
 
   const handleViewEntry = (jrnl_id: string) => {
     router.push(`/mood/insight/${jrnl_id}`);
+  };
+
+  const handleRatingSubmit = async (rating: number) => {
+    if (!selectedUserExc) return;
+    const uex_id = selectedUserExc.uex_id;
+    try {
+      const res = await fetch(`/api/user_exercise/${uex_id}/rating`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ rating }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save rating.');
+        return;
+      }
+      toastSuccess('Submitted coping exercise rating.');
+      // update exercises
+      setTodayExercise((prev) =>
+        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
+      );
+      setExcHistoryData((prev) =>
+        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
+      );
+      setOpenRating(false);
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+    }
   };
 
   return (
@@ -89,7 +155,10 @@ export default function ExerciseTrackingPage() {
     >
       <div className="w-[85%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0' }}>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
             Coping Exercise Tracking
           </h1>
         </header>
@@ -131,78 +200,152 @@ export default function ExerciseTrackingPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h1 style={styles.header1}>Today&apos;s Exercise</h1>
-          <h3 style={{ ...styles.header3, color: C.muted, fontWeight: 500 }}>
-            Date
+          <h3
+            className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
+            Today&apos;s Exercise
           </h3>
+          <h5
+            className="sm:text-[20px] md:text-[24px]"
+            style={{ color: C.muted }}
+          >
+            {format(todayDate, 'dd MMMM yyyy')}
+          </h5>
 
           {/* exercise cards */}
-          <div
-            className="rounded-[10px] border mb-3.75 p-2.5 mt-2"
-            style={{
-              backgroundColor: 'white',
-              boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-              border: '1px solid #eef2f9',
-            }}
-          >
-            <h1 style={styles.header1}>Exercise 1</h1>
-            <div className="flex gap-3 mb-2">
-              {/* mood */}
-              <Pill bgColor="#edf9f0" borderColor="#cdebd5" textColor="#2e7d32">
-                Happy
-              </Pill>
-              {/* exercise type */}
-              <Pill>Breathing</Pill>
+          <div className="w-full flex flex-col mb-2">
+            {/* scroll */}
+            <div className="mt-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
+              {fetchingTodayExc && (
+                <p style={{ color: C.faint }}>
+                  Loading today&apos;s recommended coping exercises...
+                </p>
+              )}
+
+              {!fetchingTodayExc && todayExercise.length === 0 && (
+                <p style={{ color: C.faint }}>
+                  No recommended coping exercises for today.
+                </p>
+              )}
+
+              {/* exercise card */}
+              {!fetchingTodayExc &&
+                todayExercise.map((exercise) => {
+                  const moods = Array.isArray(exercise.exc_mood)
+                    ? exercise.exc_mood
+                    : [exercise.exc_mood];
+                  const MAX_VISIBLE_MOODS = 3;
+                  const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
+                  const remainingCount = moods.length - visibleMoods.length;
+                  return (
+                    <div
+                      key={exercise.uex_id}
+                      className="rounded-[10px] border mb-3.75 p-2.5"
+                      style={{
+                        backgroundColor: 'white',
+                        boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                        border: '1px solid #eef2f9',
+                      }}
+                    >
+                      <h5
+                        className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
+                        style={{ color: C.navy }}
+                      >
+                        {exercise.exc_name}
+                      </h5>
+                      <div className="flex gap-3 mb-2">
+                        {/* exercise mood and type pills */}
+                        {visibleMoods.map((mood) => {
+                          const moodStyle = getMoodStyle(mood);
+                          return (
+                            <Pill
+                              key={mood}
+                              bgColor={moodStyle.bgColor}
+                              borderColor={moodStyle.borderColor}
+                              textColor={moodStyle.textColor}
+                            >
+                              {moodStyle.emoji} {toTitleCase(mood)}
+                            </Pill>
+                          );
+                        })}
+
+                        {remainingCount > 0 && (
+                          <div
+                            onClick={() => {
+                              setSelectedExercise(exercise);
+                              setOpenDetail(true);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Pill
+                              bgColor="#f1f3f8"
+                              borderColor="#dde1ea"
+                              textColor={C.faint}
+                              title={moods
+                                .slice(MAX_VISIBLE_MOODS)
+                                .map(toTitleCase)
+                                .join(', ')}
+                            >
+                              +{remainingCount} more
+                            </Pill>
+                          </div>
+                        )}
+
+                        <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                      </div>
+                      <p
+                        className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
+                        style={{ color: C.navy }}
+                      >
+                        {exercise.exc_desc}
+                      </p>
+
+                      <div className="flex w-full gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedExercise(exercise);
+                            setOpenDetail(true);
+                          }}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                        >
+                          {'View More'}
+                        </button>
+
+                        <button
+                          // onClick={() => setopenDetail(true)}
+                          onClick={() => handleViewEntry(exercise.jrnl_id)}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                        >
+                          {'View Insights'}
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setOpenRating(true);
+                            setSelectedUserExc(exercise);
+                          }}
+                          className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                        >
+                          {'Completed It'}
+                        </button>
+
+                        <button
+                          onClick={handleCancel}
+                          className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                        >
+                          {'Did not complete'}
+                        </button>
+                      </div>
+                      <RatingModal
+                        open={openRating}
+                        onClose={() => setOpenRating(false)}
+                        onSubmit={handleRatingSubmit}
+                      />
+                    </div>
+                  );
+                })}
             </div>
-            {/* desc - max 3 lines*/}
-            <p style={styles.pText}>
-              Proin in odio sodales, sagittis tortor a, mollis eros. Vestibulum
-              vitae bibendum sapien. In at euismod diam. Vivamus sed tellus sit
-              amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
-              nec cursus turpis, in pretium diam. Aenean vitae placerat ni...
-            </p>
-            <div className="flex w-full gap-3">
-              <button
-                onClick={() => setOpenDetail(true)}
-                className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'View More'}
-              </button>
-
-              <button
-                // onClick={() => setopenDetail(true)}
-                onClick={redirectInsight}
-                className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'View Insights'}
-              </button>
-
-              <button
-                onClick={handleCancel}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'Completed It'}
-              </button>
-
-              <button
-                onClick={handleCancel}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'Did not complete'}
-              </button>
-            </div>
-
-            {/* <ExerciseDetailModal
-              open={openDetail}
-              onClose={() => setopenDetail(false)}
-              name="Exercise 1"
-              mood="Happy"
-              type="Breathing"
-              steps="Proin in odio sodales, sagittis tortor a, mollis eros. Vestibulum
-              vitae bibendum sapien. In at euismod diam. Vivamus sed tellus sit
-              amet nibh condimentum ornare. Nunc non purus lectus. Vestibulum
-              nec cursus turpis, in pretium diam. Aenean vitae placerat ni..."
-            /> */}
           </div>
         </div>
 
@@ -215,17 +358,16 @@ export default function ExerciseTrackingPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h1 style={styles.header1}>Recommended Exercises History</h1>
+          <h3
+            className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
+            Recommended Exercises History
+          </h3>
 
           <div className="flex">
             {/* calendar - 40% */}
             <div className="w-[40%]">
-              <h3
-                className="sm:text-[24px] md:text-[28px] font-semibold"
-                style={{ color: C.navy }}
-              >
-                Calendar
-              </h3>
               <div className="w-full flex justify-center">
                 <div>
                   <DayPicker
@@ -262,7 +404,7 @@ export default function ExerciseTrackingPage() {
                   <button
                     className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
                     style={{ color: C.serenity }}
-                    onClick={() => setCalendarMonth(new Date())}
+                    onClick={() => setSelectedDate(todayDate)}
                   >
                     Go to Today
                   </button>
@@ -272,15 +414,15 @@ export default function ExerciseTrackingPage() {
 
             {/* recommended coping exercise section - 60% */}
             <div className="w-[60%] flex flex-col">
-              <h3
-                className="sm:text-[24px] md:text-[28px] font-semibold"
+              <h5
+                className="sm:text-[20px] md:text-[24px] font-bold underline"
                 style={{ color: C.navy }}
               >
                 {format(selectedDate, 'dd MMMM yyyy')}
-              </h3>
+              </h5>
 
               {/* scroll */}
-              <div className="mt-3 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
+              <div className="mx-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
                 {fetchingExcHistory && (
                   <p style={{ color: C.faint }}>
                     Loading recommended exercises...
@@ -312,12 +454,12 @@ export default function ExerciseTrackingPage() {
                           border: '1px solid #eef2f9',
                         }}
                       >
-                        <h3
-                          className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-0.5"
+                        <h5
+                          className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_name}
-                        </h3>
+                        </h5>
                         <div className="flex gap-3 mb-2">
                           {/* exercise mood and type pills */}
                           {visibleMoods.map((mood) => {
@@ -358,6 +500,7 @@ export default function ExerciseTrackingPage() {
 
                           <Pill>{toTitleCase(exercise.exc_type)}</Pill>
                         </div>
+
                         {/* rating (completed) / reason (incomplete) */}
                         {exercise.uex_status === 'completed' ? (
                           <p
@@ -382,13 +525,26 @@ export default function ExerciseTrackingPage() {
                           {exercise.exc_desc}
                         </p>
 
-                        {/* button to insights page */}
-                        <button
-                          className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                          onClick={() => handleViewEntry(exercise.jrnl_id)}
-                        >
-                          View Entry
-                        </button>
+                        <div className="mt-1 flex gap-3">
+                          {/* button to insights page */}
+                          <button
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                            onClick={() => {
+                              setSelectedExercise(exercise);
+                              setOpenDetail(true);
+                            }}
+                          >
+                            View More
+                          </button>
+
+                          {/* button to insights page */}
+                          <button
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                            onClick={() => handleViewEntry(exercise.jrnl_id)}
+                          >
+                            View Entry
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -397,6 +553,21 @@ export default function ExerciseTrackingPage() {
           </div>
         </div>
       </div>
+      {selectedExercise && (
+        <ExerciseDetailModal
+          open={openDetail}
+          onClose={() => setOpenDetail(false)}
+          name={selectedExercise.exc_name}
+          moods={
+            Array.isArray(selectedExercise.exc_mood)
+              ? selectedExercise.exc_mood
+              : [selectedExercise.exc_mood]
+          }
+          desc={selectedExercise.exc_desc}
+          type={selectedExercise.exc_type}
+          steps={selectedExercise.exc_steps}
+        />
+      )}
     </section>
   );
 }
