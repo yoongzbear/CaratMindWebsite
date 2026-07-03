@@ -1,4 +1,5 @@
 'use client';
+import CalendarHeatmap from '@/app/components/chart/CalendarHeatmap';
 import DateRangeSelector, {
   DateRangeValue,
 } from '@/app/components/chart/DateRangeSelector';
@@ -97,17 +98,7 @@ export default function MoodPage() {
             </div>
 
             <div className="w-full">
-              <h1>calendar heatmap</h1>
-            </div>
-
-            <div className="w-full flex gap-5">
-              <p style={styles.pText}>Selected Date: XX </p>
-              <button
-                //   onClick={handleSubmit}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-xs font-medium rounded-xl px-3 py-1.5 transition-colors duration-200 shadow-sm`}
-              >
-                {'View Entries'}
-              </button>
+              <CalendarHeatmap height={320} />
             </div>
           </div>
         </div>

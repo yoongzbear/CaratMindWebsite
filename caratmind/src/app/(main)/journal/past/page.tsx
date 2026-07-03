@@ -16,13 +16,12 @@ import { getMoodStyle } from '@/app/utils/moodUtils';
 
 export default function PastEntryPage() {
   const { user, loading, accessToken } = useAuth();
-  // const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [entries, setEntries] = useState<Journal[]>([]);
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // read ?date=YYYY-MM-DD from URL, fall back to today
+  // read ?date=YYYY-MM-DD from URL
   const initialDate = (() => {
     const param = searchParams.get('date');
     if (!param) return new Date();
@@ -31,6 +30,7 @@ export default function PastEntryPage() {
   })();
 
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+  const [calendarMonth, setCalendarMonth] = useState<Date>(initialDate); // to change month
 
   useEffect(() => {
     if (!accessToken) return;
@@ -115,7 +115,8 @@ export default function PastEntryPage() {
               <DayPicker
                 mode="single"
                 selected={selectedDate}
-                month={selectedDate}
+                month={calendarMonth}
+                onMonthChange={setCalendarMonth}
                 onSelect={(date) => date && setSelectedDate(date)}
                 className="w-full"
                 style={{ color: C.navy }}
