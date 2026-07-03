@@ -14,14 +14,16 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  CartesianGrid,
 } from 'recharts';
-import { addDays, format, parseISO, startOfDay } from 'date-fns';
-import { C } from '@/app/styles/styles';
+import { addDays, addHours, format, parseISO, startOfDay } from 'date-fns';
+import { buttonGradientColor, C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
 import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
+import Link from 'next/link';
 
 type Props = {
   // range?: DateRangeValue;
@@ -36,9 +38,9 @@ export default function TimeScatterPlot({
 }: Props) {
   const { points, loading, error } = useDailyMoodScatterData(moodDate);
   const router = useRouter();
+  const isToday = moodDate === format(new Date(), 'yyyy-MM-dd'); // check if date is current date
 
   // time for start and end of the day
-  // const { startDate, endDate } = resolveLocalDateRange(range);
   const xStart = startOfDay(parseISO(moodDate)).getTime();
   const xEnd = addDays(startOfDay(parseISO(moodDate)), 1).getTime();
 
@@ -60,12 +62,20 @@ export default function TimeScatterPlot({
 
   if (!points.length) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        No mood data available for this period.
-      </p>
+      <div className="text-center">
+        <p className="sm:text-[14px] md:text-[16px]" style={{ color: C.faint }}>
+          No mood data available for this date.
+        </p>
+        {/* button to new journal entry if the date is today */}
+        {isToday && (
+          <Link
+            href="/journal/new"
+            className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+          >
+            Write an entry
+          </Link>
+        )}
+      </div>
     );
   }
 
@@ -89,14 +99,14 @@ export default function TimeScatterPlot({
   }));
 
   // show time when mood exists
-  const presentTicks = Array.from(new Set(data.map((d) => d.x))).sort(
-    (a, b) => a - b,
-  );
+  // const presentTicks = Array.from(new Set(data.map((d) => d.x))).sort(
+  //   (a, b) => a - b,
+  // );
 
   // show all time
-  // const presentTicks = Array.from({ length: 24 }, (_, i) =>
-  //   addHours(startOfDay(parseISO(moodDate)), i).getTime(),
-  // );
+  const presentTicks = Array.from({ length: 24 }, (_, i) =>
+    addHours(startOfDay(parseISO(moodDate)), i).getTime(),
+  );
 
   return (
     <div className="w-full">
@@ -111,7 +121,7 @@ export default function TimeScatterPlot({
           margin={{ top: 10, right: 0, left: -20, bottom: 5 }}
           responsive
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             type="number"
             dataKey="x"
@@ -138,6 +148,7 @@ export default function TimeScatterPlot({
             axisLine={false}
             tickLine={false}
             width={90}
+            padding={{ bottom: 15 }}
           />
           <Tooltip
             formatter={(_, __, props) => {
