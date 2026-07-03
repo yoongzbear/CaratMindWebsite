@@ -22,7 +22,7 @@ const NAV_LINKS = [
   {
     label: 'Coping Exercise',
     children: [
-      { label: 'Exercise Tracking', href: '/exercise/progress' },
+      { label: 'Exercise Tracking', href: '/exercise/tracking' },
       { label: 'Exercise Catalogue', href: '/exercise/catalogue' },
     ],
   },

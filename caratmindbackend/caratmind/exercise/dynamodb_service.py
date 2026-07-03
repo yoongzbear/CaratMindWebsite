@@ -103,8 +103,33 @@ def get_recent_exc_names(user_id: str, limit: int = 5) -> list[str]:
         names.extend(item.get('exc_names', []))
     return names
 
-# get user exercise
+# get user exercise by ID
 def get_user_exercise_by_id(uex_id: str) -> dict | None:
     table = _get_user_exercise_table()
     response = table.get_item(Key={'jrnl_id': uex_id})
     return response.get('Item')
+
+# user exercises by date
+def get_user_exercises_on_date(user_id: str, date_str: str) -> list[dict]:
+    """
+    date_str is a 'YYYY-MM-DD' string. Matches entries whose uex_created_at
+    (an ISO timestamp) starts with that date.
+    """
+    table = _get_user_exercise_table()
+    response = table.scan(
+        FilterExpression=(
+            Attr('user_id').eq(user_id) & Attr('uex_created_at').begins_with(date_str)
+        )
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=(
+                Attr('user_id').eq(user_id) & Attr('uex_created_at').begins_with(date_str)
+            ),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    return items
