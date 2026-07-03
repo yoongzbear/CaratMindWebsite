@@ -124,6 +124,7 @@ export default function PastEntryPage() {
                   root: 'w-full',
                   months: 'w-full',
                   month: 'w-full',
+                  month_grid: 'w-fit mx-auto border-collapse',
                   day_button:
                     'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors',
                   today: 'font-semibold text-[#92A8D1]',

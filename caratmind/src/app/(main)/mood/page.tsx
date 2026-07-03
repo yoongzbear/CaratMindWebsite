@@ -97,7 +97,7 @@ export default function MoodPage() {
               />
             </div>
 
-            <div className="w-full">
+            <div className="w-full flex justify-center">
               <CalendarHeatmap height={320} />
             </div>
           </div>
