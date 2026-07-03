@@ -111,16 +111,16 @@ export default function SplashPage() {
   return (
     // splash page - not logged in
     <main className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)">
-      {/* ── Background decoration ─────────────────────────────── */}
+      {/* background decoration */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 w-125 h-125 rounded-full bg-rose-100/40 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 w-120 h-120 rounded-full bg-violet-100/40 blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-75 rounded-full bg-teal-50/30 blur-3xl" />
       </div>
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
+      {/* hero */}
       <div className="relative z-10 text-center mb-8 flex flex-col items-center gap-4">
-        {/* Logo */}
+        {/* logo */}
         <h1 className="text-[clamp(3rem,8vw,5.5rem)] font-light leading-none tracking-tight text-slate-800">
           Welcome to CaratMind
         </h1>
@@ -136,11 +136,11 @@ export default function SplashPage() {
             key={card.title}
             className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
           >
-            {/* Image placeholder */}
+            {/* image placeholder */}
             <div
               className={`relative w-full h-44 bg-linear-to-br ${card.accent} flex items-center justify-center`}
             >
-              {/* Decorative pattern */}
+              {/* decorative pattern */}
               <div className="absolute inset-0 opacity-20">
                 {[...Array(6)].map((_, i) => (
                   <div
@@ -157,7 +157,7 @@ export default function SplashPage() {
                   />
                 ))}
               </div>
-              {/* Center icon */}
+              {/* icon */}
               <div
                 className={`relative z-10 w-14 h-14 rounded-2xl ${card.iconBg} ${card.iconColor} flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300`}
               >
@@ -165,18 +165,18 @@ export default function SplashPage() {
               </div>
             </div>
 
-            {/* Content */}
+            {/* content */}
             <div className="flex flex-col flex-1 p-6 gap-3">
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+              <h2 className="text-slate-800 sm:text-[26px] md:text-[30px] font-semibold tracking-tight">
                 {card.title}
               </h2>
-              <p className="text-slate-400 text-sm leading-relaxed flex-1">
+              <p className="text-slate-400 sm:text-[14px] md:text-[16px] leading-relaxed flex-1">
                 {card.description}
               </p>
 
               <Link
                 href={card.href}
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
                 {card.buttonLabel}
               </Link>

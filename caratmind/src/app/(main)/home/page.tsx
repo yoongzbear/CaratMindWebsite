@@ -22,7 +22,7 @@ export default function HomePage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[80%] mx-auto">
+      <div className="w-[85%] mx-auto">
         <header className="mb-3">
           <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
             Welcome back, {user?.preferredUsername}!

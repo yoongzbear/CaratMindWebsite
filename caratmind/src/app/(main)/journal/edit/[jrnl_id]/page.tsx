@@ -91,7 +91,6 @@ export default function EditEntryPage() {
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
       // route to mood insight page
-      // router.back();
       router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
@@ -129,7 +128,7 @@ export default function EditEntryPage() {
   if (loading || fetchingJournal) {
     return (
       <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
-        Loading…
+        Loading...
       </section>
     );
   }
@@ -151,7 +150,7 @@ export default function EditEntryPage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[80%] mx-auto">
+      <div className="w-[85%] mx-auto">
         <header className="mb-3">
           <h1
             className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"

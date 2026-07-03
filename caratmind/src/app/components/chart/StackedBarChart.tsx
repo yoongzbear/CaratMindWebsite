@@ -101,8 +101,6 @@ export default function StackedBarChart({
       router.push(`/mood/insight/${ids[0]}`);
     } else {
       // multiple entries that day — go to journal list filtered by date
-      // barData.date is already formatted ('25/06') so we need the raw date
-      // store raw date separately (see step 4 below)
       router.push(`/journal/past?date=${barData.raw_date}`);
     }
   };
@@ -149,7 +147,6 @@ export default function StackedBarChart({
               borderRadius: 10,
               border: `1px solid ${C.navy}`,
               fontSize: 13,
-              // color: C.navy,
             }}
             // date label
             labelStyle={{
@@ -202,9 +199,6 @@ export default function StackedBarChart({
               // stroke={getMoodStyle(mood).borderColor}
               stroke={getMoodStyle(mood).textColor}
               strokeWidth={1.5}
-              // radius={
-              //   mood === moods[moods.length - 1] ? [4, 4, 0, 0] : [0, 0, 0, 0]
-              // }
               onClick={handleBarClick}
             />
           ))}
