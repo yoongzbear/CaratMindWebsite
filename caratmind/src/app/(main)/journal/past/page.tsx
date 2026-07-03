@@ -61,8 +61,11 @@ export default function PastEntryPage() {
 
   if (loading) {
     return (
-      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
-        Loading…
+      <section
+        className="sm:text-[28px] md:text-[32px] mt-0 mb-2 px-8 py-6 text-center"
+        style={{ color: C.faint }}
+      >
+        Loading...
       </section>
     );
   }
@@ -127,7 +130,8 @@ export default function PastEntryPage() {
                     months: 'w-full',
                     month: 'w-full',
                     month_grid: 'w-fit mx-auto',
-                    weekday: 'w-11 text-center text-sm font-bold',
+                    weekday:
+                      'w-11 text-center sm:text-[14px] md:text-[16px] font-bold',
                     day_button:
                       'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
                     today: 'font-semibold text-[#92A8D1]',
@@ -135,16 +139,16 @@ export default function PastEntryPage() {
                     month_caption:
                       'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
                     caption_label:
-                      'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
+                      'text-base font-bold text-left border rounded px-2 py-1 mx-2 flex items-center',
                     nav: 'flex items-center gap-2',
                     button_previous:
-                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center hover:cursor-pointer',
                     button_next:
-                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+                      'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center hover:cursor-pointer',
                   }}
                 />
                 <button
-                  className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
+                  className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
                   style={{ color: C.serenity }}
                   onClick={() => setCalendarMonth(initialDate)}
                 >

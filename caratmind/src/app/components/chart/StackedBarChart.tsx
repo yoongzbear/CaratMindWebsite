@@ -68,31 +68,31 @@ export default function StackedBarChart({
     );
   }
 
-  const formatted = chartData.map((row) => ({
-    ...row,
-    raw_date: row.date, // for navigation
-    date: format(parseISO(row.date), 'dd/MM'),
-    // date: format(parseISO(row.date), 'EEE d'),
-  }));
+  // fit based on number of moods
+  // const formatted = chartData.map((row) => ({
+  //   ...row,
+  //   raw_date: row.date, // for navigation
+  //   date: format(parseISO(row.date), 'dd/MM'),
+  // }));
 
   // fit bars 100% to the height
-  // const formatted = chartData.map((row) => {
-  //   const total = moods.reduce(
-  //     (sum, mood) => sum + (Number(row[mood]) || 0),
-  //     0,
-  //   );
+  const formatted = chartData.map((row) => {
+    const total = moods.reduce(
+      (sum, mood) => sum + (Number(row[mood]) || 0),
+      0,
+    );
 
-  //   const normalizedRow: ChartRow = {
-  //     date: format(parseISO(row.date), 'dd/MM'),
-  //   };
-  //   moods.forEach((mood) => {
-  //     const count = Number(row[mood]) || 0;
-  //     normalizedRow[mood] = total > 0 ? (count / total) * 100 : 0;
-  //     normalizedRow[`${mood}_count`] = count; // raw count stored under a separate key
-  //   });
+    const normalizedRow: ChartRow = {
+      date: format(parseISO(row.date), 'dd/MM'),
+    };
+    moods.forEach((mood) => {
+      const count = Number(row[mood]) || 0;
+      normalizedRow[mood] = total > 0 ? (count / total) * 100 : 0;
+      normalizedRow[`${mood}_count`] = count; // raw count stored under a separate key
+    });
 
-  //   return normalizedRow;
-  // });
+    return normalizedRow;
+  });
 
   const handleBarClick = (barData: any) => {
     const ids: string[] = barData?.jrnl_ids ?? [];

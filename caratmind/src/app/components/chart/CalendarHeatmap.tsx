@@ -26,12 +26,10 @@ type ChartRow = {
 
 type Props = {
   range?: DateRangeValue;
-  height?: number;
 };
 
 export default function CalendarHeatmap({
   range = { mode: 'days', days: 30 },
-  height = 320,
 }: Props) {
   const { accessToken } = useAuth();
   const { chartData, moods, loading, error } = useMoodChartData(range);
@@ -104,7 +102,7 @@ export default function CalendarHeatmap({
             months: 'w-full',
             month: 'w-full',
             month_grid: 'w-full table-fixed border-collapse',
-            weekday: 'text-center text-sm font-bold py-1',
+            weekday: 'text-center sm:text-[14px] md:text-[16px] font-bold py-1',
             day: 'p-0 text-center align-middle',
             today: 'font-semibold text-[#92A8D1]',
             month_caption:
@@ -113,31 +111,13 @@ export default function CalendarHeatmap({
               'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
             nav: 'flex items-center gap-2',
             button_previous:
-              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center hover:cursor-pointer',
             button_next:
-              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
+              'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center hover:cursor-pointer',
           }}
-          // classNames={{
-          //   root: 'w-full',
-          //   months: 'w-full',
-          //   month: 'w-full',
-          //   month_grid: 'w-full mx-auto border-collapse',
-          //   weekday: 'w-11 text-center text-sm font-bold',
-          //   today: 'font-semibold text-[#92A8D1]',
-          //   selected: 'ring-2 ring-[#92A8D1] rounded-full',
-          //   month_caption:
-          //     'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
-          //   caption_label:
-          //     'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
-          //   nav: 'flex items-center gap-2',
-          //   button_previous:
-          //     'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-          //   button_next:
-          //     'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-          // }}
         />
         <button
-          className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
+          className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
           style={{ color: C.serenity }}
           onClick={() => setCalendarMonth(new Date())}
         >
@@ -145,55 +125,6 @@ export default function CalendarHeatmap({
         </button>
       </div>
     </div>
-    // <div className="w-full justify-center">
-    //   <DayPicker
-    //     mode="single"
-    //     selected={selectedDate}
-    //     month={calendarMonth}
-    //     onMonthChange={setCalendarMonth}
-    //     onSelect={(date) => date && setSelectedDate(date)}
-    //     captionLayout="dropdown"
-    //     className="w-full"
-    //     style={{ color: C.navy }}
-    //     components={{
-    //       DayButton: (props) => (
-    //         <MoodDayButton
-    //           {...props}
-    //           dataByDate={dataByDate}
-    //           moods={moods}
-    //           router={router}
-    //         />
-    //       ),
-    //     }}
-    //     classNames={{
-    //       month_grid: 'w-fit mx-auto border-collapse',
-    //       // root: 'w-full',
-    //       // months: 'w-full',
-    //       // month: 'w-full',
-    //       // day_button:
-    //       //   'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors',
-    //       today: 'font-semibold text-[#92A8D1]',
-    //       // selected: 'bg-[#92A8D1] text-white rounded-full',
-    //       selected: 'ring-2 ring-[#92A8D1] rounded-full',
-    //       month_caption:
-    //         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
-    //       caption_label:
-    //         'text-base font-semibold text-left border rounded px-2 py-1 mx-2 flex items-center',
-    //       nav: 'flex items-center gap-2',
-    //       button_previous:
-    //         'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-    //       button_next:
-    //         'h-8 w-8 rounded-md hover:bg-[#eef2f9] flex items-center justify-center',
-    //     }}
-    //   />
-    //   <button
-    //     className="sm:text-[11px] md:text-[13px] hover:cursor-pointer"
-    //     style={{ color: C.serenity }}
-    //     onClick={() => setCalendarMonth(new Date())}
-    //   >
-    //     Go to Today
-    //   </button>
-    // </div>
   );
 }
 
@@ -268,14 +199,14 @@ function MoodDayButton({
     <button
       {...buttonProps}
       onClick={handleClick}
-      className="group relative w-11 m-1 h-11 rounded-full inline-flex items-center justify-center transition-opacity hover:opacity-90"
+      className="group relative w-11 m-1 h-11 rounded-full inline-flex items-center justify-center transition-opacity hover:cursor-pointer hover:opacity-100"
       style={{
         background: hasMoods ? gradientBackground : '#f4f6fb',
         zIndex: 1,
       }}
     >
       <span
-        className="relative z-10 text-sm font-medium"
+        className="relative z-10 sm:text-[14px] md:text-[16px] font-medium"
         style={{ color: hasMoods ? C.navy : C.faint }}
       >
         {day.date.getDate()}
@@ -288,7 +219,7 @@ function MoodDayButton({
 
       {hasMoods && (
         <div
-          className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs shadow-md"
+          className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 sm:text-[14px] md:text-[16px] shadow-md"
           style={{ background: 'white', borderColor: C.navy, color: C.navy }}
         >
           {moodCounts.map(({ mood, count }) => (

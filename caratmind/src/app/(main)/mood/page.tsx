@@ -85,20 +85,21 @@ export default function MoodPage() {
             </div>
           </div>
 
+          {/* calendar heatmap */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
             <div>
-              <ToggleSwitch
+              {/* <ToggleSwitch
                 leftLabel="Dominant Mood"
                 rightLabel="Average Mood"
                 defaultValue="left"
                 onChange={(value) => {
                   console.log('Selected:', value); // left | right
                 }}
-              />
+              /> */}
             </div>
 
             <div className="w-full flex justify-center">
-              <CalendarHeatmap height={320} />
+              <CalendarHeatmap />
             </div>
           </div>
         </div>
