@@ -70,7 +70,7 @@ export default function TimeScatterPlot({
         {isToday && (
           <Link
             href="/journal/new"
-            className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
           >
             Write an entry
           </Link>

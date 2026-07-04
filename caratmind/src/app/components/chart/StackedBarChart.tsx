@@ -25,22 +25,16 @@ type ChartRow = {
   date: string;
   jrnl_ids?: string[];
   [mood: string]: string | number | string[] | undefined;
-  // [mood: string]: string | number;
 };
 
 type Props = {
   range?: DateRangeValue;
   height?: number;
-  /** optional: if parent already fetched the data, pass it in to skip the fetch */
-  chartData?: ChartRow[];
-  moods?: string[];
 };
 
 export default function StackedBarChart({
   range = { mode: 'days', days: 7 },
   height = 320,
-  chartData: propData,
-  moods: propMoods,
 }: Props) {
   const { accessToken } = useAuth();
   const { chartData, moods, loading, error } = useMoodChartData(range);
@@ -48,23 +42,45 @@ export default function StackedBarChart({
 
   if (loading) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        Loading mood bar chart...
-      </p>
+      <div className="w-full">
+        <p
+          className="sm:text-[16px] md:text-[18px] mb-2"
+          style={{ color: C.faint }}
+        >
+          {getRangeLabel(range)}
+        </p>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center sm:text-[14px] md:text-[16px]"
+            style={{ color: C.faint }}
+          >
+            Loading mood bar chart...
+          </p>
+        </div>
+      </div>
     );
   }
 
   if (!chartData.length || !moods.length) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        No mood data available for this period.
-      </p>
+      <div className="w-full">
+        <p
+          className="sm:text-[16px] md:text-[18px] mb-2"
+          style={{ color: C.faint }}
+        >
+          {getRangeLabel(range)}
+        </p>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center sm:text-[14px] md:text-[16px]"
+            style={{ color: C.faint }}
+          >
+            No mood data available for this period.
+          </p>
+        </div>
+      </div>
     );
   }
 

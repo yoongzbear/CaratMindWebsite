@@ -64,7 +64,7 @@ export const buttonBase = `
 
 export const buttonGradientColor = `bg-[linear-gradient(130deg,#92A8D1,#F7CAC9)] 
   hover:[background:linear-gradient(#fff,#fff)_padding-box,_linear-gradient(130deg,#F7CAC9,#92A8D1)_border-box]
-  hover:border-2
+  
   hover:border-transparent
   hover:text-[#1B2A41]
 `;

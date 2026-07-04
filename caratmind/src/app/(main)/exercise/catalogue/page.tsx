@@ -259,7 +259,7 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                 >
                   View More
                 </button>

@@ -195,7 +195,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className={`${buttonBase} ${buttonGradientColor} sm:text-[14px] md:text-[16px]`}
+              className={`${buttonBase} ${buttonGradientColor} border-2 sm:text-[14px] md:text-[16px]`}
             >
               Log In
             </Link>

@@ -292,7 +292,7 @@ export default function ExerciseTrackingPage() {
                     entry to get started!
                   </p>
                   <button
-                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                     onClick={() => router.push('/journal/new')}
                   >
                     New Entry
@@ -426,14 +426,14 @@ export default function ExerciseTrackingPage() {
                             setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                         >
                           {'View More'}
                         </button>
 
                         <button
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                         >
                           {'View Insights'}
                         </button>
@@ -575,7 +575,7 @@ export default function ExerciseTrackingPage() {
                   excHistoryData.length === 0 &&
                   isSameDay(selectedDate, todayDate) && (
                     <button
-                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                       onClick={() => router.push('/journal/new')}
                     >
                       New Entry
@@ -687,7 +687,7 @@ export default function ExerciseTrackingPage() {
                         <div className="mt-1 flex gap-3">
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                             onClick={() => {
                               setSelectedExercise(exercise);
                               setOpenDetail(true);
@@ -698,7 +698,7 @@ export default function ExerciseTrackingPage() {
 
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                             onClick={() => handleViewEntry(exercise.jrnl_id)}
                           >
                             View Entry

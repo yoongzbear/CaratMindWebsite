@@ -43,7 +43,7 @@ export default function EntryDetailModal({
           <div className="flex justify-start gap-3">
             <button
               onClick={() => handleEdit(journal.jrnl_id)}
-              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
             >
               Edit Entry
             </button>

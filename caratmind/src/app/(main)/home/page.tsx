@@ -45,7 +45,7 @@ export default function HomePage() {
           <button
             // onClick={handleSave}
             // disabled={saving}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
           >
             {'Action Button'}
           </button>
@@ -90,14 +90,14 @@ export default function HomePage() {
                   <Eye size={16} />
                 </div>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed flex-1">
+              <p className="text-slate-400 sm:text-[12px] md:text-[14px] leading-relaxed flex-1">
                 You have not written an entry today. Write one to continue your
                 streak!
                 {/* if not written yet */}
               </p>
               <Link
                 href="/journal/new"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Write an entry
               </Link>
@@ -114,7 +114,7 @@ export default function HomePage() {
               <StackedBarChart range={barRange} height={280} />
               <Link
                 href="/mood"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 View more
               </Link>
@@ -158,14 +158,14 @@ export default function HomePage() {
                   <Eye size={16} />
                 </div>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed flex-1">
+              <p className="text-slate-400 sm:text-[12px] md:text-[14px] leading-relaxed flex-1">
                 You have not performed a coping exercise today. Complete one to
                 continue your streak!
                 {/* if not done yet */}
               </p>
               <Link
                 href="/exercise_catalogue"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Browse exercise
               </Link>

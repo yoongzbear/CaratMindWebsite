@@ -291,7 +291,7 @@ export default function MoodInsightPage() {
                 {/* view more button */}
                 <button
                   onClick={() => setOpenDetail(true)}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                 >
                   {'View More'}
                 </button>
@@ -313,7 +313,7 @@ export default function MoodInsightPage() {
                 {/* edit entry */}
                 <button
                   onClick={() => handleEdit(journal.jrnl_id)}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                 >
                   Edit Entry
                 </button>
@@ -323,7 +323,7 @@ export default function MoodInsightPage() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting}
-                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                   >
                     {submitting ? 'Submitting...' : 'Submit Entry'}
                   </button>
@@ -562,7 +562,7 @@ export default function MoodInsightPage() {
                   isSameDay(exerciseData.uex_created_at, new Date()) && (
                     <button
                       onClick={performExercise}
-                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                     >
                       {'Perform Exercise'}
                     </button>
@@ -594,7 +594,7 @@ export default function MoodInsightPage() {
           {/* mood dashboard button */}
           <button
             onClick={moodDashboard}
-            className={`mt-2 mb-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`mt-2 mb-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
           >
             {'View Mood Dashboard'}
           </button>
