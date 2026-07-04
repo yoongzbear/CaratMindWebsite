@@ -58,7 +58,8 @@ export default function ExerciseTrackingPage() {
     async function loadTodayExc() {
       setFetchingTodayExc(true);
       try {
-        const dateStr = format(todayDate, 'yyyy-MM-dd');
+        // const dateStr = format(todayDate, 'yyyy-MM-dd');
+        const dateStr = '2026-07-01';
         const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });

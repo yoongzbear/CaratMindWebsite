@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Modal from './Modal';
 import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { Star } from 'lucide-react';
+import { toastError } from '@/utils/toast';
 
 type Props = {
   open: boolean;
@@ -18,7 +19,10 @@ export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!reason || reason === '') return;
+    if (!reason || reason === '') {
+      toastError('Please select an incompletion reason before submitting.');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -38,9 +42,9 @@ export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
       footer={
         <div className="flex justify-center">
           <button
-            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             onClick={handleSubmit}
-            disabled={loading || reason === '' || !reason}
+            disabled={loading}
           >
             {loading ? 'Submitting...' : 'Submit'}
           </button>
