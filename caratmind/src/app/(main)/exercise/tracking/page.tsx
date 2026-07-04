@@ -9,11 +9,15 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
-import { Exercise, UserExercise } from '@/app/types/exercise';
+import {
+  Exercise,
+  UserExercise,
+  UserExerciseDetail,
+} from '@/app/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
-import { format } from 'date-fns';
-import { Eye, Star } from 'lucide-react';
+import { format, isSameDay } from 'date-fns';
+import { Eye, Pi, Star } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -30,16 +34,17 @@ export default function ExerciseTrackingPage() {
   const router = useRouter();
 
   const todayDate = useMemo(() => new Date(), []);
-  const [todayExercise, setTodayExercise] = useState<UserExercise[]>([]);
+  const [todayExercise, setTodayExercise] = useState<UserExerciseDetail[]>([]);
   const [fetchingTodayExc, setFetchingTodayExc] = useState(false);
 
-  const [selectedUserExc, setSelectedUserExc] = useState<UserExercise | null>(
-    null,
-  );
+  const [selectedUserExc, setSelectedUserExc] =
+    useState<UserExerciseDetail | null>(null);
   const [openRating, setOpenRating] = useState(false);
   const [openReason, setOpenReason] = useState(false);
 
-  const [excHistoryData, setExcHistoryData] = useState<UserExercise[]>([]);
+  const [excHistoryData, setExcHistoryData] = useState<UserExerciseDetail[]>(
+    [],
+  );
   const [fetchingExcHistory, setFetchingExcHistory] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(todayDate);
   const [calendarMonth, setCalendarMonth] = useState<Date>(todayDate); // to change month
@@ -53,8 +58,7 @@ export default function ExerciseTrackingPage() {
     async function loadTodayExc() {
       setFetchingTodayExc(true);
       try {
-        // const dateStr = format(todayDate, 'yyyy-MM-dd');
-        const dateStr = '2026-07-01';
+        const dateStr = format(todayDate, 'yyyy-MM-dd');
         const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -105,8 +109,6 @@ export default function ExerciseTrackingPage() {
     loadExcHistory();
   }, [selectedDate, accessToken, todayDate]);
 
-  const handleCancel = () => {};
-
   const handleViewEntry = (jrnl_id: string) => {
     router.push(`/mood/insight/${jrnl_id}`);
   };
@@ -122,8 +124,19 @@ export default function ExerciseTrackingPage() {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ rating }),
+        cache: 'no-store',
       });
-      const data = await res.json();
+
+      let data: any;
+      const contentType = res.headers.get('content-type') ?? '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error('Non-JSON response from Django:', text);
+        data = { error: 'Unexpected response from server.' };
+      }
+
       if (!res.ok) {
         toastError(data.error ?? 'Failed to save rating.');
         return;
@@ -154,8 +167,19 @@ export default function ExerciseTrackingPage() {
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ reason }),
+        cache: 'no-store',
       });
-      const data = await res.json();
+
+      let data: any;
+      const contentType = res.headers.get('content-type') ?? '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error('Non-JSON response from Django:', text);
+        data = { error: 'Unexpected response from server.' };
+      }
+
       if (!res.ok) {
         toastError(data.error ?? 'Failed to save incompletion reason.');
         return;
@@ -253,17 +277,29 @@ export default function ExerciseTrackingPage() {
               )}
 
               {!fetchingTodayExc && todayExercise.length === 0 && (
-                <p style={{ color: C.faint }}>
-                  No recommended coping exercises for today.
-                </p>
+                <div>
+                  <p
+                    className="sm:text-[14px] md:text-[16px] font-semibold"
+                    style={{ color: C.faint }}
+                  >
+                    No recommended coping exercises for today. Create a new
+                    entry to get started!
+                  </p>
+                  <button
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                    onClick={() => router.push('/journal/new')}
+                  >
+                    New Entry
+                  </button>
+                </div>
               )}
 
               {/* exercise card */}
               {!fetchingTodayExc &&
                 todayExercise.map((exercise) => {
-                  const moods = Array.isArray(exercise.exercise.exc_mood)
-                    ? exercise.exercise.exc_mood
-                    : [exercise.exercise.exc_mood];
+                  const moods = Array.isArray(exercise.exc_mood)
+                    ? exercise.exc_mood
+                    : [exercise.exc_mood];
                   const MAX_VISIBLE_MOODS = 3;
                   const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
                   const remainingCount = moods.length - visibleMoods.length;
@@ -277,12 +313,33 @@ export default function ExerciseTrackingPage() {
                         border: '1px solid #eef2f9',
                       }}
                     >
-                      <h5
-                        className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
-                        style={{ color: C.navy }}
-                      >
-                        {exercise.exc_name}
-                      </h5>
+                      <div className="w-full flex gap-3 mb-2">
+                        <h5
+                          className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
+                          style={{ color: C.navy }}
+                        >
+                          {exercise.exc_name}
+                        </h5>
+                        {exercise.uex_status === 'completed' && (
+                          <Pill
+                            bgColor={'#f1f8f4'}
+                            borderColor={'#66bb6a'}
+                            textColor={'#2e7d32'}
+                          >
+                            Completed
+                          </Pill>
+                        )}
+                        {exercise.uex_status === 'incomplete' &&
+                          exercise.uex_reason && (
+                            <Pill
+                              bgColor={'#fff5f5'}
+                              borderColor={'#e57373'}
+                              textColor={'#c62828'}
+                            >
+                              Incomplete
+                            </Pill>
+                          )}
+                      </div>
                       <div className="flex gap-3 mb-2">
                         {/* exercise mood and type pills */}
                         {visibleMoods.map((mood) => {
@@ -302,7 +359,7 @@ export default function ExerciseTrackingPage() {
                         {remainingCount > 0 && (
                           <div
                             onClick={() => {
-                              setSelectedExercise(exercise.exercise);
+                              setSelectedExercise(exercise);
                               setOpenDetail(true);
                             }}
                             className="cursor-pointer"
@@ -321,19 +378,46 @@ export default function ExerciseTrackingPage() {
                           </div>
                         )}
 
-                        <Pill>{toTitleCase(exercise.exercise.exc_type)}</Pill>
+                        <Pill>{toTitleCase(exercise.exc_type)}</Pill>
                       </div>
                       <p
                         className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                         style={{ color: C.navy }}
                       >
-                        {exercise.exercise.exc_desc}
+                        {exercise.exc_desc}
                       </p>
+
+                      {exercise.uex_status === 'completed' ? (
+                        <div className="flex items-center gap-1">
+                          <p
+                            className="sm:text-[18px] md:text-[20px] font-bold"
+                            style={{ color: C.navy }}
+                          >
+                            {exercise.uex_rating}
+                          </p>
+                          <Star
+                            size={18}
+                            style={{
+                              color: C.navy,
+                            }}
+                          />
+                        </div>
+                      ) : exercise.uex_status === 'incomplete' &&
+                        exercise.uex_reason ? (
+                        <p
+                          className="sm:text-[14px] md:text-[16px] mb-2"
+                          style={{ color: C.navy }}
+                        >
+                          <b>Incomplete Reason</b>: {exercise.uex_reason}
+                        </p>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className="flex w-full gap-3">
                         <button
                           onClick={() => {
-                            setSelectedExercise(exercise.exercise);
+                            setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
                           className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
@@ -342,29 +426,36 @@ export default function ExerciseTrackingPage() {
                         </button>
 
                         <button
-                          // onClick={() => setopenDetail(true)}
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
                           className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                         >
                           {'View Insights'}
                         </button>
 
-                        <button
-                          onClick={() => {
-                            setOpenRating(true);
-                            setSelectedUserExc(exercise);
-                          }}
-                          className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                        >
-                          {'Completed'}
-                        </button>
+                        {exercise.uex_status === 'incomplete' &&
+                          !exercise.uex_reason && (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setOpenRating(true);
+                                  setSelectedUserExc(exercise);
+                                }}
+                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                              >
+                                {'Completed'}
+                              </button>
 
-                        <button
-                          onClick={handleCancel}
-                          className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                        >
-                          {'Did Not Complete'}
-                        </button>
+                              <button
+                                onClick={() => {
+                                  setOpenReason(true);
+                                  setSelectedUserExc(exercise);
+                                }}
+                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                              >
+                                {'Did Not Complete'}
+                              </button>
+                            </>
+                          )}
                       </div>
                       <RatingModal
                         open={openRating}
@@ -372,8 +463,8 @@ export default function ExerciseTrackingPage() {
                         onSubmit={handleRatingSubmit}
                       />
                       <ReasonModal
-                        open={openRating}
-                        onClose={() => setOpenRating(false)}
+                        open={openReason}
+                        onClose={() => setOpenReason(false)}
                         onSubmit={handleReasonSubmit}
                       />
                     </div>
@@ -458,23 +549,39 @@ export default function ExerciseTrackingPage() {
               {/* scroll */}
               <div className="mx-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
                 {fetchingExcHistory && (
-                  <p style={{ color: C.faint }}>
+                  <p
+                    className="sm:text-[14px] md:text-[16px] font-semibold"
+                    style={{ color: C.faint }}
+                  >
                     Loading recommended exercises...
                   </p>
                 )}
 
                 {!fetchingExcHistory && excHistoryData.length === 0 && (
-                  <p style={{ color: C.faint }}>
+                  <p
+                    className="sm:text-[14px] md:text-[16px] font-semibold"
+                    style={{ color: C.faint }}
+                  >
                     No recommended exercises for this date.
                   </p>
                 )}
+                {!fetchingExcHistory &&
+                  excHistoryData.length === 0 &&
+                  isSameDay(selectedDate, todayDate) && (
+                    <button
+                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      onClick={() => router.push('/journal/new')}
+                    >
+                      New Entry
+                    </button>
+                  )}
 
                 {/* exercise card */}
                 {!fetchingExcHistory &&
                   excHistoryData.map((exercise) => {
-                    const moods = Array.isArray(exercise.exercise.exc_mood)
-                      ? exercise.exercise.exc_mood
-                      : [exercise.exercise.exc_mood];
+                    const moods = Array.isArray(exercise.exc_mood)
+                      ? exercise.exc_mood
+                      : [exercise.exc_mood];
                     const MAX_VISIBLE_MOODS = 2;
                     const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
                     const remainingCount = moods.length - visibleMoods.length;
@@ -513,7 +620,7 @@ export default function ExerciseTrackingPage() {
                           {remainingCount > 0 && (
                             <div
                               onClick={() => {
-                                setSelectedExercise(exercise.exercise);
+                                setSelectedExercise(exercise);
                                 setOpenDetail(true);
                               }}
                               className="cursor-pointer"
@@ -532,31 +639,43 @@ export default function ExerciseTrackingPage() {
                             </div>
                           )}
 
-                          <Pill>{toTitleCase(exercise.exercise.exc_type)}</Pill>
+                          <Pill>{toTitleCase(exercise.exc_type)}</Pill>
                         </div>
 
                         {/* rating (completed) / reason (incomplete) */}
                         {exercise.uex_status === 'completed' ? (
+                          <div className="flex items-center gap-1">
+                            <p
+                              className="sm:text-[18px] md:text-[20px] font-bold"
+                              style={{ color: C.navy }}
+                            >
+                              {exercise.uex_rating}
+                            </p>
+                            <Star
+                              size={18}
+                              style={{
+                                color: C.navy,
+                              }}
+                            />
+                          </div>
+                        ) : exercise.uex_status === 'incomplete' &&
+                          exercise.uex_reason ? (
                           <p
-                            className="sm:text-[14px] md:text-[16px]"
+                            className="sm:text-[14px] md:text-[16px] mb-2"
                             style={{ color: C.navy }}
                           >
-                            {exercise.uex_rating} <Star size={18} />
+                            <b>Incomplete Reason</b>: {exercise.uex_reason}
                           </p>
                         ) : (
-                          <p
-                            className="sm:text-[14px] md:text-[16px]"
-                            style={{ color: C.navy }}
-                          >
-                            Incomplete Reason: {exercise.uex_reason}
-                          </p>
+                          <></>
                         )}
+
                         {/* exercise description */}
                         <p
                           className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                           style={{ color: C.navy }}
                         >
-                          {exercise.exercise.exc_desc}
+                          {exercise.exc_desc}
                         </p>
 
                         <div className="mt-1 flex gap-3">
@@ -564,7 +683,7 @@ export default function ExerciseTrackingPage() {
                           <button
                             className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                             onClick={() => {
-                              setSelectedExercise(exercise.exercise);
+                              setSelectedExercise(exercise);
                               setOpenDetail(true);
                             }}
                           >

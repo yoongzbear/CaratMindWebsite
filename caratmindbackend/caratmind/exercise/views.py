@@ -109,6 +109,7 @@ def list_user_exercises_view(request):
     return JsonResponse({'exercises': exercises})
 
 # update rating
+@csrf_exempt
 @require_POST
 def rating_user_exercise_view(request, uex_id):
     principal = authenticate_bearer(request)
@@ -141,6 +142,7 @@ def rating_user_exercise_view(request, uex_id):
     return JsonResponse(updated)
 
 # update incompletion reason
+@csrf_exempt
 @require_POST
 def reason_user_exercise_view(request, uex_id):
     principal = authenticate_bearer(request)
