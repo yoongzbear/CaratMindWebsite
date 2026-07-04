@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
 from mood.services import detect_store_mood
-from .dynamodb_service import create_journal_entry, update_journal_entry
+from .dynamodb_service import calc_journal_streak, create_journal_entry, update_journal_entry
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -191,3 +191,14 @@ def update_journal_view(request, jrnl_id):
         'success': True,
         'jrnl_id': jrnl_id,
     })
+
+# get streak
+@require_GET
+def journal_streak_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    result = calc_journal_streak(sub)
+    return JsonResponse(result)

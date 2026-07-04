@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
-from exercise.dynamodb_service import get_all_exercises, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
+from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
 
 # retrieve coping exercises
 @require_GET
@@ -173,3 +173,14 @@ def reason_user_exercise_view(request, uex_id):
         return JsonResponse({'error': f'Failed to save incompletion reason: {e}'}, status=500)
 
     return JsonResponse(updated)
+
+# get streak
+@require_GET
+def exercise_streak_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    result = calc_exc_streak(sub)
+    return JsonResponse(result)

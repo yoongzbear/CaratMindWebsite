@@ -17,7 +17,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay } from 'date-fns';
-import { Eye, Pi, Star } from 'lucide-react';
+import { Eye, Flame, Pi, Star } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -32,6 +32,10 @@ export default function ExerciseTrackingPage() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
   const router = useRouter();
+
+  const [streak, setStreak] = useState(0);
+  const [completedToday, setCompletedToday] = useState(false);
+  const [fetchingStreak, setFetchingStreak] = useState(false);
 
   const todayDate = useMemo(() => new Date(), []);
   const [todayExercise, setTodayExercise] = useState<UserExerciseDetail[]>([]);
@@ -51,6 +55,32 @@ export default function ExerciseTrackingPage() {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadStreak() {
+      setFetchingStreak(true);
+      try {
+        const res = await fetch('/api/user_exercise/streak', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load streak.');
+          return;
+        }
+        setStreak(data.streak);
+        setCompletedToday(data.completed_today);
+      } catch {
+        toastError('Something went wrong loading your streak.');
+      } finally {
+        setFetchingStreak(false);
+      }
+    }
+
+    loadStreak();
+  }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -156,6 +186,18 @@ export default function ExerciseTrackingPage() {
         prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
       );
       setOpenRating(false);
+
+      // refresh streak
+      try {
+        const streakRes = await fetch('/api/user_exercise/streak', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const streakData = await streakRes.json();
+        if (streakRes.ok) {
+          setStreak(streakData.streak);
+          setCompletedToday(streakData.completed_today);
+        }
+      } catch {}
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -236,17 +278,18 @@ export default function ExerciseTrackingPage() {
             <div
               className={`relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
             >
-              <Eye size={16} />
+              <Flame size={16} />
             </div>
-            <p style={styles.pText}>XX Days</p>
+            <p style={styles.pText}>
+              {fetchingStreak
+                ? '...'
+                : `${streak} ${streak === 1 ? 'Day' : 'Days'}`}
+            </p>
           </div>
-          <p
-            style={{
-              ...styles.pText,
-            }}
-          >
-            You have not performed a coping exercise today. Complete one to
-            continue your streak!
+          <p style={{ ...styles.pText }}>
+            {completedToday
+              ? 'Great job! You kept your coping exercise streak going today.'
+              : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
           </p>
         </div>
 

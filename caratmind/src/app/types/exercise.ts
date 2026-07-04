@@ -19,7 +19,6 @@ export type UserExercise = {
   uex_created_at: string;
   uex_done_date?: string;
   user_id: string;
-  // exercise: Exercise;
 };
 
 export type ExerciseStatusKey = 'incomplete' | 'completed';

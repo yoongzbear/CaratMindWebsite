@@ -1,8 +1,11 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import boto3
 from django.conf import settings
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Attr, Key
+
+from caratmind.datetime import to_local_date_str
 
 def _get_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -87,3 +90,38 @@ def update_journal_mood_exc(jrnl_id: str, mood_id: str, mood_name: str, uex_id: 
             ':exc_name': exc_name
         },
     )
+
+# get journal streak
+def get_journal_dates_for_user(sub: str, start_date: str, end_date: str) -> list[str]:
+    table = _get_table()
+    response = table.query(
+        IndexName='user_id-jrnl_created_at-index',
+        KeyConditionExpression=(
+            Key('user_id').eq(sub) & Key('jrnl_created_at').between(start_date, end_date)
+        ),
+    )
+    items = response.get('Items', [])
+    return {to_local_date_str(item['jrnl_created_at']) for item in items}
+
+def calc_journal_streak(sub: str) -> dict:
+    today_local = datetime.now(ZoneInfo('Asia/Kuala_Lumpur')).date()
+    start_date = (today_local - timedelta(days=365)).isoformat()
+    end_date = (today_local + timedelta(days=1)).isoformat()  
+
+    submitted_dates = get_journal_dates_for_user(sub, start_date, end_date)
+
+    streak = 0
+    cursor = today_local
+    submitted_today = today_local.isoformat() in submitted_dates
+
+    if not submitted_today:
+        cursor = cursor - timedelta(days=1)
+
+    while cursor.isoformat() in submitted_dates:
+        streak += 1
+        cursor -= timedelta(days=1)
+
+    return {
+        'streak': streak,
+        'submitted_today': submitted_today,
+    }
