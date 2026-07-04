@@ -64,7 +64,7 @@ def get_user_exercise_view(request, uex_id):
 
     response_data = {
         **user_exercise,
-        'exercise': exercise,  # full exercise details: exc_desc, exc_steps, exc_type, etc. nested here
+        **exercise,  
     }
 
     return JsonResponse(response_data)

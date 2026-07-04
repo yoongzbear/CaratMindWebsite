@@ -7,7 +7,7 @@ import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
 import ToggleSwitch from '@/app/components/ToggleSwitch';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { C, styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -44,7 +44,6 @@ export default function MoodPage() {
           {/* stacked bar chart */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
             {/* time range */}
-            {/* TODO: preset the dates to today and 7 days */}
             <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
 
             <div className="w-full mt-2">
@@ -55,7 +54,6 @@ export default function MoodPage() {
           {/* scatter plot */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
             {/* time range */}
-            {/* TODO: preset the dates to today and 7 days */}
             <DateRangeSelector
               presets={[7, 30, 90]}
               onChange={setScatterRange}

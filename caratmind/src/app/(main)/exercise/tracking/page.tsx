@@ -58,8 +58,8 @@ export default function ExerciseTrackingPage() {
     async function loadTodayExc() {
       setFetchingTodayExc(true);
       try {
-        // const dateStr = format(todayDate, 'yyyy-MM-dd');
-        const dateStr = '2026-07-01';
+        const dateStr = format(todayDate, 'yyyy-MM-dd');
+        // const dateStr = '2026-07-01';
         const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -80,6 +80,12 @@ export default function ExerciseTrackingPage() {
         setFetchingTodayExc(false);
       }
     }
+
+    loadTodayExc();
+  }, [accessToken, todayDate]);
+
+  useEffect(() => {
+    if (!accessToken) return;
 
     async function loadExcHistory() {
       setFetchingExcHistory(true);
@@ -106,9 +112,8 @@ export default function ExerciseTrackingPage() {
       }
     }
 
-    loadTodayExc();
     loadExcHistory();
-  }, [selectedDate, accessToken, todayDate]);
+  }, [selectedDate, accessToken]);
 
   const handleViewEntry = (jrnl_id: string) => {
     router.push(`/mood/insight/${jrnl_id}`);

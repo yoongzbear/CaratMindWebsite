@@ -4,28 +4,20 @@ import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import EntryDetailModal, {
   DeleteEntryModal,
 } from '@/app/components/modal/EntryModal';
+import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
-import {
-  buttonGradientColor,
-  buttonOutlined,
-  buttonRed,
-  C,
-  styles,
-} from '@/app/styles/styles';
-import { UserExercise } from '@/app/types/exercise';
+import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
+import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
-import { getRangeLabel } from '@/app/utils/dateFormat';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 // import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { format, subDays, isAfter, startOfDay } from 'date-fns';
-import { Eye } from 'lucide-react';
+import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import Swal from 'sweetalert2';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function MoodInsightPage() {
   const { user, loading, accessToken } = useAuth();
@@ -35,13 +27,17 @@ export default function MoodInsightPage() {
   const [journal, setJournal] = useState<JournalDetail | null>(null);
   const [fetchingJournal, setFetchingJournal] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [openDetail, setopenDetail] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fetchingMoodData, setFetchingMoodData] = useState(false);
   const [moodData, setMoodData] = useState<Mood | null>(null);
   const [fetchingExercise, setFetchingExercise] = useState(false);
-  const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
+  // const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
+  const [exerciseData, setExerciseData] = useState<UserExerciseDetail | null>(
+    null,
+  );
+  const [openExcDetail, setOpenExcDetail] = useState(false);
 
   // const [barRange, setBarRange] = useState<DateRangeValue>({
   //   mode: 'days',
@@ -72,6 +68,12 @@ export default function MoodInsightPage() {
       }
     }
 
+    loadEntry();
+  }, [jrnl_id, accessToken]);
+
+  useEffect(() => {
+    if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
+
     async function loadMood() {
       setFetchingMoodData(true);
       try {
@@ -91,6 +93,12 @@ export default function MoodInsightPage() {
         setFetchingMoodData(false);
       }
     }
+
+    loadMood();
+  }, [jrnl_id, accessToken]);
+
+  useEffect(() => {
+    if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
 
     async function loadRecExercise() {
       setFetchingExercise(true);
@@ -114,8 +122,6 @@ export default function MoodInsightPage() {
       }
     }
 
-    loadEntry();
-    loadMood();
     loadRecExercise();
   }, [jrnl_id, accessToken]);
 
@@ -189,7 +195,7 @@ export default function MoodInsightPage() {
   };
 
   const performExercise = () => {
-    // save as draft - save into db only
+    router.push('/journal/exercise/tracking');
   };
 
   const moodDashboard = () => {
@@ -199,7 +205,7 @@ export default function MoodInsightPage() {
   if (loading || fetchingJournal) {
     return (
       <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
-        Loading…
+        Loading...
       </section>
     );
   }
@@ -247,86 +253,97 @@ export default function MoodInsightPage() {
             {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
           </h3>
 
-          <div className="mt-0 mb-2">
-            <Pill
-              bgColor={journal.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'}
-              textColor={
-                journal.jrnl_status === 'draft' ? '#c62828' : '#2e7d32'
-              }
-              borderColor={
-                journal.jrnl_status === 'draft' ? '#f3caca' : '#c8e6c9'
-              }
-            >
-              {journal.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
-            </Pill>
-          </div>
+          {!fetchingJournal && (
+            <>
+              <div className="mt-0 mb-2">
+                <Pill
+                  bgColor={
+                    journal.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
+                  }
+                  textColor={
+                    journal.jrnl_status === 'draft' ? '#c62828' : '#2e7d32'
+                  }
+                  borderColor={
+                    journal.jrnl_status === 'draft' ? '#f3caca' : '#c8e6c9'
+                  }
+                >
+                  {journal.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
+                </Pill>
+              </div>
 
-          <div
-            className="px-4 py-2 rounded-xl"
-            style={{ border: `1px solid ${C.border}` }}
-          >
-            <p
-              className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word sm:text-[14px] md:text-[16px]"
-              style={{
-                color: C.navy,
-              }}
-            >
-              {journal.entryText ? journal.entryText : 'No preview available.'}
-            </p>
-          </div>
-
-          <div className="flex gap-10 mt-3">
-            {/* view more button */}
-            <button
-              onClick={() => setopenDetail(true)}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-            >
-              {'View More'}
-            </button>
-
-            <EntryDetailModal
-              open={openDetail}
-              onClose={() => setopenDetail(false)}
-              date={format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
-              lastUpdated={format(
-                new Date(journal.jrnl_updated_at),
-                'd MMMM yyyy, p',
-              )}
-              journal={journal}
-            />
-
-            {/* edit entry */}
-            <button
-              onClick={() => handleEdit(journal.jrnl_id)}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-            >
-              Edit Entry
-            </button>
-
-            {/* submit/edit entry button */}
-            {isDraft && (
-              <button
-                onClick={handleSubmit}
-                disabled={submitting}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              <div
+                className="px-4 py-2 rounded-xl"
+                style={{ border: `1px solid ${C.border}` }}
               >
-                {submitting ? 'Submitting...' : 'Submit Entry'}
-              </button>
-            )}
+                <p
+                  className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word sm:text-[14px] md:text-[16px]"
+                  style={{
+                    color: C.navy,
+                  }}
+                >
+                  {journal.entryText
+                    ? journal.entryText
+                    : 'No preview available.'}
+                </p>
+              </div>
 
-            {/* delete button */}
-            <button
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              onClick={() => setOpenDelete(true)}
-            >
-              {'Delete Entry'}
-            </button>
+              <div className="flex gap-10 mt-3">
+                {/* view more button */}
+                <button
+                  onClick={() => setOpenDetail(true)}
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                >
+                  {'View More'}
+                </button>
 
-            <DeleteEntryModal
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-            />
-          </div>
+                <EntryDetailModal
+                  open={openDetail}
+                  onClose={() => setOpenDetail(false)}
+                  date={format(
+                    new Date(journal.jrnl_created_at),
+                    'd MMMM yyyy, p',
+                  )}
+                  lastUpdated={format(
+                    new Date(journal.jrnl_updated_at),
+                    'd MMMM yyyy, p',
+                  )}
+                  journal={journal}
+                />
+
+                {/* edit entry */}
+                <button
+                  onClick={() => handleEdit(journal.jrnl_id)}
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                >
+                  Edit Entry
+                </button>
+
+                {/* submit/edit entry button */}
+                {isDraft && (
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  >
+                    {submitting ? 'Submitting...' : 'Submit Entry'}
+                  </button>
+                )}
+
+                {/* delete button */}
+                <button
+                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  onClick={() => setOpenDelete(true)}
+                >
+                  {'Delete Entry'}
+                </button>
+
+                <DeleteEntryModal
+                  open={openDelete}
+                  onClose={() => setOpenDelete(false)}
+                />
+              </div>
+            </>
+          )}
         </div>
 
         {/* mood insight */}
@@ -346,8 +363,10 @@ export default function MoodInsightPage() {
           </p>
           <div className="flex flex-col items-center">
             {/* mood icon */}
-            {/* {!moodData?.mood_id ? ( */}
-            {!moodData?.mood_id ? (
+            {fetchingMoodData ? (
+              <p style={{ color: C.navy }}>Loading mood insight...</p>
+            ) : !moodData?.mood_id ? (
+              // {!moodData?.mood_id ? (
               <h5
                 className="m-5 text-center sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
@@ -427,7 +446,11 @@ export default function MoodInsightPage() {
           </h3>
           <div className="flex flex-col items-center">
             {/* recommended exercise */}
-            {!journal.uex_id ? (
+            {fetchingExercise ? (
+              <p style={{ color: C.navy }}>
+                Loading exercise recommendation...
+              </p>
+            ) : !journal.uex_id ? (
               <h5
                 className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                 style={{ color: C.navy }}
@@ -443,12 +466,88 @@ export default function MoodInsightPage() {
                 >
                   {exerciseData?.exc_name}
                 </h5>
+
+                {/* moods and type */}
+                {exerciseData?.uex_id &&
+                  (() => {
+                    const moods = Array.isArray(exerciseData.exc_mood)
+                      ? exerciseData.exc_mood
+                      : [exerciseData.exc_mood];
+                    const MAX_VISIBLE_MOODS = 2;
+                    const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
+                    const remainingCount = moods.length - visibleMoods.length;
+
+                    return (
+                      <div className="flex gap-3 mb-2">
+                        {visibleMoods.map((mood) => {
+                          const moodStyle = getMoodStyle(mood);
+                          return (
+                            <Pill
+                              key={mood}
+                              bgColor={moodStyle.bgColor}
+                              borderColor={moodStyle.borderColor}
+                              textColor={moodStyle.textColor}
+                            >
+                              {moodStyle.emoji} {toTitleCase(mood)}
+                            </Pill>
+                          );
+                        })}
+
+                        {remainingCount > 0 && (
+                          <div
+                            onClick={() => {
+                              // setSelectedExercise(exercise);
+                              setOpenExcDetail(true);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <Pill
+                              bgColor="#f1f3f8"
+                              borderColor="#dde1ea"
+                              textColor={C.faint}
+                              title={moods
+                                .slice(MAX_VISIBLE_MOODS)
+                                .map(toTitleCase)
+                                .join(', ')}
+                            >
+                              +{remainingCount} more
+                            </Pill>
+                          </div>
+                        )}
+
+                        <Pill>{toTitleCase(exerciseData.exc_type)}</Pill>
+                      </div>
+                    );
+                  })()}
+
                 <p
                   className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
                   style={{ color: C.navy }}
                 >
-                  {exerciseData?.exercise.exc_desc}
+                  {exerciseData?.exc_desc}
                 </p>
+
+                {exerciseData?.uex_status === 'completed' && (
+                  <div className="w-full mb-2">
+                    <Pill
+                      bgColor={'#f1f8f4'}
+                      borderColor={'#66bb6a'}
+                      textColor={'#2e7d32'}
+                    >
+                      Completed
+                    </Pill>
+                  </div>
+                )}
+                {exerciseData?.uex_status === 'incomplete' &&
+                  exerciseData.uex_reason && (
+                    <Pill
+                      bgColor={'#fff5f5'}
+                      borderColor={'#e57373'}
+                      textColor={'#c62828'}
+                    >
+                      Incomplete
+                    </Pill>
+                  )}
 
                 {/* disclaimer */}
                 <p
@@ -458,13 +557,16 @@ export default function MoodInsightPage() {
                   AI-generated recommendation. Suggestions are not a substitute
                   for professional medical or mental health advice.
                 </p>
-                {/* // perform exercise button */}
-                <button
-                  onClick={performExercise}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                >
-                  {'Perform Exercise'}
-                </button>
+                {/* // perform exercise button if the date is today and exercise not done */}
+                {exerciseData?.uex_status === 'incomplete' &&
+                  isSameDay(exerciseData.uex_created_at, new Date()) && (
+                    <button
+                      onClick={performExercise}
+                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                    >
+                      {'Perform Exercise'}
+                    </button>
+                  )}
               </>
             )}
           </div>
@@ -498,6 +600,21 @@ export default function MoodInsightPage() {
           </button>
         </div>
       </div>
+      {exerciseData && openExcDetail == true && (
+        <ExerciseDetailModal
+          open={openExcDetail}
+          onClose={() => setOpenExcDetail(false)}
+          name={exerciseData.exc_name}
+          moods={
+            Array.isArray(exerciseData.exc_mood)
+              ? exerciseData.exc_mood
+              : [exerciseData.exc_mood]
+          }
+          desc={exerciseData.exc_desc}
+          type={exerciseData.exc_type}
+          steps={exerciseData.exc_steps}
+        />
+      )}
     </section>
   );
 }
