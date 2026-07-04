@@ -1,4 +1,3 @@
-import { StatusKey } from '@/app/types/journal';
 import { NextResponse } from 'next/server';
 
 export async function POST(

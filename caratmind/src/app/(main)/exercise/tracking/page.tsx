@@ -9,11 +9,7 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
-import {
-  Exercise,
-  UserExercise,
-  UserExerciseDetail,
-} from '@/app/types/exercise';
+import { Exercise, UserExercise } from '@/app/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format } from 'date-fns';
@@ -25,6 +21,7 @@ import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
 import RatingModal from '@/app/components/modal/RatingModal';
+import ReasonModal from '@/app/components/modal/ReasonModal';
 
 export default function ExerciseTrackingPage() {
   const { user, loading, accessToken } = useAuth();
@@ -33,16 +30,16 @@ export default function ExerciseTrackingPage() {
   const router = useRouter();
 
   const todayDate = useMemo(() => new Date(), []);
-  const [todayExercise, setTodayExercise] = useState<UserExerciseDetail[]>([]);
+  const [todayExercise, setTodayExercise] = useState<UserExercise[]>([]);
   const [fetchingTodayExc, setFetchingTodayExc] = useState(false);
 
-  const [selectedUserExc, setSelectedUserExc] =
-    useState<UserExerciseDetail | null>(null);
-  const [openRating, setOpenRating] = useState(false);
-
-  const [excHistoryData, setExcHistoryData] = useState<UserExerciseDetail[]>(
-    [],
+  const [selectedUserExc, setSelectedUserExc] = useState<UserExercise | null>(
+    null,
   );
+  const [openRating, setOpenRating] = useState(false);
+  const [openReason, setOpenReason] = useState(false);
+
+  const [excHistoryData, setExcHistoryData] = useState<UserExercise[]>([]);
   const [fetchingExcHistory, setFetchingExcHistory] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(todayDate);
   const [calendarMonth, setCalendarMonth] = useState<Date>(todayDate); // to change month
@@ -131,7 +128,7 @@ export default function ExerciseTrackingPage() {
         toastError(data.error ?? 'Failed to save rating.');
         return;
       }
-      toastSuccess('Submitted coping exercise rating.');
+      toastSuccess('Saved coping exercise rating.');
       // update exercises
       setTodayExercise((prev) =>
         prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
@@ -140,6 +137,38 @@ export default function ExerciseTrackingPage() {
         prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
       );
       setOpenRating(false);
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+    }
+  };
+
+  const handleReasonSubmit = async (reason: string) => {
+    if (!selectedUserExc) return;
+    const uex_id = selectedUserExc.uex_id;
+    try {
+      const res = await fetch(`/api/user_exercise/${uex_id}/reason`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ reason }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save incompletion reason.');
+        return;
+      }
+      toastSuccess('Saved coping exercise incompletion reason.');
+      // update exercises
+      setTodayExercise((prev) =>
+        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
+      );
+      setExcHistoryData((prev) =>
+        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
+      );
+      setOpenReason(false);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -232,9 +261,9 @@ export default function ExerciseTrackingPage() {
               {/* exercise card */}
               {!fetchingTodayExc &&
                 todayExercise.map((exercise) => {
-                  const moods = Array.isArray(exercise.exc_mood)
-                    ? exercise.exc_mood
-                    : [exercise.exc_mood];
+                  const moods = Array.isArray(exercise.exercise.exc_mood)
+                    ? exercise.exercise.exc_mood
+                    : [exercise.exercise.exc_mood];
                   const MAX_VISIBLE_MOODS = 3;
                   const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
                   const remainingCount = moods.length - visibleMoods.length;
@@ -273,7 +302,7 @@ export default function ExerciseTrackingPage() {
                         {remainingCount > 0 && (
                           <div
                             onClick={() => {
-                              setSelectedExercise(exercise);
+                              setSelectedExercise(exercise.exercise);
                               setOpenDetail(true);
                             }}
                             className="cursor-pointer"
@@ -292,19 +321,19 @@ export default function ExerciseTrackingPage() {
                           </div>
                         )}
 
-                        <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                        <Pill>{toTitleCase(exercise.exercise.exc_type)}</Pill>
                       </div>
                       <p
                         className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                         style={{ color: C.navy }}
                       >
-                        {exercise.exc_desc}
+                        {exercise.exercise.exc_desc}
                       </p>
 
                       <div className="flex w-full gap-3">
                         <button
                           onClick={() => {
-                            setSelectedExercise(exercise);
+                            setSelectedExercise(exercise.exercise);
                             setOpenDetail(true);
                           }}
                           className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
@@ -327,20 +356,25 @@ export default function ExerciseTrackingPage() {
                           }}
                           className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                         >
-                          {'Completed It'}
+                          {'Completed'}
                         </button>
 
                         <button
                           onClick={handleCancel}
                           className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                         >
-                          {'Did not complete'}
+                          {'Did Not Complete'}
                         </button>
                       </div>
                       <RatingModal
                         open={openRating}
                         onClose={() => setOpenRating(false)}
                         onSubmit={handleRatingSubmit}
+                      />
+                      <ReasonModal
+                        open={openRating}
+                        onClose={() => setOpenRating(false)}
+                        onSubmit={handleReasonSubmit}
                       />
                     </div>
                   );
@@ -438,9 +472,9 @@ export default function ExerciseTrackingPage() {
                 {/* exercise card */}
                 {!fetchingExcHistory &&
                   excHistoryData.map((exercise) => {
-                    const moods = Array.isArray(exercise.exc_mood)
-                      ? exercise.exc_mood
-                      : [exercise.exc_mood];
+                    const moods = Array.isArray(exercise.exercise.exc_mood)
+                      ? exercise.exercise.exc_mood
+                      : [exercise.exercise.exc_mood];
                     const MAX_VISIBLE_MOODS = 2;
                     const visibleMoods = moods.slice(0, MAX_VISIBLE_MOODS);
                     const remainingCount = moods.length - visibleMoods.length;
@@ -479,7 +513,7 @@ export default function ExerciseTrackingPage() {
                           {remainingCount > 0 && (
                             <div
                               onClick={() => {
-                                setSelectedExercise(exercise);
+                                setSelectedExercise(exercise.exercise);
                                 setOpenDetail(true);
                               }}
                               className="cursor-pointer"
@@ -498,7 +532,7 @@ export default function ExerciseTrackingPage() {
                             </div>
                           )}
 
-                          <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                          <Pill>{toTitleCase(exercise.exercise.exc_type)}</Pill>
                         </div>
 
                         {/* rating (completed) / reason (incomplete) */}
@@ -522,7 +556,7 @@ export default function ExerciseTrackingPage() {
                           className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
                           style={{ color: C.navy }}
                         >
-                          {exercise.exc_desc}
+                          {exercise.exercise.exc_desc}
                         </p>
 
                         <div className="mt-1 flex gap-3">
@@ -530,7 +564,7 @@ export default function ExerciseTrackingPage() {
                           <button
                             className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                             onClick={() => {
-                              setSelectedExercise(exercise);
+                              setSelectedExercise(exercise.exercise);
                               setOpenDetail(true);
                             }}
                           >

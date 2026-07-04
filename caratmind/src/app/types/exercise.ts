@@ -24,4 +24,4 @@ export type UserExercise = {
 
 export type ExerciseStatusKey = 'incomplete' | 'completed';
 
-export type UserExerciseDetail = UserExercise & Exercise;
+// export type UserExerciseDetail = UserExercise & Exercise;

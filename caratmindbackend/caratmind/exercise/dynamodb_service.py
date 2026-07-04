@@ -150,3 +150,18 @@ def update_user_exercise_rating(uex_id: str, rating: int) -> dict | None:
         ReturnValues='ALL_NEW',
     )
     return response.get('Attributes')
+
+# update reason 
+def update_user_exercise_reason(uex_id: str, reason: str) -> dict | None:
+    table = _get_user_exercise_table()
+    response = table.update_item(
+        Key={'jrnl_id': uex_id},  
+        UpdateExpression=(
+            'SET uex_reason = :reason'
+        ),
+        ExpressionAttributeValues={
+            ':reason': reason,
+        },
+        ReturnValues='ALL_NEW',
+    )
+    return response.get('Attributes')
