@@ -151,6 +151,31 @@ export default function TimeScatterPlot({
             padding={{ bottom: 15 }}
           />
           <Tooltip
+            content={({ active, payload }) => {
+              if (!active || !payload || !payload.length) return null;
+
+              const point = payload[0].payload;
+
+              return (
+                <div
+                  className="sm:text-[14px] md:text-[16px]"
+                  style={{
+                    background: 'white',
+                    borderRadius: 10,
+                    border: `1px solid ${C.navy}`,
+                    padding: '6px 10px',
+                    color: C.navy,
+                  }}
+                >
+                  {getMoodStyle(point.mood).emoji}
+                  {toTitleCase(point.mood)} -{' '}
+                  {format(new Date(point.timestamp), 'p')}
+                </div>
+              );
+            }}
+            wrapperStyle={{ zIndex: 100 }}
+          />
+          {/* <Tooltip
             formatter={(_, __, props) => {
               const point = props.payload;
               //   show time only
@@ -166,7 +191,7 @@ export default function TimeScatterPlot({
             }}
             itemStyle={{ color: C.navy, fontWeight: 600 }}
             wrapperStyle={{ zIndex: 100 }}
-          />
+          /> */}
           <Scatter data={data} onClick={handleScatterClick} cursor="pointer">
             {data.map((point, i) => (
               <Cell

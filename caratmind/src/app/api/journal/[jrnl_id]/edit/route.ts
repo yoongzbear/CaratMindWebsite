@@ -33,7 +33,7 @@ export async function POST(
 
     const baseUrl = process.env.DJANGO_API_BASE_URL;
 
-    const res = await fetch(`${baseUrl}/api/journals/${jrnl_id}/update/`, {
+    const res = await fetch(`${baseUrl}/api/journal/${jrnl_id}/update/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

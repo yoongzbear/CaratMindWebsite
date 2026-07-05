@@ -195,7 +195,7 @@ export default function MoodInsightPage() {
   };
 
   const performExercise = () => {
-    router.push('/journal/exercise/tracking');
+    router.push('/exercise/tracking');
   };
 
   const moodDashboard = () => {
@@ -250,7 +250,7 @@ export default function MoodInsightPage() {
             className="sm:text-[22px] md:text-[26px] font-semibold"
             style={{ color: C.navy }}
           >
-            {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
+            {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
           </h3>
 
           {!fetchingJournal && (

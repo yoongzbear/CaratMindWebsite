@@ -2,18 +2,81 @@
 import Link from 'next/link';
 import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
-import { Eye } from 'lucide-react';
+import { Eye, Flame } from 'lucide-react';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
+import { toastError } from '@/utils/toast';
 
 export default function HomePage() {
-  const { user, loading } = useAuth();
+  const { user, loading, accessToken } = useAuth();
+
+  const [journalStreak, setJournalStreak] = useState(0);
+  const [journalToday, setJournalToday] = useState(false);
+  const [fetchingJournalStreak, setFetchingJournalStreak] = useState(false);
+
+  const [excStreak, setExcStreak] = useState(0);
+  const [excToday, setExcToday] = useState(false);
+  const [fetchingExcStreak, setFetchingExcStreak] = useState(false);
 
   const [barRange, setBarRange] = useState<DateRangeValue>({
     mode: 'days',
     days: 7,
   });
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadJournalStreak() {
+      setFetchingJournalStreak(true);
+      try {
+        const res = await fetch('/api/journal/streak', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load journal streak.');
+          return;
+        }
+        console.log('journal streak: ', data);
+        setJournalStreak(data.streak);
+        setJournalToday(data.submitted_today);
+      } catch {
+        toastError('Something went wrong loading your journal streak.');
+      } finally {
+        setFetchingJournalStreak(false);
+      }
+    }
+
+    loadJournalStreak();
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadExcStreak() {
+      setFetchingExcStreak(true);
+      try {
+        const res = await fetch('/api/user_exercise/streak', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? 'Failed to load coping exercise streak.');
+          return;
+        }
+        console.log('exercise streak: ', data);
+        setExcStreak(data.streak);
+        setExcToday(data.completed_today);
+      } catch {
+        toastError('Something went wrong loading your coping exercise streak.');
+      } finally {
+        setFetchingExcStreak(false);
+      }
+    }
+
+    loadExcStreak();
+  }, [accessToken]);
 
   return (
     <section
@@ -24,7 +87,10 @@ export default function HomePage() {
     >
       <div className="w-[85%] mx-auto">
         <header className="mb-3">
-          <h1 style={{ ...styles.header1, margin: '0 0 8px' }}>
+          <h1
+            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            style={{ color: C.navy }}
+          >
             Welcome back, {user?.preferredUsername}!
           </h1>
         </header>
@@ -52,48 +118,54 @@ export default function HomePage() {
         </div>
 
         {/* cards */}
-        <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5 mx-auto">
+        <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-3 gap-8 mx-auto">
           {/* journal */}
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-6 gap-3">
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
-                Journal
-              </h2>
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
-                Current Journal Streak
-              </h2>
-              {/* journal streak */}
-              <div
-                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
+              <h3
+                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                style={{ color: C.navy }}
               >
-                {/* Decorative pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  {[...Array(6)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute rounded-full border border-current"
-                      style={{
-                        width: `${60 + i * 30}px`,
-                        height: `${60 + i * 30}px`,
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        opacity: 1 - i * 0.14,
-                      }}
-                    />
-                  ))}
-                </div>
-                {/* Center icon */}
-                <div
-                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
-                >
-                  <Eye size={16} />
+                Journal
+              </h3>
+              <h5
+                className="sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
+                style={{ color: C.navy }}
+              >
+                Current Journal Streak
+              </h5>
+              <div className="relative w-full h-44 bg-linear-to-br flex items-center justify-center">
+                <div className="flex flex-col items-center justify-center px-3">
+                  <div className="relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
+                    {journalToday ? (
+                      <Flame
+                        fill="#fc6f03"
+                        style={{ color: C.navy }}
+                        className="size-full"
+                      />
+                    ) : (
+                      <Flame style={{ color: C.navy }} className="size-full" />
+                    )}
+                  </div>
+                  <p
+                    className="mt-2 mb-2.5 sm:text-[18px] md:text-[20px] font-semibold"
+                    style={{ color: C.navy }}
+                  >
+                    {fetchingJournalStreak
+                      ? '...'
+                      : `${journalStreak} ${journalStreak === 1 ? 'Day' : 'Days'}`}
+                  </p>
                 </div>
               </div>
-              <p className="text-slate-400 sm:text-[12px] md:text-[14px] leading-relaxed flex-1">
-                You have not written an entry today. Write one to continue your
-                streak!
-                {/* if not written yet */}
+              <p
+                className="sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
+                style={{ color: C.navy }}
+              >
+                {fetchingJournalStreak
+                  ? 'Loading journal streak...'
+                  : journalToday
+                    ? 'Great job! You kept your journal streak going today. Keep it up!'
+                    : 'You have not written an entry today. Write one to continue your streak!'}
               </p>
               <Link
                 href="/journal/new"
@@ -107,9 +179,12 @@ export default function HomePage() {
           {/* mood */}
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-6 gap-3">
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+              <h3
+                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                style={{ color: C.navy }}
+              >
                 Mood
-              </h2>
+              </h3>
               {/* mood chart */}
               <StackedBarChart range={barRange} height={280} />
               <Link
@@ -124,50 +199,61 @@ export default function HomePage() {
           {/* exercise */}
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-6 gap-3">
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+              <h3
+                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                style={{ color: C.navy }}
+              >
                 Coping Exercise
-              </h2>
-              <h2 className="text-slate-800 text-xl font-semibold tracking-tight">
+              </h3>
+              <h5
+                className="sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
+                style={{ color: C.navy }}
+              >
                 Current Exercise Streak
-              </h2>
+              </h5>
               {/* exercise streak */}
               <div
                 className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
               >
-                {/* Decorative pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  {[...Array(6)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute rounded-full border border-current"
-                      style={{
-                        width: `${60 + i * 30}px`,
-                        height: `${60 + i * 30}px`,
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        opacity: 1 - i * 0.14,
-                      }}
-                    />
-                  ))}
-                </div>
-                {/* Center icon */}
-                <div
-                  className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
-                >
-                  <Eye size={16} />
+                <div className="flex flex-col items-center justify-center px-3">
+                  <div
+                    className={`relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300`}
+                  >
+                    {excToday ? (
+                      <Flame
+                        fill="#fc6f03"
+                        style={{ color: C.navy }}
+                        className="size-full"
+                      />
+                    ) : (
+                      <Flame style={{ color: C.navy }} className="size-full" />
+                    )}
+                  </div>
+                  <p
+                    className="mt-2 mb-2.5 sm:text-[18px] md:text-[20px] font-semibold"
+                    style={{ color: C.navy }}
+                  >
+                    {fetchingExcStreak
+                      ? '...'
+                      : `${excStreak} ${excStreak === 1 ? 'Day' : 'Days'}`}
+                  </p>
                 </div>
               </div>
-              <p className="text-slate-400 sm:text-[12px] md:text-[14px] leading-relaxed flex-1">
-                You have not performed a coping exercise today. Complete one to
-                continue your streak!
-                {/* if not done yet */}
+              <p
+                className="sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
+                style={{ color: C.navy }}
+              >
+                {fetchingExcStreak
+                  ? 'Loading coping exercise streak...'
+                  : excToday
+                    ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
+                    : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
               </p>
               <Link
-                href="/exercise_catalogue"
+                href="/exercise/tracking"
                 className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
-                Browse exercise
+                Track exercise
               </Link>
             </div>
           </div>

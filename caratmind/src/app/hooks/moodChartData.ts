@@ -3,7 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
-export type ChartRow = { date: string; [mood: string]: string | number };
+// export type ChartRow = { date: string; [mood: string]: string | number };
+export type ChartRow = {
+  date: string;
+  jrnl_ids?: string[];
+  [mood: string]: string | number | string[] | undefined;
+};
 
 type Params =
   | { mode: 'days'; days: number }

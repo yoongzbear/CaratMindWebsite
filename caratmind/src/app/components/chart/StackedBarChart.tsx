@@ -100,6 +100,8 @@ export default function StackedBarChart({
 
     const normalizedRow: ChartRow = {
       date: format(parseISO(row.date), 'dd/MM'),
+      raw_date: row.date,
+      jrnl_ids: row.jrnl_ids ?? [],
     };
     moods.forEach((mood) => {
       const count = Number(row[mood]) || 0;
@@ -111,13 +113,14 @@ export default function StackedBarChart({
   });
 
   const handleBarClick = (barData: any) => {
-    const ids: string[] = barData?.jrnl_ids ?? [];
+    console.log('bar data:', barData);
+    const rowData = barData?.payload;
+    const ids: string[] = rowData?.jrnl_ids ?? [];
     if (ids.length === 0) return;
     if (ids.length === 1) {
       router.push(`/mood/insight/${ids[0]}`);
     } else {
-      // multiple entries that day — go to journal list filtered by date
-      router.push(`/journal/past?date=${barData.raw_date}`);
+      router.push(`/journal/past?date=${rowData?.raw_date}`);
     }
   };
 
@@ -157,7 +160,9 @@ export default function StackedBarChart({
             }}
             formatter={(value, name, props) => {
               const rawCount = props.payload?.[`${name}_count`] ?? value;
-              return [rawCount, toTitleCase(String(name))];
+              const mood = String(name);
+              const emoji = getMoodStyle(mood).emoji;
+              return [rawCount, `${emoji} ${toTitleCase(mood)}`];
             }}
             contentStyle={{
               borderRadius: 10,
@@ -171,7 +176,6 @@ export default function StackedBarChart({
             }}
             itemStyle={{
               color: C.navy,
-              fontWeight: 600,
             }}
             wrapperStyle={{ zIndex: 100 }} // make it above the legend
           />

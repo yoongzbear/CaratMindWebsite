@@ -169,16 +169,16 @@ def update_user_exercise_reason(uex_id: str, reason: str) -> dict | None:
     return response.get('Attributes')
 
 # days completed exercise for streak
-def get_completed_dates_for_user(sub: str, start_date: str, end_date: str) -> list[str]:
+def get_completed_dates_for_user(sub: str, start_date: str, end_date: str) -> set[str]:
     table = _get_user_exercise_table()
     response = table.query(
-        IndexName='user_id-uex_created_at-index',
+        IndexName='user_id-uex_done_date-index',
         KeyConditionExpression=(
-            Key('user_id').eq(sub) & Key('uex_created_at').between(start_date, end_date)
+            Key('user_id').eq(sub) & Key('uex_done_date').between(start_date, end_date)
         ),
     )
     items = response.get('Items', [])
-    return {to_local_date_str(item['uex_created_at']) for item in items}
+    return {to_local_date_str(item['uex_done_date']) for item in items}
 
 def calc_exc_streak(sub: str) -> dict:
     today_local = datetime.now(ZoneInfo('Asia/Kuala_Lumpur')).date()

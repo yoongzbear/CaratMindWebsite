@@ -14,7 +14,7 @@ export async function GET(
 
   const baseUrl = process.env.DJANGO_API_BASE_URL;
   console.log('at route', jrnl_id);
-  const res = await fetch(`${baseUrl}/api/journals/${jrnl_id}/`, {
+  const res = await fetch(`${baseUrl}/api/journal/${jrnl_id}/`, {
     headers: { Authorization: `Bearer ${accessToken}` },
     cache: 'no-store',
   });

@@ -17,7 +17,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay } from 'date-fns';
-import { Eye, Flame, Pi, Star } from 'lucide-react';
+import { Eye, Flame, Pi, Snowflake, Star } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -189,11 +189,11 @@ export default function ExerciseTrackingPage() {
 
       // refresh streak
       try {
-        const streakRes = await fetch('/api/user_exercise/streak', {
+        const res = await fetch('/api/user_exercise/streak', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        const streakData = await streakRes.json();
-        if (streakRes.ok) {
+        const streakData = await res.json();
+        if (res.ok) {
           setStreak(streakData.streak);
           setCompletedToday(streakData.completed_today);
         }
@@ -273,23 +273,34 @@ export default function ExerciseTrackingPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <div className="flex flex-col items-center px-3">
-            {/* mood icon */}
+          <div className="flex flex-col items-center justify-center px-3">
             <div
-              className={`relative mb-2 z-10 w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition-transform duration-300`}
+              className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300`}
             >
-              <Flame size={16} />
+              {completedToday ? (
+                <Flame fill="#fc6f03" style={{ color: C.navy }} size={40} />
+              ) : (
+                <Flame style={{ color: C.navy }} size={40} />
+              )}
             </div>
-            <p style={styles.pText}>
+            <p
+              className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+              style={{ color: C.navy }}
+            >
               {fetchingStreak
                 ? '...'
                 : `${streak} ${streak === 1 ? 'Day' : 'Days'}`}
             </p>
           </div>
-          <p style={{ ...styles.pText }}>
-            {completedToday
-              ? 'Great job! You kept your coping exercise streak going today.'
-              : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
+          <p
+            className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+            style={{ color: C.navy }}
+          >
+            {fetchingStreak
+              ? 'Loading coping exercise streak...'
+              : completedToday
+                ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
+                : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
           </p>
         </div>
 

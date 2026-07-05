@@ -223,10 +223,11 @@ function MoodDayButton({
           style={{ background: 'white', borderColor: C.navy, color: C.navy }}
         >
           {moodCounts.map(({ mood, count }) => (
-            <div key={mood} className="flex items-center gap-1">
+            <div key={mood} className="flex items-center gap-1 font-normal">
               <span>{getMoodStyle(mood).emoji}</span>
-              <span className="font-medium">{toTitleCase(mood)}</span>
-              <span style={{ color: C.faint }}> - {count}</span>
+              <span>
+                {toTitleCase(mood)}: {count}
+              </span>
             </div>
           ))}
         </div>

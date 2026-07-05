@@ -153,6 +153,7 @@ export default function DayScatterPlot({
                     color: C.navy,
                   }}
                 >
+                  {getMoodStyle(point.mood).emoji}
                   {toTitleCase(point.mood)} -{' '}
                   {format(new Date(point.timestamp), 'dd/MM/yyyy, p')}
                 </div>

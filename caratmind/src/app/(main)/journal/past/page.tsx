@@ -164,7 +164,7 @@ export default function PastEntryPage() {
               className="sm:text-[24px] md:text-[28px] font-semibold"
               style={{ color: C.navy }}
             >
-              Saved Entries: {format(selectedDate, 'd MMMM yyyy')}
+              Saved Entries: {format(selectedDate, 'dd MMMM yyyy')}
             </h3>
 
             {/* scroll */}
