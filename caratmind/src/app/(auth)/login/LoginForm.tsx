@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
-// import { SocialAuthButtons } from '@/app/components/SocialAuthButtons';
 import { useAuth } from '@/context/AuthContext';
-import { C, styles } from '@/app/styles/styles';
+import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
+import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
 
 function resolvePostLoginPath(requestedNext: string | null): string {
   if (
@@ -53,26 +53,32 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   return (
     <AuthCard title="Log In">
       <form onSubmit={onSubmit}>
-        <label style={styles.label}>Username or email</label>
+        <label className={labelStyle} style={{ color: C.muted }}>
+          Username or email
+        </label>
         <input
           type="text"
           autoComplete="username"
           required
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
-          style={styles.input}
+          className={inputStyle}
+          style={{ color: C.navy }}
           suppressHydrationWarning
         />
 
-        <label style={styles.label}>Password</label>
+        <label className={labelStyle} style={{ color: C.muted }}>
+          Password
+        </label>
         <div className="relative mb-3.5">
           <input
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             required
             value={password}
+            className={inputStyle}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ ...styles.input, paddingRight: '44px', marginBottom: 0 }}
+            style={{ color: C.navy, paddingRight: '44px', marginBottom: 0 }}
             suppressHydrationWarning
           />
           <button
@@ -83,15 +89,15 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
               color: C.faint,
             }}
           >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
           </button>
         </div>
 
         <button
+          className={`w-full ${buttonGradient}`}
           type="submit"
           disabled={submitting}
           style={{
-            ...styles.button,
             opacity: submitting ? 0.75 : 1,
             cursor: submitting ? 'wait' : 'pointer',
           }}
@@ -100,10 +106,8 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
         </button>
       </form>
 
-      {/* <SocialAuthButtons nextPath={requestedNext} /> */}
-
       <p
-        className="mt-5.5 text-center text-[13px]"
+        className="mt-5.5 text-center sm:text-[14px] md:text-[16px]"
         style={{
           color: C.faint,
         }}
@@ -115,6 +119,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
               ? `/register?next=${encodeURIComponent(requestedNext)}`
               : '/register'
           }
+          className="hover:underline"
           style={{ color: C.serenity, fontWeight: 600 }}
         >
           Register here

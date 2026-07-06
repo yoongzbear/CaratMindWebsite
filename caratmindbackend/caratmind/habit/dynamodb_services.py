@@ -99,3 +99,22 @@ def select_today_habit(user_id: str) -> dict | None:
 
     # random
     return random.choice(candidates)
+
+# delete habit records
+def delete_all_user_habit(user_id: str) -> None:
+    table = _get_user_habit_table()
+    response = table.scan(
+        FilterExpression=Attr('user_id').eq(user_id)
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=Attr('user_id').eq(user_id),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    with table.batch_writer() as batch:
+        for item in items:
+            batch.delete_item(Key={'uhab_id': item['uhab_id']}) 

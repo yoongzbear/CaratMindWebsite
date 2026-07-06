@@ -5,20 +5,23 @@ import Link from 'next/link';
 export function AuthCard({
   title,
   children,
+  width = 420,
 }: {
   title: string;
   children: React.ReactNode;
+  width?: number;
 }) {
   return (
     <div
-      className="w-full max-w-105 bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-7 py-8"
+      className={`w-full bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-7 py-8`}
       style={{
+        width: `${width}px`,
         border: `1px solid ${C.border}`,
         boxShadow: '0 8px 40px rgba(146,168,209,0.18)',
       }}
     >
       <h1
-        className="mb-5 text-center text-[22px] font-bold"
+        className="sm:text-[28px] md:text-[32px] mb-5 text-center text-[22px] font-bold"
         style={{
           color: C.navy,
         }}

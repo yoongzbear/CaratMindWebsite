@@ -1,5 +1,6 @@
 // UI components
 
+import { buttonGradientColor } from './styles';
 import { C, ThemeName, themes } from './themes';
 
 /*
@@ -14,11 +15,15 @@ subtitle text - sm:text-[11px] md:text-[13px]
 button - sm:text-[12px] md:text-[14px]
 */
 
+// Tailwind classes
+// className={...}
+// className={`w-full ${buttonGradient}`}
+
 // texts
-export const labelStyle = `block text-xs sm:text-sm md:text-base font-semibold mb-1`;
+export const labelStyle = `block sm:text-[14px] md:text-[16px] font-semibold mb-1`;
 //   export const labelStyle = `block text-[12px] sm:text-[14px] md:text-[16px] font-semibold mb-[6px]`;
 
-export const inputStyle = `w-full box-border px-3 py-2.75 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
+export const inputStyle = `w-full box-border px-3 py-2.75 rounded-lg border border-slate-200 sm:text-[14px] md:text-[16px] text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
 // export const inputStyle = `w-full px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300`;
 
 export const preInputStyle = `w-full box-border px-3 py-2.75 flex items rounded-lg flex items-center justify-between bg-[${C.backgroundFaint}] border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
@@ -44,19 +49,21 @@ export const errorTextStyle = `text-red-500 text-xs pb-2`;
 export const pText = `mt-0 mb-2.5`;
 
 // buttons
+export const buttonGradient = `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
+
 // export const buttonBase = `inline-flex items-center justify-center gap-1 px-5 py-2 rounded-xl text-sm font-semibold transition-opacity duration-150`;
-export const buttonBase = `
-  w-full
-  px-5 py-2
-  rounded-[10px]
-  font-semibold
-  text-[13px]
-  text-white
-  no-underline
-  ml-2
-  transition-opacity
-  duration-150
-`;
+// export const buttonBase = `
+//   w-full
+//   px-5 py-2
+//   rounded-[10px]
+//   font-semibold
+//   text-[13px]
+//   text-white
+//   no-underline
+//   ml-2
+//   transition-opacity
+//   duration-150
+// `;
 
 // export const buttonGradient = `bg-gradient-to-r from-slate-400 to-pink-300 text-white hover:opacity-90`;
 

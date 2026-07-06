@@ -8,6 +8,7 @@ import { C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
+import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
 
 export function RegisterForm({
   requestedNext,
@@ -89,98 +90,132 @@ export function RegisterForm({
   }
 
   return (
-    <AuthCard title="Register">
+    <AuthCard title="Register" width={840}>
       <form onSubmit={onSubmit}>
         {!needsConfirmation ? (
           <>
-            <label style={styles.label}>Username</label>
-            <input
-              type="text"
-              autoComplete="username"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              style={styles.input}
-            />
+            <div className="w-full flex gap-4">
+              <div className="w-full">
+                <label className={labelStyle} style={{ color: C.muted }}>
+                  Username
+                </label>
+                <input
+                  type="text"
+                  autoComplete="username"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className={inputStyle}
+                  style={{ color: C.navy }}
+                />
+              </div>
 
-            <label style={styles.label}>Preferred username</label>
-            <div className="relative mb-3.5">
-              <input
-                type="text"
-                autoComplete="nickname"
-                required
-                value={preferredUsername}
-                onChange={(e) => setPreferredUsername(e.target.value)}
-                style={{
-                  ...styles.input,
-                  paddingRight: '44px',
-                  marginBottom: 0,
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setPreferredUsername(generateRandomName())}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
-                style={{
-                  color: C.faint,
-                }}
-              >
-                <Dices size={16} />
-              </button>
+              <div className="w-full">
+                <label className={labelStyle} style={{ color: C.muted }}>
+                  Preferred Name
+                </label>
+                <div className="relative mb-3.5">
+                  <input
+                    type="text"
+                    autoComplete="nickname"
+                    required
+                    value={preferredUsername}
+                    onChange={(e) => setPreferredUsername(e.target.value)}
+                    className={inputStyle}
+                    style={{
+                      color: C.navy,
+                      paddingRight: '44px',
+                      marginBottom: 0,
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setPreferredUsername(generateRandomName())}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    style={{
+                      color: C.faint,
+                    }}
+                  >
+                    <Dices size={24} />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <label style={styles.label}>Email</label>
+            <label className={labelStyle} style={{ color: C.muted }}>
+              Email
+            </label>
             <input
               type="email"
               autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
+              className={inputStyle}
+              style={{ color: C.navy }}
             />
 
-            <label style={styles.label}>Password</label>
-            <div className="relative mb-3.5">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={styles.input}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
-                style={{
-                  color: C.faint,
-                }}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-
-            <label style={styles.label}>Confirm password</label>
-            <div className="relative mb-3.5">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                style={styles.input}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((p) => !p)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
-                style={{
-                  color: C.faint,
-                }}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
+            <div className="w-full flex gap-4">
+              <div className="w-full">
+                <label className={labelStyle} style={{ color: C.muted }}>
+                  Password
+                </label>
+                <div className="relative mb-3.5">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={inputStyle}
+                    style={{
+                      color: C.navy,
+                      paddingRight: '44px',
+                      marginBottom: 0,
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    style={{
+                      color: C.faint,
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                  </button>
+                </div>
+              </div>
+              <div className="w-full">
+                <label className={labelStyle} style={{ color: C.muted }}>
+                  Confirm password
+                </label>
+                <div className="relative mb-3.5">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={inputStyle}
+                    style={{
+                      color: C.navy,
+                      paddingRight: '44px',
+                      marginBottom: 0,
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    style={{
+                      color: C.faint,
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* consent checkbox */}
@@ -191,7 +226,7 @@ export function RegisterForm({
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
               />
-              <label style={styles.label}>
+              <label className={labelStyle} style={{ color: C.muted }}>
                 I am <b>above 18</b> and I acknowledge my data such as journal
                 entries will be used for data processing by AI
               </label>
@@ -219,10 +254,10 @@ export function RegisterForm({
         )}
 
         <button
+          className={`w-full ${buttonGradient}`}
           type="submit"
           disabled={submitting}
           style={{
-            ...styles.button,
             opacity: submitting ? 0.75 : 1,
             cursor: submitting ? 'wait' : 'pointer',
           }}
@@ -235,10 +270,8 @@ export function RegisterForm({
         </button>
       </form>
 
-      {/* {!needsConfirmation && <SocialAuthButtons nextPath={requestedNext} />} */}
-
       <p
-        className="mt-5.5 text-center text-[13px]"
+        className="mt-5.5 text-center sm:text-[14px] md:text-[16px]"
         style={{
           color: C.faint,
         }}
@@ -250,6 +283,7 @@ export function RegisterForm({
               ? `/login?next=${encodeURIComponent(requestedNext)}`
               : '/login'
           }
+          className="hover:underline"
           style={{ color: C.serenity, fontWeight: 600 }}
         >
           Log in

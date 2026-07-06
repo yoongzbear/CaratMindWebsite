@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from exercise.dynamodb_service import delete_all_user_exercise
+from habit.dynamodb_services import delete_all_user_habit
 from journal.dynamodb_service import delete_all_user_entries
 from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
@@ -264,7 +265,11 @@ def delete_account_view(request):
     except Exception as e:
         errors.append(f'Delete user exercise error: {e}')
 
-    # TODO: delete user habit records
+    # delete user habit records
+    try:
+        delete_all_user_habit(sub)
+    except Exception as e:
+        errors.append(f'Delete user habit error: {e}')
 
     # delete user profile record in DynamoDB
     try:
