@@ -77,7 +77,7 @@ def get_default_exercise() -> dict | None:
 def create_exercise_recommendation(user_id: str, jrnl_id: str, exercise: dict) -> dict:
     table = _get_user_exercise_table()
     item = {
-        'uex_id': jrnl_id, # use jrnl ID - 1 to 1
+        'uex_id': jrnl_id, 
         'user_id': user_id,
         'jrnl_id': jrnl_id,
         'exc_id': exercise['exc_id'],
