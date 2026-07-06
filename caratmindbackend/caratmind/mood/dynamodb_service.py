@@ -108,4 +108,5 @@ def delete_all_user_mood(user_id: str) -> None:
 
     with table.batch_writer() as batch:
         for item in items:
+            # batch.delete_item(Key={'mood_id': item['mood_id']}) 
             batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 

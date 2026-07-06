@@ -113,7 +113,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         width={900}
         title="Delete Account"
         footer={
-          <div className="w-full flex justify-start gap-3 items-center">
+          <div className="w-full flex justify-start gap-5 items-stretch">
             {/* enter username to confirm delete */}
             <input
               autoFocus
@@ -123,7 +123,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
               onKeyDown={(e) => {
                 if (e.key === 'Escape') handleClose();
               }}
-              className="flex-1 rounded-lg px-2.5 py-1.5 text-[14px] outline-none"
+              className="flex-1 rounded-lg h-10 px-2.5 py-1.5 text-[14px] outline-none"
               style={{
                 border: `1.5px solid ${C.serenity}`,
                 color: C.navy,
@@ -132,7 +132,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
             <button
               onClick={handleConfirmDelete}
               disabled={!isConfirmed || deleting}
-              className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               {deleting ? 'Deleting…' : 'Confirm Delete Account'}
             </button>
@@ -150,7 +150,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
           className="sm:text-[12px] md:text-[14px] mt-0 mb-2.5 italic"
           style={{ color: C.faint }}
         >
-          Journal entries will be downloaded as .txt files
+          Journal entries will be downloaded as a .txt file
         </p>
         <button
           onClick={handleDownload}

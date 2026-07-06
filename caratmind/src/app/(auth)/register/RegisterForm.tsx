@@ -226,7 +226,10 @@ export function RegisterForm({
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
               />
-              <label className={labelStyle} style={{ color: C.muted }}>
+              <label
+                className={`${labelStyle} text-justify`}
+                style={{ color: C.muted }}
+              >
                 I am <b>above 18</b> and I acknowledge my data such as journal
                 entries will be used for data processing by AI
               </label>
@@ -234,13 +237,21 @@ export function RegisterForm({
           </>
         ) : (
           <>
-            <p className="text-[13px] mt-0" style={{ color: C.navy }}>
+            <p
+              className="sm:text-[14px] md:text-[16px]"
+              style={{ color: C.navy }}
+            >
               Enter the verification code sent to <strong>{email}</strong>.
             </p>
-            <p className="text-[11px] mt-0" style={{ color: C.muted }}>
+            <p
+              className="sm:text-[14px] md:text-[16px]"
+              style={{ color: C.muted }}
+            >
               You may check your spam emails for the code.
             </p>
-            <label style={styles.label}>Verification code</label>
+            <label className={labelStyle} style={{ color: C.muted }}>
+              Verification code
+            </label>
             <input
               type="text"
               inputMode="numeric"
@@ -248,7 +259,8 @@ export function RegisterForm({
               required
               value={confirmationCode}
               onChange={(e) => setConfirmationCode(e.target.value)}
-              style={styles.input}
+              className={inputStyle}
+              style={{ color: C.navy }}
             />
           </>
         )}

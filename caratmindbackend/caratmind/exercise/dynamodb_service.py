@@ -88,7 +88,7 @@ def create_exercise_recommendation(user_id: str, jrnl_id: str, exercise: dict) -
         'uex_rating': None,
         'uex_reason': None,
         'uex_created_at': datetime.now(timezone.utc).isoformat(),
-        'uex_done_date': None
+        # 'uex_done_date': None
     }
     table.put_item(Item=item)
     return item
@@ -219,6 +219,13 @@ def delete_all_user_exercise(user_id: str) -> None:
         )
         items.extend(response.get('Items', []))
 
-    with table.batch_writer() as batch:
-        for item in items:
-            batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 
+    # with table.batch_writer() as batch:
+    #     for item in items:
+    #         # batch.delete_item(Key={'uex_id': item['uex_id']}) 
+    #         batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 
+    for item in items:
+        table.delete_item(
+            Key={
+                'jrnl_id': item['jrnl_id']
+            }
+        )

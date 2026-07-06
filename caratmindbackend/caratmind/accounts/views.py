@@ -1,4 +1,5 @@
 import json
+import logging
 
 import boto3
 from django.conf import settings
@@ -14,6 +15,7 @@ from django.views.decorators.http import require_POST
 from exercise.dynamodb_service import delete_all_user_exercise
 from habit.dynamodb_services import delete_all_user_habit
 from journal.dynamodb_service import delete_all_user_entries
+from journal.s3_service import delete_entry_text
 from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
 from .services import CognitoService
@@ -235,7 +237,10 @@ def update_preferred_name_view(request):
 
     return JsonResponse({'preferredUsername': preferred_name})
 
+logger = logging.getLogger(__name__)
+
 # delete account
+@csrf_exempt
 @require_http_methods(['DELETE'])
 def delete_account_view(request):
     principal = authenticate_bearer(request)
@@ -249,7 +254,9 @@ def delete_account_view(request):
 
     # delete journal entries
     try:
-        delete_all_user_entries(sub)
+        entries = delete_all_user_entries(sub) # DynamoDB
+        # delete_entry_text(entries) # S3
+        delete_entry_text(sub)
     except Exception as e:
         errors.append(f'Delete journal error: {e}')
 
@@ -278,6 +285,7 @@ def delete_account_view(request):
         errors.append(f'Delete user DB error: {e}')
 
     if errors:
+        logger.error("DELETE ACCOUNT ERRORS:", errors)  # <-- move here
         # data deletion partially failed, not delete the cognito identity,
         return JsonResponse(
             {'error': 'Failed to delete some account data.', 'details': errors},
@@ -286,15 +294,15 @@ def delete_account_view(request):
 
     # delete cognito identity 
     try:
-        cognito_client = boto3.client('cognito-idp', region_name=settings.COGNITO_REGION)
+        cognito_client = boto3.client('cognito-idp', region_name=settings.AWS_COGNITO_REGION)
         cognito_client.admin_delete_user(
-            UserPoolId=settings.COGNITO_USER_POOL_ID,
+            UserPoolId=settings.AWS_COGNITO_USER_POOL_ID,
             Username=username,
         )
     except Exception as e:
         return JsonResponse(
             {'error': f'Data was deleted but failed to remove account credentials: {e}'},
             status=500,
-        )
+        )    
 
     return JsonResponse({'success': True})

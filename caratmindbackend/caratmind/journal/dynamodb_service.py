@@ -138,7 +138,7 @@ def calc_journal_streak(sub: str) -> dict:
     }
 
 # delete user journal entries
-def delete_all_user_entries(user_id: str) -> None:
+def delete_all_user_entries(user_id: str) -> list[dict]:
     table = _get_table()
     response = table.scan(
         FilterExpression=Attr('user_id').eq(user_id)
@@ -155,3 +155,5 @@ def delete_all_user_entries(user_id: str) -> None:
     with table.batch_writer() as batch:
         for item in items:
             batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 
+
+    return items

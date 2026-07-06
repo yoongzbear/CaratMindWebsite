@@ -19,3 +19,41 @@ def get_entry_text(entry_key: str) -> str:
     client = _get_s3_client()
     obj = client.get_object(Bucket=settings.AWS_S3_JOURNAL_BUCKET, Key=entry_key)
     return obj['Body'].read().decode('utf-8')
+
+# delete entry
+def delete_entry_text(user_id: str) -> None:
+    client = _get_s3_client()
+    bucket = settings.AWS_S3_JOURNAL_BUCKET
+
+    prefix = f"journals/{user_id}/"
+
+    while True:
+        response = client.list_objects_v2(
+            Bucket=bucket,
+            Prefix=prefix
+        )
+
+        # nothing left to delete
+        if "Contents" not in response:
+            break
+
+        objects = [{"Key": obj["Key"]} for obj in response["Contents"]]
+
+        client.delete_objects(
+            Bucket=bucket,
+            Delete={"Objects": objects, "Quiet": True}
+        )
+
+        # stop if no more pages
+        if not response.get("IsTruncated"):
+            break
+
+# def delete_entry_text(items):
+#     client = _get_s3_client()
+#     bucket = settings.AWS_S3_JOURNAL_BUCKET
+
+#     for item in items:
+#         client.delete_object(
+#             Bucket=bucket,
+#             Key=item["jrnl_entry_key"]
+#         )
