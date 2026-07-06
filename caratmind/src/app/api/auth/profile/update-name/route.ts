@@ -21,7 +21,7 @@ export async function PATCH(request: Request) {
     }
 
     const baseUrl = process.env.DJANGO_API_BASE_URL;
-    const res = await fetch(`${baseUrl}/api/users/update-name/`, {
+    const res = await fetch(`${baseUrl}/api/accounts/update-name/`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

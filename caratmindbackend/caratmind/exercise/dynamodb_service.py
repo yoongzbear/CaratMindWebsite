@@ -202,3 +202,22 @@ def calc_exc_streak(sub: str) -> dict:
         'streak': streak,
         'completed_today': completed_today,
     }
+
+# delete user exercise records
+def delete_all_user_exercise(user_id: str) -> None:
+    table = _get_user_exercise_table()
+    response = table.scan(
+        FilterExpression=Attr('user_id').eq(user_id)
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=Attr('user_id').eq(user_id),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    with table.batch_writer() as batch:
+        for item in items:
+            batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 

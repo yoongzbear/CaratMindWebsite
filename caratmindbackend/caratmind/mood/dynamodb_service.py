@@ -90,3 +90,22 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
 
     items.sort(key=lambda i: i.get('mood_timestamp', ''), reverse=True)
     return items
+
+# delete user mood records
+def delete_all_user_mood(user_id: str) -> None:
+    table = _get_table()
+    response = table.scan(
+        FilterExpression=Attr('user_id').eq(user_id)
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=Attr('user_id').eq(user_id),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    with table.batch_writer() as batch:
+        for item in items:
+            batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 

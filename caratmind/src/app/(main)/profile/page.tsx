@@ -7,6 +7,7 @@ import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
+import DeleteAccountModal from '@/app/components/modal/DeleteAccountModal';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -14,6 +15,7 @@ export default function ProfilePage() {
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [openDeleteAccount, setOpenDeleteAccount] = useState(false);
 
   if (loading) {
     return (
@@ -192,14 +194,18 @@ export default function ProfilePage() {
 
             {/* Delete account */}
             <button
-              onClick={handleEditClick}
-              className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              onClick={() => setOpenDeleteAccount(true)}
+              className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
             >
               Delete Account
             </button>
           </dl>
         </div>
       </div>
+      <DeleteAccountModal
+        open={openDeleteAccount}
+        onClose={() => setOpenDeleteAccount(false)}
+      />
     </section>
   );
 }

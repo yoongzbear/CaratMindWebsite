@@ -9,6 +9,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('api/me/', views.api_me_view, name='api_me'),
     path('api/protected/', views.api_protected_example_view, name='api_protected'),
-    path('api/users/provision/', views.provision_user_view, name='provision_user'),
-    path('api/users/update-name/', views.update_preferred_name_view, name='update_preferred_name'),
+    path('api/accounts/delete/', views.delete_account_view, name='delete_account'),
+    path('api/accounts/provision/', views.provision_user_view, name='provision_user'),
+    path('api/accounts/update-name/', views.update_preferred_name_view, name='update_preferred_name'),
 ]

@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
 from mood.services import detect_store_mood
-from .dynamodb_service import calc_journal_streak, create_journal_entry, update_journal_entry
+from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, update_journal_entry
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -202,3 +202,53 @@ def journal_streak_view(request):
     sub = principal.claims.get('sub')
     result = calc_journal_streak(sub)
     return JsonResponse(result)
+
+# download entries
+@require_GET
+def download_journal_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    try:
+        entries = get_all_entry_user(sub) 
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load entries: {e}'}, status=500)
+    
+    result = []
+
+    for entry in entries:
+        entry_key = entry.get('jrnl_entry_key')
+        full_text = ''
+        if entry_key:
+            try:
+                full_text = get_entry_text(entry_key) # S3 
+            except Exception as e:
+                full_text = '[Unable to retrieve entry text]'
+
+        result.append({
+            'jrnl_created_at': entry.get('jrnl_created_at'),
+            'entryText': full_text,
+        })
+
+    return JsonResponse({'entries': result})
+
+def get_journal_view(request, jrnl_id):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    entry = get_entry_by_id(jrnl_id)
+
+    if not entry or entry.get('user_id') != sub:
+        return JsonResponse({'error': 'Not found'}, status=404)
+
+    try:
+        full_text = get_entry_text(entry['jrnl_entry_key'])
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load entry text: {e}'}, status=500)
+
+    return JsonResponse({**entry, 'entryText': full_text})

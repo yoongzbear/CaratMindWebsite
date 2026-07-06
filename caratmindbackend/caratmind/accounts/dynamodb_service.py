@@ -49,3 +49,8 @@ def get_user(user_id: str) -> dict | None:
     table = _get_table()
     response = table.get_item(Key={'user_id': user_id})
     return response.get('Item')
+
+# delete user record
+def delete_user_record(user_id: str) -> None:
+    table = _get_table()
+    table.delete_item(Key={'user_id': user_id})

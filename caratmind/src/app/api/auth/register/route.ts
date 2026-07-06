@@ -35,7 +35,7 @@ async function provisionUser(input: {
   }
 
   try {
-    const res = await fetch(`${baseUrl}/api/users/provision/`, {
+    const res = await fetch(`${baseUrl}/api/accounts/provision/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

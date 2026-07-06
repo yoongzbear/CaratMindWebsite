@@ -15,6 +15,17 @@ def create_journal_entry(item: dict) -> None:
     table = _get_table()
     table.put_item(Item=item)
 
+# all user journal entries
+def get_all_entry_user(user_id: str) -> dict | None:
+    table = _get_table()
+    response = table.scan(FilterExpression=(Attr('user_id').eq(user_id)))
+    items = response.get('Items', [])
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(FilterExpression=(Attr('user_id').eq(user_id)))
+        items.extend(response.get('Items', []))
+
+    return items
+
 # filter using date 
 def get_entries_for_user_on_date(user_id: str, date_str: str) -> list[dict]:
     """
@@ -125,3 +136,22 @@ def calc_journal_streak(sub: str) -> dict:
         'streak': streak,
         'submitted_today': submitted_today,
     }
+
+# delete user journal entries
+def delete_all_user_entries(user_id: str) -> None:
+    table = _get_table()
+    response = table.scan(
+        FilterExpression=Attr('user_id').eq(user_id)
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=Attr('user_id').eq(user_id),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    with table.batch_writer() as batch:
+        for item in items:
+            batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 

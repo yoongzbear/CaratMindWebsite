@@ -1,5 +1,6 @@
 import json
 
+import boto3
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
@@ -9,9 +10,13 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+
+from exercise.dynamodb_service import delete_all_user_exercise
+from journal.dynamodb_service import delete_all_user_entries
+from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
 from .services import CognitoService
-from .dynamodb_service import create_user_if_not_exists, get_user, update_preferred_name
+from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_preferred_name
 
 
 def login_view(request):
@@ -228,3 +233,63 @@ def update_preferred_name_view(request):
         return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'preferredUsername': preferred_name})
+
+# delete account
+@require_http_methods(['DELETE'])
+def delete_account_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    username = principal.claims.get('username') or principal.claims.get('cognito:username')
+
+    errors = []
+
+    # delete journal entries
+    try:
+        delete_all_user_entries(sub)
+    except Exception as e:
+        errors.append(f'Delete journal error: {e}')
+
+    # delete mood records
+    try:
+        delete_all_user_mood(sub)
+    except Exception as e:
+        errors.append(f'Delete mood error: {e}')
+
+    # delete user_exercise records
+    try:
+        delete_all_user_exercise(sub)
+    except Exception as e:
+        errors.append(f'Delete user exercise error: {e}')
+
+    # TODO: delete user habit records
+
+    # delete user profile record in DynamoDB
+    try:
+        delete_user_record(sub)
+    except Exception as e:
+        errors.append(f'Delete user DB error: {e}')
+
+    if errors:
+        # data deletion partially failed, not delete the cognito identity,
+        return JsonResponse(
+            {'error': 'Failed to delete some account data.', 'details': errors},
+            status=500,
+        )
+
+    # delete cognito identity 
+    try:
+        cognito_client = boto3.client('cognito-idp', region_name=settings.COGNITO_REGION)
+        cognito_client.admin_delete_user(
+            UserPoolId=settings.COGNITO_USER_POOL_ID,
+            Username=username,
+        )
+    except Exception as e:
+        return JsonResponse(
+            {'error': f'Data was deleted but failed to remove account credentials: {e}'},
+            status=500,
+        )
+
+    return JsonResponse({'success': True})
