@@ -189,8 +189,8 @@ def calc_exc_streak(sub: str) -> dict:
     completed_dates = get_completed_dates_for_user(sub, start_date, end_date)
 
     streak = 0
-    cursor = today_local
-    completed_today = today_local.isoformat() in completed_dates
+    cursor = today
+    completed_today = today.isoformat() in completed_dates
 
     if not completed_today:
         cursor = cursor - timedelta(days=1)

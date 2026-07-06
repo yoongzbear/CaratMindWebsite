@@ -42,7 +42,7 @@ def save_user_habit(user_id: str, hab_id: str, action: str, status: str) -> dict
         'hab_id': hab_id,
         'uhab_action': action,
         'uhab_status': status,
-        'uhab_date': today_local().isoFormat(),
+        'uhab_date': today_local().isoformat(),
         'uhab_created_at': now,
         'uhab_updated_at': now,        
         'user_id': user_id        
@@ -53,7 +53,7 @@ def save_user_habit(user_id: str, hab_id: str, action: str, status: str) -> dict
 # get user completed habit for current date 
 def get_today_user_habit(user_id: str) -> list[dict]:
     table = _get_user_habit_table()
-    today = today_local().isoFormat()
+    today = today_local().isoformat()
     response = table.scan(
         FilterExpression=(
             Attr('user_id').eq(user_id) & Attr('uhab_date').eq(today)

@@ -18,7 +18,7 @@ export default function HomePage() {
   const { user, loading, accessToken } = useAuth();
 
   const [habit, setHabit] = useState<Habit | null>(null);
-  const [fetchingHabit, setFetchingHabit] = useState(false);
+  const [fetchingHabit, setFetchingHabit] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState<HabitStatus | null>(
     null,
   );
@@ -26,11 +26,11 @@ export default function HomePage() {
 
   const [journalStreak, setJournalStreak] = useState(0);
   const [journalToday, setJournalToday] = useState(false);
-  const [fetchingJournalStreak, setFetchingJournalStreak] = useState(false);
+  const [fetchingJournalStreak, setFetchingJournalStreak] = useState(true);
 
   const [excStreak, setExcStreak] = useState(0);
   const [excToday, setExcToday] = useState(false);
-  const [fetchingExcStreak, setFetchingExcStreak] = useState(false);
+  const [fetchingExcStreak, setFetchingExcStreak] = useState(true);
 
   const [barRange, setBarRange] = useState<DateRangeValue>({
     mode: 'days',
@@ -120,7 +120,7 @@ export default function HomePage() {
     if (!habit) return;
     setSubmittingAction(true);
     try {
-      const res = await fetch('/api/habit/action', {
+      const res = await fetch('/api/habit/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,9 @@ export default function HomePage() {
       }
       setSelectedStatus(action.status);
     } catch {
-      toastError('Something went wrong. Please try again.');
+      toastError(
+        'Something went wrong in saving habit action. Please try again.',
+      );
     } finally {
       setSubmittingAction(false);
     }
@@ -164,7 +166,7 @@ export default function HomePage() {
 
         {/* banner for basic habits */}
         <div
-          className="rounded-[10px] border mb-4 p-2.5 flex gap-3"
+          className="rounded-[10px] border mb-4 p-3 flex gap-3 items-center"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -172,46 +174,45 @@ export default function HomePage() {
           }}
         >
           {fetchingHabit ? (
-            <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+            <h5
+              className="sm:text-[20px] md:text-[24px]"
+              style={{ color: C.navy }}
+            >
               Loading today&apos;s habit...
-            </p>
+            </h5>
           ) : !habit ? (
-            <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+            <h5
+              className="sm:text-[20px] md:text-[24px]"
+              style={{ color: C.navy }}
+            >
               All habits completed for today! Keep it up for tomorrow.
-            </p>
+            </h5>
           ) : (
             <>
-              <p
-                style={{
-                  ...styles.subtitle,
-                  fontSize: '14px',
-                  color: C.navy,
-                  fontWeight: 600,
-                }}
+              <h5
+                className="flex-1 sm:text-[20px] md:text-[24px]"
+                style={{ color: C.navy }}
               >
                 {habit.hab_question}
-              </p>
+              </h5>
 
               {selectedStatus ? (
                 <p
-                  style={{
-                    ...styles.subtitle,
-                    fontSize: '14px',
-                    color: C.faint,
-                  }}
+                  className="sm:text-[20px] md:text-[24px] font-semibold"
+                  style={{ color: C.navy }}
                 >
                   {habitMessage[selectedStatus]}
                 </p>
               ) : (
-                <div className="flex gap-3 flex-wrap">
-                  {habit.hab_actions.map((a) => (
+                <div className="ml-auto flex gap-5 flex-wrap">
+                  {habit.hab_actions.map((action) => (
                     <button
-                      key={a.action}
+                      key={action.action}
                       disabled={submittingAction}
-                      onClick={() => handleActionClick(a)}
-                      className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                      onClick={() => handleActionClick(action)}
+                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
                     >
-                      {a.action}
+                      {action.action}
                     </button>
                   ))}
                 </div>
