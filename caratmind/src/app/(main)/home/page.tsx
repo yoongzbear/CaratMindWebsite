@@ -7,9 +7,22 @@ import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import { useEffect, useState } from 'react';
 import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
 import { toastError } from '@/utils/toast';
+import {
+  Habit,
+  HabitAction,
+  habitMessage,
+  HabitStatus,
+} from '@/app/types/habit';
 
 export default function HomePage() {
   const { user, loading, accessToken } = useAuth();
+
+  const [habit, setHabit] = useState<Habit | null>(null);
+  const [fetchingHabit, setFetchingHabit] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<HabitStatus | null>(
+    null,
+  );
+  const [submittingAction, setSubmittingAction] = useState(false);
 
   const [journalStreak, setJournalStreak] = useState(0);
   const [journalToday, setJournalToday] = useState(false);
@@ -23,6 +36,31 @@ export default function HomePage() {
     mode: 'days',
     days: 7,
   });
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadHabit() {
+      setFetchingHabit(true);
+      try {
+        const res = await fetch('/api/habit/today', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          toastError(data.error ?? "Failed to load today's habit.");
+          return;
+        }
+        setHabit(data.habit);
+      } catch {
+        toastError("Something went wrong loading today's habit.");
+      } finally {
+        setFetchingHabit(false);
+      }
+    }
+
+    loadHabit();
+  }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -78,6 +116,35 @@ export default function HomePage() {
     loadExcStreak();
   }, [accessToken]);
 
+  async function handleActionClick(action: HabitAction) {
+    if (!habit) return;
+    setSubmittingAction(true);
+    try {
+      const res = await fetch('/api/habit/action', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          hab_id: habit.hab_id,
+          action: action.action,
+          status: action.status,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to save.');
+        return;
+      }
+      setSelectedStatus(action.status);
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+      setSubmittingAction(false);
+    }
+  }
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -104,17 +171,53 @@ export default function HomePage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <p style={{ ...styles.subtitle, fontSize: '14px' }}>
-            Basic habits hoho
-          </p>
+          {fetchingHabit ? (
+            <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+              Loading today&apos;s habit...
+            </p>
+          ) : !habit ? (
+            <p style={{ ...styles.subtitle, fontSize: '14px' }}>
+              All habits completed for today! Keep it up for tomorrow.
+            </p>
+          ) : (
+            <>
+              <p
+                style={{
+                  ...styles.subtitle,
+                  fontSize: '14px',
+                  color: C.navy,
+                  fontWeight: 600,
+                }}
+              >
+                {habit.hab_question}
+              </p>
 
-          <button
-            // onClick={handleSave}
-            // disabled={saving}
-            className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-          >
-            {'Action Button'}
-          </button>
+              {selectedStatus ? (
+                <p
+                  style={{
+                    ...styles.subtitle,
+                    fontSize: '14px',
+                    color: C.faint,
+                  }}
+                >
+                  {habitMessage[selectedStatus]}
+                </p>
+              ) : (
+                <div className="flex gap-3 flex-wrap">
+                  {habit.hab_actions.map((a) => (
+                    <button
+                      key={a.action}
+                      disabled={submittingAction}
+                      onClick={() => handleActionClick(a)}
+                      className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                    >
+                      {a.action}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* cards */}

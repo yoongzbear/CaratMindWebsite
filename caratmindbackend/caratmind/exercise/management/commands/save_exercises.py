@@ -1,5 +1,5 @@
 # upload coping exercises to dynamodb
-# python manage.py seed_exercise
+# python manage.py save_exercise
 from django.core.management.base import BaseCommand
 import boto3
 import uuid
@@ -11,7 +11,7 @@ def _get_table():
         return resource.Table(settings.DYNAMODB_EXERCISE_TABLE)
 
 class Command(BaseCommand):
-    help = "Seed Exercise table in DynamoDB"
+    help = "Save EXERCISE table in DynamoDB"
 
     def handle(self, *args, **kwargs):
         table = _get_table()
@@ -464,4 +464,4 @@ class Command(BaseCommand):
                 item["exc_id"] = str(uuid.uuid4())
                 batch.put_item(Item=item)
 
-        self.stdout.write(self.style.SUCCESS("Exercise table seeded successfully"))
+        self.stdout.write(self.style.SUCCESS("EXERCISE table saved successfully"))

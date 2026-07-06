@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
 from caratmind import settings
-from caratmind.datetime import to_local_date_str
+from caratmind.datetime import to_local_date_str, today_local
 
 def _get_exercise_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -181,9 +181,10 @@ def get_completed_dates_for_user(sub: str, start_date: str, end_date: str) -> se
     return {to_local_date_str(item['uex_done_date']) for item in items}
 
 def calc_exc_streak(sub: str) -> dict:
-    today_local = datetime.now(ZoneInfo('Asia/Kuala_Lumpur')).date()
-    start_date = (today_local - timedelta(days=365)).isoformat()
-    end_date = (today_local + timedelta(days=1)).isoformat() 
+    # today_local = datetime.fromisoformat(today_local_str()).date()
+    today = today_local()
+    start_date = (today - timedelta(days=365)).isoformat()
+    end_date = (today + timedelta(days=1)).isoformat() 
 
     completed_dates = get_completed_dates_for_user(sub, start_date, end_date)
 

@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'journal',
     'mood',
     'exercise',
+    'habit'
 ]
 
 # Session configuration for token storage

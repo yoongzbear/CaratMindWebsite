@@ -1,11 +1,14 @@
 
 from datetime import datetime, timezone
+import random
+import uuid
+from zoneinfo import ZoneInfo
 
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
 
 from caratmind import settings
-
+from caratmind.datetime import today_local
 
 def _get_habit_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -31,27 +34,29 @@ def get_all_habit() -> list[dict]:
     return items
 
 # save habit
-def save_user_habit(user_id: str, habit: dict) -> dict:
+def save_user_habit(user_id: str, hab_id: str, action: str, status: str) -> dict:
     table = _get_user_habit_table()
-    item = {
-        # TODO: check the values
-        'uhab_id': 'string', # uuid
-        'hab_id': habit['hab_id'],
-        'uhab_action': habit['uhab_action'],
-        'uhab_created_at': datetime.now(timezone.utc).isoformat(),
-        'uhab_updated_at': datetime.now(timezone.utc).isoformat(),
-        'uhab_status': habit['uhab_status'],
+    now = datetime.now(timezone.utc).isoformat() # timestamp
+    item = {        
+        'uhab_id': str(uuid.uuid4()), 
+        'hab_id': hab_id,
+        'uhab_action': action,
+        'uhab_status': status,
+        'uhab_date': today_local().isoFormat(),
+        'uhab_created_at': now,
+        'uhab_updated_at': now,        
         'user_id': user_id        
     }
     table.put_item(Item=item)
     return item
 
-# get user completed habit 
-def get_user_habit(user_id: str) -> list[dict]:
+# get user completed habit for current date 
+def get_today_user_habit(user_id: str) -> list[dict]:
     table = _get_user_habit_table()
+    today = today_local().isoFormat()
     response = table.scan(
         FilterExpression=(
-            Attr('user_id').eq(user_id)
+            Attr('user_id').eq(user_id) & Attr('uhab_date').eq(today)
         )
     )
     items = response.get('Items', [])
@@ -59,10 +64,38 @@ def get_user_habit(user_id: str) -> list[dict]:
     while 'LastEvaluatedKey' in response:
         response = table.scan(
             FilterExpression=(
-                Attr('user_id').eq(user_id)
+                Attr('user_id').eq(user_id) & Attr('uhab_date').eq(today)
             ),
             ExclusiveStartKey=response['LastEvaluatedKey'],
         )
         items.extend(response.get('Items', []))
 
     return items
+
+# select habit from current pool
+def select_today_habit(user_id: str) -> dict | None:
+    """
+    Returns a random habit that the user hasn't marked completed/incomplete today.
+    Returns None if every habit already has a completed/incomplete status today.
+    """
+    all_habits = get_all_habit()
+    today_records = get_today_user_habit(user_id)
+
+    # most recent based on uhab_updated_at (even with same hab_id)
+    status_by_habit = {}
+    for record in today_records:
+        hab_id = record.get('hab_id')
+        if hab_id not in status_by_habit or record['uhab_updated_at'] > status_by_habit[hab_id]['uhab_updated_at']:
+            status_by_habit[hab_id] = record
+
+    # habits with no record today or status is not 'completed' or 'incomplete'
+    candidates = [
+        habit for habit in all_habits
+        if status_by_habit.get(habit['hab_id'], {}).get('uhab_status') not in ('completed', 'incomplete')
+    ]
+
+    if not candidates:
+        return None
+
+    # random
+    return random.choice(candidates)

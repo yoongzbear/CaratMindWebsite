@@ -13,7 +13,7 @@ export type UserExercise = {
   exc_id: string;
   jrnl_id: string;
   exc_name: string;
-  uex_status: ExerciseStatusKey;
+  uex_status: ExerciseStatus;
   uex_rating?: string;
   uex_reason?: string;
   uex_created_at: string;
@@ -21,6 +21,6 @@ export type UserExercise = {
   user_id: string;
 };
 
-export type ExerciseStatusKey = 'incomplete' | 'completed';
+export type ExerciseStatus = 'incomplete' | 'completed';
 
 export type UserExerciseDetail = UserExercise & Exercise;
