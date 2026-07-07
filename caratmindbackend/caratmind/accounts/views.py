@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 
 import boto3
 from django.conf import settings
@@ -12,6 +13,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from accounts import cognito_service
 from exercise.dynamodb_service import delete_all_user_exercise
 from habit.dynamodb_services import delete_all_user_habit
 from journal.dynamodb_service import delete_all_user_entries
@@ -21,13 +23,110 @@ from .authentication import authenticate_bearer
 from .services import CognitoService
 from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_preferred_name
 
+def _validate_password(password: str) -> str | None:
+    if len(password) < 8:
+        return f'Password must be at least {8} characters.'
+    if not re.search(r'[a-z]', password) or not re.search(r'[A-Z]', password) or not re.search(r'\d', password):
+        return 'Password must include uppercase, lowercase, and a number.'
+    return None
+
+@csrf_exempt
+@require_POST
+def register_view(request):
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    username = None
+    try:
+        # confirmation step
+        if body.get('confirmationCode') and body.get('username'):
+            username = body['username'].strip()
+            sub = (body.get('sub') or '').strip()
+            email = (body.get('email') or '').strip()
+            preferred_username = (body.get('preferredUsername') or '').strip()
+
+            if not sub or not email or not preferred_username:
+                return JsonResponse({'error': 'Missing user details for confirmation.'}, status=400)
+
+            cognito_service.confirm_sign_up(username, body['confirmationCode'])
+            create_user_if_not_exists(
+                user_id=sub,
+                email=email,
+                username=username,
+                preferred_name=preferred_username,
+            )
+            return JsonResponse({'confirmed': True})
+
+        # initial signup step
+        username = (body.get('username') or '').strip()
+        email = (body.get('email') or '').strip()
+        preferred_username = (body.get('preferredUsername') or '').strip()
+        password = body.get('password') or ''
+        confirm_password = body.get('confirmPassword') or ''
+
+        if not username or not email or not preferred_username or not password:
+            return JsonResponse({'error': 'All fields are required.'}, status=400)
+
+        if password != confirm_password:
+            return JsonResponse({'error': 'Passwords do not match.'}, status=400)
+
+        password_error = _validate_password(password)
+        if password_error:
+            return JsonResponse({'error': password_error}, status=400)
+
+        if cognito_service.find_confirmed_email(email):
+            return JsonResponse(
+                {'error': 'An account with this email already exists. Please log in instead.'},
+                status=400,
+            )
+
+        result = cognito_service.sign_up_user(username, password, email, preferred_username)
+
+        if result['user_confirmed']:
+            create_user_if_not_exists(
+                user_id=result['user_sub'],
+                email=email,
+                username=username,
+                preferred_name=preferred_username,
+            )
+
+        return JsonResponse({
+            'userConfirmed': result['user_confirmed'],
+            'username': username,
+            'sub': result['user_sub'],
+            'message': (
+                'Account created. You can sign in now.'
+                if result['user_confirmed']
+                else 'Account created. Check your email for a verification code.'
+            ),
+        })
+
+    except Exception as e:
+        error_name = e.__class__.__name__
+        if error_name == 'UsernameExistsException' and username:
+            status = cognito_service.get_user_status(username)
+            if status['exists'] and not status['confirmed'] and status['sub']:
+                cognito_service.resend_confirmation_code(username)
+                return JsonResponse({
+                    'userConfirmed': False,
+                    'username': username,
+                    'sub': status['sub'],
+                    'message': 'This account is not yet verified. A new verification code has been sent to your email.',
+                })
+            return JsonResponse(
+                {'error': 'An account with this username already exists. Please log in instead.'},
+                status=400,
+            )
+
+        return JsonResponse({'error': cognito_service.map_cognito_error(e)}, status=400)
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     cognito_service = CognitoService()
     return redirect(cognito_service.get_authorization_url())
-
 
 def callback_view(request):
     code = request.GET.get('code')
@@ -79,7 +178,6 @@ def callback_view(request):
     messages.success(request, 'Successfully logged in!')
     return redirect('dashboard')
 
-
 def logout_view(request):
     access_token = request.session.get('access_token')
     if access_token:
@@ -93,12 +191,10 @@ def logout_view(request):
     )
     return redirect(logout_url)
 
-
 def dashboard_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return render(request, 'accounts/dashboard.html', {'user': request.user})
-
 
 def home_view(request):
     return render(request, 'accounts/home.html')
@@ -112,9 +208,7 @@ def api_me_view(request):
     sub = principal.claims.get('sub')
     dynamo_user = get_user(sub) if sub else None
 
-    if not dynamo_user:
-        # Provisioning never ran for this user — fall back to Cognito claims
-        # rather than returning blank fields.
+    if not dynamo_user:        
         return JsonResponse(
             {
                 'allowed': True,
@@ -179,8 +273,6 @@ def api_protected_example_view(request):
 @csrf_exempt
 @require_POST
 def provision_user_view(request):
-    # Server-to-server call from Next.js, not a user-authenticated request —
-    # no Cognito access token yet 
     internal_key = request.META.get('HTTP_X_INTERNAL_API_KEY', '')
     if not internal_key or internal_key != settings.INTERNAL_API_KEY:
         return JsonResponse({'error': 'Unauthorized'}, status=401)

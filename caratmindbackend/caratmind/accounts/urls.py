@@ -11,5 +11,6 @@ urlpatterns = [
     path('api/protected/', views.api_protected_example_view, name='api_protected'),
     path('api/accounts/delete/', views.delete_account_view, name='delete_account'),
     path('api/accounts/provision/', views.provision_user_view, name='provision_user'),
+    path('api/accounts/register/', views.register_view, name='register'),
     path('api/accounts/update-name/', views.update_preferred_name_view, name='update_preferred_name'),
 ]
