@@ -139,13 +139,13 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
           </div>
         }
       >
-        <h2
-          className="sm:text-[26px] md:text-[30px] mt-0 mb-2.5"
+        <h4
+          className="sm:text-[22px] md:text-[26px] mt-0 mb-2.5"
           style={{ color: C.navy }}
         >
           Deleting your account will remove all related data including your
           journal entries. Would you like to download your journal entries?
-        </h2>
+        </h4>
         <p
           className="sm:text-[12px] md:text-[14px] mt-0 mb-2.5 italic"
           style={{ color: C.faint }}
