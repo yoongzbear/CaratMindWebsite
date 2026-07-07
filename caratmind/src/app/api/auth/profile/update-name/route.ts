@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { updatePreferredUsername, mapCognitoError } from '@/lib/cognito/server';
+// import { updatePreferredUsername, mapCognitoError } from '@/lib/cognito/server';
 
 export async function PATCH(request: Request) {
   try {

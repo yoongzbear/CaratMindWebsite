@@ -13,7 +13,8 @@ from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from accounts import cognito_service
+# from accounts import cognito_service
+from accounts.services import CognitoService
 from exercise.dynamodb_service import delete_all_user_exercise
 from habit.dynamodb_services import delete_all_user_habit
 from journal.dynamodb_service import delete_all_user_entries
@@ -33,6 +34,7 @@ def _validate_password(password: str) -> str | None:
 @csrf_exempt
 @require_POST
 def register_view(request):
+    cognito = CognitoService()
     try:
         body = json.loads(request.body)
     except json.JSONDecodeError:
@@ -50,7 +52,7 @@ def register_view(request):
             if not sub or not email or not preferred_username:
                 return JsonResponse({'error': 'Missing user details for confirmation.'}, status=400)
 
-            cognito_service.confirm_sign_up(username, body['confirmationCode'])
+            cognito.confirm_sign_up(username, body['confirmationCode'])
             create_user_if_not_exists(
                 user_id=sub,
                 email=email,
@@ -76,13 +78,13 @@ def register_view(request):
         if password_error:
             return JsonResponse({'error': password_error}, status=400)
 
-        if cognito_service.find_confirmed_email(email):
+        if cognito.find_confirmed_email(email):
             return JsonResponse(
                 {'error': 'An account with this email already exists. Please log in instead.'},
                 status=400,
             )
 
-        result = cognito_service.sign_up_user(username, password, email, preferred_username)
+        result = cognito.sign_up_user(username, password, email, preferred_username)
 
         if result['user_confirmed']:
             create_user_if_not_exists(
@@ -106,9 +108,9 @@ def register_view(request):
     except Exception as e:
         error_name = e.__class__.__name__
         if error_name == 'UsernameExistsException' and username:
-            status = cognito_service.get_user_status(username)
+            status = cognito.get_user_status(username)
             if status['exists'] and not status['confirmed'] and status['sub']:
-                cognito_service.resend_confirmation_code(username)
+                cognito.resend_confirmation_code(username)
                 return JsonResponse({
                     'userConfirmed': False,
                     'username': username,
@@ -120,13 +122,39 @@ def register_view(request):
                 status=400,
             )
 
-        return JsonResponse({'error': cognito_service.map_cognito_error(e)}, status=400)
+        return JsonResponse({'error': cognito.map_cognito_error(e)}, status=400)
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    cognito_service = CognitoService()
-    return redirect(cognito_service.get_authorization_url())
+    cognito = CognitoService()
+    return redirect(cognito.get_authorization_url())
+
+@csrf_exempt
+@require_POST
+def login_view(request):
+    cognito = CognitoService()
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    identifier = (body.get('identifier') or '').strip()
+    password = body.get('password') or ''
+
+    if not identifier or not password:
+        return JsonResponse({'error': 'Username/email and password are required.'}, status=400)
+
+    try:
+        tokens = cognito.sign_in_with_password(identifier, password)
+        profile = cognito.get_user_profile(tokens['access_token'])
+        return JsonResponse({
+            'tokens': tokens,
+            'profile': profile,
+        })
+    except Exception as e:
+        logger.error(f'Login error: {e.__class__.__name__}: {e}', exc_info=True)
+        return JsonResponse({'error': cognito.map_cognito_error(e)}, status=401)
 
 def callback_view(request):
     code = request.GET.get('code')
@@ -140,14 +168,14 @@ def callback_view(request):
         messages.error(request, 'Authorization code not provided')
         return redirect('home')
 
-    cognito_service = CognitoService()
-    tokens = cognito_service.exchange_code_for_tokens(code)
+    cognito = CognitoService()
+    tokens = cognito.exchange_code_for_tokens(code)
     if not tokens:
         messages.error(request, 'Failed to obtain tokens')
         return redirect('home')
 
     id_token = tokens.get('id_token')
-    user_info = cognito_service.verify_id_token(id_token)
+    user_info = cognito.verify_id_token(id_token)
     if not user_info:
         messages.error(request, 'Invalid token')
         return redirect('home')
@@ -178,18 +206,44 @@ def callback_view(request):
     messages.success(request, 'Successfully logged in!')
     return redirect('dashboard')
 
-def logout_view(request):
-    access_token = request.session.get('access_token')
-    if access_token:
-        CognitoService().sign_out_user(access_token)
+@csrf_exempt
+@require_POST
+def refresh_token_view(request):
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-    request.session.flush()
-    logout_url = (
-        f"{settings.COGNITO_DOMAIN}/logout?"
-        f"client_id={settings.AWS_COGNITO_APP_CLIENT_ID}&"
-        f"logout_uri={settings.COGNITO_LOGOUT_URI}"
-    )
-    return redirect(logout_url)
+    username = (body.get('username') or '').strip()
+    refresh_token = body.get('refreshToken')
+
+    if not username or not refresh_token:
+        return JsonResponse({'error': 'username and refreshToken are required'}, status=400)
+
+    cognito = CognitoService()
+    try:
+        tokens = cognito.refresh_tokens(username, refresh_token)
+        profile = cognito.get_user_profile(tokens['access_token'])
+        return JsonResponse({
+            'tokens': tokens,
+            'profile': profile,
+        })
+    except Exception as e:
+        return JsonResponse({'error': cognito.map_cognito_error(e)}, status=401)
+
+def logout_view(request):
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        body = {}
+
+    access_token = body.get('accessToken')
+
+    if access_token:
+        cognito = CognitoService()
+        cognito.sign_out_user(access_token)
+
+    return JsonResponse({'logout': True})
 
 def dashboard_view(request):
     if not request.user.is_authenticated:

@@ -1,6 +1,7 @@
 'use client';
 import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
+import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
 import EntryDetailModal, {
   DeleteEntryModal,
 } from '@/app/components/modal/EntryModal';
@@ -38,6 +39,7 @@ export default function MoodInsightPage() {
     null,
   );
   const [openExcDetail, setOpenExcDetail] = useState(false);
+  const [detecting, setDetecting] = useState(false);
 
   // const [barRange, setBarRange] = useState<DateRangeValue>({
   //   mode: 'days',
@@ -72,7 +74,13 @@ export default function MoodInsightPage() {
   }, [jrnl_id, accessToken]);
 
   useEffect(() => {
-    if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
+    if (
+      !accessToken ||
+      !jrnl_id ||
+      jrnl_id === 'undefined' ||
+      journal?.jrnl_status !== 'submitted'
+    )
+      return;
 
     async function loadMood() {
       setFetchingMoodData(true);
@@ -95,10 +103,16 @@ export default function MoodInsightPage() {
     }
 
     loadMood();
-  }, [jrnl_id, accessToken]);
+  }, [jrnl_id, accessToken, journal?.jrnl_status]);
 
   useEffect(() => {
-    if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
+    if (
+      !accessToken ||
+      !jrnl_id ||
+      jrnl_id === 'undefined' ||
+      journal?.jrnl_status !== 'submitted'
+    )
+      return;
 
     async function loadRecExercise() {
       setFetchingExercise(true);
@@ -123,7 +137,7 @@ export default function MoodInsightPage() {
     }
 
     loadRecExercise();
-  }, [jrnl_id, accessToken]);
+  }, [jrnl_id, accessToken, journal?.jrnl_status]);
 
   // update entry
   async function updateEntry(status: StatusKey) {
@@ -135,6 +149,10 @@ export default function MoodInsightPage() {
     }
 
     setSubmitting(true);
+
+    if (status === 'submitted') {
+      setDetecting(true);
+    }
 
     try {
       const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
@@ -163,6 +181,9 @@ export default function MoodInsightPage() {
       toastError('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
+      if (status === 'submitted') {
+        setDetecting(false);
+      }
     }
   }
 
@@ -355,24 +376,22 @@ export default function MoodInsightPage() {
                 border: '1px solid #eef2f9',
               }}
             >
-              <p
-                className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65] font-semibold"
+              <h3
+                className="sm:text-[24px] md:text-[28px] font-semibold"
                 style={{ color: C.navy }}
               >
                 From your entry, you felt:
-              </p>
+              </h3>
               <div className="flex flex-col items-center">
                 {/* mood icon */}
                 {fetchingMoodData ? (
                   <p style={{ color: C.navy }}>Loading mood insight...</p>
                 ) : !moodData?.mood_id ? (
-                  // {!moodData?.mood_id ? (
                   <h5
                     className="m-5 text-center sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                     style={{ color: C.navy }}
                   >
-                    Mood not available yet. Submit your entry to see your mood
-                    insight.
+                    Mood not available yet. Submit your entry first.
                   </h5>
                 ) : (
                   <>
@@ -456,8 +475,8 @@ export default function MoodInsightPage() {
                     className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                     style={{ color: C.navy }}
                   >
-                    Exercise recommendation not available yet. Submit your entry
-                    first.
+                    Coping exercise recommendation not available yet. Submit
+                    your entry first.
                   </h5>
                 ) : (
                   <>
@@ -586,7 +605,7 @@ export default function MoodInsightPage() {
             >
               {/* mood chart */}
               <h3
-                className="sm:text-[22px] md:text-[26px] font-semibold w-full"
+                className="sm:text-[24px] md:text-[28px] font-semibold w-full"
                 style={{ color: C.navy }}
               >
                 {barRange.mode === 'days'
@@ -620,6 +639,7 @@ export default function MoodInsightPage() {
           steps={exerciseData.exc_steps}
         />
       )}
+      <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />
     </section>
   );
 }

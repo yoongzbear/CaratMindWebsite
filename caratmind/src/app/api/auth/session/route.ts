@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import {
-  getUserProfile,
-  mapCognitoError,
-  refreshTokens,
-} from '@/lib/cognito/server';
+// import {
+//   getUserProfile,
+//   mapCognitoError,
+//   refreshTokens,
+// } from '@/lib/cognito/server';
 import { readAuthCookies, setAuthCookies } from '@/lib/auth/cookies';
 import { buildSessionPayload } from '@/lib/auth/session-response';
 
@@ -15,11 +15,26 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    const tokens = await refreshTokens(username, refreshToken);
+    const refreshRes = await fetch(
+      `${process.env.DJANGO_API_BASE_URL}/api/accounts/refresh/`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, refreshToken }),
+        cache: 'no-store',
+      },
+    );
 
+    if (!refreshRes.ok) {
+      throw new Error('Failed to refresh tokens');
+    }
+
+    const { tokens } = await refreshRes.json();
+
+    // fetch profile from db
     const baseUrl = process.env.DJANGO_API_BASE_URL;
     const meRes = await fetch(`${baseUrl}/api/me/`, {
-      headers: { Authorization: `Bearer ${tokens.accessToken}` },
+      headers: { Authorization: `Bearer ${tokens.access_token}` },
       cache: 'no-store',
     });
 
@@ -29,13 +44,11 @@ export async function GET() {
 
     const meData = await meRes.json();
 
-    // Re-use the username that's already proven to work for refresh —
-    // never overwrite the auth cookie with a value sourced from DynamoDB.
-    await setAuthCookies(tokens.refreshToken, username);
+    await setAuthCookies(tokens.refresh_token, username);
 
     return NextResponse.json({
-      accessToken: tokens.accessToken,
-      expiresIn: tokens.expiresIn,
+      accessToken: tokens.access_token,
+      expiresIn: tokens.expires_in,
       user: {
         username: meData.user.username,
         email: meData.user.email,

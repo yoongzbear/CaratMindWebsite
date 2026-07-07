@@ -2,7 +2,7 @@ import os
 import re
 import threading
 from functools import lru_cache
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from llama_cpp import Llama
 

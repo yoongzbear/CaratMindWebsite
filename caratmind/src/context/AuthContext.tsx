@@ -60,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false;
       }
       const data = await res.json();
+      console.log('authContext data:', data);
       applySession({
         accessToken: data.accessToken,
         user: data.user,
