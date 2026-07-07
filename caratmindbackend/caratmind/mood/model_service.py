@@ -108,41 +108,93 @@ def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
         "mood_explain": explanation, 
     }
 
+# help clean feedback
+def _clean_explanation(text: str) -> str:
+    markers = ["Task:", "Rules:", "Journal Entry:", "Detected mood", "Is mood mixed:"]
+    for marker in markers:
+        idx = text.find(marker)
+        if idx != -1:
+            text = text[:idx]
+    return text.strip()
+
+# 2 sentence feedback
+def cut_two_sentences(text: str) -> str:
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    return " ".join(sentences[:2])
+
+# trim last incomplete sentence
+def trim_explanation(text: str) -> str:
+    text = text.strip()
+
+    if text.endswith((".", "!", "?")):
+        return text
+
+    # get all complete sentences
+    matches = list(re.finditer(r'[^.!?]+[.!?]', text))
+
+    if matches:
+        # keep everything up to the end of the last complete sentence
+        return text[:matches[-1].end()].strip()
+
+    # if no complete sentence at all
+    return text
+
 # generate feedback
 def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
+    # short entry (10 words)
+    word_count = len(text.split())
+    if word_count < 10:
+        return (
+            f"Your entry is short, but it carries a tone that leans towards {mood_label}. "
+            "Consider writing more next time for a deeper mood insight!"
+        )
+
     llm = _loadExplain()
 
     messages = [
         {
             "role": "system",
-            "content": "You are a strict mood analyst. You explain moods only using evidence from the text."
+            "content": (
+                f"You explain the output of a mood classifier. The classifier has already selected the mood.\n"
+                "Never disagree with the classifier. Do not evaluate whether the classifier is correct.\n"
+                "Your only task is to explain which words or events in the journal support the detected mood."
+            )
         },
         {
             "role": "user",
             "content": (
                 f"Journal Entry:\n{text}\n\n"
                 f"Detected mood:\n{mood_label}\n\n"
-                f"Detected mood confidence score:\n{mood_score}\n\n"
-                f"Is mood mixed:\n{is_mixed}\n\n"
+                # f"Detected mood confidence score:\n{mood_score}\n\n"
+                # f"Is mood mixed:\n{is_mixed}\n\n"
                 "Task:\n"
-                "Explain why this mood appear.\n\n"
+                "Explain what parts of the journal support this detected mood. Your only task is to explain which words or events in the journal support the detected mood.\n"
                 "Rules:\n"
-                "- 1 to 2 sentences only\n"
-                "- Must reference or quote phrases from the journal within the 2 sentences only\n"
-                "- Do not mention the confidence scores explicitly\n"
-                "- Only discuss the single detected mood. Never name, list, or reference any other mood/emotion, even to say they are absent or not present\n"
-                + ("- Since the mood is mixed, you may note that this is the closest interpretation, without naming any other specific mood\n" if is_mixed else "")
-                + "- Refer to the author as 'you'\n"
-                "- Ensure the grammar is proper\n"
+                "- Write exactly two sentences.\n"
+                "- Only use information written in the journal.\n"
+                "- Do not use bullet points.\n"
+                "- Do not use numbered lists.\n"
+                "- Do not write headings.\n"
+                "- End after the second sentence.\n"
+                "- End with a period.\n"
+                "- Refer to the author as 'you'\n"
+                "- Ensure the grammar is proper."
             )
         }
     ]
 
     output = llm.create_chat_completion(
         messages=messages,
-        max_tokens=120,
-        temperature=0.7,
+        # max_tokens=120,
+        max_tokens= 80, # lower token
+        temperature=0.4,
         top_p=0.9,
+        repeat_penalty=1.3,
+        stop=["\nTask:", "\nRules:", "\nJournal Entry:", "\nDetected mood"], # stop when it starts to generate prompts
     )
 
-    return output["choices"][0]["message"]["content"]
+    # return output["choices"][0]["message"]["content"]
+    raw_text = output["choices"][0]["message"]["content"]
+    cleaned = _clean_explanation(raw_text)
+    print(cleaned)
+    return trim_explanation(cleaned)
