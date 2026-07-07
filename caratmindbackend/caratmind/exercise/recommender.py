@@ -1,4 +1,4 @@
-# orchestrator: KB lookup -> rule engine -> top-N picks
+# orchestrator: db lookup -> rule -> top-N picks
 
 import logging
 
@@ -12,14 +12,13 @@ from .rules import pick_best_exercise
 
 logger = logging.getLogger(__name__)
 
-
 def recommend_exercise(
     *,
     user_id: str,
     mood_name: str,
     mood_confidence: float,
 ) -> dict | None:
-    candidates = get_exercises_for_mood(mood_name)  # knowledge-based
+    candidates = get_exercises_for_mood(mood_name)  # knowledge base
     recent_names = get_recent_exc_names(user_id, limit=5)
 
     # rule-based

@@ -30,8 +30,8 @@ run_samples(samples_1)
 
 def run_test(text):
     result = predict_mood(text)
-    print("predict mood", result)
-    exercise = recommend_exercise(user_id="test-user-local", mood_name=result['mood_name'], mood_confidence=result['mood_confidence'])
+    # print("predict mood", result)
+    exercise = recommend_exercise(user_id="a5edc5c8-2021-70d7-750c-8b2ca8096def", mood_name=result['mood_name'], mood_confidence=result['mood_confidence'])
     print("recommended:", exercise.get('exc_name') if exercise else None)
 
 run_test("hello my name is vernon")

@@ -1,9 +1,7 @@
-# rule-based filtering/ranking using context (confidence, history, mixed)
-
 """
 Rule-based layer. Knowledge base (DynamoDB exc_mood tags) gives the
 candidate pool for a mood; these rules pick the single best exercise
-based on situational context — confidence, mixed mood, repetition.
+based on situational context = confidence, mixed mood, repetition
 
 type: 
 breathing
@@ -12,7 +10,7 @@ mindfulness
 meditation
 """
 
-# Mood -> preferred exc_type priority order (domain/expert judgment).
+# Mood -> preferred exc_type priority order 
 MOOD_TYPE_PRIORITY = {
     "admiration": ["positivity", "breathing"],
     "amusement": ["positivity", "breathing"],
@@ -63,11 +61,10 @@ def pick_best_exercise(
 ) -> dict | None:
     """
     Rules applied:
-    1. Exclude recently-recommended exercises; fall back to allowing
-       repeats if everything was filtered out (or pool was empty).
+    1. Exclude recently-recommended exercises. Fall back to allowing repeats if everything filtered out or pool is empty.
     2. Rank by the mood's preferred exc_type priority order.
-    # 3. If mood is mixed/low-confidence, bias toward low-intensity types.
-    Returns the single best match, or None if no candidates exist at all - handled in recommender.py
+    3. If mood is mixed/low-confidence, bias toward low-intensity types.
+    Returns the single best match, or None if no candidates exist at all 
     """
     if not candidates:
         return None

@@ -98,11 +98,13 @@ def get_recent_exc_names(user_id: str, limit: int = 5) -> list[str]:
     table = _get_user_exercise_table()
     response = table.scan(FilterExpression=Attr('user_id').eq(user_id))
     items = response.get('Items', [])
-    items.sort(key=lambda i: i.get('rec_timestamp', ''), reverse=True)
+    items.sort(key=lambda i: i.get('uex_created_at', ''), reverse=True)
 
     names = []
     for item in items[:limit]:
-        names.extend(item.get('exc_names', []))
+        if item.get('exc_name'):
+            names.append(item['exc_name'])
+    print(names)
     return names
 
 # get user exercise by ID
