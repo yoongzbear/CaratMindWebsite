@@ -32,16 +32,6 @@ export const HELPLINES: Helpline[] = [
     available: 'Daily 8:00AM - 11:59PM',
   },
   {
-    name: 'Befrienders KL',
-    description:
-      'Confidential emotional support to anyone who is feeling distressed, depressed, or suicidal',
-    contact: '03-7627 2929',
-    tel: 'tel:+60376272929',
-    web: 'befrienders.org.my',
-    href: 'https://befrienders.org.my/',
-    available: '24/7',
-  },
-  {
     name: 'MIASA Crisis Helpline',
     description:
       'Dedicated to prevent suicide through assistance from friendly and supportive peers or volunteers who have experience in how to help people with similar experiences.',
@@ -55,11 +45,31 @@ export const HELPLINES: Helpline[] = [
     name: 'Malaysian Mental Health Association (MMHA)',
     description:
       'Dedicated to providing free and confidential support and information by phone.',
-    contact: '03-278-06803',
+    contact: '03-2780 6803',
     tel: 'tel:+60327806803',
     web: 'mmha.org.my',
     href: 'https://mmha.org.my/',
     available: 'Monday to Saturday 9:00AM - 5:00PM',
+  },
+  {
+    name: 'Mind Healing Therapy Center',
+    description:
+      'Offers mentor and coaching for mental health management by certified counselor and coaches.',
+    contact: '019-338 8565',
+    tel: 'tel:+60193388565',
+    web: 'irkazren.com',
+    href: 'https://irkazren.com/mentor-coach-pembimbing/',
+    available: '24/7',
+  },
+  {
+    name: 'Befrienders KL',
+    description:
+      'Confidential emotional support to anyone who is feeling distressed, depressed, or suicidal',
+    contact: '03-7627 2929',
+    tel: 'tel:+60376272929',
+    web: 'befrienders.org.my',
+    href: 'https://befrienders.org.my/',
+    available: '24/7',
   },
   {
     name: 'Sneham Welfare Organisation Malaysia',

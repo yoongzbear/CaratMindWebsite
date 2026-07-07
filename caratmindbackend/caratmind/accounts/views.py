@@ -124,11 +124,11 @@ def register_view(request):
 
         return JsonResponse({'error': cognito.map_cognito_error(e)}, status=400)
 
-def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
-    cognito = CognitoService()
-    return redirect(cognito.get_authorization_url())
+# def login_view(request):
+#     if request.user.is_authenticated:
+#         return redirect('dashboard')
+#     cognito = CognitoService()
+#     return redirect(cognito.get_authorization_url())
 
 @csrf_exempt
 @require_POST
@@ -156,55 +156,55 @@ def login_view(request):
         logger.error(f'Login error: {e.__class__.__name__}: {e}', exc_info=True)
         return JsonResponse({'error': cognito.map_cognito_error(e)}, status=401)
 
-def callback_view(request):
-    code = request.GET.get('code')
-    error = request.GET.get('error')
+# def callback_view(request):
+#     code = request.GET.get('code')
+#     error = request.GET.get('error')
 
-    if error:
-        messages.error(request, f'Authentication failed: {error}')
-        return redirect('home')
+#     if error:
+#         messages.error(request, f'Authentication failed: {error}')
+#         return redirect('home')
 
-    if not code:
-        messages.error(request, 'Authorization code not provided')
-        return redirect('home')
+#     if not code:
+#         messages.error(request, 'Authorization code not provided')
+#         return redirect('home')
 
-    cognito = CognitoService()
-    tokens = cognito.exchange_code_for_tokens(code)
-    if not tokens:
-        messages.error(request, 'Failed to obtain tokens')
-        return redirect('home')
+#     cognito = CognitoService()
+#     tokens = cognito.exchange_code_for_tokens(code)
+#     if not tokens:
+#         messages.error(request, 'Failed to obtain tokens')
+#         return redirect('home')
 
-    id_token = tokens.get('id_token')
-    user_info = cognito.verify_id_token(id_token)
-    if not user_info:
-        messages.error(request, 'Invalid token')
-        return redirect('home')
+#     id_token = tokens.get('id_token')
+#     user_info = cognito.verify_id_token(id_token)
+#     if not user_info:
+#         messages.error(request, 'Invalid token')
+#         return redirect('home')
 
-    custom_attributes = {
-        key.replace('custom:', ''): value
-        for key, value in user_info.items()
-        if key.startswith('custom:')
-    }
-    request.session['custom_attributes'] = custom_attributes
-    request.session['access_token'] = tokens.get('access_token')
-    request.session['refresh_token'] = tokens.get('refresh_token')
-    request.session['id_token'] = id_token
+#     custom_attributes = {
+#         key.replace('custom:', ''): value
+#         for key, value in user_info.items()
+#         if key.startswith('custom:')
+#     }
+#     request.session['custom_attributes'] = custom_attributes
+#     request.session['access_token'] = tokens.get('access_token')
+#     request.session['refresh_token'] = tokens.get('refresh_token')
+#     request.session['id_token'] = id_token
 
-    email = user_info.get('email')
-    username = user_info.get('cognito:username', email)
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            first_name=user_info.get('given_name', ''),
-            last_name=user_info.get('family_name', ''),
-        )
+#     email = user_info.get('email')
+#     username = user_info.get('cognito:username', email)
+#     try:
+#         user = User.objects.get(email=email)
+#     except User.DoesNotExist:
+#         user = User.objects.create_user(
+#             username=username,
+#             email=email,
+#             first_name=user_info.get('given_name', ''),
+#             last_name=user_info.get('family_name', ''),
+#         )
 
-    login(request, user)
-    messages.success(request, 'Successfully logged in!')
-    return redirect('dashboard')
+#     login(request, user)
+#     messages.success(request, 'Successfully logged in!')
+#     return redirect('dashboard')
 
 @csrf_exempt
 @require_POST

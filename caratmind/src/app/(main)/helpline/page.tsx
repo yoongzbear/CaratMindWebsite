@@ -88,9 +88,9 @@ export default function HelplinePage() {
         </div>
 
         <p
-          className="mt-7 sm:text-[16px] md:text-[18px] text-center leading-[1.7]"
+          className="mt-7 sm:text-[18px] md:text-[20px] text-center leading-[1.7]"
           style={{
-            color: C.faint,
+            color: C.muted,
           }}
         >
           Numbers and availability may change. Verify details with the service

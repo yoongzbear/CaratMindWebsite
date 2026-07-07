@@ -104,7 +104,6 @@ export default function SplashPage() {
   }
 
   if (user) {
-    router.replace('/home');
     return null;
   }
 
