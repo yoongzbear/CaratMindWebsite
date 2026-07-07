@@ -186,7 +186,7 @@ def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
     output = llm.create_chat_completion(
         messages=messages,
         # max_tokens=120,
-        max_tokens= 80, # lower token
+        max_tokens= 100, # lower token
         temperature=0.4,
         top_p=0.9,
         repeat_penalty=1.3,

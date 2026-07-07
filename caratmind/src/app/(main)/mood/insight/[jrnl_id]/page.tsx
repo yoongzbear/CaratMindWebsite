@@ -169,14 +169,24 @@ export default function MoodInsightPage() {
         return;
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-      setJournal((prev) =>
-        prev
-          ? {
-              ...prev,
-              jrnl_status: status,
-            }
-          : prev,
-      );
+      // setJournal((prev) =>
+      //   prev
+      //     ? {
+      //         ...prev,
+      //         jrnl_status: status,
+      //       }
+      //     : prev,
+      // );
+      if (status === 'submitted') {
+        const refresh = await fetch(`/api/journal/${jrnl_id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const updatedJournal = await refresh.json();
+        setJournal(updatedJournal);
+      }
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -322,11 +332,11 @@ export default function MoodInsightPage() {
                       onClose={() => setOpenDetail(false)}
                       date={format(
                         new Date(journal.jrnl_created_at),
-                        'd MMMM yyyy, p',
+                        'dd MMMM yyyy, p',
                       )}
                       lastUpdated={format(
                         new Date(journal.jrnl_updated_at),
-                        'd MMMM yyyy, p',
+                        'dd MMMM yyyy, p',
                       )}
                       journal={journal}
                     />
@@ -470,7 +480,7 @@ export default function MoodInsightPage() {
                   <p style={{ color: C.navy }}>
                     Loading exercise recommendation...
                   </p>
-                ) : !journal.uex_id ? (
+                ) : !exerciseData ? (
                   <h5
                     className="m-5 sm:text-[20px] md:text-[24px] leading-[1.65] font-semibold"
                     style={{ color: C.navy }}
@@ -612,7 +622,7 @@ export default function MoodInsightPage() {
                   ? 'Mood This Week'
                   : 'Mood Around This Entry'}
               </h3>
-              <StackedBarChart range={barRange} />
+              <StackedBarChart range={barRange} key={journal.jrnl_updated_at} />
               {/* mood dashboard button */}
               <button
                 onClick={moodDashboard}

@@ -159,32 +159,32 @@ function MoodDayButton({
   const totalCount = moodCounts.reduce((sum, m) => sum + m.count, 0); // mood total for the day
 
   // no gradient version
-  // const gradientBackground = useMemo(() => {
-  //   if (!hasMoods) return undefined;
+  const gradientBackground = useMemo(() => {
+    if (!hasMoods) return undefined;
 
-  //   let cursor = 0;
-  //   const stops: string[] = [];
+    let cursor = 0;
+    const stops: string[] = [];
 
-  //   for (const { mood, count } of moodCounts) {
-  //     const start = (cursor / totalCount) * 100;
-  //     cursor += count;
-  //     const end = (cursor / totalCount) * 100;
-  //     const color = getMoodStyle(mood).borderColor;
-  //     stops.push(`${color} ${start}%`, `${color} ${end}%`);
-  //   }
+    for (const { mood, count } of moodCounts) {
+      const start = (cursor / totalCount) * 100;
+      cursor += count;
+      const end = (cursor / totalCount) * 100;
+      const color = getMoodStyle(mood).borderColor;
+      stops.push(`${color} ${start}%`, `${color} ${end}%`);
+    }
 
-  //   return `linear-gradient(180deg, ${stops.join(', ')})`;
-  // }, [moodCounts, hasMoods, totalCount]);
+    return `linear-gradient(180deg, ${stops.join(', ')})`;
+  }, [moodCounts, hasMoods, totalCount]);
 
   // gradient version
-  let cursor = 0;
-  const stops: string[] = [];
-  for (const { mood, count } of moodCounts) {
-    cursor += count;
-    const pos = (cursor / totalCount) * 100;
-    stops.push(`${getMoodStyle(mood).borderColor} ${pos}%`);
-  }
-  const gradientBackground = `linear-gradient(180deg, ${stops.join(', ')})`;
+  // let cursor = 0;
+  // const stops: string[] = [];
+  // for (const { mood, count } of moodCounts) {
+  //   cursor += count;
+  //   const pos = (cursor / totalCount) * 100;
+  //   stops.push(`${getMoodStyle(mood).borderColor} ${pos}%`);
+  // }
+  // const gradientBackground = `linear-gradient(180deg, ${stops.join(', ')})`;
 
   const handleClick = () => {
     const ids = row?.jrnl_ids ?? [];
