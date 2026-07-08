@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 
 import { useEffect, useRef, useState } from 'react';
 import { SessionUser } from '../types/user';
+import { ChevronDown, Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
   {
@@ -34,6 +35,10 @@ export default function Header() {
   const { user, loading, signOut } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const [mobile, setMobile] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
 
   async function handleLogout() {
     await signOut();
@@ -61,6 +66,12 @@ export default function Header() {
       ) {
         setProfileOpen(false);
       }
+      if (
+        mobileRef.current &&
+        !mobileRef.current.contains(event.target as Node)
+      ) {
+        setMobile(false);
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -70,6 +81,11 @@ export default function Header() {
     };
   }, []);
 
+  function closeMobile() {
+    setMobile(false);
+    setMobileExpanded(null);
+  }
+
   return (
     <header
       className="sticky top-0 z-50 w-full border-b-[1.5px]"
@@ -77,9 +93,18 @@ export default function Header() {
         backgroundColor: C.bgTopbar,
         borderBottom: `1.5px solid ${C.serenity}`,
         boxShadow: '0 2px 12px rgba(146,168,209,0.10)',
+        // dynamic island safe (iPhone devices)
+        paddingTop: 'env(safe-area-inset-top, 0px)',
       }}
     >
-      <div className="w-[90%] mx-auto px-8 h-17 items-center flex justify-between">
+      <div
+        className="w-full md:w-[90%] mx-auto px-8 h-17 items-center flex justify-between"
+        style={{
+          // below dynamic island
+          paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+          paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
+        }}
+      >
         <Link href="/" className="no-underline flex items-center">
           <Image
             src="/assets/CM_long.png"
@@ -90,7 +115,8 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="flex items-center gap-1">
+        {/* desktop */}
+        <nav className="hidden md:flex items-center gap-1">
           {NAV_LINKS.map((item) => (
             <DropdownItem key={item.label} item={item} />
           ))}
@@ -201,7 +227,131 @@ export default function Header() {
             </Link>
           )}
         </nav>
+
+        {/* mobile */}
+        <div className="flex md:hidden items-center gap-2">
+          {!loading && user && (
+            <button
+              type="button"
+              onClick={() => router.push('/profile')}
+              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
+              style={{
+                border: `1px solid ${C.border}`,
+                background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
+              }}
+              aria-label="Profile"
+            >
+              {avatarInitials(user)}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setMobile((v) => !v)}
+            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-150"
+            style={{
+              border: `1px solid ${C.border}`,
+              color: C.navy,
+            }}
+            aria-label={mobile ? 'Close menu' : 'Open menu'}
+          >
+            {mobile ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
+
+      {/* mobile menu */}
+      {mobile && (
+        <div
+          ref={mobileRef}
+          className="md:hidden w-full border-t"
+          style={{
+            backgroundColor: C.bgTopbar,
+            borderTop: `1px solid ${C.border}`,
+          }}
+        >
+          <nav className="flex flex-col px-4 py-2">
+            {NAV_LINKS.map((item) =>
+              item.children ? (
+                <div
+                  key={item.label}
+                  className="border-b"
+                  style={{ borderColor: C.border }}
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileExpanded((cur) =>
+                        cur === item.label ? null : item.label,
+                      )
+                    }
+                    className="w-full flex items-center justify-between py-3.5 text-[15px] font-medium"
+                    style={{ color: C.navy }}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      size={18}
+                      className="transition-transform duration-200"
+                      style={{
+                        transform:
+                          mobileExpanded === item.label
+                            ? 'rotate(180deg)'
+                            : 'rotate(0deg)',
+                      }}
+                    />
+                  </button>
+                  {mobileExpanded === item.label && (
+                    <div className="pb-2 pl-3 flex flex-col gap-1">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={closeMobile}
+                          className="py-2.5 text-[14px]"
+                          style={{ color: C.serenity }}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMobile}
+                  className="py-3.5 text-[15px] font-medium border-b"
+                  style={{ color: C.navy, borderColor: C.border }}
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
+
+            {!loading && user ? (
+              <button
+                type="button"
+                onClick={() => {
+                  closeMobile();
+                  handleLogout();
+                }}
+                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[15px] font-medium"
+                style={{ color: '#dc2626' }}
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={closeMobile}
+                className={`mt-3 mb-3 ${buttonBase} ${buttonGradientColor} border-2 text-[15px] justify-center`}
+              >
+                Log In
+              </Link>
+            )}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

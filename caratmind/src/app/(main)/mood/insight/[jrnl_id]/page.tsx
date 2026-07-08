@@ -169,24 +169,24 @@ export default function MoodInsightPage() {
         return;
       }
       toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-      // setJournal((prev) =>
-      //   prev
-      //     ? {
-      //         ...prev,
-      //         jrnl_status: status,
-      //       }
-      //     : prev,
-      // );
-      if (status === 'submitted') {
-        const refresh = await fetch(`/api/journal/${jrnl_id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+      setJournal((prev) =>
+        prev
+          ? {
+              ...prev,
+              jrnl_status: status,
+            }
+          : prev,
+      );
+      // if (status === 'submitted') {
+      //   const refresh = await fetch(`/api/journal/${jrnl_id}`, {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   });
 
-        const updatedJournal = await refresh.json();
-        setJournal(updatedJournal);
-      }
+      //   const updatedJournal = await refresh.json();
+      //   setJournal(updatedJournal);
+      // }
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

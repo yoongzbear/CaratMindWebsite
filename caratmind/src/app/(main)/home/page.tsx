@@ -41,7 +41,6 @@ export default function HomePage() {
     if (!accessToken) return;
 
     async function loadHabit() {
-      // setFetchingHabit(true);
       try {
         const res = await fetch('/api/habit/today', {
           headers: { Authorization: `Bearer ${accessToken}` },
