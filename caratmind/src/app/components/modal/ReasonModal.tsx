@@ -14,9 +14,16 @@ type Props = {
   onSubmit: (reason: string) => Promise<void>;
 };
 
-export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
+export default function ReasonModal({ open, onClose, onSubmit }: Props) {
   const [reason, setReason] = useState('');
+  const [otherReason, setOtherReason] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const reasons = [
+    'No time to complete',
+    'Current environment is not suitable',
+    'Not interested in the coping exercise',
+  ];
 
   const handleSubmit = async () => {
     if (!reason || reason === '') {
@@ -24,9 +31,11 @@ export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
       return;
     }
 
+    const selectedReason = reason === 'Other' ? otherReason.trim() : reason;
+
     setLoading(true);
     try {
-      await onSubmit(reason);
+      await onSubmit(selectedReason);
       onClose();
     } finally {
       setLoading(false);
@@ -51,6 +60,61 @@ export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
         </div>
       }
     >
+      <div className="space-y-3">
+        {reasons.map((item) => (
+          <label key={item} className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="reason"
+              value={item}
+              checked={reason === item}
+              onChange={(e) => setReason(e.target.value)}
+              className="cursor-pointer"
+            />
+            <span
+              className="sm:text-[14px] md:text-[16px]"
+              style={{ color: C.navy }}
+            >
+              {item}
+            </span>
+          </label>
+        ))}
+
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="radio"
+            name="reason"
+            value="Other"
+            checked={reason === 'Other'}
+            onChange={() => setReason('Other')}
+            className="mt-1 cursor-pointer"
+          />
+
+          <div className="flex-1">
+            <span
+              className="sm:text-[14px] md:text-[16px]"
+              style={{ color: C.navy }}
+            >
+              Other:
+            </span>
+
+            {reason === 'Other' && (
+              <input
+                type="text"
+                value={otherReason}
+                onChange={(e) => setOtherReason(e.target.value)}
+                placeholder="Please specify"
+                className="mt-2 w-full rounded-[10px] px-3 py-2"
+                style={{
+                  border: `1px solid ${C.border}`,
+                  color: C.navy,
+                }}
+              />
+            )}
+          </div>
+        </label>
+      </div>
+      {/* <input type="radio"></input>
       <select
         className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
         style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -61,7 +125,7 @@ export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
         <option>No time to complete</option>
         <option>Current environment is not suitable</option>
         <option>Not interested in the coping exercise</option>
-      </select>
+      </select> */}
     </Modal>
   );
 }

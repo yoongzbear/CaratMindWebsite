@@ -4,15 +4,15 @@ import { buttonGradientColor } from './styles';
 import { C, ThemeName, themes } from './themes';
 
 /*
-h1 - className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+h1 - className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
 h2 - sm:text-[26px] md:text-[30px]
-h3 - sm:text-[24px] md:text-[28px]
+h3 - text-[20px] sm:text-[24px] md:text-[28px]
 h4 - sm:text-[22px] md:text-[26px]
-h5 - sm:text-[20px] md:text-[24px]
-normal text - sm:text-[14px] md:text-[16px]
-subtitle text - sm:text-[11px] md:text-[13px]
-button - sm:text-[12px] md:text-[14px]
+h5 - text-[16px] sm:text-[20px] md:text-[24px]
+normal text - text-[15px] sm:text-[14px] md:text-[16px]
+subtitle text - text-[10px] sm:text-[11px] md:text-[13px]
+button - font-bold text-[13px] sm:text-[12px] md:text-[14px]
 */
 
 // Tailwind classes

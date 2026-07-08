@@ -14,7 +14,7 @@ type Props = {
   onSubmit: (rating: number) => Promise<void>;
 };
 
-export default function EntryDetailModal({ open, onClose, onSubmit }: Props) {
+export default function RatingModal({ open, onClose, onSubmit }: Props) {
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);

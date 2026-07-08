@@ -148,15 +148,15 @@ export default function HomePage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 pb-12"
       style={{
         background: C.bgPage,
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Welcome back, {user?.preferredUsername}!
@@ -165,7 +165,7 @@ export default function HomePage() {
 
         {/* banner for basic habits */}
         <div
-          className="rounded-[10px] border mb-4 p-3 flex gap-3 items-center"
+          className="rounded-[10px] border mb-4 p-3 flex flex-col sm:flex-row gap-3 sm:items-center"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -174,14 +174,14 @@ export default function HomePage() {
         >
           {fetchingHabit ? (
             <h5
-              className="sm:text-[20px] md:text-[24px]"
+              className="text-[16px] sm:text-[20px] md:text-[24px]"
               style={{ color: C.navy }}
             >
               Loading today&apos;s habit...
             </h5>
           ) : !habit ? (
             <h5
-              className="sm:text-[20px] md:text-[24px]"
+              className="text-[16px] sm:text-[20px] md:text-[24px]"
               style={{ color: C.navy }}
             >
               All habits completed for today! Keep it up for tomorrow.
@@ -189,7 +189,7 @@ export default function HomePage() {
           ) : (
             <>
               <h5
-                className="flex-1 sm:text-[20px] md:text-[24px]"
+                className="flex-1 text-[16px] sm:text-[20px] md:text-[24px]"
                 style={{ color: C.navy }}
               >
                 {habit.hab_question}
@@ -197,19 +197,19 @@ export default function HomePage() {
 
               {selectedStatus ? (
                 <p
-                  className="sm:text-[20px] md:text-[24px] font-semibold"
+                  className="text-[16px] sm:text-[20px] md:text-[24px] font-semibold"
                   style={{ color: C.navy }}
                 >
                   {habitMessage[selectedStatus]}
                 </p>
               ) : (
-                <div className="ml-auto flex gap-5 flex-wrap">
+                <div className="sm:ml-auto flex gap-3 justify-center sm:justify-end sm:gap-5 flex-wrap">
                   {habit.hab_actions.map((action) => (
                     <button
                       key={action.action}
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
-                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[13px] sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
                     >
                       {action.action}
                     </button>
@@ -221,25 +221,25 @@ export default function HomePage() {
         </div>
 
         {/* cards */}
-        <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-3 gap-8 mx-auto">
+        <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mx-auto">
           {/* journal */}
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
-            <div className="flex flex-col flex-1 p-6 gap-3">
+            <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
               <h3
-                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                className="text-[20px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Journal
               </h3>
               <h5
-                className="sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
+                className="text-[16px] sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Current Journal Streak
               </h5>
-              <div className="relative w-full h-44 bg-linear-to-br flex items-center justify-center">
+              <div className="relative w-full h-36 sm:h-40 md:h-44 bg-linear-to-br flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center px-3">
-                  <div className="relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
+                  <div className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
                     {journalToday ? (
                       <Flame
                         fill="#fc6f03"
@@ -251,7 +251,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p
-                    className="mt-2 mb-2.5 sm:text-[18px] md:text-[20px] font-semibold"
+                    className="mt-2 mb-2.5 text-[16px] sm:text-[18px] md:text-[20px] font-semibold"
                     style={{ color: C.navy }}
                   >
                     {fetchingJournalStreak
@@ -261,7 +261,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p
-                className="sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
+                className="text-[13px] sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
                 style={{ color: C.navy }}
               >
                 {fetchingJournalStreak
@@ -272,7 +272,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/journal/new"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[12px] sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Write an entry
               </Link>

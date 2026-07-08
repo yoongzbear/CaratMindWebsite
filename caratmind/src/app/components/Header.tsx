@@ -98,25 +98,26 @@ export default function Header() {
       }}
     >
       <div
-        className="w-full md:w-[90%] mx-auto px-8 h-17 items-center flex justify-between"
+        className="w-full lg:w-[90%] mx-auto h-16 lg:h-17 items-center flex justify-between"
         style={{
-          // below dynamic island
+          // below/beside dynamic island
           paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
           paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
         }}
       >
-        <Link href="/" className="no-underline flex items-center">
+        <Link href="/" className="no-underline flex items-center shrink-0">
           <Image
             src="/assets/CM_long.png"
             alt="Mental Health System logo"
             width={140}
             height={0}
-            className="h-auto rounded-lg"
+            // className="h-auto rounded-lg"
+            className="h-auto w-27.5 sm:w-32.5 lg:w-35 rounded-lg"
           />
         </Link>
 
         {/* desktop */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map((item) => (
             <DropdownItem key={item.label} item={item} />
           ))}
@@ -229,7 +230,7 @@ export default function Header() {
         </nav>
 
         {/* mobile */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex lg:hidden items-center gap-2">
           {!loading && user && (
             <button
               type="button"
@@ -263,13 +264,20 @@ export default function Header() {
       {mobile && (
         <div
           ref={mobileRef}
-          className="md:hidden w-full border-t"
+          className="lg:hidden w-full border-t max-h-[calc(100vh-4rem)] overflow-y-auto"
           style={{
             backgroundColor: C.bgTopbar,
             borderTop: `1px solid ${C.border}`,
           }}
         >
-          <nav className="flex flex-col px-4 py-2">
+          <nav
+            className="flex flex-col px-4 py-2"
+            style={{
+              paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+              paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
+              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+            }}
+          >
             {NAV_LINKS.map((item) =>
               item.children ? (
                 <div
@@ -284,7 +292,7 @@ export default function Header() {
                         cur === item.label ? null : item.label,
                       )
                     }
-                    className="w-full flex items-center justify-between py-3.5 text-[15px] font-medium"
+                    className="w-full flex items-center justify-between py-3.5 text-[15px] font-bold"
                     style={{ color: C.navy }}
                   >
                     {item.label}
@@ -306,7 +314,7 @@ export default function Header() {
                           key={child.href}
                           href={child.href}
                           onClick={closeMobile}
-                          className="py-2.5 text-[14px]"
+                          className="py-2.5 text-[15px] font-bold"
                           style={{ color: C.serenity }}
                         >
                           {child.label}
@@ -320,7 +328,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={closeMobile}
-                  className="py-3.5 text-[15px] font-medium border-b"
+                  className="py-3.5 text-[15px] font-bold border-b"
                   style={{ color: C.navy, borderColor: C.border }}
                 >
                   {item.label}
@@ -335,7 +343,7 @@ export default function Header() {
                   closeMobile();
                   handleLogout();
                 }}
-                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[15px] font-medium"
+                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[15px] font-bold"
                 style={{ color: '#dc2626' }}
               >
                 Log Out
@@ -344,7 +352,8 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={closeMobile}
-                className={`mt-3 mb-3 ${buttonBase} ${buttonGradientColor} border-2 text-[15px] justify-center`}
+                // className={`mt-3 mb-3 ${buttonBase} ${buttonGradientColor} border-2 text-[15px] justify-center`}
+                className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[15px] sm:text-[12px] md:text-[14px] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Log In
               </Link>
