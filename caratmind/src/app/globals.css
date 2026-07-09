@@ -1,4 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
 
 :root {
   --background: #ffffff;

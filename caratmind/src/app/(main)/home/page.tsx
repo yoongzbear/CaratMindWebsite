@@ -13,6 +13,7 @@ import {
   habitMessage,
   HabitStatus,
 } from '@/app/types/habit';
+import { buttonGradient } from '@/app/styles/ui';
 
 export default function HomePage() {
   const { user, loading, accessToken } = useAuth();
@@ -148,15 +149,16 @@ export default function HomePage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
       style={{
         background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
       <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            // className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
@@ -175,14 +177,14 @@ export default function HomePage() {
         >
           {fetchingHabit ? (
             <h5
-              className="text-[clamp(1rem,3vw,2rem)]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.navy }}
             >
               Loading today&apos;s habit...
             </h5>
           ) : !habit ? (
             <h5
-              className="text-[clamp(1rem,3vw,2rem)]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.navy }}
             >
               All habits completed for today! Keep it up for tomorrow.
@@ -190,7 +192,7 @@ export default function HomePage() {
           ) : (
             <>
               <h5
-                className="flex-1 text-[clamp(1rem,3vw,2rem)]"
+                className="flex-1 font-semibold text-[clamp(1rem,3vw,1.5rem)]"
                 style={{ color: C.navy }}
               >
                 {habit.hab_question}
@@ -198,7 +200,7 @@ export default function HomePage() {
 
               {selectedStatus ? (
                 <p
-                  className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
+                  className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                   style={{ color: C.navy }}
                 >
                   {habitMessage[selectedStatus]}
@@ -210,7 +212,8 @@ export default function HomePage() {
                       key={action.action}
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
-                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                      // className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                      className={`${buttonGradient}`}
                     >
                       {action.action}
                     </button>
@@ -222,7 +225,7 @@ export default function HomePage() {
         </div>
 
         {/* cards */}
-        <div className="relative z-10 w-full grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mx-auto">
+        <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mx-auto">
           {/* journal */}
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
@@ -233,7 +236,7 @@ export default function HomePage() {
                 Journal
               </h3>
               <h5
-                className="text-[clamp(1rem,3vw,2rem)] font-semibold tracking-tight"
+                className="text-[clamp(1rem,3vw,1.5rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Current Journal Streak
@@ -252,7 +255,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p
-                    className="mt-2 mb-2.5 text-[clamp(1rem,3vw,2rem)] font-semibold"
+                    className="mt-2 mb-2.5 text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                     style={{ color: C.navy }}
                   >
                     {fetchingJournalStreak
@@ -262,7 +265,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p
-                className="text-[clamp(1rem,3vw,2rem)] leading-relaxed flex-1 text-justify"
+                className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-relaxed flex-1 text-justify"
                 style={{ color: C.navy }}
               >
                 {fetchingJournalStreak
@@ -271,10 +274,7 @@ export default function HomePage() {
                     ? 'Great job! You kept your journal streak going today. Keep it up!'
                     : 'You have not written an entry today. Write one to continue your streak!'}
               </p>
-              <Link
-                href="/journal/new"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
-              >
+              <Link href="/journal/new" className={`${buttonGradient}`}>
                 Write an entry
               </Link>
             </div>
@@ -291,10 +291,7 @@ export default function HomePage() {
               </h3>
               {/* mood chart */}
               <StackedBarChart range={barRange} height={280} />
-              <Link
-                href="/mood"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
-              >
+              <Link href="/mood" className={`${buttonGradient}`}>
                 View more
               </Link>
             </div>
@@ -310,7 +307,7 @@ export default function HomePage() {
                 Coping Exercise
               </h3>
               <h5
-                className="text-[clamp(1rem,3vw,2rem)] font-semibold tracking-tight"
+                className="text-[clamp(1rem,3vw,1.5rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Current Exercise Streak
@@ -334,7 +331,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p
-                    className="mt-2 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
+                    className="mt-2 mb-2.5 text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                     style={{ color: C.navy }}
                   >
                     {fetchingExcStreak
@@ -344,7 +341,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p
-                className="text-[clamp(0.875rem,1.5vw,1rem)] leading-relaxed flex-1 text-justify"
+                className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-relaxed flex-1 text-justify"
                 style={{ color: C.navy }}
               >
                 {fetchingExcStreak
@@ -353,10 +350,7 @@ export default function HomePage() {
                     ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
                     : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
               </p>
-              <Link
-                href="/exercise/tracking"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
-              >
+              <Link href="/exercise/tracking" className={`${buttonGradient}`}>
                 Track exercise
               </Link>
             </div>

@@ -26,6 +26,7 @@ export default function Footer() {
           // dynamic island
           paddingLeft: 'max(2rem, env(safe-area-inset-left, 0px))',
           paddingRight: 'max(2rem, env(safe-area-inset-right, 0px))',
+          paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
         }}
       >
         {/* Logo + tagline */}

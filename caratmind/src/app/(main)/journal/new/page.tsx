@@ -3,7 +3,7 @@
 import {
   buttonGradientColor,
   buttonOutlined,
-  buttonRed,
+  // buttonRed,
   C,
   styles,
 } from '@/app/styles/styles';
@@ -13,6 +13,7 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { useRouter } from 'next/navigation';
 import { StatusKey } from '@/app/types/journal';
 import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
+import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
 
 export default function NewEntryPage() {
   const { user, loading, accessToken } = useAuth();
@@ -70,37 +71,39 @@ export default function NewEntryPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-2 lg:pb-12"
       style={{
         background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             New Journal Entry
           </h1>
 
-          <p
-            className="sm:text-[14px] md:text-[16px] mt-0.5 mb-2"
+          <h5
+            className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
             style={{ color: C.navy }}
           >
             Write out your thoughts and feelings with no limits. Feel free to
             write about your day or any experiences you faced!
-          </p>
+          </h5>
           <p
-            className="sm:text-[11px] md:text-[13px] mt-0.5 mb-2"
-            style={{ color: C.faint }}
+            className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2"
+            style={{ color: C.muted }}
           >
             Entry shall be analyzed using AI to identify your mood.
           </p>
         </header>
 
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3 p-3 pb-6"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -108,7 +111,7 @@ export default function NewEntryPage() {
           }}
         >
           <textarea
-            className="w-full min-h-64 px-3 py-2.5 rounded-lg sm:text-[14px] md:text-[16px] bg-white box-border outline-none font-inherit"
+            className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] bg-white box-border outline-none font-inherit"
             value={entry}
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
@@ -119,12 +122,9 @@ export default function NewEntryPage() {
             }}
           ></textarea>
 
-          <div className="flex items-center justify-center gap-30 mt-4">
+          <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex items-stretch justify-between mt-4">
             {/* reset button */}
-            <button
-              onClick={handleReset}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-            >
+            <button onClick={handleReset} className={`${buttonRed}`}>
               {'Reset'}
             </button>
 
@@ -132,7 +132,7 @@ export default function NewEntryPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+              className={`${buttonGradient}`}
             >
               {submitting ? 'Submitting...' : 'Submit Entry'}
             </button>
@@ -141,7 +141,7 @@ export default function NewEntryPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonOutlined} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`${buttonGrey}`}
             >
               {saving ? 'Saving...' : 'Save as Draft'}
             </button>

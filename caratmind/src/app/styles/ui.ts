@@ -12,10 +12,10 @@ Maximum: 5.5rem (88px)
 h1 - className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
 h1 (splash) - text-[clamp(3rem,8vw,5.5rem)]
-h1 - text-[clamp(1.38rem,7vw,2rem)]
+text-[clamp(1.38rem,7vw,2rem)]
 
 h2 - sm:text-[26px] md:text-[30px]
-// h2 - text-[clamp(2.75rem,7vw,5.25rem)]
+// h2 - text-[clamp(2.75rem,6vw,1.85rem)]
 
 h3 - text-[20px] sm:text-[24px] md:text-[28px]
 h3 - text-[clamp(1.25rem,5vw,1.75rem)]
@@ -24,7 +24,7 @@ h4 - sm:text-[22px] md:text-[26px]
 h4 - text-[clamp(1.15rem,4vw,1.65rem)]
 
 h5 - text-[16px] sm:text-[20px] md:text-[24px]
-h5 - text-[clamp(1rem,3vw,2rem)]
+text-[clamp(1rem,3vw,1.5rem)]
 
 footer title - text-[16px] md:text-[18px]
 text-[clamp(1rem,2vw,1.15rem)]
@@ -32,7 +32,7 @@ text-[clamp(1rem,2vw,1.15rem)]
 loading... - text-[clamp(1rem,3vw,2rem)]
 
 normal text - text-[15px] sm:text-[14px] md:text-[16px]
-normal text - text-[clamp(0.875rem,1.5vw,1rem)]
+text-[clamp(0.875rem,1.5vw,1rem)]
 
 subtitle text - text-[10px] sm:text-[11px] md:text-[13px]
 text-[clamp(0.7rem,1.5vw,0.85rem)]
@@ -127,9 +127,17 @@ export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semi
 //   hover:text-[${themes[theme].text}] hover:border-[${themes[theme].muted}] hover:bg-[#f8faff]
 // `;
 
-export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
-rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white 
-hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+
+export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+
+// export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
+// rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white
+// hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
 
 export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
