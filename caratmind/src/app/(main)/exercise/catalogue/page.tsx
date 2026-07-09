@@ -99,7 +99,7 @@ export default function ExerciseCatalogPage() {
       <div className="w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
             style={{ color: C.navy }}
           >
             Coping Exercise Catalogue
@@ -118,7 +118,7 @@ export default function ExerciseCatalogPage() {
             {/* search */}
             <div className="w-50">
               <input
-                className="w-full pl-10 sm:text-[14px] md:text-[16px]"
+                className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
                 style={styles.input}
                 type="search"
                 placeholder="Search Exercise"
@@ -130,7 +130,7 @@ export default function ExerciseCatalogPage() {
             {/* mood dropdown */}
             <div className="w-50">
               <select
-                className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
+                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
                 value={selectedMood}
                 onChange={(e) => setSelectedMood(e.target.value)}
@@ -147,7 +147,7 @@ export default function ExerciseCatalogPage() {
             {/* type dropdown */}
             <div className="w-40">
               <select
-                className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
+                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
@@ -164,8 +164,8 @@ export default function ExerciseCatalogPage() {
 
           {fetching && (
             <p
-              className="sm:text-[20px] md:text-[24px]"
-              style={{ color: C.faint }}
+              className="text-[clamp(1rem,3vw,2rem)]"
+              style={{ color: C.muted }}
             >
               Loading coping exercises...
             </p>
@@ -173,8 +173,8 @@ export default function ExerciseCatalogPage() {
 
           {!fetching && filtered.length === 0 && (
             <p
-              className="sm:text-[20px] md:text-[24px]"
-              style={{ color: C.faint }}
+              className="text-[clamp(1rem,3vw,2rem)]"
+              style={{ color: C.muted }}
             >
               {exercises.length === 0
                 ? 'No exercise is available.'
@@ -201,7 +201,7 @@ export default function ExerciseCatalogPage() {
                 }}
               >
                 <h3
-                  className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-0.5"
+                  className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-0.5"
                   style={{ color: C.navy }}
                 >
                   {ex.exc_name}
@@ -248,7 +248,7 @@ export default function ExerciseCatalogPage() {
                 </div>
 
                 <p
-                  className="w-full mb-2 text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
+                  className="w-full mb-2 text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
                   style={{ color: C.navy }}
                 >
                   {ex.exc_desc}
@@ -259,7 +259,7 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                 >
                   View More
                 </button>

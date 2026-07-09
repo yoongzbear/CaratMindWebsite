@@ -11,7 +11,8 @@ Maximum: 5.5rem (88px)
 
 h1 - className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
-// h1 - text-[clamp(3rem,8vw,5.5rem)]
+h1 (splash) - text-[clamp(3rem,8vw,5.5rem)]
+h1 - text-[clamp(1.38rem,7vw,2rem)]
 
 h2 - sm:text-[26px] md:text-[30px]
 // h2 - text-[clamp(2.75rem,7vw,5.25rem)]
@@ -27,6 +28,8 @@ h5 - text-[clamp(1rem,3vw,2rem)]
 
 footer title - text-[16px] md:text-[18px]
 text-[clamp(1rem,2vw,1.15rem)]
+
+loading... - text-[clamp(1rem,3vw,2rem)]
 
 normal text - text-[15px] sm:text-[14px] md:text-[16px]
 normal text - text-[clamp(0.875rem,1.5vw,1rem)]

@@ -156,7 +156,8 @@ export default function HomePage() {
       <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            // className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Welcome back, {user?.preferredUsername}!
@@ -174,14 +175,14 @@ export default function HomePage() {
         >
           {fetchingHabit ? (
             <h5
-              className="text-[16px] sm:text-[20px] md:text-[24px]"
+              className="text-[clamp(1rem,3vw,2rem)]"
               style={{ color: C.navy }}
             >
               Loading today&apos;s habit...
             </h5>
           ) : !habit ? (
             <h5
-              className="text-[16px] sm:text-[20px] md:text-[24px]"
+              className="text-[clamp(1rem,3vw,2rem)]"
               style={{ color: C.navy }}
             >
               All habits completed for today! Keep it up for tomorrow.
@@ -189,7 +190,7 @@ export default function HomePage() {
           ) : (
             <>
               <h5
-                className="flex-1 text-[16px] sm:text-[20px] md:text-[24px]"
+                className="flex-1 text-[clamp(1rem,3vw,2rem)]"
                 style={{ color: C.navy }}
               >
                 {habit.hab_question}
@@ -197,7 +198,7 @@ export default function HomePage() {
 
               {selectedStatus ? (
                 <p
-                  className="text-[16px] sm:text-[20px] md:text-[24px] font-semibold"
+                  className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
                   style={{ color: C.navy }}
                 >
                   {habitMessage[selectedStatus]}
@@ -209,7 +210,7 @@ export default function HomePage() {
                       key={action.action}
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
-                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[13px] sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
+                      className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
                     >
                       {action.action}
                     </button>
@@ -226,13 +227,13 @@ export default function HomePage() {
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
               <h3
-                className="text-[20px] sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Journal
               </h3>
               <h5
-                className="text-[16px] sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
+                className="text-[clamp(1rem,3vw,2rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Current Journal Streak
@@ -251,7 +252,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p
-                    className="mt-2 mb-2.5 text-[16px] sm:text-[18px] md:text-[20px] font-semibold"
+                    className="mt-2 mb-2.5 text-[clamp(1rem,3vw,2rem)] font-semibold"
                     style={{ color: C.navy }}
                   >
                     {fetchingJournalStreak
@@ -261,7 +262,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p
-                className="text-[13px] sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
+                className="text-[clamp(1rem,3vw,2rem)] leading-relaxed flex-1 text-justify"
                 style={{ color: C.navy }}
               >
                 {fetchingJournalStreak
@@ -272,7 +273,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/journal/new"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[12px] sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Write an entry
               </Link>
@@ -283,7 +284,7 @@ export default function HomePage() {
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
-                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Mood
@@ -292,7 +293,7 @@ export default function HomePage() {
               <StackedBarChart range={barRange} height={280} />
               <Link
                 href="/mood"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 View more
               </Link>
@@ -303,13 +304,13 @@ export default function HomePage() {
           <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
-                className="sm:text-[24px] md:text-[28px] font-semibold tracking-tight"
+                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Coping Exercise
               </h3>
               <h5
-                className="sm:text-[20px] md:text-[24px] font-semibold tracking-tight"
+                className="text-[clamp(1rem,3vw,2rem)] font-semibold tracking-tight"
                 style={{ color: C.navy }}
               >
                 Current Exercise Streak
@@ -333,7 +334,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <p
-                    className="mt-2 mb-2.5 sm:text-[18px] md:text-[20px] font-semibold"
+                    className="mt-2 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
                     style={{ color: C.navy }}
                   >
                     {fetchingExcStreak
@@ -343,7 +344,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p
-                className="sm:text-[14px] md:text-[16px] leading-relaxed flex-1 text-justify"
+                className="text-[clamp(0.875rem,1.5vw,1rem)] leading-relaxed flex-1 text-justify"
                 style={{ color: C.navy }}
               >
                 {fetchingExcStreak
@@ -354,7 +355,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/exercise/tracking"
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Track exercise
               </Link>

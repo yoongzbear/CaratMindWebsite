@@ -257,7 +257,7 @@ export default function ExerciseTrackingPage() {
       <div className="w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Coping Exercise Tracking
@@ -284,7 +284,7 @@ export default function ExerciseTrackingPage() {
               )}
             </div>
             <p
-              className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+              className="mt-0 mb-2.5 text-[clamp(1rem,3vw,2rem)]"
               style={{ color: C.navy }}
             >
               {fetchingStreak
@@ -293,7 +293,7 @@ export default function ExerciseTrackingPage() {
             </p>
           </div>
           <p
-            className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+            className="mt-0 mb-2.5 text-[clamp(1rem,3vw,2rem)]"
             style={{ color: C.navy }}
           >
             {fetchingStreak
@@ -314,13 +314,13 @@ export default function ExerciseTrackingPage() {
           }}
         >
           <h3
-            className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Today&apos;s Exercise
           </h3>
           <h5
-            className="sm:text-[20px] md:text-[24px]"
+            className="text-[clamp(1rem,3vw,2rem)]"
             style={{ color: C.muted }}
           >
             {format(todayDate, 'dd MMMM yyyy')}
@@ -339,14 +339,14 @@ export default function ExerciseTrackingPage() {
               {!fetchingTodayExc && todayExercise.length === 0 && (
                 <div>
                   <p
-                    className="sm:text-[14px] md:text-[16px] font-semibold"
-                    style={{ color: C.faint }}
+                    className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
+                    style={{ color: C.muted }}
                   >
                     No recommended coping exercises for today. Create a new
                     entry to get started!
                   </p>
                   <button
-                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                     onClick={() => router.push('/journal/new')}
                   >
                     New Entry
@@ -375,7 +375,7 @@ export default function ExerciseTrackingPage() {
                     >
                       <div className="w-full flex gap-3 mb-2">
                         <h5
-                          className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
+                          className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_name}
@@ -441,7 +441,7 @@ export default function ExerciseTrackingPage() {
                         <Pill>{toTitleCase(exercise.exc_type)}</Pill>
                       </div>
                       <p
-                        className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
+                        className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
                         style={{ color: C.navy }}
                       >
                         {exercise.exc_desc}
@@ -450,7 +450,7 @@ export default function ExerciseTrackingPage() {
                       {exercise.uex_status === 'completed' ? (
                         <div className="flex items-center gap-1">
                           <p
-                            className="sm:text-[18px] md:text-[20px] font-bold"
+                            className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
                             style={{ color: C.navy }}
                           >
                             {exercise.uex_rating}
@@ -465,7 +465,7 @@ export default function ExerciseTrackingPage() {
                       ) : exercise.uex_status === 'incomplete' &&
                         exercise.uex_reason ? (
                         <p
-                          className="sm:text-[14px] md:text-[16px] mb-2"
+                          className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2"
                           style={{ color: C.navy }}
                         >
                           <b>Incomplete Reason</b>: {exercise.uex_reason}
@@ -480,7 +480,7 @@ export default function ExerciseTrackingPage() {
                             setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                         >
                           {'View More'}
                         </button>
