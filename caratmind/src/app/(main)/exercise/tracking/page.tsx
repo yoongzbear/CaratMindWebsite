@@ -487,7 +487,7 @@ export default function ExerciseTrackingPage() {
 
                         <button
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                         >
                           {'View Insights'}
                         </button>
@@ -500,7 +500,7 @@ export default function ExerciseTrackingPage() {
                                   setOpenRating(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                               >
                                 {'Completed'}
                               </button>
@@ -510,7 +510,7 @@ export default function ExerciseTrackingPage() {
                                   setOpenReason(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-sm font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                               >
                                 {'Did Not Complete'}
                               </button>
@@ -544,7 +544,7 @@ export default function ExerciseTrackingPage() {
           }}
         >
           <h3
-            className="sm:text-[24px] md:text-[28px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Recommended Exercises History
@@ -570,7 +570,7 @@ export default function ExerciseTrackingPage() {
                       month: 'w-full',
                       month_grid: 'w-fit mx-auto',
                       weekday:
-                        'w-11 text-center sm:text-[14px] md:text-[16px] font-bold',
+                        'w-11 text-center text-[clamp(0.875rem,1.5vw,1rem)] font-bold',
                       day_button:
                         'w-11 h-11 m-1 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
                       today: 'font-semibold text-[#92A8D1]',
@@ -587,7 +587,7 @@ export default function ExerciseTrackingPage() {
                     }}
                   />
                   <button
-                    className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
+                    className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold hover:cursor-pointer"
                     style={{ color: C.serenity }}
                     onClick={() => setSelectedDate(todayDate)}
                   >
@@ -600,7 +600,7 @@ export default function ExerciseTrackingPage() {
             {/* recommended coping exercise section - 60% */}
             <div className="w-[60%] flex flex-col">
               <h5
-                className="sm:text-[20px] md:text-[24px] font-bold underline"
+                className="text-[clamp(1rem,3vw,2rem)] font-bold underline"
                 style={{ color: C.navy }}
               >
                 {format(selectedDate, 'dd MMMM yyyy')}
@@ -610,8 +610,8 @@ export default function ExerciseTrackingPage() {
               <div className="mx-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
                 {fetchingExcHistory && (
                   <p
-                    className="sm:text-[14px] md:text-[16px] font-semibold"
-                    style={{ color: C.faint }}
+                    className="text-[clamp(1rem,3vw,2rem)] font-semibold"
+                    style={{ color: C.muted }}
                   >
                     Loading recommended exercises...
                   </p>
@@ -619,8 +619,8 @@ export default function ExerciseTrackingPage() {
 
                 {!fetchingExcHistory && excHistoryData.length === 0 && (
                   <p
-                    className="sm:text-[14px] md:text-[16px] font-semibold"
-                    style={{ color: C.faint }}
+                    className="text-[clamp(1rem,3vw,2rem)] font-semibold"
+                    style={{ color: C.muted }}
                   >
                     No recommended exercises for this date.
                   </p>
@@ -629,7 +629,7 @@ export default function ExerciseTrackingPage() {
                   excHistoryData.length === 0 &&
                   isSameDay(selectedDate, todayDate) && (
                     <button
-                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                       onClick={() => router.push('/journal/new')}
                     >
                       New Entry
@@ -656,7 +656,7 @@ export default function ExerciseTrackingPage() {
                         }}
                       >
                         <h5
-                          className="sm:text-[20px] md:text-[24px] font-semibold mt-0 mb-0.5"
+                          className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_name}
@@ -706,7 +706,7 @@ export default function ExerciseTrackingPage() {
                         {exercise.uex_status === 'completed' ? (
                           <div className="flex items-center gap-1">
                             <p
-                              className="sm:text-[18px] md:text-[20px] font-bold"
+                              className="text-[clamp(1rem,3vw,2rem)] font-bold"
                               style={{ color: C.navy }}
                             >
                               {exercise.uex_rating}
@@ -721,7 +721,7 @@ export default function ExerciseTrackingPage() {
                         ) : exercise.uex_status === 'incomplete' &&
                           exercise.uex_reason ? (
                           <p
-                            className="sm:text-[14px] md:text-[16px] mb-2"
+                            className="text-[clamp(1rem,3vw,2rem)] mb-2"
                             style={{ color: C.navy }}
                           >
                             <b>Incomplete Reason</b>: {exercise.uex_reason}
@@ -732,7 +732,7 @@ export default function ExerciseTrackingPage() {
 
                         {/* exercise description */}
                         <p
-                          className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word sm:text-[14px] md:text-[16px]"
+                          className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(1rem,3vw,2rem)]"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_desc}
@@ -741,7 +741,7 @@ export default function ExerciseTrackingPage() {
                         <div className="mt-1 flex gap-3">
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                             onClick={() => {
                               setSelectedExercise(exercise);
                               setOpenDetail(true);
@@ -752,7 +752,7 @@ export default function ExerciseTrackingPage() {
 
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                             onClick={() => handleViewEntry(exercise.jrnl_id)}
                           >
                             View Entry

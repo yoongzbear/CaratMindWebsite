@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { C, styles } from '@/app/styles/styles';
 import { HELPLINES } from '@/app/copywriting/helpline';
+import { Clock, Phone } from 'lucide-react';
 
 export default function HelplinePage() {
   return (
@@ -10,21 +11,22 @@ export default function HelplinePage() {
         background: C.bgPage,
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-0.5"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
             style={{ color: C.navy }}
           >
             Emergency Helplines
           </h1>
           <p
-            className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
+            className="mt-0 mb-2.5 text-[clamp(1rem,1.5vw,1.25rem)] font-medium"
             style={{ color: C.navy }}
           >
             If you are in crisis or need urgent support, reach out to a
-            qualified professional or emergency service. CaratMind is not a
-            substitute for licensed care or emergency response.
+            qualified professional or emergency service. <br />
+            CaratMind is not a substitute for licensed care or emergency
+            response.
           </p>
         </header>
 
@@ -43,14 +45,14 @@ export default function HelplinePage() {
             >
               <div className="flex justify-between items-start gap-3">
                 <h4
-                  className="font-semibold sm:text-[22px] md:text-[26px]"
+                  className="font-semibold text-[clamp(1.1rem,4vw,1.65rem)]"
                   style={{ color: C.navy }}
                 >
                   {line.name}
                 </h4>
               </div>
               <p
-                className="m-0 sm:text-[14px] md:text-[16px] leading-[1.65] flex-1"
+                className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.65] flex-1"
                 style={{
                   color: C.navy,
                 }}
@@ -59,24 +61,26 @@ export default function HelplinePage() {
               </p>
               {line.available && (
                 <p
-                  className="m-0 sm:text-[12px] md:text-[14px]"
+                  className="inline-flex gap-1.5 font-bold m-0 text-[clamp(0.7rem,1.5vw,0.85rem)]"
                   style={{ color: C.muted }}
                 >
+                  <Clock size={20} />
                   {line.available}
                 </p>
               )}
               <a
                 href={line.tel}
-                className="inline-flex items-center gap-1.5 mt-1 sm:text-[12px] md:text-[14px] font-bold no-underline"
+                className="inline-flex items-center gap-1.5 mt-1 text-[clamp(0.875rem,1.5vw,1rem)] font-bold no-underline"
                 style={{
                   color: C.navy,
                 }}
               >
+                <Phone size={20} />
                 {line.contact}
               </a>
               <a
                 href={line.href}
-                className="inline-flex items-center gap-1.5 mt-1 sm:text-[12px] md:text-[14px] font-bold underline"
+                className="inline-flex items-center gap-1.5 mt-1 text-[clamp(0.875rem,1.5vw,1rem)] font-bold underline hover:no-underline"
                 style={{
                   color: C.serenity,
                 }}
@@ -88,7 +92,7 @@ export default function HelplinePage() {
         </div>
 
         <p
-          className="mt-7 sm:text-[18px] md:text-[20px] text-center leading-[1.7]"
+          className="mt-7 text-[clamp(1rem,2vw,1.15rem)] text-center leading-[1.7]"
           style={{
             color: C.muted,
           }}

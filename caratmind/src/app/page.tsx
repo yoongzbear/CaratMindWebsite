@@ -123,7 +123,7 @@ export default function SplashPage() {
       {/* hero */}
       <div className="relative z-10 text-center mb-8 flex flex-col items-center gap-4">
         {/* logo */}
-        <h1 className="text-[clamp(3rem,8vw,5.5rem)] font-light leading-none tracking-tight text-slate-800">
+        <h1 className="text-[clamp(3rem,8vw,5rem)] font-light leading-none tracking-tight text-slate-800">
           Welcome to CaratMind
         </h1>
         <h5 className="text-slate-500 text-[clamp(1rem,3vw,2rem)] leading-relaxed">
@@ -178,7 +178,7 @@ export default function SplashPage() {
 
               <Link
                 href={card.href}
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 {card.buttonLabel}
               </Link>
