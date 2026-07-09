@@ -203,7 +203,7 @@ export default function Footer() {
           </Link>
         </p>
         <p
-          className="mt-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-[textLight] text-center"
+          className="mt-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-center"
           style={{
             color: textLight,
           }}

@@ -13,15 +13,15 @@ export function AuthCard({
 }) {
   return (
     <div
-      className={`w-full bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-7 py-8`}
+      className={`w-full bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-5 py-5 sm:px-7 sm:py-8`}
       style={{
-        width: `${width}px`,
+        maxWidth: `${width}px`,
         border: `1px solid ${C.border}`,
         boxShadow: '0 8px 40px rgba(146,168,209,0.18)',
       }}
     >
       <h1
-        className="sm:text-[28px] md:text-[32px] mb-5 text-center text-[22px] font-bold"
+        className="text-[clamp(1.38rem,7vw,2rem)] mb-5 text-center font-bold"
         style={{
           color: C.navy,
         }}

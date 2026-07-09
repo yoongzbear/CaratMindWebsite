@@ -94,9 +94,9 @@ export function RegisterForm({
       <form onSubmit={onSubmit}>
         {!needsConfirmation ? (
           <>
-            <div className="w-full flex gap-4">
+            <div className="w-full sm:flex gap-4">
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.muted }}>
+                <label className={labelStyle} style={{ color: C.navy }}>
                   Username
                 </label>
                 <input
@@ -111,7 +111,7 @@ export function RegisterForm({
               </div>
 
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.muted }}>
+                <label className={labelStyle} style={{ color: C.navy }}>
                   Preferred Name
                 </label>
                 <div className="relative mb-3.5">
@@ -142,7 +142,7 @@ export function RegisterForm({
               </div>
             </div>
 
-            <label className={labelStyle} style={{ color: C.muted }}>
+            <label className={labelStyle} style={{ color: C.navy }}>
               Email
             </label>
             <input
@@ -155,9 +155,9 @@ export function RegisterForm({
               style={{ color: C.navy }}
             />
 
-            <div className="w-full flex gap-4">
+            <div className="w-full sm:flex gap-4">
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.muted }}>
+                <label className={labelStyle} style={{ color: C.navy }}>
                   Password
                 </label>
                 <div className="relative mb-3.5">
@@ -187,8 +187,8 @@ export function RegisterForm({
                 </div>
               </div>
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.muted }}>
-                  Confirm password
+                <label className={labelStyle} style={{ color: C.navy }}>
+                  Confirm Password
                 </label>
                 <div className="relative mb-3.5">
                   <input
@@ -228,7 +228,7 @@ export function RegisterForm({
               />
               <label
                 className={`${labelStyle} text-justify`}
-                style={{ color: C.muted }}
+                style={{ color: C.navy }}
               >
                 I am <b>above 18</b> and I acknowledge my data such as journal
                 entries will be used for data processing by AI
@@ -238,18 +238,18 @@ export function RegisterForm({
         ) : (
           <>
             <p
-              className="sm:text-[14px] md:text-[16px]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)]"
               style={{ color: C.navy }}
             >
               Enter the verification code sent to <strong>{email}</strong>.
             </p>
             <p
-              className="sm:text-[14px] md:text-[16px]"
-              style={{ color: C.muted }}
+              className="text-[clamp(0.875rem,1.5vw,1rem)]"
+              style={{ color: C.navy }}
             >
               You may check your spam emails for the code.
             </p>
-            <label className={labelStyle} style={{ color: C.muted }}>
+            <label className={labelStyle} style={{ color: C.navy }}>
               Verification code
             </label>
             <input
@@ -283,9 +283,9 @@ export function RegisterForm({
       </form>
 
       <p
-        className="mt-5.5 text-center sm:text-[14px] md:text-[16px]"
+        className="mt-5.5 text-center text-[clamp(0.875rem,1.5vw,1rem)]"
         style={{
-          color: C.faint,
+          color: C.navy,
         }}
       >
         Already have an account?{' '}

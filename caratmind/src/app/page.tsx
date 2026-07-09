@@ -110,10 +110,13 @@ export default function SplashPage() {
   return (
     // splash page - not logged in
     <main
-      className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)"
-      style={{}}
+      className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center py-8 relative overflow-hidden font-(family-name:--font-dm-sans)"
+      style={{
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
+      }}
     >
-      {/* background decoration */}
+      {/* background color */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 w-125 h-125 rounded-full bg-rose-100/40 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 w-120 h-120 rounded-full bg-violet-100/40 blur-3xl" />
@@ -123,7 +126,7 @@ export default function SplashPage() {
       {/* hero */}
       <div className="relative z-10 text-center mb-8 flex flex-col items-center gap-4">
         {/* logo */}
-        <h1 className="text-[clamp(3rem,8vw,5rem)] font-light leading-none tracking-tight text-slate-800">
+        <h1 className="text-[clamp(3rem,8vw,4rem)] font-light leading-none tracking-tight text-slate-800">
           Welcome to CaratMind
         </h1>
         <h5 className="text-slate-500 text-[clamp(1rem,3vw,2rem)] leading-relaxed">
@@ -132,7 +135,7 @@ export default function SplashPage() {
       </div>
 
       {/* cards */}
-      <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-5 px-2">
+      <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-5 px-2">
         {cards.map((card) => (
           <div
             key={card.title}

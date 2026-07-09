@@ -53,8 +53,8 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   return (
     <AuthCard title="Log In">
       <form onSubmit={onSubmit}>
-        <label className={labelStyle} style={{ color: C.muted }}>
-          Username or email
+        <label className={labelStyle} style={{ color: C.navy }}>
+          Username / Email
         </label>
         <input
           type="text"
@@ -67,7 +67,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           suppressHydrationWarning
         />
 
-        <label className={labelStyle} style={{ color: C.muted }}>
+        <label className={labelStyle} style={{ color: C.navy }}>
           Password
         </label>
         <div className="relative mb-3.5">
@@ -107,9 +107,9 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
       </form>
 
       <p
-        className="mt-5.5 text-center sm:text-[14px] md:text-[16px]"
+        className="mt-5.5 text-center text-[clamp(0.875rem,1.5vw,1rem)]"
         style={{
-          color: C.faint,
+          color: C.navy,
         }}
       >
         Don&apos;t have an account?{' '}

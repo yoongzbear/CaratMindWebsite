@@ -61,8 +61,8 @@ export default function HelplinePage() {
               </p>
               {line.available && (
                 <p
-                  className="inline-flex gap-1.5 font-bold m-0 text-[clamp(0.7rem,1.5vw,0.85rem)]"
-                  style={{ color: C.muted }}
+                  className="inline-flex gap-1.5 font-semibold m-0 text-[clamp(0.875rem,1.5vw,1rem)]"
+                  style={{ color: C.navy }}
                 >
                   <Clock size={20} />
                   {line.available}
@@ -94,7 +94,7 @@ export default function HelplinePage() {
         <p
           className="mt-7 text-[clamp(1rem,2vw,1.15rem)] text-center leading-[1.7]"
           style={{
-            color: C.muted,
+            color: C.navy,
           }}
         >
           Numbers and availability may change. Verify details with the service
