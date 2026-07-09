@@ -4,15 +4,38 @@ import { buttonGradientColor } from './styles';
 import { C, ThemeName, themes } from './themes';
 
 /*
+clamp(minimum, preferred, maximum)
+Minimum: 3rem (48px, assuming 1rem = 16px)
+Preferred: 8vw (8% of the viewport width)
+Maximum: 5.5rem (88px)
+
 h1 - className="text-[22px] sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
+// h1 - text-[clamp(3rem,8vw,5.5rem)]
+
 h2 - sm:text-[26px] md:text-[30px]
+// h2 - text-[clamp(2.75rem,7vw,5.25rem)]
+
 h3 - text-[20px] sm:text-[24px] md:text-[28px]
+h3 - text-[clamp(1.25rem,5vw,1.75rem)]
+
 h4 - sm:text-[22px] md:text-[26px]
+// h4 - text-[clamp(2.25rem,5vw,4.75rem)]
+
 h5 - text-[16px] sm:text-[20px] md:text-[24px]
+h5 - text-[clamp(1rem,3vw,2rem)]
+
+footer title - text-[16px] md:text-[18px]
+text-[clamp(1rem,2vw,1.15rem)]
+
 normal text - text-[15px] sm:text-[14px] md:text-[16px]
+normal text - text-[clamp(0.875rem,1.5vw,1rem)]
+
 subtitle text - text-[10px] sm:text-[11px] md:text-[13px]
+text-[clamp(0.7rem,1.5vw,0.85rem)]
+
 button - font-bold text-[13px] sm:text-[12px] md:text-[14px]
+button - text-[clamp(0.875rem,1.5vw,1rem)]
 */
 
 // Tailwind classes

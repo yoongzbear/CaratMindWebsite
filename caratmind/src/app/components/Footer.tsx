@@ -39,7 +39,7 @@ export default function Footer() {
           />
           <div>
             <div
-              className="font-extrabold text-[20px] sm:text-[22px] md:text-[26px] leading-[1.1] tracking-[-0.5px]"
+              className="font-extrabold text-[clamp(1.25rem,5vw,1.75rem)] leading-[1.1] tracking-[-0.5px]"
               style={{
                 color: C.navy,
               }}
@@ -47,7 +47,7 @@ export default function Footer() {
               CaratMind
             </div>
             <div
-              className="text-[12px] sm:text-[14px] md:text-[18px] mt-0.75 tracking-[0.06em]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.75 tracking-[0.06em]"
               style={{
                 color: textMid,
               }}
@@ -60,7 +60,7 @@ export default function Footer() {
         {/* Links */}
         <div>
           <div
-            className="text-[16px] md:text-[18px] font-extrabold tracking-[0.12em] uppercase mb-3"
+            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
               color: textMid,
             }}
@@ -74,7 +74,7 @@ export default function Footer() {
             <Link
               key={href}
               href={href}
-              className="block text-[14px] md:text-[16px] no-underline mb-1.75 font-medium transition-colors duration-130"
+              className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
               style={{
                 color: textMid,
               }}
@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
         <div>
           <div
-            className="text-[16px] md:text-[18px] font-extrabold tracking-[0.12em] uppercase mb-3"
+            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
               color: textMid,
             }}
@@ -103,7 +103,7 @@ export default function Footer() {
               <Link
                 key={href}
                 href={href}
-                className="block text-[14px] md:text-[16px] no-underline mb-1.75 font-medium transition-colors duration-130"
+                className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
                 style={{
                   color: textMid,
                 }}
@@ -121,7 +121,7 @@ export default function Footer() {
         </div>
         <div>
           <div
-            className="text-[16px] md:text-[18px] font-extrabold tracking-[0.12em] uppercase mb-3"
+            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
               color: textMid,
             }}
@@ -135,7 +135,7 @@ export default function Footer() {
             <Link
               key={href}
               href={href}
-              className="block text-[14px] md:text-[16px] no-underline mb-1.75 font-medium transition-colors duration-130"
+              className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
               style={{
                 color: textMid,
               }}
@@ -163,7 +163,7 @@ export default function Footer() {
         }}
       >
         <p
-          className="m-0 text-[14px] md:text-[16px] leading-[1.75] text-center"
+          className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
             color: textMid,
           }}
@@ -174,7 +174,7 @@ export default function Footer() {
         </p>
         <br />
         <p
-          className="m-0 text-[14px] md:text-[16px] leading-[1.75] text-center"
+          className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
             color: textMid,
           }}
@@ -187,7 +187,7 @@ export default function Footer() {
           a qualified professional or emergency support immediately.
         </p>
         <p
-          className="m-0 text-[14px] md:text-[16px] text-[textMid] leading-[1.75] text-center"
+          className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
             color: textMid,
           }}
@@ -203,7 +203,7 @@ export default function Footer() {
           </Link>
         </p>
         <p
-          className="mt-2.5 text-[13px] md:text-[15px] text-[textLight] text-center"
+          className="mt-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-[textLight] text-center"
           style={{
             color: textLight,
           }}

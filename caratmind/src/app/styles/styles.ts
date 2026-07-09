@@ -9,7 +9,7 @@ export const C = {
   border: '#dde4f0',
   bgSidebar: 'linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%)',
   bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
-  bgTopbar: 'rgba(253,250,251,0.92)',
+  bgTopbar: 'rgba(253,250,251)',
 };
 
 // shared style for clamped text cells
@@ -63,8 +63,7 @@ export const buttonBase = `
 `;
 
 export const buttonGradientColor = `bg-[linear-gradient(130deg,#92A8D1,#F7CAC9)] 
-  hover:[background:linear-gradient(#fff,#fff)_padding-box,_linear-gradient(130deg,#F7CAC9,#92A8D1)_border-box]
-  
+  hover:[background:linear-gradient(#fff,#fff)_padding-box,_linear-gradient(130deg,#F7CAC9,#92A8D1)_border-box]  
   hover:border-transparent
   hover:text-[#1B2A41]
 `;

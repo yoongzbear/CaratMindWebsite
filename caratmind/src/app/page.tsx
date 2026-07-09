@@ -13,7 +13,7 @@ const cards = [
     description:
       'Write your thoughts and feelings daily. Mood is detected through your entry.',
     href: '/journal',
-    buttonLabel: 'Write an entry',
+    buttonLabel: 'Write Entry',
     accent: 'from-rose-100 to-pink-50',
     iconBg: 'bg-rose-100',
     iconColor: 'text-rose-400',
@@ -38,7 +38,7 @@ const cards = [
     description:
       'View summary of detected moods over time. Informative insights are generated based on the moods and the journal entry.',
     href: '/mood',
-    buttonLabel: 'View mood',
+    buttonLabel: 'View Mood',
     accent: 'from-violet-100 to-purple-50',
     iconBg: 'bg-violet-100',
     iconColor: 'text-violet-400',
@@ -63,7 +63,7 @@ const cards = [
     description:
       'View a collection of coping exercises to help with your daily mental health care.',
     href: '/coping',
-    buttonLabel: 'Browse exercise',
+    buttonLabel: 'Browse Exercise',
     accent: 'from-teal-100 to-emerald-50',
     iconBg: 'bg-teal-100',
     iconColor: 'text-teal-500',
@@ -109,7 +109,10 @@ export default function SplashPage() {
 
   return (
     // splash page - not logged in
-    <main className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)">
+    <main
+      className="min-h-screen bg-[#faf9f7] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden font-(family-name:--font-dm-sans)"
+      style={{}}
+    >
       {/* background decoration */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 w-125 h-125 rounded-full bg-rose-100/40 blur-3xl" />
@@ -123,9 +126,9 @@ export default function SplashPage() {
         <h1 className="text-[clamp(3rem,8vw,5.5rem)] font-light leading-none tracking-tight text-slate-800">
           Welcome to CaratMind
         </h1>
-        <p className="text-slate-500 text-base max-w-sm leading-relaxed">
+        <h5 className="text-slate-500 text-[clamp(1rem,3vw,2rem)] leading-relaxed">
           A thoughtful space for your mental wellbeing.
-        </p>
+        </h5>
       </div>
 
       {/* cards */}
@@ -166,16 +169,16 @@ export default function SplashPage() {
 
             {/* content */}
             <div className="flex flex-col flex-1 p-6 gap-3">
-              <h2 className="text-slate-800 sm:text-[26px] md:text-[30px] font-semibold tracking-tight">
+              <h3 className="text-slate-800 text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight">
                 {card.title}
-              </h2>
-              <p className="text-slate-400 sm:text-[14px] md:text-[16px] leading-relaxed flex-1">
+              </h3>
+              <p className="text-slate-400 text-[clamp(0.94rem,1.5vw,1rem)] leading-relaxed flex-1">
                 {card.description}
               </p>
 
               <Link
                 href={card.href}
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} text-white text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               >
                 {card.buttonLabel}
               </Link>

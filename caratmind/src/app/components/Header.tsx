@@ -160,7 +160,7 @@ export default function Header() {
                       }}
                     >
                       <div
-                        className="font-bold sm:text-[14px] md:text-[16px]"
+                        className="font-bold text-[clamp(0.875rem,1.5vw,1rem)]"
                         style={{
                           color: C.navy,
                         }}
@@ -169,7 +169,8 @@ export default function Header() {
                       </div>
 
                       <div
-                        className="sm:text-[11px] md:text-[13px] mt-0.5"
+                        // TODO: check the text when logged in
+                        className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0.5"
                         style={{
                           color: C.serenity,
                         }}
@@ -183,7 +184,7 @@ export default function Header() {
                       <button
                         type="button"
                         onClick={() => router.push('/profile')}
-                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer sm:text-[14px] md:text-[16px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: C.navy,
                         }}
@@ -200,7 +201,7 @@ export default function Header() {
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer sm:text-[14px] md:text-[16px] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: '#dc2626',
                         }}
@@ -222,7 +223,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className={`${buttonBase} ${buttonGradientColor} border-2 sm:text-[14px] md:text-[16px]`}
+              className={`${buttonBase} ${buttonGradientColor} border-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold`}
             >
               Log In
             </Link>
@@ -292,7 +293,7 @@ export default function Header() {
                         cur === item.label ? null : item.label,
                       )
                     }
-                    className="w-full flex items-center justify-between py-3.5 text-[15px] font-bold"
+                    className="w-full flex items-center justify-between py-3.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
                     style={{ color: C.navy }}
                   >
                     {item.label}
@@ -314,7 +315,7 @@ export default function Header() {
                           key={child.href}
                           href={child.href}
                           onClick={closeMobile}
-                          className="py-2.5 text-[15px] font-bold"
+                          className="py-2.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
                           style={{ color: C.serenity }}
                         >
                           {child.label}
@@ -328,7 +329,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={closeMobile}
-                  className="py-3.5 text-[15px] font-bold border-b"
+                  className="py-3.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold border-b"
                   style={{ color: C.navy, borderColor: C.border }}
                 >
                   {item.label}
@@ -343,7 +344,7 @@ export default function Header() {
                   closeMobile();
                   handleLogout();
                 }}
-                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[15px] font-bold"
+                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
                 style={{ color: '#dc2626' }}
               >
                 Log Out
@@ -353,7 +354,7 @@ export default function Header() {
                 href="/login"
                 onClick={closeMobile}
                 // className={`mt-3 mb-3 ${buttonBase} ${buttonGradientColor} border-2 text-[15px] justify-center`}
-                className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[15px] sm:text-[12px] md:text-[14px] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.95rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Log In
               </Link>

@@ -42,7 +42,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       {item.href ? (
         <Link
           href={item.href}
-          className="sm:text-[14px] md:text-[16px] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
           style={{ color: C.muted }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -52,7 +52,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
         </Link>
       ) : (
         <button
-          className="sm:text-[14px] md:text-[16px] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
           style={{ color: C.muted }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -65,7 +65,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       {/* Dropdown Menu */}
       {hasChildren && open && (
         <div
-          className="absolute bg-white rounded-xl sm:text-[12px] md:text-[14px] font-bold
+          className="absolute bg-white rounded-xl text-[clamp(0.875rem,1.5vw,1rem)] font-bold
         shadow-[0_8px_24px_rgba(146,168,209,0.18)] min-w-50 p-1.5 z-100 border top-full left-0 peer-hover:top-0 peer-hover:left-full"
         >
           {item.children?.map((child) => (
