@@ -56,8 +56,8 @@ export default function CalendarHeatmap({
   if (loading) {
     return (
       <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
+        className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+        style={{ color: C.muted }}
       >
         Loading mood calendar heatmap...
       </p>
@@ -67,8 +67,8 @@ export default function CalendarHeatmap({
   if (!chartData.length || !moods.length) {
     return (
       <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
+        className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+        style={{ color: C.muted }}
       >
         No mood data available for this period.
       </p>
@@ -102,7 +102,7 @@ export default function CalendarHeatmap({
             months: 'w-full',
             month: 'w-full',
             month_grid: 'w-full table-fixed border-collapse',
-            weekday: 'text-center sm:text-[14px] md:text-[16px] font-bold py-1',
+            weekday: 'text-center text-[clamp(1rem,3vw,1.5rem)] font-bold py-1',
             day: 'p-0 text-center align-middle',
             today: 'font-semibold text-[#92A8D1]',
             month_caption:
@@ -117,7 +117,7 @@ export default function CalendarHeatmap({
           }}
         />
         <button
-          className="sm:text-[12px] md:text-[14px] font-semibold hover:cursor-pointer"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold hover:cursor-pointer"
           style={{ color: C.serenity }}
           onClick={() => setSelectedDate(new Date())}
         >

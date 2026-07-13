@@ -149,7 +149,7 @@ export default function HomePage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
         background: C.bgPage,
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',

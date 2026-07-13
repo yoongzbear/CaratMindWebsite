@@ -8,6 +8,7 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
 import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
+import { buttonGradient } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
@@ -237,15 +238,17 @@ export default function MoodInsightPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
       style={{
         background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
             Mood Insights
@@ -254,15 +257,15 @@ export default function MoodInsightPage() {
 
         {loading || fetchingJournal ? (
           <section
-            className="sm:text-[24px] md:text-[28px] px-8 py-6 text-center"
-            style={{ color: C.faint }}
+            className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
+            style={{ color: C.navy }}
           >
             Loading mood insight...
           </section>
         ) : !journal ? (
           <section
-            className="sm:text-[24px] md:text-[28px] px-8 py-6 text-center"
-            style={{ color: C.faint }}
+            className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
+            style={{ color: C.navy }}
           >
             Entry not found.
           </section>
@@ -278,7 +281,7 @@ export default function MoodInsightPage() {
               }}
             >
               <h3
-                className="sm:text-[22px] md:text-[26px] font-semibold"
+                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
                 style={{ color: C.navy }}
               >
                 {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
@@ -307,7 +310,7 @@ export default function MoodInsightPage() {
                     style={{ border: `1px solid ${C.border}` }}
                   >
                     <p
-                      className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word sm:text-[14px] md:text-[16px]"
+                      className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word text-[clamp(1.25rem,5vw,1.75rem)]"
                       style={{
                         color: C.navy,
                       }}
@@ -322,7 +325,8 @@ export default function MoodInsightPage() {
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
-                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                      className={`${buttonGradient}`}
                     >
                       {'View More'}
                     </button>

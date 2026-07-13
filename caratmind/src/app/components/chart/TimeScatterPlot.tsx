@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
 import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
+import { buttonGradient } from '@/app/styles/ui';
 
 type Props = {
   // range?: DateRangeValue;
@@ -51,26 +52,35 @@ export default function TimeScatterPlot({
 
   if (loading) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        Loading daily mood scatter plot chart...
-      </p>
+      <div className="text-center items-center" style={{ height: height }}>
+        <p
+          className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+          style={{ color: C.muted }}
+        >
+          Loading daily mood scatter plot chart...
+        </p>
+      </div>
     );
   }
 
   if (!points.length) {
     return (
-      <div className="text-center">
-        <p className="sm:text-[14px] md:text-[16px]" style={{ color: C.faint }}>
+      <div
+        className="flex flex-col text-center items-center justify-center"
+        style={{ height: height }}
+      >
+        <p
+          className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+          style={{ color: C.muted }}
+        >
           No mood data available for this date.
         </p>
         {/* button to new journal entry if the date is today */}
         {isToday && (
           <Link
             href="/journal/new"
-            className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+            className={`${buttonGradient} mt-2`}
+            // className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
           >
             Write an entry
           </Link>
@@ -111,8 +121,8 @@ export default function TimeScatterPlot({
   return (
     <div className="w-full">
       <p
-        className="sm:text-[16px] md:text-[18px] mb-2 w-full"
-        style={{ color: C.faint }}
+        className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
+        style={{ color: C.navy }}
       >
         {format(parseISO(moodDate), 'EEEE, dd/MM/yyyy')}
       </p>
@@ -158,7 +168,7 @@ export default function TimeScatterPlot({
 
               return (
                 <div
-                  className="sm:text-[14px] md:text-[16px]"
+                  className="text-[clamp(1rem,2vw,1.15rem)]"
                   style={{
                     background: 'white',
                     borderRadius: 10,

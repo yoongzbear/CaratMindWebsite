@@ -43,17 +43,17 @@ export default function StackedBarChart({
   if (loading) {
     return (
       <div className="w-full">
-        <p
-          className="sm:text-[16px] md:text-[18px] mb-2"
-          style={{ color: C.faint }}
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: C.navy }}
         >
           {getRangeLabel(range)}
-        </p>
+        </h5>
 
         <div style={{ height }} className="flex items-center justify-center">
           <p
-            className="text-center sm:text-[14px] md:text-[16px]"
-            style={{ color: C.faint }}
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: C.muted }}
           >
             Loading mood bar chart...
           </p>
@@ -65,17 +65,17 @@ export default function StackedBarChart({
   if (!chartData.length || !moods.length) {
     return (
       <div className="w-full">
-        <p
-          className="sm:text-[16px] md:text-[18px] mb-2"
-          style={{ color: C.faint }}
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: C.navy }}
         >
           {getRangeLabel(range)}
-        </p>
+        </h5>
 
         <div style={{ height }} className="flex items-center justify-center">
           <p
-            className="text-center sm:text-[14px] md:text-[16px]"
-            style={{ color: C.faint }}
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: C.muted }}
           >
             No mood data available for this period.
           </p>
@@ -126,12 +126,12 @@ export default function StackedBarChart({
 
   return (
     <div className="w-full">
-      <p
-        className="sm:text-[16px] md:text-[18px] mb-2 w-full"
-        style={{ color: C.faint }}
+      <h5
+        className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
+        style={{ color: C.navy }}
       >
         {getRangeLabel(range)}
-      </p>
+      </h5>
       <ResponsiveContainer width="100%" height={height}>
         <BarChart
           data={formatted}
@@ -195,7 +195,7 @@ export default function StackedBarChart({
                       }}
                     />
                     <span
-                      className="sm:text-[14px] md:text-[16px]"
+                      className="text-[clamp(1rem,2vw,1.15rem)]"
                       style={{
                         color: getMoodStyle(entry.value).textColor,
                         fontWeight: 500,

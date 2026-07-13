@@ -1,6 +1,7 @@
 'use client';
 
 import { C, styles } from '@/app/styles/styles';
+import { dropdownStyle } from '@/app/styles/ui';
 import { useEffect, useState } from 'react';
 
 export type DateRangeValue =
@@ -9,7 +10,7 @@ export type DateRangeValue =
 
 type Props = {
   onChange: (value: DateRangeValue) => void;
-  presets?: number[]; // e.g. [7, 30, 90]
+  presets?: number[];
 };
 
 const PRESET_LABELS: Record<number, string> = {
@@ -28,7 +29,6 @@ export default function DateRangeSelector({
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // emit on every meaningful change
   useEffect(() => {
     if (selected === 'custom') {
       if (startDate && endDate && startDate <= endDate) {
@@ -43,13 +43,13 @@ export default function DateRangeSelector({
     <div className="flex flex-wrap w-full gap-4 items-end">
       <div>
         <label
-          className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
+          className="block text-[clamp(0.875rem,1.5vw,1rem)] font-bold mb-1"
           style={{ color: C.navy }}
         >
           Period
         </label>
         <select
-          className="sm:text-[14px] md:text-[16px]"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
           style={styles.dropdown}
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
@@ -64,16 +64,16 @@ export default function DateRangeSelector({
       </div>
 
       {selected === 'custom' && (
-        <>
+        <div className="flex gap-4 w-full">
           <div>
             <label
-              className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
-              style={{ color: C.muted }}
+              className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
+              style={{ color: C.navy }}
             >
               Start Date
             </label>
             <input
-              className="sm:text-[14px] md:text-[16px]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)]"
               style={styles.dateInput}
               type="date"
               value={startDate}
@@ -83,13 +83,13 @@ export default function DateRangeSelector({
           </div>
           <div>
             <label
-              className="block text-xs sm:text-sm md:text-base font-semibold mb-1"
-              style={{ color: C.muted }}
+              className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
+              style={{ color: C.navy }}
             >
               End Date
             </label>
             <input
-              className="sm:text-[14px] md:text-[16px]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)]"
               style={styles.dateInput}
               type="date"
               value={endDate}
@@ -97,7 +97,7 @@ export default function DateRangeSelector({
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   );

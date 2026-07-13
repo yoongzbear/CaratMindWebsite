@@ -18,7 +18,7 @@ h2 - sm:text-[26px] md:text-[30px]
 // h2 - text-[clamp(2.75rem,6vw,1.85rem)]
 
 h3 - text-[20px] sm:text-[24px] md:text-[28px]
-h3 - text-[clamp(1.25rem,5vw,1.75rem)]
+text-[clamp(1.25rem,5vw,1.75rem)]
 
 h4 - sm:text-[22px] md:text-[26px]
 h4 - text-[clamp(1.15rem,4vw,1.65rem)]
@@ -29,7 +29,7 @@ text-[clamp(1rem,3vw,1.5rem)]
 footer title - text-[16px] md:text-[18px]
 text-[clamp(1rem,2vw,1.15rem)]
 
-loading... - text-[clamp(1rem,3vw,2rem)]
+loading... - text-[clamp(1rem,3vw,1.5rem)]
 
 normal text - text-[15px] sm:text-[14px] md:text-[16px]
 text-[clamp(0.875rem,1.5vw,1rem)]
@@ -60,7 +60,7 @@ export const selectStyle = `w-full px-3 py-2 rounded-lg border border-slate-200 
 
 export const dateInputStyle = `box-border px-3 py-2.75 rounded-[10px] text-sm font-inherit bg-white outline-none cursor-pointer appearance-none`;
 
-export const dropdownStyle = `w-full px-3 py-2.25 rounded-[10px] text-[13px] font-inherit bg-white outline-none cursor-pointer appearance-none`;
+export const dropdownStyle = `w-full px-3 py-2.25 rounded-[10px] text-[clamp(0.875rem,1.5vw,1rem)] font-inherit bg-white outline-none cursor-pointer appearance-none`;
 
 export const header1 = `text-2xl font-bold text-slate-800`;
 

@@ -54,23 +54,45 @@ export default function DayScatterPlot({
 
   if (loading) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        Loading mood scatter plot chart..
-      </p>
+      <div className="w-full">
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: C.navy }}
+        >
+          {getRangeLabel(range)}
+        </h5>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: C.muted }}
+          >
+            Loading mood scatter plot chart..
+          </p>
+        </div>
+      </div>
     );
   }
 
   if (!points.length) {
     return (
-      <p
-        className="text-center sm:text-[14px] md:text-[16px]"
-        style={{ color: C.faint }}
-      >
-        No mood data available for this period.
-      </p>
+      <div className="w-full">
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: C.navy }}
+        >
+          {getRangeLabel(range)}
+        </h5>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: C.muted }}
+          >
+            No mood data available for this period.
+          </p>
+        </div>
+      </div>
     );
   }
 
@@ -96,15 +118,15 @@ export default function DayScatterPlot({
 
   return (
     <div className="w-full">
-      <p
-        className="sm:text-[16px] md:text-[18px] mb-2 w-full"
-        style={{ color: C.faint }}
+      <h5
+        className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
+        style={{ color: C.navy }}
       >
         {getRangeLabel(range)}
-      </p>
+      </h5>
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart
-          margin={{ top: 10, right: 0, left: -20, bottom: 5 }}
+          margin={{ top: 10, right: 0, left: -20, bottom: 10 }}
           // style={{ backgroundColor: C.serenity }}
           responsive
         >
@@ -144,7 +166,7 @@ export default function DayScatterPlot({
 
               return (
                 <div
-                  className="sm:text-[14px] md:text-[16px]"
+                  className="text-[clamp(1rem,2vw,1.15rem)]"
                   style={{
                     background: 'white',
                     borderRadius: 10,
