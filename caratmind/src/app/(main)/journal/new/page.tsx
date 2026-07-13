@@ -95,7 +95,7 @@ export default function NewEntryPage() {
             write about your day or any experiences you faced!
           </h5>
           <p
-            className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2"
+            className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2 italic"
             style={{ color: C.muted }}
           >
             Entry shall be analyzed using AI to identify your mood.

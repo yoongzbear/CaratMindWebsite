@@ -4,7 +4,7 @@
 
 import Modal from './Modal';
 import Pill from '../Pill';
-import { styles } from '@/app/styles/styles';
+import { C, styles } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 
@@ -29,7 +29,7 @@ export default function ExerciseDetailModal({
 }: Props) {
   return (
     <Modal open={open} onClose={onClose} width={1000} title={name}>
-      <div className="flex flex-wrap gap-3 mb-3">
+      <div className="max-h-24 overflow-y-auto flex flex-wrap gap-2 mb-3">
         {moods.map((mood) => {
           const moodStyle = getMoodStyle(mood);
           return (
@@ -47,15 +47,22 @@ export default function ExerciseDetailModal({
 
       <Pill>{toTitleCase(type)}</Pill>
 
-      <p style={styles.pText}>{desc}</p>
+      <p
+        className="text-[clamp(0.875rem,1.5vw,1rem)]"
+        style={{ color: C.muted }}
+      >
+        {desc}
+      </p>
 
-      <ol className="list-decimal pl-5 space-y-2">
-        <p style={styles.pText}>
-          {steps.map((step, index) => (
-            <li key={index}>{step}</li>
-          ))}
-        </p>
-      </ol>
+      <div className="mt-2 max-h-52 md:max-h-36 overflow-y-auto">
+        <ol className="list-decimal pl-5 space-y-2">
+          <p style={styles.pText}>
+            {steps.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </p>
+        </ol>
+      </div>
     </Modal>
   );
 }

@@ -45,7 +45,7 @@ export default function Modal({
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="w-full rounded-md overflow-hidden modal-pop"
+            className="w-full max-h-[90vh] rounded-md overflow-hidden modal-pop"
             style={{
               maxWidth: `${width}px`,
               background: 'white',
@@ -62,7 +62,7 @@ export default function Modal({
               <div>
                 {title && (
                   <h2
-                    className="sm:text-[26px] md:text-[30px] font-bold m-0"
+                    className="text-[clamp(1.3rem,6vw,1.85rem)] font-bold m-0"
                     style={{
                       color: C.navy,
                     }}
@@ -73,9 +73,9 @@ export default function Modal({
 
                 {subtitle && (
                   <p
-                    className="mt-1 sm:text-[14px] md:text-[16px]"
+                    className="mt-1 text-[clamp(0.875rem,1.5vw,1rem)]"
                     style={{
-                      color: C.faint,
+                      color: C.muted,
                     }}
                   >
                     {subtitle}

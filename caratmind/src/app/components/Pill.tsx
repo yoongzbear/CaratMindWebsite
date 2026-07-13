@@ -9,7 +9,7 @@ type PillItems = {
 
 export default function Pill({
   children,
-  bgColor = '#f4f7fc', // default
+  bgColor = '#f4f7fc',
   textColor = '#3a4a6b',
   borderColor = '#dde4f0',
   size = 'md',
@@ -17,7 +17,7 @@ export default function Pill({
 }: PillItems) {
   return (
     <span
-      className="sm:text-[12px] md:text-[14px]"
+      className="text-[clamp(0.875rem,1.5vw,1rem)]"
       title={title}
       style={{
         display: 'inline-flex',

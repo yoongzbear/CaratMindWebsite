@@ -62,7 +62,7 @@ export const buttonBase = `
   duration-150
 `;
 
-export const buttonGradientColor = `font-bold
+export const buttonGradientColor = `
   bg-[linear-gradient(130deg,#92A8D1,#F7CAC9)] 
   hover:[background:linear-gradient(#fff,#fff)_padding-box,_linear-gradient(130deg,#F7CAC9,#92A8D1)_border-box]  
   hover:border-transparent

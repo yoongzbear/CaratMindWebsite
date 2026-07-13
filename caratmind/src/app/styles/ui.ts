@@ -15,7 +15,7 @@ h1 (splash) - text-[clamp(3rem,8vw,5.5rem)]
 text-[clamp(1.38rem,7vw,2rem)]
 
 h2 - sm:text-[26px] md:text-[30px]
-// h2 - text-[clamp(2.75rem,6vw,1.85rem)]
+text-[clamp(1.3rem,6vw,1.85rem)]
 
 h3 - text-[20px] sm:text-[24px] md:text-[28px]
 text-[clamp(1.25rem,5vw,1.75rem)]
@@ -75,7 +75,7 @@ export const errorTextStyle = `text-red-500 text-xs pb-2`;
 export const pText = `mt-0 mb-2.5`;
 
 // buttons
-export const buttonGradient = `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
+export const buttonGradient = `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
 
 // export const buttonBase = `inline-flex items-center justify-center gap-1 px-5 py-2 rounded-xl text-sm font-semibold transition-opacity duration-150`;
 // export const buttonBase = `
@@ -128,18 +128,18 @@ export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semi
 // `;
 
 export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
 text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
 
 export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
 text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
 
 // export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
 // rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white
 // hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
 
-export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium 
+export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold
 rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
 hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
 

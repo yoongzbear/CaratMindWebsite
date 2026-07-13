@@ -270,7 +270,7 @@ export default function PastEntryPage() {
                     >
                       {entry.jrnl_preview
                         ? entry.jrnl_preview.length >= 150
-                          ? `${entry.jrnl_preview}…`
+                          ? `${entry.jrnl_preview}...`
                           : entry.jrnl_preview
                         : 'No preview available.'}
                     </p>

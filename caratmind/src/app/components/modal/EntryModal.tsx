@@ -4,9 +4,10 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
+import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { useRouter } from 'next/navigation';
 import { JournalDetail } from '@/app/types/journal';
+import { buttonGradient, buttonRed } from '@/app/styles/ui';
 
 type Props = {
   open: boolean;
@@ -43,7 +44,8 @@ export default function EntryDetailModal({
           <div className="flex justify-start gap-3">
             <button
               onClick={() => handleEdit(journal.jrnl_id)}
-              className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+              // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+              className={buttonGradient}
             >
               Edit Entry
             </button>
@@ -54,7 +56,7 @@ export default function EntryDetailModal({
         }
       >
         <p
-          className="sm:text-[14px] md:text-[16px] mt-0 mb-2.5"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] md:text-[16px] mt-0 mb-2.5"
           style={{ color: C.navy }}
         >
           {journal.entryText}
@@ -81,10 +83,10 @@ export function DeleteEntryModal({ open, onClose }: DeleteProps) {
       open={open}
       onClose={onClose}
       width={600}
-      title="Cannot delete entry"
+      title="Cannot delete entry!"
     >
       <p
-        className="sm:text-[18px] md:text-[20px] mt-0 mb-2.5"
+        className="text-[clamp(1rem,1.5vw,1.5rem)] mt-0 mb-2.5"
         style={{ color: C.navy }}
       >
         You are not allowed to delete a journal entry after submitted. Do not
