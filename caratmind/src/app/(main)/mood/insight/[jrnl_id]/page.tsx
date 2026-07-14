@@ -13,6 +13,7 @@ import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
+import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 // import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
@@ -464,7 +465,7 @@ export default function MoodInsightPage() {
 
                     {/* disclaimer */}
                     <p
-                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic"
+                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic"
                       style={{ color: C.muted }}
                     >
                       Your mood is estimated using AI based on the submitted
@@ -511,6 +512,9 @@ export default function MoodInsightPage() {
                   </h5>
                 ) : (
                   <>
+                    <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
+                      {getExerciseStyle(exerciseData?.exc_type).emoji}
+                    </div>
                     <h5
                       className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                       style={{ color: C.navy }}

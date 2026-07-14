@@ -7,6 +7,7 @@ import Pill from '../Pill';
 import { C, styles } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
+import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 
 type Props = {
   open: boolean;
@@ -28,7 +29,16 @@ export default function ExerciseDetailModal({
   steps,
 }: Props) {
   return (
-    <Modal open={open} onClose={onClose} width={1000} title={name}>
+    <Modal
+      open={open}
+      onClose={onClose}
+      width={1000}
+      title={
+        <>
+          {getExerciseStyle(type).emoji} {name}
+        </>
+      }
+    >
       <div className="max-h-24 overflow-y-auto flex flex-wrap gap-2 mb-3">
         {moods.map((mood) => {
           const moodStyle = getMoodStyle(mood);

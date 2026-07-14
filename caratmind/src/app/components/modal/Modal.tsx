@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 type ModalProps = {
   open: boolean;
   onClose: () => void;
-  title?: string;
+  title?: ReactNode;
   subtitle?: string;
   width?: number;
   children: ReactNode;
