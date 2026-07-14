@@ -7,6 +7,7 @@ import Modal from './Modal';
 import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { Star } from 'lucide-react';
 import { toastError } from '@/utils/toast';
+import { buttonGradient } from '@/app/styles/ui';
 
 type Props = {
   open: boolean;
@@ -43,7 +44,8 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
       footer={
         <div className="flex justify-center">
           <button
-            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+            className={buttonGradient}
             onClick={handleSubmit}
             disabled={loading}
           >
@@ -54,7 +56,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
     >
       <div className="flex items-center justify-center gap-2 mb-4">
         <p
-          className="sm:text-[22px] md:text-[26px] font-semibold"
+          className="text-[clamp(1.15rem,4vw,1.65rem)] hidden md:flex font-semibold"
           style={{ color: C.navy }}
         >
           Did not help
@@ -91,7 +93,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
         </div>
 
         <p
-          className="sm:text-[22px] md:text-[26px] font-semibold"
+          className="text-[clamp(1.15rem,4vw,1.65rem)] hidden md:flex font-semibold"
           style={{ color: C.navy }}
         >
           Helped a lot

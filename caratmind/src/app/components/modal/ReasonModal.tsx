@@ -7,6 +7,7 @@ import Modal from './Modal';
 import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
 import { Star } from 'lucide-react';
 import { toastError } from '@/utils/toast';
+import { buttonGradient } from '@/app/styles/ui';
 
 type Props = {
   open: boolean;
@@ -51,7 +52,8 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
       footer={
         <div className="flex justify-center">
           <button
-            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+            className={buttonGradient}
             onClick={handleSubmit}
             disabled={loading}
           >
@@ -72,7 +74,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
               className="cursor-pointer"
             />
             <span
-              className="sm:text-[14px] md:text-[16px]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.navy }}
             >
               {item}
@@ -92,7 +94,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
 
           <div className="flex-1">
             <span
-              className="sm:text-[14px] md:text-[16px]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.navy }}
             >
               Other:

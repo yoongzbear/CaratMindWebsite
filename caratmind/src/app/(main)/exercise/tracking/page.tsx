@@ -3,9 +3,7 @@ import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
 import {
   buttonGradientColor,
-  buttonGreen,
   buttonOutlined,
-  buttonRed,
   C,
   styles,
 } from '@/app/styles/styles';
@@ -26,6 +24,7 @@ import { toTitleCase } from '@/app/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
 import RatingModal from '@/app/components/modal/RatingModal';
 import ReasonModal from '@/app/components/modal/ReasonModal';
+import { buttonGradient, buttonGreen, buttonRed } from '@/app/styles/ui';
 
 export default function ExerciseTrackingPage() {
   const { user, loading, accessToken } = useAuth();
@@ -249,12 +248,14 @@ export default function ExerciseTrackingPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
         background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
@@ -274,17 +275,15 @@ export default function ExerciseTrackingPage() {
           }}
         >
           <div className="flex flex-col items-center justify-center px-3">
-            <div
-              className={`relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300`}
-            >
+            <div className="relative z-10 w-24 h-24 flex items-center justify-center transition-transform duration-300">
               {completedToday ? (
-                <Flame fill="#fc6f03" style={{ color: C.navy }} size={40} />
+                <Flame fill="#fc6f03" style={{ color: C.navy }} size={48} />
               ) : (
-                <Flame style={{ color: C.navy }} size={40} />
+                <Flame style={{ color: C.navy }} size={48} />
               )}
             </div>
             <p
-              className="mt-0 mb-2.5 text-[clamp(1rem,3vw,2rem)]"
+              className="mt-0 mb-1 text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.navy }}
             >
               {fetchingStreak
@@ -293,14 +292,16 @@ export default function ExerciseTrackingPage() {
             </p>
           </div>
           <p
-            className="mt-0 mb-2.5 text-[clamp(1rem,3vw,2rem)]"
+            className="mt-0 mb-2.5 text-[clamp(1rem,3vw,1.5rem)]"
             style={{ color: C.navy }}
           >
             {fetchingStreak
               ? 'Loading coping exercise streak...'
               : completedToday
                 ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
-                : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
+                : streak === 0
+                  ? 'You have not performed a coping exercise today. Complete one to start your streak!'
+                  : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
           </p>
         </div>
 
@@ -320,7 +321,7 @@ export default function ExerciseTrackingPage() {
             Today&apos;s Exercise
           </h3>
           <h5
-            className="text-[clamp(1rem,3vw,2rem)]"
+            className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
             style={{ color: C.muted }}
           >
             {format(todayDate, 'dd MMMM yyyy')}
@@ -331,7 +332,10 @@ export default function ExerciseTrackingPage() {
             {/* scroll */}
             <div className="mt-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
               {fetchingTodayExc && (
-                <p style={{ color: C.faint }}>
+                <p
+                  className="text-[clamp(1rem,3vw,1.5rem)]"
+                  style={{ color: C.muted }}
+                >
                   Loading today&apos;s recommended coping exercises...
                 </p>
               )}
@@ -340,13 +344,14 @@ export default function ExerciseTrackingPage() {
                 <div>
                   <p
                     className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold"
-                    style={{ color: C.muted }}
+                    style={{ color: C.navy }}
                   >
                     No recommended coping exercises for today. Create a new
                     entry to get started!
                   </p>
                   <button
-                    className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                    // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                    className={buttonGradient}
                     onClick={() => router.push('/journal/new')}
                   >
                     New Entry
@@ -375,7 +380,7 @@ export default function ExerciseTrackingPage() {
                     >
                       <div className="w-full flex gap-3 mb-2">
                         <h5
-                          className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
+                          className="text-[clamp(1rem,3vw,1.5rem)] font-bold mt-0 mb-0.5"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_name}
@@ -400,46 +405,96 @@ export default function ExerciseTrackingPage() {
                             </Pill>
                           )}
                       </div>
-                      <div className="flex gap-3 mb-2">
-                        {/* exercise mood and type pills */}
-                        {visibleMoods.map((mood) => {
-                          const moodStyle = getMoodStyle(mood);
-                          return (
-                            <Pill
-                              key={mood}
-                              bgColor={moodStyle.bgColor}
-                              borderColor={moodStyle.borderColor}
-                              textColor={moodStyle.textColor}
-                            >
-                              {moodStyle.emoji} {toTitleCase(mood)}
-                            </Pill>
-                          );
-                        })}
 
-                        {remainingCount > 0 && (
-                          <div
-                            onClick={() => {
-                              setSelectedExercise(exercise);
-                              setOpenDetail(true);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <Pill
-                              bgColor="#f1f3f8"
-                              borderColor="#dde1ea"
-                              textColor={C.faint}
-                              title={moods
-                                .slice(MAX_VISIBLE_MOODS)
-                                .map(toTitleCase)
-                                .join(', ')}
-                            >
-                              +{remainingCount} more
-                            </Pill>
+                      {/* mood pills */}
+                      {(() => {
+                        const mobileVisibleMoods = moods.slice(0, 1);
+
+                        return (
+                          <div className="flex flex-wrap gap-3 mb-2">
+                            {/* Mobile: show 1 pill */}
+                            <div className="flex gap-3 sm:hidden">
+                              {mobileVisibleMoods.map((mood) => {
+                                const moodStyle = getMoodStyle(mood);
+                                return (
+                                  <Pill
+                                    key={mood}
+                                    bgColor={moodStyle.bgColor}
+                                    borderColor={moodStyle.borderColor}
+                                    textColor={moodStyle.textColor}
+                                  >
+                                    {moodStyle.emoji} {toTitleCase(mood)}
+                                  </Pill>
+                                );
+                              })}
+
+                              {moods.length > 1 && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedExercise(exercise);
+                                    setOpenDetail(true);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <Pill
+                                    bgColor="#f1f3f8"
+                                    borderColor="#dde1ea"
+                                    textColor={C.faint}
+                                    title={moods
+                                      .slice(1)
+                                      .map(toTitleCase)
+                                      .join(', ')}
+                                  >
+                                    +{moods.length - 1} more
+                                  </Pill>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Desktop: existing visibleMoods / MAX_VISIBLE_MOODS logic */}
+                            <div className="hidden sm:flex gap-3">
+                              {visibleMoods.map((mood) => {
+                                const moodStyle = getMoodStyle(mood);
+                                return (
+                                  <Pill
+                                    key={mood}
+                                    bgColor={moodStyle.bgColor}
+                                    borderColor={moodStyle.borderColor}
+                                    textColor={moodStyle.textColor}
+                                  >
+                                    {moodStyle.emoji} {toTitleCase(mood)}
+                                  </Pill>
+                                );
+                              })}
+
+                              {remainingCount > 0 && (
+                                <div
+                                  onClick={() => {
+                                    setSelectedExercise(exercise);
+                                    setOpenDetail(true);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <Pill
+                                    bgColor="#f1f3f8"
+                                    borderColor="#dde1ea"
+                                    textColor={C.faint}
+                                    title={moods
+                                      .slice(MAX_VISIBLE_MOODS)
+                                      .map(toTitleCase)
+                                      .join(', ')}
+                                  >
+                                    +{remainingCount} more
+                                  </Pill>
+                                </div>
+                              )}
+                            </div>
+
+                            <Pill>{toTitleCase(exercise.exc_type)}</Pill>
                           </div>
-                        )}
+                        );
+                      })()}
 
-                        <Pill>{toTitleCase(exercise.exc_type)}</Pill>
-                      </div>
                       <p
                         className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
                         style={{ color: C.navy }}
@@ -474,22 +529,25 @@ export default function ExerciseTrackingPage() {
                         <></>
                       )}
 
-                      <div className="flex w-full gap-3">
+                      {/* <div className="flex w-full gap-3"> */}
+                      <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                         <button
                           onClick={() => {
                             setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          className={buttonGradient}
                         >
-                          {'View More'}
+                          View More
                         </button>
 
                         <button
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
-                          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                          className={buttonGradient}
                         >
-                          {'View Insights'}
+                          View Insights
                         </button>
 
                         {exercise.uex_status === 'incomplete' &&
@@ -500,7 +558,8 @@ export default function ExerciseTrackingPage() {
                                   setOpenRating(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                className={buttonGreen}
                               >
                                 {'Completed'}
                               </button>
@@ -510,9 +569,10 @@ export default function ExerciseTrackingPage() {
                                   setOpenReason(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                                className={buttonRed}
                               >
-                                {'Did Not Complete'}
+                                Uncompleted
                               </button>
                             </>
                           )}

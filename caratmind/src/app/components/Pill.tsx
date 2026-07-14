@@ -5,6 +5,7 @@ type PillItems = {
   borderColor?: string;
   size?: 'sm' | 'md';
   title?: string;
+  className?: string;
 };
 
 export default function Pill({
@@ -14,10 +15,11 @@ export default function Pill({
   borderColor = '#dde4f0',
   size = 'md',
   title,
+  className = '',
 }: PillItems) {
   return (
     <span
-      className="text-[clamp(0.875rem,1.5vw,1rem)]"
+      className={`text-[clamp(0.875rem,1.5vw,1rem)] ${className}`}
       title={title}
       style={{
         display: 'inline-flex',
