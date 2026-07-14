@@ -8,7 +8,7 @@ import {
   C,
   styles,
 } from '@/app/styles/styles';
-import { dropdownStyle } from '@/app/styles/ui';
+import { buttonGradient, dropdownStyle } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
@@ -25,7 +25,7 @@ export default function ExerciseCatalogPage() {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
-  const [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [search, setSearch] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
@@ -91,12 +91,14 @@ export default function ExerciseCatalogPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
+      className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
         background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
@@ -114,7 +116,55 @@ export default function ExerciseCatalogPage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <div className="flex w-full gap-5">
+          {/* mobile search */}
+          <div className="lg:hidden w-full gap-5">
+            {/* search */}
+            {/* <div className="w-[70%]"> */}
+            <input
+              className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
+              style={styles.input}
+              type="search"
+              placeholder="Search Exercise"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            ></input>
+            {/* </div> */}
+
+            {/* mood dropdown */}
+            <div className="w-full flex gap-2">
+              <select
+                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
+                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                value={selectedMood}
+                onChange={(e) => setSelectedMood(e.target.value)}
+              >
+                <option value="">Select Mood</option>
+                {moodOptions.map((mood) => (
+                  <option key={mood.value} value={mood.value}>
+                    {toTitleCase(mood.label)}
+                  </option>
+                ))}
+              </select>
+
+              {/* type dropdown */}
+              <select
+                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
+                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Select Type</option>
+                {typeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {toTitleCase(type)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* desktop search */}
+          <div className="hidden lg:flex w-full justify-between">
             {/* search */}
             <div className="w-50">
               <input
@@ -128,7 +178,7 @@ export default function ExerciseCatalogPage() {
             </div>
 
             {/* mood dropdown */}
-            <div className="w-50">
+            <div className="w-[40%] flex gap-4 my-2">
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -142,10 +192,10 @@ export default function ExerciseCatalogPage() {
                   </option>
                 ))}
               </select>
-            </div>
+              {/* </div> */}
 
-            {/* type dropdown */}
-            <div className="w-40">
+              {/* type dropdown */}
+              {/* <div className="w-40"> */}
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -164,7 +214,7 @@ export default function ExerciseCatalogPage() {
 
           {fetching && (
             <p
-              className="text-[clamp(1rem,3vw,2rem)]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.muted }}
             >
               Loading coping exercises...
@@ -173,7 +223,7 @@ export default function ExerciseCatalogPage() {
 
           {!fetching && filtered.length === 0 && (
             <p
-              className="text-[clamp(1rem,3vw,2rem)]"
+              className="text-[clamp(1rem,3vw,1.5rem)]"
               style={{ color: C.muted }}
             >
               {exercises.length === 0
@@ -208,7 +258,95 @@ export default function ExerciseCatalogPage() {
                 </h3>
 
                 <div className="flex gap-3 mb-2">
-                  {visibleMoods.map((mood) => {
+                  {(() => {
+                    const mobileVisibleMoods = moods.slice(0, 1);
+
+                    return (
+                      <div className="flex flex-wrap gap-3 mb-2">
+                        {/* Mobile - 1 pill */}
+                        <div className="flex gap-3 sm:hidden">
+                          {mobileVisibleMoods.map((mood) => {
+                            const moodStyle = getMoodStyle(mood);
+                            return (
+                              <Pill
+                                key={mood}
+                                bgColor={moodStyle.bgColor}
+                                borderColor={moodStyle.borderColor}
+                                textColor={moodStyle.textColor}
+                              >
+                                {moodStyle.emoji} {toTitleCase(mood)}
+                              </Pill>
+                            );
+                          })}
+
+                          {moods.length > 1 && (
+                            <div
+                              onClick={() => {
+                                setSelectedExercise(ex);
+                                setOpenDetail(true);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Pill
+                                bgColor="#f1f3f8"
+                                borderColor="#dde1ea"
+                                textColor={C.faint}
+                                title={moods
+                                  .slice(1)
+                                  .map(toTitleCase)
+                                  .join(', ')}
+                              >
+                                +{moods.length - 1} more
+                              </Pill>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Desktop: existing visibleMoods / MAX_VISIBLE_MOODS logic */}
+                        <div className="hidden sm:flex gap-3">
+                          {visibleMoods.map((mood) => {
+                            const moodStyle = getMoodStyle(mood);
+                            return (
+                              <Pill
+                                key={mood}
+                                bgColor={moodStyle.bgColor}
+                                borderColor={moodStyle.borderColor}
+                                textColor={moodStyle.textColor}
+                              >
+                                {moodStyle.emoji} {toTitleCase(mood)}
+                              </Pill>
+                            );
+                          })}
+
+                          {remainingCount > 0 && (
+                            <div
+                              onClick={() => {
+                                setSelectedExercise(ex);
+                                setOpenDetail(true);
+                              }}
+                              className="cursor-pointer"
+                            >
+                              <Pill
+                                bgColor="#f1f3f8"
+                                borderColor="#dde1ea"
+                                textColor={C.faint}
+                                title={moods
+                                  .slice(MAX_VISIBLE_MOODS)
+                                  .map(toTitleCase)
+                                  .join(', ')}
+                              >
+                                +{remainingCount} more
+                              </Pill>
+                            </div>
+                          )}
+                        </div>
+
+                        <Pill>{toTitleCase(ex.exc_type)}</Pill>
+                      </div>
+                    );
+                  })()}
+
+                  {/* {visibleMoods.map((mood) => {
                     const moodStyle = getMoodStyle(mood);
                     return (
                       <Pill
@@ -242,9 +380,9 @@ export default function ExerciseCatalogPage() {
                         +{remainingCount} more
                       </Pill>
                     </div>
-                  )}
+                  )} */}
 
-                  <Pill>{toTitleCase(ex.exc_type)}</Pill>
+                  {/* <Pill>{toTitleCase(ex.exc_type)}</Pill> */}
                 </div>
 
                 <p
@@ -259,7 +397,8 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                  // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                  className={buttonGradient}
                 >
                   View More
                 </button>
