@@ -14,7 +14,7 @@ import {
 } from '@/app/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import { Eye, Flame, Pi, Snowflake, Star } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -300,8 +300,8 @@ export default function ExerciseTrackingPage() {
               : completedToday
                 ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
                 : streak === 0
-                  ? 'You have not performed a coping exercise today. Complete one to start your streak!'
-                  : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
+                  ? 'Complete a coping exercise today to start your streak!'
+                  : 'Complete a coping exercise today to continue your streak!'}
           </p>
         </div>
 
@@ -412,7 +412,7 @@ export default function ExerciseTrackingPage() {
 
                         return (
                           <div className="flex flex-wrap gap-3 mb-2">
-                            {/* Mobile: show 1 pill */}
+                            {/* Mobile - 1 pill */}
                             <div className="flex gap-3 sm:hidden">
                               {mobileVisibleMoods.map((mood) => {
                                 const moodStyle = getMoodStyle(mood);
@@ -530,7 +530,7 @@ export default function ExerciseTrackingPage() {
                       )}
 
                       {/* <div className="flex w-full gap-3"> */}
-                      <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
+                      <div className="w-full lg:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                         <button
                           onClick={() => {
                             setSelectedExercise(exercise);
@@ -610,9 +610,46 @@ export default function ExerciseTrackingPage() {
             Recommended Exercises History
           </h3>
 
+          {/* mobile - date selector */}
+          <div className="w-full flex lg:hidden flex-col gap-2">
+            <label
+              className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+              style={{ color: C.navy }}
+            >
+              Select a Date
+            </label>
+            <div className="flex items-center gap-3">
+              <input
+                type="date"
+                id="mobile-date"
+                value={format(selectedDate, 'yyyy-MM-dd')}
+                onChange={(e) => {
+                  const parsed = parseISO(e.target.value);
+                  if (isValid(parsed)) {
+                    setSelectedDate(parsed);
+                    setCalendarMonth(parsed);
+                  }
+                }}
+                className="flex-1 rounded-lg border px-3 py-2.5 text-[clamp(0.9rem,3.5vw,1rem)] font-medium"
+                style={{ color: C.navy, borderColor: '#eef2f9' }}
+              />
+              <button
+                type="button"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap hover:cursor-pointer"
+                style={{ color: C.serenity }}
+                onClick={() => {
+                  setSelectedDate(todayDate);
+                  // setCalendarMonth(initialDate);
+                }}
+              >
+                Today
+              </button>
+            </div>
+          </div>
+
           <div className="flex">
-            {/* calendar - 40% */}
-            <div className="w-[40%]">
+            {/* desktop calendar - 40% */}
+            <div className="w-[40%] hidden lg:flex">
               <div className="w-full flex justify-center">
                 <div>
                   <DayPicker
@@ -658,9 +695,9 @@ export default function ExerciseTrackingPage() {
             </div>
 
             {/* recommended coping exercise section - 60% */}
-            <div className="w-[60%] flex flex-col">
+            <div className="w-full lg:w-[60%] flex flex-col">
               <h5
-                className="text-[clamp(1rem,3vw,2rem)] font-bold underline"
+                className="text-[clamp(1rem,3vw,1.5rem)] font-bold underline"
                 style={{ color: C.navy }}
               >
                 {format(selectedDate, 'dd MMMM yyyy')}
@@ -670,7 +707,7 @@ export default function ExerciseTrackingPage() {
               <div className="mx-2 flex-1 overflow-y-auto pr-2 max-h-[70vh]">
                 {fetchingExcHistory && (
                   <p
-                    className="text-[clamp(1rem,3vw,2rem)] font-semibold"
+                    className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                     style={{ color: C.muted }}
                   >
                     Loading recommended exercises...
@@ -679,7 +716,7 @@ export default function ExerciseTrackingPage() {
 
                 {!fetchingExcHistory && excHistoryData.length === 0 && (
                   <p
-                    className="text-[clamp(1rem,3vw,2rem)] font-semibold"
+                    className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                     style={{ color: C.muted }}
                   >
                     No recommended exercises for this date.
@@ -689,7 +726,8 @@ export default function ExerciseTrackingPage() {
                   excHistoryData.length === 0 &&
                   isSameDay(selectedDate, todayDate) && (
                     <button
-                      className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                      className={buttonGradient}
                       onClick={() => router.push('/journal/new')}
                     >
                       New Entry
@@ -723,50 +761,100 @@ export default function ExerciseTrackingPage() {
                         </h5>
                         <div className="flex gap-3 mb-2">
                           {/* exercise mood and type pills */}
-                          {visibleMoods.map((mood) => {
-                            const moodStyle = getMoodStyle(mood);
+                          {(() => {
+                            const mobileVisibleMoods = moods.slice(0, 1);
+
                             return (
-                              <Pill
-                                key={mood}
-                                bgColor={moodStyle.bgColor}
-                                borderColor={moodStyle.borderColor}
-                                textColor={moodStyle.textColor}
-                              >
-                                {moodStyle.emoji} {toTitleCase(mood)}
-                              </Pill>
+                              <div className="flex flex-wrap gap-3 mb-2">
+                                {/* mobile - 1 pill */}
+                                <div className="flex gap-3 sm:hidden">
+                                  {mobileVisibleMoods.map((mood) => {
+                                    const moodStyle = getMoodStyle(mood);
+                                    return (
+                                      <Pill
+                                        key={mood}
+                                        bgColor={moodStyle.bgColor}
+                                        borderColor={moodStyle.borderColor}
+                                        textColor={moodStyle.textColor}
+                                      >
+                                        {moodStyle.emoji} {toTitleCase(mood)}
+                                      </Pill>
+                                    );
+                                  })}
+
+                                  {moods.length > 1 && (
+                                    <div
+                                      onClick={() => {
+                                        setSelectedExercise(exercise);
+                                        setOpenDetail(true);
+                                      }}
+                                      className="cursor-pointer"
+                                    >
+                                      <Pill
+                                        bgColor="#f1f3f8"
+                                        borderColor="#dde1ea"
+                                        textColor={C.faint}
+                                        title={moods
+                                          .slice(1)
+                                          .map(toTitleCase)
+                                          .join(', ')}
+                                      >
+                                        +{moods.length - 1} more
+                                      </Pill>
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* desktop mood */}
+                                <div className="hidden sm:flex gap-3">
+                                  {visibleMoods.map((mood) => {
+                                    const moodStyle = getMoodStyle(mood);
+                                    return (
+                                      <Pill
+                                        key={mood}
+                                        bgColor={moodStyle.bgColor}
+                                        borderColor={moodStyle.borderColor}
+                                        textColor={moodStyle.textColor}
+                                      >
+                                        {moodStyle.emoji} {toTitleCase(mood)}
+                                      </Pill>
+                                    );
+                                  })}
+
+                                  {remainingCount > 0 && (
+                                    <div
+                                      onClick={() => {
+                                        setSelectedExercise(exercise);
+                                        setOpenDetail(true);
+                                      }}
+                                      className="cursor-pointer"
+                                    >
+                                      <Pill
+                                        bgColor="#f1f3f8"
+                                        borderColor="#dde1ea"
+                                        textColor={C.faint}
+                                        title={moods
+                                          .slice(MAX_VISIBLE_MOODS)
+                                          .map(toTitleCase)
+                                          .join(', ')}
+                                      >
+                                        +{remainingCount} more
+                                      </Pill>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                              </div>
                             );
-                          })}
-
-                          {remainingCount > 0 && (
-                            <div
-                              onClick={() => {
-                                setSelectedExercise(exercise);
-                                setOpenDetail(true);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              <Pill
-                                bgColor="#f1f3f8"
-                                borderColor="#dde1ea"
-                                textColor={C.faint}
-                                title={moods
-                                  .slice(MAX_VISIBLE_MOODS)
-                                  .map(toTitleCase)
-                                  .join(', ')}
-                              >
-                                +{remainingCount} more
-                              </Pill>
-                            </div>
-                          )}
-
-                          <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                          })()}
                         </div>
 
                         {/* rating (completed) / reason (incomplete) */}
                         {exercise.uex_status === 'completed' ? (
                           <div className="flex items-center gap-1">
                             <p
-                              className="text-[clamp(1rem,3vw,2rem)] font-bold"
+                              className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
                               style={{ color: C.navy }}
                             >
                               {exercise.uex_rating}
@@ -781,7 +869,7 @@ export default function ExerciseTrackingPage() {
                         ) : exercise.uex_status === 'incomplete' &&
                           exercise.uex_reason ? (
                           <p
-                            className="text-[clamp(1rem,3vw,2rem)] mb-2"
+                            className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2"
                             style={{ color: C.navy }}
                           >
                             <b>Incomplete Reason</b>: {exercise.uex_reason}
@@ -792,7 +880,7 @@ export default function ExerciseTrackingPage() {
 
                         {/* exercise description */}
                         <p
-                          className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(1rem,3vw,2rem)]"
+                          className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
                           style={{ color: C.navy }}
                         >
                           {exercise.exc_desc}
@@ -801,7 +889,8 @@ export default function ExerciseTrackingPage() {
                         <div className="mt-1 flex gap-3">
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            className={buttonGradient}
                             onClick={() => {
                               setSelectedExercise(exercise);
                               setOpenDetail(true);
@@ -812,10 +901,11 @@ export default function ExerciseTrackingPage() {
 
                           {/* button to insights page */}
                           <button
-                            className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                            className={buttonGradient}
                             onClick={() => handleViewEntry(exercise.jrnl_id)}
                           >
-                            View Entry
+                            View Insights
                           </button>
                         </div>
                       </div>

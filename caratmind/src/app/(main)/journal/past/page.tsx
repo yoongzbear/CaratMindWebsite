@@ -205,10 +205,10 @@ export default function PastEntryPage() {
           {/* saved entries section - 60% */}
           <div className="w-full lg:w-[60%] flex flex-col">
             <h3
-              className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
+              className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold underline"
               style={{ color: C.navy }}
             >
-              Saved Entries: {format(selectedDate, 'dd MMMM yyyy')}
+              {format(selectedDate, 'dd MMMM yyyy')}
             </h3>
 
             {/* scroll */}
