@@ -8,7 +8,7 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
@@ -16,7 +16,6 @@ import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { getMoodStyle } from '@/app/utils/moodUtils';
-// import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
@@ -261,14 +260,14 @@ export default function NewMoodInsightPage() {
         {loading || fetchingJournal ? (
           <section
             className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.navy }}
+            style={{ color: C.muted }}
           >
             Loading mood insight...
           </section>
         ) : !journal ? (
           <section
             className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.navy }}
+            style={{ color: C.muted }}
           >
             Entry not found.
           </section>
@@ -330,9 +329,9 @@ export default function NewMoodInsightPage() {
                     <button
                       onClick={() => setOpenDetail(true)}
                       // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                      className={`${buttonGradient}`}
+                      className={buttonGradient}
                     >
-                      {'View More'}
+                      View More
                     </button>
 
                     <EntryDetailModal
@@ -353,7 +352,7 @@ export default function NewMoodInsightPage() {
                     <button
                       onClick={() => handleEdit(journal.jrnl_id)}
                       // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                      className={`${buttonGradient}`}
+                      className={buttonGradient}
                     >
                       Edit Entry
                     </button>
@@ -364,7 +363,7 @@ export default function NewMoodInsightPage() {
                         onClick={handleSubmit}
                         disabled={submitting}
                         // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                        className={`${buttonGradient}`}
+                        className={buttonGradient}
                       >
                         {submitting ? 'Submitting...' : 'Submit Entry'}
                       </button>
@@ -373,7 +372,7 @@ export default function NewMoodInsightPage() {
                     {/* delete button */}
                     <button
                       // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                      className={`${buttonRed}`}
+                      className={buttonRed}
                       onClick={() => setOpenDelete(true)}
                     >
                       Delete Entry
@@ -409,14 +408,14 @@ export default function NewMoodInsightPage() {
                   {fetchingMoodData ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
-                      style={{ color: C.navy }}
+                      style={{ color: C.muted }}
                     >
                       Loading mood insight...
                     </p>
                   ) : !moodData?.mood_id ? (
                     <h5
                       className="m-5 text-center text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                      style={{ color: C.navy }}
+                      style={{ color: C.muted }}
                     >
                       Mood not available yet. Submit your entry first.
                     </h5>
@@ -451,7 +450,7 @@ export default function NewMoodInsightPage() {
                 <div className="w-fit mx-auto mt-3">
                   <button
                     // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                    className={`${buttonGradient}`}
+                    className={buttonGradient}
                     onClick={() => setOpenMoodDetail(true)}
                   >
                     View Details
@@ -479,14 +478,14 @@ export default function NewMoodInsightPage() {
                   {fetchingExercise ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
-                      style={{ color: C.navy }}
+                      style={{ color: C.muted }}
                     >
                       Loading exercise recommendation...
                     </p>
                   ) : !exerciseData ? (
                     <h5
                       className="m-5 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                      style={{ color: C.navy }}
+                      style={{ color: C.muted }}
                     >
                       Coping exercise recommendation not available yet. Submit
                       your entry first.
@@ -539,7 +538,7 @@ export default function NewMoodInsightPage() {
                       <div className="w-fit mx-auto flex gap-4 mt-2">
                         <button
                           // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                          className={`${buttonGradient}`}
+                          className={buttonGradient}
                           onClick={() => setOpenExcDetail(true)}
                         >
                           View Details
@@ -554,9 +553,9 @@ export default function NewMoodInsightPage() {
                             <button
                               onClick={performExercise}
                               // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                              className={`${buttonGradient}`}
+                              className={buttonGradient}
                             >
-                              {'Perform Exercise'}
+                              Perform Exercise
                             </button>
                           )}
                       </div>
@@ -589,9 +588,9 @@ export default function NewMoodInsightPage() {
               <button
                 onClick={moodDashboard}
                 // className={`mt-2 mb-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                className={`${buttonGradient}`}
+                className={buttonGradient}
               >
-                {'View Mood Dashboard'}
+                View Mood Dashboard
               </button>
             </div>
           </>

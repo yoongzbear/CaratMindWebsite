@@ -13,7 +13,7 @@ export function AuthCard({
 }) {
   return (
     <div
-      className={`w-full bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-5 py-5 sm:px-7 sm:py-8`}
+      className="w-full bg-white rounded-2xl shadow-[0_8px_40px_rgba(146,168,209,0.18)] px-5 py-5 sm:px-7 sm:py-8"
       style={{
         maxWidth: `${width}px`,
         border: `1px solid ${C.border}`,

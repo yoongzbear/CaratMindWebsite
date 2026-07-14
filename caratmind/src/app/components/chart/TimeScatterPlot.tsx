@@ -17,7 +17,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { addDays, addHours, format, parseISO, startOfDay } from 'date-fns';
-import { buttonGradientColor, C } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
 import { useRouter } from 'next/navigation';

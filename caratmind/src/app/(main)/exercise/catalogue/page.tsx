@@ -4,7 +4,6 @@ import Pill from '@/app/components/Pill';
 import {
   buttonGradientColor,
   buttonOutlined,
-  buttonRed,
   C,
   styles,
 } from '@/app/styles/styles';
@@ -109,7 +108,7 @@ export default function ExerciseCatalogPage() {
         </header>
 
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3.75 p-4"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -117,7 +116,7 @@ export default function ExerciseCatalogPage() {
           }}
         >
           {/* mobile search */}
-          <div className="lg:hidden w-full gap-5">
+          <div className="md:hidden w-full gap-5">
             {/* search */}
             {/* <div className="w-[70%]"> */}
             <input
@@ -164,9 +163,9 @@ export default function ExerciseCatalogPage() {
           </div>
 
           {/* desktop search */}
-          <div className="hidden lg:flex w-full justify-between">
+          <div className="hidden md:flex w-full justify-between items-center">
             {/* search */}
-            <div className="w-50">
+            <div className="w-[30%]">
               <input
                 className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
                 style={styles.input}
@@ -178,7 +177,7 @@ export default function ExerciseCatalogPage() {
             </div>
 
             {/* mood dropdown */}
-            <div className="w-[40%] flex gap-4 my-2">
+            <div className="md:w-[60%] lg:w-[40%] flex gap-4 my-2">
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}

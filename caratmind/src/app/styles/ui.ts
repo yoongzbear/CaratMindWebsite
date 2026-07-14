@@ -21,7 +21,7 @@ h3 - text-[20px] sm:text-[24px] md:text-[28px]
 text-[clamp(1.25rem,5vw,1.75rem)]
 
 h4 - sm:text-[22px] md:text-[26px]
-h4 - text-[clamp(1.15rem,4vw,1.65rem)]
+text-[clamp(1.15rem,4vw,1.65rem)]
 
 h5 - text-[16px] sm:text-[20px] md:text-[24px]
 text-[clamp(1rem,3vw,1.5rem)]

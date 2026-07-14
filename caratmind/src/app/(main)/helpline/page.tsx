@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { C, styles } from '@/app/styles/styles';
 import { HELPLINES } from '@/app/copywriting/helpline';
 import { Clock, Phone } from 'lucide-react';

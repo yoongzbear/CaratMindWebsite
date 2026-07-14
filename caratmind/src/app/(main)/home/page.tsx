@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
-import { Eye, Flame } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import { useEffect, useState } from 'react';
 import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
@@ -213,7 +213,7 @@ export default function HomePage() {
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
                       // className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
-                      className={`${buttonGradient}`}
+                      className={buttonGradient}
                     >
                       {action.action}
                     </button>

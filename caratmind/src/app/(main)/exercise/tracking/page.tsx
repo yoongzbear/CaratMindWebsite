@@ -16,7 +16,7 @@ import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import { Eye, Flame, Pi, Snowflake, Star } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getMoodStyle } from '@/app/utils/moodUtils';
@@ -25,6 +25,20 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import RatingModal from '@/app/components/modal/RatingModal';
 import ReasonModal from '@/app/components/modal/ReasonModal';
 import { buttonGradient, buttonGreen, buttonRed } from '@/app/styles/ui';
+
+type RatingResponse = {
+  message: string;
+  user_exercise: UserExercise;
+};
+
+type ReasonResponse = {
+  message: string;
+  user_exercise: UserExercise;
+};
+
+type ApiErrorResponse = {
+  error: string;
+};
 
 export default function ExerciseTrackingPage() {
   const { user, loading, accessToken } = useAuth();
@@ -55,93 +69,92 @@ export default function ExerciseTrackingPage() {
     null,
   );
 
-  useEffect(() => {
+  const loadStreak = async () => {
     if (!accessToken) return;
-
-    async function loadStreak() {
-      setFetchingStreak(true);
-      try {
-        const res = await fetch('/api/user_exercise/streak', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load streak.');
-          return;
-        }
-        setStreak(data.streak);
-        setCompletedToday(data.completed_today);
-      } catch {
-        toastError('Something went wrong loading your streak.');
-      } finally {
-        setFetchingStreak(false);
+    setFetchingStreak(true);
+    try {
+      const res = await fetch('/api/user_exercise/streak', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load streak.');
+        return;
       }
+      setStreak(data.streak);
+      setCompletedToday(data.completed_today);
+    } catch {
+      toastError('Something went wrong loading your streak.');
+    } finally {
+      setFetchingStreak(false);
     }
+  };
 
-    loadStreak();
+  const loadTodayExc = async () => {
+    if (!accessToken) return;
+    setFetchingTodayExc(true);
+    try {
+      const dateStr = format(todayDate, 'yyyy-MM-dd');
+      const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(
+          data.error ?? 'Failed to load recommended coping exercises today.',
+        );
+        setTodayExercise([]);
+        return;
+      }
+      setTodayExercise(data.exercises ?? []);
+    } catch {
+      toastError(
+        'Something went wrong loading recommended coping exercises today.',
+      );
+    } finally {
+      setFetchingTodayExc(false);
+    }
+  };
+
+  const loadExcHistory = async () => {
+    if (!accessToken) return;
+    setFetchingExcHistory(true);
+    try {
+      const dateStr = format(selectedDate, 'yyyy-MM-dd');
+      const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(
+          data.error ?? 'Failed to load recommended coping exercises.',
+        );
+        setExcHistoryData([]);
+        return;
+      }
+      setExcHistoryData(data.exercises ?? []);
+    } catch {
+      toastError('Something went wrong loading recommended coping exercises.');
+    } finally {
+      setFetchingExcHistory(false);
+    }
+  };
+  useEffect(() => {
+    startTransition(() => {
+      loadStreak();
+    });
   }, [accessToken]);
 
   useEffect(() => {
-    if (!accessToken) return;
-
-    async function loadTodayExc() {
-      setFetchingTodayExc(true);
-      try {
-        const dateStr = format(todayDate, 'yyyy-MM-dd');
-        // const dateStr = '2026-07-01';
-        const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(
-            data.error ?? 'Failed to load recommended coping exercises today.',
-          );
-          setTodayExercise([]);
-          return;
-        }
-        setTodayExercise(data.exercises ?? []);
-      } catch {
-        toastError(
-          'Something went wrong loading recommended coping exercises today.',
-        );
-      } finally {
-        setFetchingTodayExc(false);
-      }
-    }
-
-    loadTodayExc();
+    startTransition(() => {
+      loadTodayExc();
+    });
   }, [accessToken, todayDate]);
 
   useEffect(() => {
-    if (!accessToken) return;
-
-    async function loadExcHistory() {
-      setFetchingExcHistory(true);
-      try {
-        const dateStr = format(selectedDate, 'yyyy-MM-dd');
-        const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(
-            data.error ?? 'Failed to load recommended coping exercises.',
-          );
-          setExcHistoryData([]);
-          return;
-        }
-        setExcHistoryData(data.exercises ?? []);
-      } catch {
-        toastError(
-          'Something went wrong loading recommended coping exercises.',
-        );
-      } finally {
-        setFetchingExcHistory(false);
-      }
-    }
-
-    loadExcHistory();
+    startTransition(() => {
+      loadExcHistory();
+    });
   }, [selectedDate, accessToken]);
 
   const handleViewEntry = (jrnl_id: string) => {
@@ -162,7 +175,7 @@ export default function ExerciseTrackingPage() {
         cache: 'no-store',
       });
 
-      let data: any;
+      let data: RatingResponse | ApiErrorResponse;
       const contentType = res.headers.get('content-type') ?? '';
       if (contentType.includes('application/json')) {
         data = await res.json();
@@ -172,34 +185,18 @@ export default function ExerciseTrackingPage() {
         data = { error: 'Unexpected response from server.' };
       }
 
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save rating.');
+      if (!res.ok || 'error' in data) {
+        toastError('error' in data ? data.error : 'Failed to save rating.');
         return;
       }
+
       toastSuccess('Saved coping exercise rating.');
-      // update exercises
-      setTodayExercise((prev) =>
-        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
-      );
-      setExcHistoryData((prev) =>
-        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
-      );
       setOpenRating(false);
 
-      // refresh streak
-      try {
-        const res = await fetch('/api/user_exercise/streak', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const streakData = await res.json();
-        if (res.ok) {
-          setStreak(streakData.streak);
-          setCompletedToday(streakData.completed_today);
-        }
-      } catch {}
+      // refresh today's exercises, history, and streak
+      await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
     } catch {
       toastError('Something went wrong. Please try again.');
-    } finally {
     }
   };
 
@@ -217,7 +214,7 @@ export default function ExerciseTrackingPage() {
         cache: 'no-store',
       });
 
-      let data: any;
+      let data: ReasonResponse | ApiErrorResponse;
       const contentType = res.headers.get('content-type') ?? '';
       if (contentType.includes('application/json')) {
         data = await res.json();
@@ -227,22 +224,20 @@ export default function ExerciseTrackingPage() {
         data = { error: 'Unexpected response from server.' };
       }
 
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save incompletion reason.');
+      if (!res.ok || 'error' in data) {
+        toastError(
+          'error' in data ? data.error : 'Failed to save incompletion reason.',
+        );
         return;
       }
+
       toastSuccess('Saved coping exercise incompletion reason.');
-      // update exercises
-      setTodayExercise((prev) =>
-        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
-      );
-      setExcHistoryData((prev) =>
-        prev.map((e) => (e.uex_id === uex_id ? { ...e, ...data } : e)),
-      );
       setOpenReason(false);
+
+      // refresh today's exercises and history
+      await Promise.all([loadTodayExc(), loadExcHistory()]);
     } catch {
       toastError('Something went wrong. Please try again.');
-    } finally {
     }
   };
 
@@ -307,7 +302,7 @@ export default function ExerciseTrackingPage() {
 
         {/* today's exercise */}
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3.75 p-4"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -530,7 +525,7 @@ export default function ExerciseTrackingPage() {
                       )}
 
                       {/* <div className="flex w-full gap-3"> */}
-                      <div className="w-full lg:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
+                      <div className="w-full mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-start mt-4">
                         <button
                           onClick={() => {
                             setSelectedExercise(exercise);
@@ -596,7 +591,7 @@ export default function ExerciseTrackingPage() {
 
         {/* recommended exercises history */}
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3.75 p-4"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',

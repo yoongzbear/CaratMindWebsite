@@ -4,11 +4,12 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
+import { buttonGradient, buttonRed } from '@/app/styles/ui';
 
 type Props = {
   open: boolean;
@@ -113,7 +114,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         width={900}
         title="Delete Account"
         footer={
-          <div className="w-full flex justify-start gap-5 items-stretch">
+          <div className="w-full flex flex-col sm:flex-row gap-3 sm:gap-5 items-stretch sm:items-center">
             {/* enter username to confirm delete */}
             <input
               autoFocus
@@ -123,7 +124,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
               onKeyDown={(e) => {
                 if (e.key === 'Escape') handleClose();
               }}
-              className="flex-1 rounded-lg h-10 px-2.5 py-1.5 text-[14px] outline-none"
+              className="flex-1 rounded-lg h-10 px-2.5 py-1.5 text-[clamp(0.875rem,1.5vw,1rem)] outline-none"
               style={{
                 border: `1.5px solid ${C.serenity}`,
                 color: C.navy,
@@ -132,7 +133,8 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
             <button
               onClick={handleConfirmDelete}
               disabled={!isConfirmed || deleting}
-              className={`inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              // className={`inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+              className={`${buttonRed} w-fit mx-auto sm:w-auto`}
             >
               {deleting ? 'Deleting…' : 'Confirm Delete Account'}
             </button>
@@ -140,22 +142,23 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         }
       >
         <h4
-          className="sm:text-[22px] md:text-[26px] mt-0 mb-2.5"
+          className="text-[clamp(1.15rem,4vw,1.65rem)] mt-0 mb-2.5"
           style={{ color: C.navy }}
         >
           Deleting your account will remove all related data including your
           journal entries. Would you like to download your journal entries?
         </h4>
         <p
-          className="sm:text-[12px] md:text-[14px] mt-0 mb-2.5 italic"
-          style={{ color: C.faint }}
+          className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0 mb-2.5 italic"
+          style={{ color: C.muted }}
         >
           Journal entries will be downloaded as a .txt file
         </p>
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+          // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+          className={buttonGradient}
         >
           {downloading
             ? 'Preparing to Download...'
@@ -163,7 +166,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         </button>
 
         <p
-          className="sm:text-[14px] md:text-[16px] mt-4"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] mt-4"
           style={{ color: C.navy }}
         >
           To confirm deletion, type your username <b>{user?.username}</b> below,

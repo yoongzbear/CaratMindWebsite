@@ -10,10 +10,9 @@ import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { C } from '@/app/styles/styles';
-import { format, isValid, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';
-import { getRangeLabel } from '@/app/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 import { DayPicker } from '@daypicker/react';
 import { useMemo, useState } from 'react';
@@ -206,7 +205,7 @@ function MoodDayButton({
       }}
     >
       <span
-        className="relative z-10 sm:text-[14px] md:text-[16px] font-medium"
+        className="relative z-10 text-[clamp(0.875rem,1.5vw,1rem)] font-medium"
         style={{ color: hasMoods ? C.navy : C.faint }}
       >
         {day.date.getDate()}
@@ -219,7 +218,7 @@ function MoodDayButton({
 
       {hasMoods && (
         <div
-          className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 sm:text-[14px] md:text-[16px] shadow-md"
+          className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-[clamp(0.875rem,1.5vw,1rem)] shadow-md"
           style={{ background: 'white', borderColor: C.navy, color: C.navy }}
         >
           {moodCounts.map(({ mood, count }) => (

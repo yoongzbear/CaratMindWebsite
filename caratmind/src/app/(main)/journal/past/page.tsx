@@ -1,11 +1,8 @@
 'use client';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { Journal } from '@/app/types/journal';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import { format, isValid, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DayPicker } from '@daypicker/react';
@@ -64,7 +61,7 @@ export default function PastEntryPage() {
     return (
       <section
         className="text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center"
-        style={{ color: C.faint }}
+        style={{ color: C.muted }}
       >
         Loading...
       </section>
@@ -103,7 +100,7 @@ export default function PastEntryPage() {
         </header>
 
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5 flex flex-col lg:flex-row gap-3 lg:gap-0"
+          className="rounded-[10px] border mb-3.75 p-4 flex flex-col lg:flex-row gap-3 lg:gap-0"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -216,7 +213,7 @@ export default function PastEntryPage() {
               {fetching && (
                 <p
                   className="text-[clamp(1rem,3vw,1.5rem)]"
-                  style={{ color: C.navy }}
+                  style={{ color: C.muted }}
                 >
                   Loading entries...
                 </p>
@@ -225,7 +222,7 @@ export default function PastEntryPage() {
               {!fetching && entries.length === 0 && (
                 <p
                   className="text-[clamp(1rem,3vw,1.5rem)]"
-                  style={{ color: C.navy }}
+                  style={{ color: C.muted }}
                 >
                   No entries for this date.
                 </p>

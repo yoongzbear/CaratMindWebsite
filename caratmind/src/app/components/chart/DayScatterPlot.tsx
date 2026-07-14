@@ -15,20 +15,15 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  CartesianGrid,
 } from 'recharts';
 import { format, parseISO, startOfDay } from 'date-fns';
 import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
 import { DateRangeValue } from './DateRangeSelector';
-import { MoodPoint, useMoodScatterData } from '@/app/hooks/moodScatterData';
+import { useMoodScatterData } from '@/app/hooks/moodScatterData';
 import { useRouter } from 'next/navigation';
-import {
-  getMoodStyle,
-  MOOD_ORDER,
-  MOOD_ORDER_MAP,
-} from '@/app/utils/moodUtils';
+import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
 import { getRangeLabel, resolveLocalDateRange } from '@/app/utils/dateFormat';
 
 type Props = {
@@ -49,6 +44,7 @@ export default function DayScatterPlot({
 
   //   ES Lint error
   const handleScatterClick = (point: any) => {
+    console.log('point: ', point);
     router.push(`/mood/insight/${point.jrnl_id}`);
   };
 

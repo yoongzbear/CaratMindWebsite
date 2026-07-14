@@ -3,10 +3,7 @@
 'use client';
 
 import Modal from './Modal';
-import Pill from '../Pill';
-import { C, styles } from '@/app/styles/styles';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodUtils';
+import { C } from '@/app/styles/styles';
 import Link from 'next/link';
 import { HELPLINES } from '@/app/copywriting/helpline';
 
@@ -21,7 +18,7 @@ export default function HelplineModal({ open, onClose, numDays = 3 }: Props) {
   return (
     <Modal open={open} onClose={onClose} width={900}>
       <p
-        className="mt-0 mb-2.5 sm:text-[18px] md:text-[22px]"
+        className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)]"
         style={{ color: C.navy }}
       >
         It seems you have been experiencing poor moods for 3 days or more.
@@ -37,26 +34,26 @@ export default function HelplineModal({ open, onClose, numDays = 3 }: Props) {
             style={{ borderColor: C.border }}
           >
             <p
-              className="mt-0 mb-2.5 sm:text-[20px] md:text-[24px] font-medium"
+              className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
               style={{ color: C.navy }}
             >
               {h.name}
             </p>
             <p
-              className="mt-0 mb-2.5 sm:text-[14px] md:text-[16px]"
-              style={{ color: C.faint }}
+              className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)]"
+              style={{ color: C.muted }}
             >
               {h.description}
             </p>
             <Link
               href={h.href}
-              className="mt-0 mb-2.5 sm:text-[16px] md:text-[18px]"
+              className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] font-medium"
               style={{ color: C.serenity, fontWeight: 600 }}
             >
               {h.contact}
             </Link>
             <span
-              className="ml-2 sm:text-[11px] md:text-[13px]"
+              className="ml-2 text-[clamp(0.7rem,1.5vw,0.85rem)]"
               style={{ color: C.faint }}
             >
               {h.available}
@@ -67,7 +64,7 @@ export default function HelplineModal({ open, onClose, numDays = 3 }: Props) {
 
       <div className="mb-2">
         <Link
-          className="sm:text-[16px] md:text-[18px] underline"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] underline"
           href={'/helpline'}
           style={{ color: C.serenity, fontWeight: 600 }}
         >

@@ -1,7 +1,6 @@
 'use client';
 
 import { C, styles } from '@/app/styles/styles';
-import { dropdownStyle } from '@/app/styles/ui';
 import { useEffect, useState } from 'react';
 
 export type DateRangeValue =

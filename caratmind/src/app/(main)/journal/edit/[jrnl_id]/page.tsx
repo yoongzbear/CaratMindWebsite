@@ -1,11 +1,5 @@
 'use client';
-import {
-  buttonGradientColor,
-  buttonOutlined,
-  buttonRed,
-  C,
-  styles,
-} from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -13,7 +7,7 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { format } from 'date-fns';
 import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
-import { buttonGradient, buttonGrey } from '@/app/styles/ui';
+import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
 
 export default function EditEntryPage() {
   const router = useRouter();
@@ -142,8 +136,6 @@ export default function EditEntryPage() {
     );
   }
 
-  const isDraft = journal.jrnl_status === 'draft';
-
   return (
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-2 lg:pb-12"
@@ -166,7 +158,7 @@ export default function EditEntryPage() {
             className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
             style={{ color: C.navy }}
           >
-            {format(new Date(journal.jrnl_created_at), 'd MMMM yyyy, p')}
+            {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
           </h5>
 
           <h5
@@ -185,7 +177,7 @@ export default function EditEntryPage() {
         </header>
 
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3.75 p-4"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -209,7 +201,7 @@ export default function EditEntryPage() {
             <button
               onClick={handleCancel}
               // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              className={`${buttonRed}`}
+              className={buttonRed}
             >
               {'Cancel Edit'}
             </button>
@@ -218,7 +210,7 @@ export default function EditEntryPage() {
             <button
               onClick={handleReset}
               // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              className={`${buttonRed}`}
+              className={buttonRed}
             >
               {'Reset'}
             </button>

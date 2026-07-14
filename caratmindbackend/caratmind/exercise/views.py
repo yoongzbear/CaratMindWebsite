@@ -139,7 +139,11 @@ def rating_user_exercise_view(request, uex_id):
     except Exception as e:
         return JsonResponse({'error': f'Failed to save rating: {e}'}, status=500)
 
-    return JsonResponse(updated)
+    # return JsonResponse(updated)
+    return JsonResponse({
+        "message": "Rating saved successfully.",
+        "user_exercise": updated,
+    })
 
 # update incompletion reason
 @csrf_exempt

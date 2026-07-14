@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
 import DeleteAccountModal from '@/app/components/modal/DeleteAccountModal';
+import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -19,15 +20,18 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <section className="px-8 py-6 text-center" style={{ color: C.faint }}>
-        Loading profile…
+      <section
+        className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]"
+        style={{ color: C.muted }}
+      >
+        Loading profile...
       </section>
     );
   }
 
   if (!user) {
     return (
-      <section className="px-8 py-6 text-center">
+      <section className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]">
         <p style={{ color: C.muted }}>You are not signed in.</p>
         <Link href="/login" style={{ color: C.serenity, fontWeight: 600 }}>
           Log in
@@ -80,20 +84,24 @@ export default function ProfilePage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
-      style={{ background: C.bgPage }}
+      className="pt-4 sm:pt-6 pb-10"
+      style={{
+        background: C.bgPage,
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
+      }}
     >
-      <div className="w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
         <header className="mb-3">
           <h1
-            className="sm:text-[28px] md:text-[32px] font-bold mt-0 mb-2"
+            className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
             style={{ color: C.navy }}
           >
             User Profile
           </h1>
         </header>
         <div
-          className="rounded-[10px] border mb-3.75 p-2.5"
+          className="rounded-[10px] border mb-3.75 p-4"
           style={{
             color: C.navy,
             backgroundColor: 'white',
@@ -101,30 +109,33 @@ export default function ProfilePage() {
             border: '1px solid #eef2f9',
           }}
         >
-          <h3 className="sm:text-[24px] md:text-[28px] font-semibold">
+          {/* <h3 className="sm:text-[24px] md:text-[28px] font-semibold">
             User Details
-          </h3>
+          </h3> */}
 
           {/* <div className="m-3" style={{ color: C.navy }}> */}
           {/* Username */}
           <p
-            className="sm:text-[14px] md:text-[16px]"
+            className="text-[clamp(0.875rem,1.5vw,1rem)]"
             style={{ color: C.muted }}
           >
             Username
           </p>
-          <p className="mt-1 mb-4 sm:text-[14px] md:text-[16px]">
+          <p
+            className="mt-1 mb-4 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+            style={{ color: C.navy }}
+          >
             {user.username}
           </p>
 
           {/* Preferred name */}
           <p
-            className="sm:text-[14px] md:text-[16px]"
+            className="text-[clamp(0.875rem,1.5vw,1rem)]"
             style={{ color: C.muted }}
           >
             Preferred Name
           </p>
-          <p className="mb-1">
+          <div className="mb-1">
             {editing ? (
               <>
                 <div className="relative mb-3.5 w-55">
@@ -136,7 +147,7 @@ export default function ProfilePage() {
                       if (e.key === 'Enter') handleSave();
                       if (e.key === 'Escape') handleCancel();
                     }}
-                    className="w-full rounded-lg px-2.5 py-1.5 pr-8 sm:text-[14px] md:text-[16px] outline-none"
+                    className="w-full rounded-lg px-2.5 py-1.5 pr-8 text-[clamp(0.875rem,1.5vw,1rem)] outline-none"
                     style={{
                       border: `1.5px solid ${C.serenity}`,
                       color: C.navy,
@@ -146,24 +157,27 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setDraft(generateRandomName())}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center"
-                    style={{ color: C.faint }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer"
+                    style={{ color: C.muted }}
                   >
                     <Dices size={24} />
                   </button>
                 </div>
               </>
             ) : (
-              <span className="mt-1 mb-4 sm:text-[14px] md:text-[16px]">
+              <p
+                className="mt-1 mb-4 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+                style={{ color: C.navy }}
+              >
                 {user.preferredUsername ?? '—'}
-              </span>
+              </p>
             )}
-          </p>
+          </div>
 
           {/* Error */}
           {error && (
             <p
-              className="sm:text-[14px] md:text-[16px] mt-1 mb-2"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] mt-1 mb-2"
               style={{ color: '#e05' }}
             >
               {error}
@@ -171,24 +185,23 @@ export default function ProfilePage() {
           )}
 
           {/* Action buttons */}
-          <p style={{ margin: '8px 0 16px', display: 'flex', gap: '8px' }}>
+          {/* <p style={{ margin: '8px 0 16px', display: 'flex', gap: '8px' }}> */}
+          <div className="mt-2 mb-4 flex gap-2">
             {editing ? (
               <>
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                  // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                  className={buttonGradient}
                 >
                   {saving ? 'Saving…' : 'Save'}
                 </button>
                 <button
                   onClick={handleCancel}
                   disabled={saving}
-                  className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                  style={{
-                    color: C.muted,
-                    border: `1px solid ${C.border}`,
-                  }}
+                  // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                  className={buttonGrey}
                 >
                   Cancel
                 </button>
@@ -196,30 +209,37 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={handleEditClick}
-                className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={buttonGradient}
               >
                 Edit Name
               </button>
             )}
-          </p>
+          </div>
 
           {/* Email */}
           {user.email && (
             <>
               <p
-                className="sm:text-[14px] md:text-[16px]"
+                className="text-[clamp(0.875rem,1.5vw,1rem)]"
                 style={{ color: C.muted }}
               >
                 Email
               </p>
-              <p className="mt-1 sm:text-[14px] md:text-[16px]">{user.email}</p>
+              <p
+                className="mt-1 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+                style={{ color: C.navy }}
+              >
+                {user.email}
+              </p>
             </>
           )}
 
           {/* Delete account */}
           <button
             onClick={() => setOpenDeleteAccount(true)}
-            className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            // className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+            className={`${buttonRed} mt-4`}
           >
             Delete Account
           </button>

@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  buttonGradientColor,
-  buttonOutlined,
-  // buttonRed,
-  C,
-  styles,
-} from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
@@ -124,7 +118,7 @@ export default function NewEntryPage() {
 
           <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex items-stretch justify-between mt-4">
             {/* reset button */}
-            <button onClick={handleReset} className={`${buttonRed}`}>
+            <button onClick={handleReset} className={buttonRed}>
               {'Reset'}
             </button>
 
@@ -132,7 +126,7 @@ export default function NewEntryPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={`${buttonGradient}`}
+              className={buttonGradient}
             >
               {submitting ? 'Submitting...' : 'Submit Entry'}
             </button>
@@ -141,7 +135,7 @@ export default function NewEntryPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`${buttonGrey}`}
+              className={buttonGrey}
             >
               {saving ? 'Saving...' : 'Save as Draft'}
             </button>

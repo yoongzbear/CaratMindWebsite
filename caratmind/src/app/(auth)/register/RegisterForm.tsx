@@ -133,7 +133,7 @@ export function RegisterForm({
                     onClick={() => setPreferredUsername(generateRandomName())}
                     className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
                     style={{
-                      color: C.faint,
+                      color: C.muted,
                     }}
                   >
                     <Dices size={24} />

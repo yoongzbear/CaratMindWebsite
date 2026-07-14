@@ -24,7 +24,7 @@ export default function DetectMoodModal({ open, onClose }: Props) {
         />
       </div>
       <h2
-        className="mt-0 mb-2.5 sm:text-[26px] md:text-[30px]"
+        className="mt-0 mb-2.5 text-[clamp(1.3rem,6vw,1.85rem)]"
         style={{ color: C.navy }}
       >
         Detecting your mood and recommending a coping exercise...

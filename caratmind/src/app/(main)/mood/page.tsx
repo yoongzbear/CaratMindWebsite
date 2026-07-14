@@ -6,7 +6,6 @@ import DateRangeSelector, {
 import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
-import ToggleSwitch from '@/app/components/ToggleSwitch';
 import { C, styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { format } from 'date-fns';

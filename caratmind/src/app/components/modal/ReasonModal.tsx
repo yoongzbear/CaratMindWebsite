@@ -4,8 +4,7 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { buttonGradientColor, buttonRed, C, styles } from '@/app/styles/styles';
-import { Star } from 'lucide-react';
+import { C } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
 import { buttonGradient } from '@/app/styles/ui';
 
