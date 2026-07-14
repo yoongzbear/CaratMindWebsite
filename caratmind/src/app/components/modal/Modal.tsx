@@ -36,6 +36,8 @@ export default function Modal({
           style={{
             background: 'rgba(20,30,50,0.35)',
             backdropFilter: 'blur(3px)',
+            paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
+            paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
           }}
           onClick={onClose}
           initial={{ opacity: 0 }}

@@ -20,14 +20,31 @@ const PRESET_LABELS: Record<number, string> = {
   365: '1 year',
 };
 
+function toDateInputValue(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getDefaultRange(days: number) {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(start.getDate() - (days - 1));
+  return {
+    startDate: toDateInputValue(start),
+    endDate: toDateInputValue(end),
+  };
+}
+
 export default function DateRangeSelector({
   onChange,
   presets = [7, 30, 90],
 }: Props) {
   const [selected, setSelected] = useState<string>('7');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
+  const defaultRange = getDefaultRange(7);
+  const [startDate, setStartDate] = useState(defaultRange.startDate);
+  const [endDate, setEndDate] = useState(defaultRange.endDate);
   useEffect(() => {
     if (selected === 'custom') {
       if (startDate && endDate && startDate <= endDate) {
@@ -63,8 +80,8 @@ export default function DateRangeSelector({
       </div>
 
       {selected === 'custom' && (
-        <div className="flex gap-4 w-full">
-          <div>
+        <div className="flex flex-wrap gap-4 w-full">
+          <div className="min-w-35 flex-1">
             <label
               className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
               style={{ color: C.navy }}
@@ -72,7 +89,7 @@ export default function DateRangeSelector({
               Start Date
             </label>
             <input
-              className="text-[clamp(0.875rem,1.5vw,1rem)]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] w-full"
               style={styles.dateInput}
               type="date"
               value={startDate}
@@ -80,7 +97,7 @@ export default function DateRangeSelector({
               onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
-          <div>
+          <div className="min-w-35 flex-1">
             <label
               className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
               style={{ color: C.navy }}
@@ -88,7 +105,7 @@ export default function DateRangeSelector({
               End Date
             </label>
             <input
-              className="text-[clamp(0.875rem,1.5vw,1rem)]"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] w-full"
               style={styles.dateInput}
               type="date"
               value={endDate}

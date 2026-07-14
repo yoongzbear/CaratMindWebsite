@@ -39,7 +39,7 @@ export default function ExerciseDetailModal({
         </>
       }
     >
-      <div className="max-h-24 overflow-y-auto flex flex-wrap gap-2 mb-3">
+      <div className="max-h-24 lg:max-h-32 overflow-y-auto flex flex-wrap gap-2 mb-3">
         {moods.map((mood) => {
           const moodStyle = getMoodStyle(mood);
           return (
@@ -58,21 +58,39 @@ export default function ExerciseDetailModal({
       <Pill>{toTitleCase(type)}</Pill>
 
       <p
-        className="text-[clamp(0.875rem,1.5vw,1rem)]"
+        className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
         style={{ color: C.muted }}
       >
         {desc}
       </p>
 
-      <div className="mt-2 max-h-52 md:max-h-36 overflow-y-auto">
+      <div className="mt-2 max-h-52 md:max-h-36 landscape:max-h-28 overflow-y-auto min-h-0 pb-4">
+        <ol className="list-decimal pl-7 space-y-2">
+          {steps.map((step, index) => (
+            <li
+              key={index}
+              className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
+              style={{ color: C.navy }}
+            >
+              {step}
+            </li>
+          ))}
+        </ol>
+        <br />
+      </div>
+
+      {/* <div className="mt-2 max-h-52 md:max-h-36 overflow-y-auto">
         <ol className="list-decimal pl-5 space-y-2">
-          <p style={styles.pText}>
+          <p
+            className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
+            style={{ color: C.navy }}
+          >
             {steps.map((step, index) => (
               <li key={index}>{step}</li>
             ))}
           </p>
         </ol>
-      </div>
+      </div> */}
     </Modal>
   );
 }

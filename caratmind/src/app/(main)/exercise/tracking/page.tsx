@@ -262,7 +262,7 @@ export default function ExerciseTrackingPage() {
 
         {/* streak banner */}
         <div
-          className="flex mx-auto items-center rounded-[10px] border mb-3.75 p-2.5 w-[80%]"
+          className="flex mx-auto items-center rounded-[10px] border mb-3.75 p-2.5 w-full lg:w-[80%]"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -316,8 +316,8 @@ export default function ExerciseTrackingPage() {
             Today&apos;s Exercise
           </h3>
           <h5
-            className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
-            style={{ color: C.muted }}
+            className="text-[clamp(1rem,3vw,1.5rem)] font-semibold underline"
+            style={{ color: C.navy }}
           >
             {format(todayDate, 'dd MMMM yyyy')}
           </h5>
@@ -630,7 +630,7 @@ export default function ExerciseTrackingPage() {
               />
               <button
                 type="button"
-                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap hover:cursor-pointer"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap cursor-pointer"
                 style={{ color: C.serenity }}
                 onClick={() => {
                   setSelectedDate(todayDate);

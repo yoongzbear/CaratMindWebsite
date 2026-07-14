@@ -323,7 +323,7 @@ export default function MoodInsightPage() {
                   </div>
 
                   {/* <div className="flex gap-10 mt-3"> */}
-                  <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
+                  <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
@@ -456,7 +456,7 @@ export default function MoodInsightPage() {
 
                     {/* explanation mood  */}
                     <p
-                      className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2"
+                      className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2 text-justify"
                       style={{ color: C.navy }}
                     >
                       {moodData.mood_explain?.replace(/^"+|"+$/g, '') ??
@@ -465,7 +465,7 @@ export default function MoodInsightPage() {
 
                     {/* disclaimer */}
                     <p
-                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic"
+                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic text-justify"
                       style={{ color: C.muted }}
                     >
                       Your mood is estimated using AI based on the submitted
@@ -570,7 +570,7 @@ export default function MoodInsightPage() {
                               )}
                             </div>
 
-                            {/* Desktop: show 2 pills */}
+                            {/* Desktop - 2 pills */}
                             <div className="hidden sm:flex gap-3">
                               {desktopVisibleMoods.map((mood) => {
                                 const moodStyle = getMoodStyle(mood);
@@ -611,7 +611,7 @@ export default function MoodInsightPage() {
                         );
                       })()}
                     <p
-                      className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)]"
+                      className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
                       style={{ color: C.navy }}
                     >
                       {exerciseData?.exc_desc}
@@ -641,7 +641,7 @@ export default function MoodInsightPage() {
 
                     {/* disclaimer */}
                     <p
-                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic w-full"
+                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-2 mb-2.5 italic w-full text-justify"
                       style={{ color: C.muted }}
                     >
                       AI-generated recommendation. Suggestions are not a

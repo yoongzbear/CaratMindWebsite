@@ -116,7 +116,7 @@ export default function ExerciseCatalogPage() {
           }}
         >
           {/* mobile search */}
-          <div className="md:hidden w-full gap-5">
+          <div className="md:hidden w-full gap-5 mb-3">
             {/* search */}
             {/* <div className="w-[70%]"> */}
             <input
@@ -177,7 +177,7 @@ export default function ExerciseCatalogPage() {
             </div>
 
             {/* mood dropdown */}
-            <div className="md:w-[60%] lg:w-[40%] flex gap-4 my-2">
+            <div className="md:w-[60%] lg:w-[40%] flex gap-4">
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}

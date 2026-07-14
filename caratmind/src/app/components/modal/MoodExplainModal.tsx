@@ -22,48 +22,51 @@ export default function MoodExplainModal({ open, onClose, moodData }: Props) {
       width={1000}
       title={'Detected Mood Details'}
     >
-      <div className="mx-auto w-fit">
-        {/* mood emoji */}
-        <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-          {getMoodStyle(moodData?.mood_name).emoji}
+      <div className="max-h-[80vh] landscape:max-h-[70vh] overflow-y-auto min-h-0 pb-4 [-webkit-overflow-scrolling:touch]">
+        <div className="mx-auto text-center w-fit">
+          {/* mood emoji */}
+          <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
+            {getMoodStyle(moodData?.mood_name).emoji}
+          </div>
+          <h5
+            className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+            style={{ color: C.navy }}
+          >
+            {toTitleCase(moodData.mood_name) ?? 'Unknown'}
+          </h5>
         </div>
-        <h5
-          className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-          style={{ color: C.navy }}
-        >
-          {toTitleCase(moodData.mood_name) ?? 'Unknown'}
-        </h5>
-      </div>
 
-      <div className="mb-3.75 p-4">
-        {/* mood confidence */}
-        <p
-          className="text-[clamp(0.875rem,1.5vw,1rem)] mb-1"
-          style={{ color: C.muted }}
-        >
-          Confidence:{' '}
-          {moodData.mood_confidence
-            ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
-            : 'Unknown'}
-        </p>
+        <div className="mb-3.75 p-4">
+          {/* mood confidence */}
+          <p
+            className="text-[clamp(0.875rem,1.5vw,1rem)] mb-1"
+            style={{ color: C.muted }}
+          >
+            Confidence:{' '}
+            {moodData.mood_confidence
+              ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
+              : 'Unknown'}
+          </p>
 
-        {/* explanation mood  */}
-        <p
-          className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2"
-          style={{ color: C.navy }}
-        >
-          {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
-        </p>
+          {/* explanation mood  */}
+          <p
+            className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2 text-justify"
+            style={{ color: C.navy }}
+          >
+            {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
+          </p>
 
-        {/* disclaimer */}
-        <p
-          className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic"
-          style={{ color: C.muted }}
-        >
-          Your mood is estimated using AI based on the submitted entry. The
-          detected mood may not always accurately reflect your actual emotional
-          state. Please refer to a professional for further advice or help.
-        </p>
+          {/* disclaimer */}
+          <p
+            className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
+            style={{ color: C.muted }}
+          >
+            Your mood is estimated using AI based on the submitted entry. The
+            detected mood may not always accurately reflect your actual
+            emotional state. Please refer to a professional for further advice
+            or help.
+          </p>
+        </div>
       </div>
     </Modal>
   );

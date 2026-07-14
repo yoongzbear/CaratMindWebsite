@@ -74,7 +74,7 @@ export default function PastEntryPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-10"
+      className="pt-4 sm:pt-6 pb-10"
       style={{
         background: C.bgPage,
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
@@ -92,7 +92,7 @@ export default function PastEntryPage() {
 
           <button
             // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-            className={`${buttonGradient}`}
+            className={buttonGradient}
             onClick={() => router.push('/journal/new')}
           >
             New Entry
@@ -240,9 +240,9 @@ export default function PastEntryPage() {
                       border: '1px solid #eef2f9',
                     }}
                   >
-                    <div className="w-full flex gap-3">
+                    <div className="w-full flex gap-3 items-center">
                       <h5
-                        className="text-[clamp(1rem,3vw,1.5rem)] font-medium"
+                        className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
                         style={{ color: C.navy }}
                       >
                         {format(new Date(entry.jrnl_created_at), 'p')}

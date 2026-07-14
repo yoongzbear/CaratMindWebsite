@@ -56,7 +56,7 @@ export default function EntryDetailModal({
         }
       >
         <p
-          className="text-[clamp(0.875rem,1.5vw,1rem)] md:text-[16px] mt-0 mb-2.5"
+          className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify mt-0 mb-2.5"
           style={{ color: C.navy }}
         >
           {journal.entryText}
@@ -86,7 +86,7 @@ export function DeleteEntryModal({ open, onClose }: DeleteProps) {
       title="Cannot delete entry!"
     >
       <p
-        className="text-[clamp(1rem,1.5vw,1.5rem)] mt-0 mb-2.5"
+        className="text-[clamp(1rem,1.5vw,1.5rem)] mt-0 mb-2.5 text-justify"
         style={{ color: C.navy }}
       >
         You are not allowed to delete a journal entry after submitted. Do not

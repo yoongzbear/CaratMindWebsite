@@ -324,7 +324,7 @@ export default function NewMoodInsightPage() {
                   </div>
 
                   {/* <div className="flex gap-10 mt-3"> */}
-                  <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
+                  <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
@@ -436,26 +436,30 @@ export default function NewMoodInsightPage() {
                 </div>
 
                 {/* disclaimer */}
-                <p
-                  className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic"
-                  style={{ color: C.muted }}
-                >
-                  Your mood is estimated using AI based on the submitted entry.
-                  The detected mood may not always accurately reflect your
-                  actual emotional state. Please refer to a professional for
-                  further advice or help.
-                </p>
+                {!fetchingMoodData && moodData?.mood_id && (
+                  <p
+                    className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic text-justify"
+                    style={{ color: C.muted }}
+                  >
+                    Your mood is estimated using AI based on the submitted
+                    entry. The detected mood may not always accurately reflect
+                    your actual emotional state. Please refer to a professional
+                    for further advice or help.
+                  </p>
+                )}
 
                 {/* button to mood modal */}
-                <div className="w-fit mx-auto mt-3">
-                  <button
-                    // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                    className={buttonGradient}
-                    onClick={() => setOpenMoodDetail(true)}
-                  >
-                    View Details
-                  </button>
-                </div>
+                {!fetchingMoodData && moodData?.mood_id && (
+                  <div className="w-fit mx-auto mt-3">
+                    <button
+                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      className={buttonGradient}
+                      onClick={() => setOpenMoodDetail(true)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* coping exercise recommendation */}
@@ -526,7 +530,7 @@ export default function NewMoodInsightPage() {
 
                       {/* disclaimer */}
                       <p
-                        className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic w-full"
+                        className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic w-full text-justify"
                         style={{ color: C.muted }}
                       >
                         AI-generated recommendation. Suggestions are not a
