@@ -172,7 +172,7 @@ export default function EditEntryPage() {
             className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2 italic"
             style={{ color: C.muted }}
           >
-            Entry shall be analyzed using AI to identify your mood.
+            Entry shall be analyzed using AI to detect your mood.
           </p>
         </header>
 

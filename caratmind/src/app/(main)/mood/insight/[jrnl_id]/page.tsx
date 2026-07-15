@@ -6,8 +6,9 @@ import EntryDetailModal, {
   DeleteEntryModal,
 } from '@/app/components/modal/EntryModal';
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
+import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
@@ -15,14 +16,13 @@ import { Mood } from '@/app/types/mood';
 import { toTitleCase } from '@/app/utils/format';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { getMoodStyle } from '@/app/utils/moodUtils';
-// import { getMoodEmoji } from '@/app/utils/moodEmoji';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function MoodInsightPage() {
+export default function NewMoodInsightPage() {
   const { user, loading, accessToken } = useAuth();
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
@@ -32,6 +32,7 @@ export default function MoodInsightPage() {
   const [date, setDate] = useState(new Date());
   const [openDetail, setOpenDetail] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openMoodDetail, setOpenMoodDetail] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fetchingMoodData, setFetchingMoodData] = useState(false);
   const [moodData, setMoodData] = useState<Mood | null>(null);
@@ -386,281 +387,207 @@ export default function MoodInsightPage() {
               )}
             </div>
 
-            {/* mood insight */}
-            <div
-              className="rounded-[10px] border mb-3.75 p-4"
-              style={{
-                backgroundColor: 'white',
-                boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-                border: '1px solid #eef2f9',
-              }}
-            >
-              <h3
-                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                style={{ color: C.navy }}
+            <div className="w-full md:flex gap-2">
+              {/* mood insight */}
+              <div
+                className="flex-1 rounded-[10px] border mb-3.75 p-4 flex flex-col"
+                style={{
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                  border: '1px solid #eef2f9',
+                }}
               >
-                From your entry, you felt:
-              </h3>
-              <div className="flex flex-col items-center">
-                {/* mood icon */}
-                {fetchingMoodData ? (
-                  <p
-                    className="text-[clamp(1rem,3vw,1.5rem)]"
-                    style={{ color: C.muted }}
-                  >
-                    Loading mood insight...
-                  </p>
-                ) : !moodData?.mood_id ? (
-                  <h5
-                    className="m-5 text-center text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                    style={{ color: C.muted }}
-                  >
-                    Mood not available yet. Submit your entry first.
-                  </h5>
-                ) : (
-                  <>
-                    {/* mood emoji */}
-                    <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-                      {getMoodStyle(moodData?.mood_name).emoji}
-                    </div>
-                    <h5
-                      className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                      style={{ color: C.navy }}
+                <h3
+                  className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
+                  style={{ color: C.navy }}
+                >
+                  From your entry, you felt:
+                </h3>
+                <div className="flex flex-col items-center flex-1">
+                  {/* mood icon */}
+                  {fetchingMoodData ? (
+                    <p
+                      className="text-[clamp(1rem,3vw,1.5rem)]"
+                      style={{ color: C.muted }}
                     >
-                      {toTitleCase(moodData.mood_name) ?? 'Unknown'}
+                      Loading mood insight...
+                    </p>
+                  ) : !moodData?.mood_id ? (
+                    <h5
+                      className="m-5 text-center text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
+                      style={{ color: C.muted }}
+                    >
+                      Mood not available yet. Submit your entry first.
                     </h5>
-                  </>
+                  ) : (
+                    <>
+                      {/* mood emoji */}
+                      <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
+                        {getMoodStyle(moodData?.mood_name).emoji}
+                      </div>
+                      <h5
+                        className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                        style={{ color: C.navy }}
+                      >
+                        {toTitleCase(moodData.mood_name) ?? 'Unknown'}
+                      </h5>
+                    </>
+                  )}
+                </div>
+
+                {/* disclaimer */}
+                {!fetchingMoodData && moodData?.mood_id && (
+                  <p
+                    className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic text-justify"
+                    style={{ color: C.muted }}
+                  >
+                    Your mood is estimated using AI based on the submitted
+                    entry. The detected mood may not always accurately reflect
+                    your actual emotional state. Please refer to a professional
+                    for further advice or help.
+                  </p>
+                )}
+
+                {/* button to mood modal */}
+                {!fetchingMoodData && moodData?.mood_id && (
+                  <div className="w-fit mx-auto mt-3">
+                    <button
+                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                      className={buttonGradient}
+                      onClick={() => setOpenMoodDetail(true)}
+                    >
+                      View Details
+                    </button>
+                  </div>
                 )}
               </div>
 
-              {moodData?.mood_id && (
-                <>
-                  <div
-                    className="rounded-[10px] border mb-3.75 p-4"
-                    style={{
-                      backgroundColor: 'white',
-                      boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-                      border: '1px solid #eef2f9',
-                    }}
-                  >
-                    {/* mood confidence */}
-                    <p
-                      className="text-[clamp(0.875rem,1.5vw,1rem)] mb-1"
-                      style={{ color: C.muted }}
-                    >
-                      Confidence:{' '}
-                      {moodData.mood_confidence
-                        ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
-                        : 'Unknown'}
-                    </p>
-
-                    {/* explanation mood  */}
-                    <p
-                      className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2 text-justify"
-                      style={{ color: C.navy }}
-                    >
-                      {moodData.mood_explain?.replace(/^"+|"+$/g, '') ??
-                        'Unknown'}
-                    </p>
-
-                    {/* disclaimer */}
-                    <p
-                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic text-justify"
-                      style={{ color: C.muted }}
-                    >
-                      Your mood is estimated using AI based on the submitted
-                      entry. The detected mood may not always accurately reflect
-                      your actual emotional state. Please refer to a
-                      professional for further advice or help.
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* coping exercise recommendation */}
-            <div
-              className="rounded-[10px] border mb-3.75 p-4"
-              style={{
-                backgroundColor: 'white',
-                boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-                border: '1px solid #eef2f9',
-              }}
-            >
-              <h3
-                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                style={{ color: C.navy }}
+              {/* coping exercise recommendation */}
+              <div
+                className="flex-1 rounded-[10px] border mb-3.75 p-4 flex flex-col"
+                style={{
+                  backgroundColor: 'white',
+                  boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
+                  border: '1px solid #eef2f9',
+                }}
               >
-                Recommended Coping Exercise:
-              </h3>
-              <div className="flex flex-col items-center">
-                {/* recommended exercise */}
-                {fetchingExercise ? (
-                  <p
-                    className="text-[clamp(1rem,3vw,1.5rem)]"
-                    style={{ color: C.muted }}
-                  >
-                    Loading exercise recommendation...
-                  </p>
-                ) : !exerciseData ? (
-                  <h5
-                    className="m-5 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                    style={{ color: C.muted }}
-                  >
-                    Coping exercise recommendation not available yet. Submit
-                    your entry first.
-                  </h5>
-                ) : (
-                  <>
-                    <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-                      {getExerciseStyle(exerciseData?.exc_type).emoji}
-                    </div>
-                    <h5
-                      className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                      style={{ color: C.navy }}
-                    >
-                      {exerciseData?.exc_name}
-                    </h5>
-
-                    {/* moods and type */}
-                    {exerciseData?.uex_id &&
-                      (() => {
-                        const moods = Array.isArray(exerciseData.exc_mood)
-                          ? exerciseData.exc_mood
-                          : [exerciseData.exc_mood];
-
-                        const mobileVisibleMoods = moods.slice(0, 1);
-                        const desktopVisibleMoods = moods.slice(0, 2);
-
-                        return (
-                          <div className="flex flex-wrap gap-3 mb-2">
-                            {/* Mobile: show 1 pill */}
-                            <div className="flex gap-3 sm:hidden">
-                              {mobileVisibleMoods.map((mood) => {
-                                const moodStyle = getMoodStyle(mood);
-                                return (
-                                  <Pill
-                                    key={mood}
-                                    bgColor={moodStyle.bgColor}
-                                    borderColor={moodStyle.borderColor}
-                                    textColor={moodStyle.textColor}
-                                  >
-                                    {moodStyle.emoji} {toTitleCase(mood)}
-                                  </Pill>
-                                );
-                              })}
-
-                              {moods.length > 1 && (
-                                <div
-                                  onClick={() => setOpenExcDetail(true)}
-                                  className="cursor-pointer"
-                                >
-                                  <Pill
-                                    bgColor="#f1f3f8"
-                                    borderColor="#dde1ea"
-                                    textColor={C.muted}
-                                    title={moods
-                                      .slice(1)
-                                      .map(toTitleCase)
-                                      .join(', ')}
-                                  >
-                                    +{moods.length - 1} more
-                                  </Pill>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Desktop - 2 pills */}
-                            <div className="hidden sm:flex gap-3">
-                              {desktopVisibleMoods.map((mood) => {
-                                const moodStyle = getMoodStyle(mood);
-                                return (
-                                  <Pill
-                                    key={mood}
-                                    bgColor={moodStyle.bgColor}
-                                    borderColor={moodStyle.borderColor}
-                                    textColor={moodStyle.textColor}
-                                  >
-                                    {moodStyle.emoji} {toTitleCase(mood)}
-                                  </Pill>
-                                );
-                              })}
-
-                              {moods.length > 2 && (
-                                <div
-                                  onClick={() => setOpenExcDetail(true)}
-                                  className="cursor-pointer"
-                                >
-                                  <Pill
-                                    bgColor="#f1f3f8"
-                                    borderColor="#dde1ea"
-                                    textColor={C.muted}
-                                    title={moods
-                                      .slice(2)
-                                      .map(toTitleCase)
-                                      .join(', ')}
-                                  >
-                                    +{moods.length - 2} more
-                                  </Pill>
-                                </div>
-                              )}
-                            </div>
-
-                            <Pill>{toTitleCase(exerciseData.exc_type)}</Pill>
-                          </div>
-                        );
-                      })()}
+                <h3
+                  className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
+                  style={{ color: C.navy }}
+                >
+                  Recommended Coping Exercise:
+                </h3>
+                <div className="flex flex-col items-center flex-1">
+                  {/* recommended exercise */}
+                  {fetchingExercise ? (
                     <p
-                      className="mt-0 mb-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
-                      style={{ color: C.navy }}
-                    >
-                      {exerciseData?.exc_desc}
-                    </p>
-
-                    {exerciseData?.uex_status === 'completed' && (
-                      <div className="w-full mb-2">
-                        <Pill
-                          bgColor={'#f1f8f4'}
-                          borderColor={'#66bb6a'}
-                          textColor={'#2e7d32'}
-                        >
-                          Completed
-                        </Pill>
-                      </div>
-                    )}
-                    {exerciseData?.uex_status === 'incomplete' &&
-                      exerciseData.uex_reason && (
-                        <Pill
-                          bgColor={'#fff5f5'}
-                          borderColor={'#e57373'}
-                          textColor={'#c62828'}
-                        >
-                          Incomplete
-                        </Pill>
-                      )}
-
-                    {/* disclaimer */}
-                    <p
-                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-2 mb-2.5 italic w-full text-justify"
+                      className="text-[clamp(1rem,3vw,1.5rem)]"
                       style={{ color: C.muted }}
                     >
-                      AI-generated recommendation. Suggestions are not a
-                      substitute for professional medical or mental health
-                      advice.
+                      Loading exercise recommendation...
                     </p>
-                    {/* // perform exercise button if the date is today and exercise not done */}
-                    {exerciseData?.uex_status === 'incomplete' &&
-                      isSameDay(exerciseData.uex_created_at, new Date()) && (
-                        <button
-                          onClick={performExercise}
-                          // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                          className={buttonGradient}
+                  ) : !exerciseData ? (
+                    <h5
+                      className="m-5 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
+                      style={{ color: C.muted }}
+                    >
+                      Coping exercise recommendation not available yet. Submit
+                      your entry first.
+                    </h5>
+                  ) : (
+                    <>
+                      <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
+                        {getExerciseStyle(exerciseData?.exc_type).emoji}
+                      </div>
+                      <div className="flex gap-2 mb-2">
+                        <h5
+                          className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                          style={{ color: C.navy }}
                         >
-                          Perform Exercise
+                          {exerciseData?.exc_name}
+                        </h5>
+
+                        {exerciseData?.uex_status === 'completed' && (
+                          <Pill
+                            bgColor={'#f1f8f4'}
+                            borderColor={'#66bb6a'}
+                            textColor={'#2e7d32'}
+                          >
+                            Completed
+                          </Pill>
+                        )}
+                        {exerciseData?.uex_status === 'incomplete' &&
+                          exerciseData.uex_reason && (
+                            <Pill
+                              bgColor={'#fff5f5'}
+                              borderColor={'#e57373'}
+                              textColor={'#c62828'}
+                            >
+                              Incomplete
+                            </Pill>
+                          )}
+                      </div>
+
+                      {/* <div className="w-fit mx-auto my-2">
+                        {exerciseData?.uex_status === 'completed' && (
+                          <Pill
+                            bgColor={'#f1f8f4'}
+                            borderColor={'#66bb6a'}
+                            textColor={'#2e7d32'}
+                          >
+                            Completed
+                          </Pill>
+                        )}
+                        {exerciseData?.uex_status === 'incomplete' &&
+                          exerciseData.uex_reason && (
+                            <Pill
+                              bgColor={'#fff5f5'}
+                              borderColor={'#e57373'}
+                              textColor={'#c62828'}
+                            >
+                              Incomplete
+                            </Pill>
+                          )}
+                      </div> */}
+
+                      {/* disclaimer */}
+                      <p
+                        className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic w-full text-justify"
+                        style={{ color: C.muted }}
+                      >
+                        AI-generated recommendation. Suggestions are not a
+                        substitute for professional medical or mental health
+                        advice.
+                      </p>
+
+                      {/* button to exercise modal */}
+                      <div className="w-fit mx-auto flex gap-4 mt-2">
+                        <button
+                          // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
+                          className={buttonGradient}
+                          onClick={() => setOpenExcDetail(true)}
+                        >
+                          View Details
                         </button>
-                      )}
-                  </>
-                )}
+
+                        {/* // perform exercise button if the date is today and exercise not done */}
+                        {exerciseData?.uex_status === 'incomplete' &&
+                          isSameDay(
+                            exerciseData.uex_created_at,
+                            new Date(),
+                          ) && (
+                            <button
+                              onClick={performExercise}
+                              // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                              className={buttonGradient}
+                            >
+                              Perform Exercise
+                            </button>
+                          )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -695,6 +622,7 @@ export default function MoodInsightPage() {
           </>
         )}
       </div>
+      {/* modals */}
       {exerciseData && openExcDetail == true && (
         <ExerciseDetailModal
           open={openExcDetail}
@@ -708,6 +636,13 @@ export default function MoodInsightPage() {
           desc={exerciseData.exc_desc}
           type={exerciseData.exc_type}
           steps={exerciseData.exc_steps}
+        />
+      )}
+      {moodData && openMoodDetail == true && (
+        <MoodExplainModal
+          open={openMoodDetail}
+          onClose={() => setOpenMoodDetail(false)}
+          moodData={moodData}
         />
       )}
       <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />

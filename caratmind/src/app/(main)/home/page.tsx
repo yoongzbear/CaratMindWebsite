@@ -278,7 +278,11 @@ export default function HomePage() {
                     ? 'Great job! You kept your journal streak going today. Keep it up!'
                     : 'You have not written an entry today. Write one to continue your streak!'}
               </p>
-              <Link href="/journal/new" className={`${buttonGradient}`}>
+              <Link
+                href="/journal/new"
+                className={buttonGradient}
+                id="entry-button"
+              >
                 Write an entry
               </Link>
             </div>

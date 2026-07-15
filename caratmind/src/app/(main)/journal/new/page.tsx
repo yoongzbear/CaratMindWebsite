@@ -72,7 +72,7 @@ export default function NewEntryPage() {
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto" id="new-journal">
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
@@ -92,7 +92,7 @@ export default function NewEntryPage() {
             className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2 italic"
             style={{ color: C.muted }}
           >
-            Entry shall be analyzed using AI to identify your mood.
+            Entry shall be analyzed using AI to detect your mood.
           </p>
         </header>
 
@@ -107,6 +107,7 @@ export default function NewEntryPage() {
           <textarea
             className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] bg-white box-border outline-none font-inherit"
             value={entry}
+            id="entry-text"
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
             style={{
@@ -118,8 +119,12 @@ export default function NewEntryPage() {
 
           <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex items-stretch justify-between mt-4">
             {/* reset button */}
-            <button onClick={handleReset} className={buttonRed}>
-              {'Reset'}
+            <button
+              onClick={handleReset}
+              className={buttonRed}
+              id="button-reset"
+            >
+              Reset
             </button>
 
             {/* submit button */}
@@ -127,6 +132,7 @@ export default function NewEntryPage() {
               onClick={handleSubmit}
               disabled={submitting}
               className={buttonGradient}
+              id="button-submit"
             >
               {submitting ? 'Submitting...' : 'Submit Entry'}
             </button>
@@ -136,6 +142,7 @@ export default function NewEntryPage() {
               onClick={handleSave}
               disabled={saving}
               className={buttonGrey}
+              id="button-draft"
             >
               {saving ? 'Saving...' : 'Save as Draft'}
             </button>
