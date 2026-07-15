@@ -9,7 +9,7 @@ import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { format } from 'date-fns';
 
-// sample, not real data
+// sample data
 const sampleJournal = {
   jrnl_created_at: new Date().toISOString(),
   entryText:
@@ -32,215 +32,6 @@ const sampleExercise = {
 };
 
 export default function MoodInsightPreviewPage() {
-  // const { user, loading, accessToken } = useAuth();
-  // const { jrnl_id } = useParams<{ jrnl_id: string }>();
-  // const [entry, setEntry] = useState('');
-  // const router = useRouter();
-  // const [journal, setJournal] = useState<JournalDetail | null>(null);
-  // const [fetchingJournal, setFetchingJournal] = useState(false);
-  // const [date, setDate] = useState(new Date());
-  // const [openDetail, setOpenDetail] = useState(false);
-  // const [openDelete, setOpenDelete] = useState(false);
-  // const [openMoodDetail, setOpenMoodDetail] = useState(false);
-  // const [submitting, setSubmitting] = useState(false);
-  // const [fetchingMoodData, setFetchingMoodData] = useState(false);
-  // const [moodData, setMoodData] = useState<Mood | null>(null);
-  // const [fetchingExercise, setFetchingExercise] = useState(false);
-  // const [exerciseData, setExerciseData] = useState<UserExerciseDetail | null>(
-  //   null,
-  // );
-  // const [openExcDetail, setOpenExcDetail] = useState(false);
-  // const [detecting, setDetecting] = useState(false);
-
-  // useEffect(() => {
-  //   if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
-
-  //   async function loadEntry() {
-  //     setFetchingJournal(true);
-  //     try {
-  //       const res = await fetch(`/api/journal/${jrnl_id}`, {
-  //         headers: { Authorization: `Bearer ${accessToken}` },
-  //       });
-  //       const data = await res.json();
-  //       if (!res.ok) {
-  //         toastError(data.error ?? 'Failed to load entry.');
-  //         setJournal(null);
-  //         return;
-  //       }
-  //       setJournal(data);
-  //       setEntry(data.entryText);
-  //     } catch {
-  //       toastError('Something went wrong loading the entry.');
-  //     } finally {
-  //       setFetchingJournal(false);
-  //     }
-  //   }
-
-  //   loadEntry();
-  // }, [jrnl_id, accessToken]);
-
-  // useEffect(() => {
-  //   if (
-  //     !accessToken ||
-  //     !jrnl_id ||
-  //     jrnl_id === 'undefined' ||
-  //     journal?.jrnl_status !== 'submitted'
-  //   )
-  //     return;
-
-  //   async function loadMood() {
-  //     setFetchingMoodData(true);
-  //     try {
-  //       const res = await fetch(`/api/mood/${jrnl_id}`, {
-  //         headers: { Authorization: `Bearer ${accessToken}` },
-  //       });
-  //       const data = await res.json();
-  //       if (!res.ok) {
-  //         toastError(data.error ?? 'Failed to load mood.');
-  //         setMoodData(null);
-  //         return;
-  //       }
-  //       setMoodData(data);
-  //     } catch {
-  //       toastError('Something went wrong loading the mood.');
-  //     } finally {
-  //       setFetchingMoodData(false);
-  //     }
-  //   }
-
-  //   loadMood();
-  // }, [jrnl_id, accessToken, journal?.jrnl_status]);
-
-  // useEffect(() => {
-  //   if (
-  //     !accessToken ||
-  //     !jrnl_id ||
-  //     jrnl_id === 'undefined' ||
-  //     journal?.jrnl_status !== 'submitted'
-  //   )
-  //     return;
-
-  //   async function loadRecExercise() {
-  //     setFetchingExercise(true);
-  //     try {
-  //       const res = await fetch(`/api/user_exercise/${jrnl_id}`, {
-  //         headers: { Authorization: `Bearer ${accessToken}` },
-  //       });
-  //       const data = await res.json();
-  //       if (!res.ok) {
-  //         toastError(
-  //           data.error ?? 'Failed to load recommended coping exercise.',
-  //         );
-  //         setExerciseData(null);
-  //         return;
-  //       }
-  //       setExerciseData(data);
-  //     } catch {
-  //       toastError('Something went wrong loading recommended coping exercise.');
-  //     } finally {
-  //       setFetchingExercise(false);
-  //     }
-  //   }
-
-  //   loadRecExercise();
-  // }, [jrnl_id, accessToken, journal?.jrnl_status]);
-
-  // // update entry
-  // async function updateEntry(status: StatusKey) {
-  //   const content = entry.trim() || journal?.entryText;
-
-  //   if (!content) {
-  //     toastError('Entry text is required.');
-  //     return;
-  //   }
-
-  //   setSubmitting(true);
-
-  //   if (status === 'submitted') {
-  //     setDetecting(true);
-  //   }
-
-  //   try {
-  //     const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //       body: JSON.stringify({ entry: content, status }),
-  //     });
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       toastError(data.error ?? 'Failed to save.');
-  //       return;
-  //     }
-  //     toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-  //     setJournal((prev) =>
-  //       prev
-  //         ? {
-  //             ...prev,
-  //             jrnl_status: status,
-  //           }
-  //         : prev,
-  //     );
-  //     // if (status === 'submitted') {
-  //     //   const refresh = await fetch(`/api/journal/${jrnl_id}`, {
-  //     //     headers: {
-  //     //       Authorization: `Bearer ${accessToken}`,
-  //     //     },
-  //     //   });
-
-  //     //   const updatedJournal = await refresh.json();
-  //     //   setJournal(updatedJournal);
-  //     // }
-  //   } catch {
-  //     toastError('Something went wrong. Please try again.');
-  //   } finally {
-  //     setSubmitting(false);
-  //     if (status === 'submitted') {
-  //       setDetecting(false);
-  //     }
-  //   }
-  // }
-
-  // const barRange: DateRangeValue = useMemo(() => {
-  //   if (!journal) return { mode: 'days', days: 7 };
-
-  //   const journalDate = startOfDay(new Date(journal.jrnl_created_at));
-  //   const sevenDaysAgo = startOfDay(subDays(new Date(), 6));
-
-  //   if (
-  //     isAfter(journalDate, sevenDaysAgo) ||
-  //     journalDate.getTime() === sevenDaysAgo.getTime()
-  //   ) {
-  //     return { mode: 'days', days: 7 };
-  //   }
-
-  //   const start = subDays(journalDate, 6);
-  //   return {
-  //     mode: 'range',
-  //     startDate: format(start, 'yyyy-MM-dd'),
-  //     endDate: format(journalDate, 'yyyy-MM-dd'),
-  //   };
-  // }, [journal]);
-
-  // const handleSubmit = () => updateEntry('submitted');
-  // const handleSave = () => updateEntry('draft');
-
-  // const handleEdit = (jrnl_id: string) => {
-  //   router.push(`/journal/edit/${jrnl_id}`);
-  // };
-
-  // const performExercise = () => {
-  //   router.push('/exercise/tracking');
-  // };
-
-  // const moodDashboard = () => {
-  //   router.push('/mood/');
-  // };
-
-  // const isDraft = journal?.jrnl_status === 'draft';
-
   return (
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
@@ -268,18 +59,24 @@ export default function MoodInsightPreviewPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="journal-summary"
         >
-          <h3
-            className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-            style={{ color: C.navy }}
-          >
-            {format(new Date(sampleJournal.jrnl_created_at), 'dd MMMM yyyy, p')}
-          </h3>
+          <div className="flex gap-2 items-center mb-2">
+            <h3
+              className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
+              style={{ color: C.navy }}
+            >
+              {format(
+                new Date(sampleJournal.jrnl_created_at),
+                'dd MMMM yyyy, p',
+              )}
+            </h3>
 
-          <div className="mt-0 mb-2">
-            <Pill bgColor="#f1f8f4" textColor="#2e7d32" borderColor="#c8e6c9">
-              Submitted
-            </Pill>
+            <div className="">
+              <Pill bgColor="#f1f8f4" textColor="#2e7d32" borderColor="#c8e6c9">
+                Submitted
+              </Pill>
+            </div>
           </div>
 
           <div
@@ -298,51 +95,24 @@ export default function MoodInsightPreviewPage() {
 
           <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
             {/* view more button */}
-            <button
-              // onClick={() => setOpenDetail(true)}
-              className={buttonGradient}
-            >
+            <button className={buttonGradient} id="button-view-entry">
               View More
             </button>
 
-            {/* <EntryDetailModal
-              open={openDetail}
-              onClose={() => setOpenDetail(false)}
-              date={format(
-                new Date(journal.jrnl_created_at),
-                'dd MMMM yyyy, p',
-              )}
-              lastUpdated={format(
-                new Date(journal.jrnl_updated_at),
-                'dd MMMM yyyy, p',
-              )}
-              journal={journal}
-            /> */}
-
             {/* edit entry */}
-            <button
-              // onClick={() => handleEdit(journal.jrnl_id)}
-              className={buttonGradient}
-            >
+            <button className={buttonGradient} id="button-edit-entry">
               Edit Entry
             </button>
 
             {/* submit/edit entry button */}
-            <button
-              // onClick={handleSubmit}
-              // disabled={submitting}
-              className={buttonGradient}
-            >
+            <button className={buttonGradient} id="button-submit-entry">
               Submit Entry
             </button>
 
             {/* delete button */}
-            <button className={buttonRed}>Delete Entry</button>
-
-            {/* <DeleteEntryModal
-              open={openDelete}
-              onClose={() => setOpenDelete(false)}
-            /> */}
+            <button className={buttonRed} id="button-delete-entry">
+              Delete Entry
+            </button>
           </div>
         </div>
 
@@ -355,55 +125,36 @@ export default function MoodInsightPreviewPage() {
               boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
               border: '1px solid #eef2f9',
             }}
+            id="mood"
           >
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
               style={{ color: C.navy }}
             >
-              From your entry, you felt:
+              From your entry, you felt
             </h3>
 
             {/* emoji */}
-            <div className="flex items-center justify-center">
-              {/* {!fetchingMoodData && moodData?.mood_id && ( */}
+            <div className="items-center justify-center text-center">
               <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                 {getMoodStyle(sampleMood.mood_name).emoji}
               </div>
-              {/* )} */}
-            </div>
+              {/* </div> */}
 
-            {/* mood name */}
-            <div className="flex items-center justify-center text-center">
+              {/* mood name */}
+              {/* <div className="flex items-center justify-center text-center"> */}
               <h5
                 className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                 style={{ color: C.navy }}
               >
                 {toTitleCase(sampleMood.mood_name) ?? 'Unknown'}
               </h5>
-              {/* {fetchingMoodData ? (
-                <p
-                  className="text-[clamp(1rem,3vw,1.5rem)]"
-                  style={{ color: C.muted }}
-                >
-                  Loading mood insight...
-                </p>
-              ) : !moodData?.mood_id ? (
-                <h5
-                  className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                  style={{ color: C.muted }}
-                >
-                  Mood not available yet. Submit your entry first.
-                </h5>
-              ) : (
-                
-              )} */}
             </div>
 
             <div />
 
             {/* disclaimer */}
             <div>
-              {/* {!fetchingMoodData && moodData?.mood_id && ( */}
               <p
                 className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
                 style={{ color: C.muted }}
@@ -413,19 +164,13 @@ export default function MoodInsightPreviewPage() {
                 emotional state. Please refer to a professional for further
                 advice or help.
               </p>
-              {/* )} */}
             </div>
 
             {/* button */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
-              {/* {!fetchingMoodData && moodData?.mood_id && ( */}
-              <button
-                className={buttonGradient}
-                // onClick={() => setOpenMoodDetail(true)}
-              >
+              <button className={buttonGradient} id="button-view-mood">
                 View Details
               </button>
-              {/* )} */}
             </div>
           </div>
 
@@ -437,6 +182,7 @@ export default function MoodInsightPreviewPage() {
               boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
               border: '1px solid #eef2f9',
             }}
+            id="exercise"
           >
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
@@ -446,16 +192,14 @@ export default function MoodInsightPreviewPage() {
             </h3>
 
             {/* emoji */}
-            <div className="flex items-center justify-center">
-              {/* {!fetchingExercise && exerciseData && ( */}
+            <div className="items-center justify-center">
               <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                 {getExerciseStyle(sampleExercise.exc_type).emoji}
               </div>
-              {/* )} */}
-            </div>
+              {/* </div> */}
 
-            {/* name + status / states */}
-            <div className="flex items-center justify-center text-center">
+              {/* name + status */}
+              {/* <div className="flex items-center justify-center text-center"> */}
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <h5
                   className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
@@ -463,51 +207,20 @@ export default function MoodInsightPreviewPage() {
                 >
                   {sampleExercise.exc_name}
                 </h5>
-                {/* {sampleExercise.uex_status === 'completed' && (
-                  <Pill
-                    bgColor="#f1f8f4"
-                    borderColor="#66bb6a"
-                    textColor="#2e7d32"
-                  >
-                    Completed
-                  </Pill>
-                )}
-                {exerciseData.uex_status === 'incomplete' &&
-                  exerciseData.uex_reason && (
-                    <Pill
-                      bgColor="#fff5f5"
-                      borderColor="#e57373"
-                      textColor="#c62828"
-                    >
-                      Incomplete
-                    </Pill>
-                  )} */}
+                <Pill
+                  bgColor="#fff5f5"
+                  borderColor="#e57373"
+                  textColor="#c62828"
+                >
+                  Incomplete
+                </Pill>
               </div>
-              {/* {fetchingExercise ? (
-                <p
-                  className="text-[clamp(1rem,3vw,1.5rem)]"
-                  style={{ color: C.muted }}
-                >
-                  Loading exercise recommendation...
-                </p>
-              ) : !exerciseData ? (
-                <h5
-                  className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                  style={{ color: C.muted }}
-                >
-                  Coping exercise recommendation not available yet. Submit your
-                  entry first.
-                </h5>
-              ) : (
-                
-              )} */}
             </div>
 
             <div />
 
             {/* disclaimer */}
             <div>
-              {/* {!fetchingExercise && exerciseData && ( */}
               <p
                 className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
                 style={{ color: C.muted }}
@@ -515,30 +228,19 @@ export default function MoodInsightPreviewPage() {
                 AI-generated recommendation. Suggestions are not a substitute
                 for professional medical or mental health advice.
               </p>
-              {/* )} */}
             </div>
 
             {/* buttons */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
-              {/* {!fetchingExercise && exerciseData && ( */}
               <>
-                <button
-                  className={buttonGradient}
-                  // onClick={() => setOpenExcDetail(true)}
-                >
+                <button className={buttonGradient} id="button-view-exercise">
                   View Details
                 </button>
-                {/* {exerciseData.uex_status === 'incomplete' &&
-                    isSameDay(exerciseData.uex_created_at, new Date()) && ( */}
-                <button
-                  className={buttonGradient}
-                  // onClick={performExercise}
-                >
+
+                <button className={buttonGradient} id="button-track-exercise">
                   Perform Exercise
                 </button>
-                {/* )} */}
               </>
-              {/* )} */}
             </div>
           </div>
         </div>
@@ -550,6 +252,7 @@ export default function MoodInsightPreviewPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="mood-chart"
         >
           {/* mood chart */}
           <h3
@@ -560,26 +263,10 @@ export default function MoodInsightPreviewPage() {
           </h3>
           <StackedBarChart range={{ mode: 'days', days: 7 }} />
           {/* mood dashboard button */}
-          <button className={buttonGradient}>View Mood Dashboard</button>
+          <button className={buttonGradient} id="button-mood-chart">
+            View Mood Dashboard
+          </button>
         </div>
-
-        {/* {loading || fetchingJournal ? (
-          <section
-            className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.muted }}
-          >
-            Loading mood insight...
-          </section>
-        ) : !journal ? (
-          <section
-            className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.muted }}
-          >
-            Entry not found.
-          </section>
-        ) : (
-          <></>
-        )} */}
       </div>
     </section>
   );

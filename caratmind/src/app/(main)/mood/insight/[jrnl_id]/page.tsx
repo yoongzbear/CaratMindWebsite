@@ -281,15 +281,14 @@ export default function MoodInsightPage() {
                 border: '1px solid #eef2f9',
               }}
             >
-              <h3
-                className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                style={{ color: C.navy }}
-              >
-                {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
-              </h3>
-
-              {!fetchingJournal && (
-                <>
+              <div className="flex gap-2 items-center mb-2">
+                <h3
+                  className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
+                  style={{ color: C.navy }}
+                >
+                  {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
+                </h3>
+                {!fetchingJournal && (
                   <div className="mt-0 mb-2">
                     <Pill
                       bgColor={
@@ -305,7 +304,11 @@ export default function MoodInsightPage() {
                       {journal.jrnl_status === 'draft' ? 'Draft' : 'Submitted'}
                     </Pill>
                   </div>
+                )}
+              </div>
 
+              {!fetchingJournal && (
+                <>
                   <div
                     className="px-4 py-2 rounded-xl"
                     style={{ border: `1px solid ${C.border}` }}
@@ -395,20 +398,20 @@ export default function MoodInsightPage() {
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
                   style={{ color: C.navy }}
                 >
-                  From your entry, you felt:
+                  From your entry, you felt
                 </h3>
 
                 {/* emoji */}
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center text-center">
                   {!fetchingMoodData && moodData?.mood_id && (
                     <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                       {getMoodStyle(moodData.mood_name).emoji}
                     </div>
                   )}
-                </div>
+                  {/* </div> */}
 
-                {/* mood name */}
-                <div className="flex items-center justify-center text-center">
+                  {/* mood name */}
+                  {/* <div className="flex items-center justify-center text-center"> */}
                   {fetchingMoodData ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
@@ -476,20 +479,20 @@ export default function MoodInsightPage() {
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
                   style={{ color: C.navy }}
                 >
-                  Recommended Coping Exercise:
+                  Recommended Coping Exercise
                 </h3>
 
                 {/* emoji */}
-                <div className="flex items-center justify-center">
+                <div className="items-center justify-center">
                   {!fetchingExercise && exerciseData && (
                     <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                       {getExerciseStyle(exerciseData.exc_type).emoji}
                     </div>
                   )}
-                </div>
+                  {/* </div> */}
 
-                {/* name + status / states */}
-                <div className="flex items-center justify-center text-center">
+                  {/* name + status / states */}
+                  {/* <div className="flex items-center justify-center text-center"> */}
                   {fetchingExercise ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
