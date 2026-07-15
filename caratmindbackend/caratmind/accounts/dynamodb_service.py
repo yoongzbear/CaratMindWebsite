@@ -45,6 +45,20 @@ def update_preferred_name(user_id: str, preferred_name: str):
         ConditionExpression='attribute_exists(user_id)',
     )
 
+# update onboarding completion
+# update name 
+def update_onboarding(user_id: str, onboardingDone: bool):
+    table = _get_table()
+
+    table.update_item(
+        Key={
+            'user_id': user_id,
+        },
+        UpdateExpression='SET user_complete_onboarding = :user_complete_onboarding',
+        ExpressionAttributeValues={':user_complete_onboarding': onboardingDone},
+        ConditionExpression='attribute_exists(user_id)',
+    )
+
 def get_user(user_id: str) -> dict | None:
     table = _get_table()
     response = table.get_item(Key={'user_id': user_id})

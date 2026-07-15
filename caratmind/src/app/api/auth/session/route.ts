@@ -6,6 +6,7 @@ import { NextResponse } from 'next/server';
 // } from '@/lib/cognito/server';
 import { readAuthCookies, setAuthCookies } from '@/lib/auth/cookies';
 import { buildSessionPayload } from '@/lib/auth/session-response';
+import { refreshAccessToken } from '@/lib/auth/refresh';
 
 export async function GET() {
   try {
@@ -15,21 +16,23 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    const refreshRes = await fetch(
-      `${process.env.DJANGO_API_BASE_URL}/api/accounts/refresh/`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, refreshToken }),
-        cache: 'no-store',
-      },
-    );
+    // const refreshRes = await fetch(
+    //   `${process.env.DJANGO_API_BASE_URL}/api/accounts/refresh/`,
+    //   {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ username, refreshToken }),
+    //     cache: 'no-store',
+    //   },
+    // );
 
-    if (!refreshRes.ok) {
-      throw new Error('Failed to refresh tokens');
-    }
+    const tokens = await refreshAccessToken(username, refreshToken);
 
-    const { tokens } = await refreshRes.json();
+    // if (!refreshRes.ok) {
+    //   throw new Error('Failed to refresh tokens');
+    // }
+
+    // const { tokens } = await refreshRes.json();
 
     // fetch profile from db
     const baseUrl = process.env.DJANGO_API_BASE_URL;
@@ -53,6 +56,7 @@ export async function GET() {
         username: meData.user.username,
         email: meData.user.email,
         preferredUsername: meData.user.preferredUsername,
+        completedOnboarding: meData.user.completedOnboarding,
       },
     });
   } catch (error) {

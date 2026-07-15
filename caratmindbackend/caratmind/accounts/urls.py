@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/accounts/delete/', views.delete_account_view, name='delete_account'),
     path('api/accounts/login/', views.login_view, name='login_account'),
     path('api/accounts/logout/', views.logout_view, name='logout_account'),
+    path('api/accounts/onboarding/complete/', views.complete_onboarding_view, name='complete_onboarding'),
     path('api/accounts/provision/', views.provision_user_view, name='provision_user'),
     path('api/accounts/refresh/', views.refresh_token_view, name='refresh_token'),
     path('api/accounts/register/', views.register_view, name='register'),

@@ -156,7 +156,7 @@ export default function HomePage() {
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto" id="home">
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
@@ -169,6 +169,7 @@ export default function HomePage() {
         {/* banner for basic habits */}
         <div
           className="rounded-[10px] border mb-4 p-3 flex flex-col sm:flex-row gap-3 sm:items-center"
+          id="banner"
           style={{
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -227,7 +228,10 @@ export default function HomePage() {
         {/* cards */}
         <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mx-auto">
           {/* journal */}
-          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+          <div
+            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            id="journal-streak"
+          >
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
@@ -281,7 +285,10 @@ export default function HomePage() {
           </div>
 
           {/* mood */}
-          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+          <div
+            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            id="mood-chart"
+          >
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
@@ -298,7 +305,10 @@ export default function HomePage() {
           </div>
 
           {/* exercise */}
-          <div className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden">
+          <div
+            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            id="exercise-streak"
+          >
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"

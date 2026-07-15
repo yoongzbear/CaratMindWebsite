@@ -2,14 +2,15 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { buttonBase, buttonGradientColor, C } from '@/app/styles/styles';
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
 
 import { useEffect, useRef, useState } from 'react';
 import { SessionUser } from '../types/user';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, HelpCircle, Menu, X } from 'lucide-react';
+import { useNextStep } from 'nextstepjs';
 
 const NAV_LINKS = [
   {
@@ -29,6 +30,28 @@ const NAV_LINKS = [
   },
   { label: 'Helpline', href: '/helpline' },
 ];
+
+// onboarding quick start
+// const pageTours: Record<string, string> = {
+//   '/': 'home-tour',
+//   '/mood': 'mood-tour',
+//   '/exercise/tracking': 'exercise-tour',
+//   '/journal/new': 'journal-tour',
+// };
+
+// export function HelpButton() {
+//   const pathname = usePathname();
+//   const { startNextStep } = useNextStep();
+//   const tourName = pageTours[pathname];
+
+//   if (!tourName) return null;
+
+//   return (
+//     <button onClick={() => startNextStep(tourName)} aria-label="Show page tour">
+//       <HelpCircle size={20} />
+//     </button>
+//   );
+// }
 
 export default function Header() {
   const router = useRouter();
@@ -169,7 +192,6 @@ export default function Header() {
                       </div>
 
                       <div
-                        // TODO: check the text when logged in
                         className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0.5"
                         style={{
                           color: C.serenity,
@@ -181,6 +203,9 @@ export default function Header() {
 
                     {/* buttons */}
                     <div className="p-2">
+                      {/* onboarding */}
+                      {/* <HelpButton /> */}
+
                       <button
                         type="button"
                         onClick={() => router.push('/profile')}
@@ -233,18 +258,22 @@ export default function Header() {
         {/* mobile */}
         <div className="flex lg:hidden items-center gap-2">
           {!loading && user && (
-            <button
-              type="button"
-              onClick={() => router.push('/profile')}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
-              style={{
-                border: `1px solid ${C.border}`,
-                background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
-              }}
-              aria-label="Profile"
-            >
-              {avatarInitials(user)}
-            </button>
+            <>
+              {/* onboarding */}
+              {/* <HelpButton /> */}
+              <button
+                type="button"
+                onClick={() => router.push('/profile')}
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
+                style={{
+                  border: `1px solid ${C.border}`,
+                  background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
+                }}
+                aria-label="Profile"
+              >
+                {avatarInitials(user)}
+              </button>
+            </>
           )}
           <button
             type="button"

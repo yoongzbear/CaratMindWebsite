@@ -22,7 +22,7 @@ from journal.s3_service import delete_entry_text
 from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
 from .services import CognitoService
-from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_preferred_name
+from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_onboarding, update_preferred_name
 
 def _validate_password(password: str) -> str | None:
     if len(password) < 8:
@@ -288,6 +288,16 @@ def api_me_view(request):
             },
         }
     )
+
+# onboarding complete update
+def complete_onboarding_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    update_onboarding(sub, True)  # your existing DynamoDB update helper
+    return JsonResponse({'allowed': True})
 
 # @require_GET
 # def api_me_view(request):
