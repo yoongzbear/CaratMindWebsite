@@ -22,7 +22,7 @@ import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function NewMoodInsightPage() {
+export default function MoodInsightPage() {
   const { user, loading, accessToken } = useAuth();
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
@@ -37,7 +37,6 @@ export default function NewMoodInsightPage() {
   const [fetchingMoodData, setFetchingMoodData] = useState(false);
   const [moodData, setMoodData] = useState<Mood | null>(null);
   const [fetchingExercise, setFetchingExercise] = useState(false);
-  // const [exerciseData, setExerciseData] = useState<UserExercise | null>(null);
   const [exerciseData, setExerciseData] = useState<UserExerciseDetail | null>(
     null,
   );
@@ -323,12 +322,10 @@ export default function NewMoodInsightPage() {
                     </p>
                   </div>
 
-                  {/* <div className="flex gap-10 mt-3"> */}
                   <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                       className={buttonGradient}
                     >
                       View More
@@ -351,7 +348,6 @@ export default function NewMoodInsightPage() {
                     {/* edit entry */}
                     <button
                       onClick={() => handleEdit(journal.jrnl_id)}
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                       className={buttonGradient}
                     >
                       Edit Entry
@@ -362,7 +358,6 @@ export default function NewMoodInsightPage() {
                       <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                         className={buttonGradient}
                       >
                         {submitting ? 'Submitting...' : 'Submit Entry'}
@@ -387,10 +382,10 @@ export default function NewMoodInsightPage() {
               )}
             </div>
 
-            <div className="w-full md:flex gap-2">
+            <div className="w-full flex flex-col gap-2 md:grid md:grid-cols-2 md:grid-rows-[auto_auto_auto_1fr_auto_auto] md:gap-3">
               {/* mood insight */}
               <div
-                className="flex-1 rounded-[10px] border mb-3.75 p-4 flex flex-col"
+                className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
                 style={{
                   backgroundColor: 'white',
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -403,8 +398,18 @@ export default function NewMoodInsightPage() {
                 >
                   From your entry, you felt:
                 </h3>
-                <div className="flex flex-col items-center flex-1">
-                  {/* mood icon */}
+
+                {/* emoji */}
+                <div className="flex items-center justify-center">
+                  {!fetchingMoodData && moodData?.mood_id && (
+                    <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
+                      {getMoodStyle(moodData.mood_name).emoji}
+                    </div>
+                  )}
+                </div>
+
+                {/* mood name */}
+                <div className="flex items-center justify-center text-center">
                   {fetchingMoodData ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
@@ -414,57 +419,54 @@ export default function NewMoodInsightPage() {
                     </p>
                   ) : !moodData?.mood_id ? (
                     <h5
-                      className="m-5 text-center text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
+                      className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
                       style={{ color: C.muted }}
                     >
                       Mood not available yet. Submit your entry first.
                     </h5>
                   ) : (
-                    <>
-                      {/* mood emoji */}
-                      <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-                        {getMoodStyle(moodData?.mood_name).emoji}
-                      </div>
-                      <h5
-                        className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                        style={{ color: C.navy }}
-                      >
-                        {toTitleCase(moodData.mood_name) ?? 'Unknown'}
-                      </h5>
-                    </>
+                    <h5
+                      className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                      style={{ color: C.navy }}
+                    >
+                      {toTitleCase(moodData.mood_name) ?? 'Unknown'}
+                    </h5>
                   )}
                 </div>
 
-                {/* disclaimer */}
-                {!fetchingMoodData && moodData?.mood_id && (
-                  <p
-                    className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-1 italic text-justify"
-                    style={{ color: C.muted }}
-                  >
-                    Your mood is estimated using AI based on the submitted
-                    entry. The detected mood may not always accurately reflect
-                    your actual emotional state. Please refer to a professional
-                    for further advice or help.
-                  </p>
-                )}
+                <div />
 
-                {/* button to mood modal */}
-                {!fetchingMoodData && moodData?.mood_id && (
-                  <div className="w-fit mx-auto mt-3">
+                {/* disclaimer */}
+                <div>
+                  {!fetchingMoodData && moodData?.mood_id && (
+                    <p
+                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
+                      style={{ color: C.muted }}
+                    >
+                      Your mood is estimated using AI based on the submitted
+                      entry. The detected mood may not always accurately reflect
+                      your actual emotional state. Please refer to a
+                      professional for further advice or help.
+                    </p>
+                  )}
+                </div>
+
+                {/* button */}
+                <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
+                  {!fetchingMoodData && moodData?.mood_id && (
                     <button
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                       className={buttonGradient}
                       onClick={() => setOpenMoodDetail(true)}
                     >
                       View Details
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               {/* coping exercise recommendation */}
               <div
-                className="flex-1 rounded-[10px] border mb-3.75 p-4 flex flex-col"
+                className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
                 style={{
                   backgroundColor: 'white',
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
@@ -477,8 +479,18 @@ export default function NewMoodInsightPage() {
                 >
                   Recommended Coping Exercise:
                 </h3>
-                <div className="flex flex-col items-center flex-1">
-                  {/* recommended exercise */}
+
+                {/* emoji */}
+                <div className="flex items-center justify-center">
+                  {!fetchingExercise && exerciseData && (
+                    <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
+                      {getExerciseStyle(exerciseData.exc_type).emoji}
+                    </div>
+                  )}
+                </div>
+
+                {/* name + status / states */}
+                <div className="flex items-center justify-center text-center">
                   {fetchingExercise ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
@@ -488,110 +500,84 @@ export default function NewMoodInsightPage() {
                     </p>
                   ) : !exerciseData ? (
                     <h5
-                      className="m-5 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
+                      className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
                       style={{ color: C.muted }}
                     >
                       Coping exercise recommendation not available yet. Submit
                       your entry first.
                     </h5>
                   ) : (
-                    <>
-                      <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-                        {getExerciseStyle(exerciseData?.exc_type).emoji}
-                      </div>
-                      <div className="flex gap-2 mb-2">
-                        <h5
-                          className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                          style={{ color: C.navy }}
-                        >
-                          {exerciseData?.exc_name}
-                        </h5>
-
-                        {exerciseData?.uex_status === 'completed' && (
-                          <Pill
-                            bgColor={'#f1f8f4'}
-                            borderColor={'#66bb6a'}
-                            textColor={'#2e7d32'}
-                          >
-                            Completed
-                          </Pill>
-                        )}
-                        {exerciseData?.uex_status === 'incomplete' &&
-                          exerciseData.uex_reason && (
-                            <Pill
-                              bgColor={'#fff5f5'}
-                              borderColor={'#e57373'}
-                              textColor={'#c62828'}
-                            >
-                              Incomplete
-                            </Pill>
-                          )}
-                      </div>
-
-                      {/* <div className="w-fit mx-auto my-2">
-                        {exerciseData?.uex_status === 'completed' && (
-                          <Pill
-                            bgColor={'#f1f8f4'}
-                            borderColor={'#66bb6a'}
-                            textColor={'#2e7d32'}
-                          >
-                            Completed
-                          </Pill>
-                        )}
-                        {exerciseData?.uex_status === 'incomplete' &&
-                          exerciseData.uex_reason && (
-                            <Pill
-                              bgColor={'#fff5f5'}
-                              borderColor={'#e57373'}
-                              textColor={'#c62828'}
-                            >
-                              Incomplete
-                            </Pill>
-                          )}
-                      </div> */}
-
-                      {/* disclaimer */}
-                      <p
-                        className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0 mb-2.5 italic w-full text-justify"
-                        style={{ color: C.muted }}
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      <h5
+                        className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                        style={{ color: C.navy }}
                       >
-                        AI-generated recommendation. Suggestions are not a
-                        substitute for professional medical or mental health
-                        advice.
-                      </p>
-
-                      {/* button to exercise modal */}
-                      <div className="w-fit mx-auto flex gap-4 mt-2">
-                        <button
-                          // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-                          className={buttonGradient}
-                          onClick={() => setOpenExcDetail(true)}
+                        {exerciseData.exc_name}
+                      </h5>
+                      {exerciseData.uex_status === 'completed' && (
+                        <Pill
+                          bgColor="#f1f8f4"
+                          borderColor="#66bb6a"
+                          textColor="#2e7d32"
                         >
-                          View Details
-                        </button>
+                          Completed
+                        </Pill>
+                      )}
+                      {exerciseData.uex_status === 'incomplete' &&
+                        exerciseData.uex_reason && (
+                          <Pill
+                            bgColor="#fff5f5"
+                            borderColor="#e57373"
+                            textColor="#c62828"
+                          >
+                            Incomplete
+                          </Pill>
+                        )}
+                    </div>
+                  )}
+                </div>
 
-                        {/* // perform exercise button if the date is today and exercise not done */}
-                        {exerciseData?.uex_status === 'incomplete' &&
-                          isSameDay(
-                            exerciseData.uex_created_at,
-                            new Date(),
-                          ) && (
-                            <button
-                              onClick={performExercise}
-                              // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                              className={buttonGradient}
-                            >
-                              Perform Exercise
-                            </button>
-                          )}
-                      </div>
+                <div />
+
+                {/* disclaimer */}
+                <div>
+                  {!fetchingExercise && exerciseData && (
+                    <p
+                      className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
+                      style={{ color: C.muted }}
+                    >
+                      AI-generated recommendation. Suggestions are not a
+                      substitute for professional medical or mental health
+                      advice.
+                    </p>
+                  )}
+                </div>
+
+                {/* buttons */}
+                <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
+                  {!fetchingExercise && exerciseData && (
+                    <>
+                      <button
+                        className={buttonGradient}
+                        onClick={() => setOpenExcDetail(true)}
+                      >
+                        View Details
+                      </button>
+                      {exerciseData.uex_status === 'incomplete' &&
+                        isSameDay(exerciseData.uex_created_at, new Date()) && (
+                          <button
+                            className={buttonGradient}
+                            onClick={performExercise}
+                          >
+                            Perform Exercise
+                          </button>
+                        )}
                     </>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* mood chart*/}
             <div
               className="rounded-[10px] border mb-3.75 p-4 flex flex-col items-center"
               style={{
