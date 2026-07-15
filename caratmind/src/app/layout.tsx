@@ -9,7 +9,7 @@ import { useMoodStreakAlert } from './hooks/negativeMoodStreak';
 import { HelplineModalProvider } from './components/HelplineModalProvider';
 import '@daypicker/react/style.css';
 import { NextStep, NextStepProvider } from 'nextstepjs';
-import { steps } from '@/lib/onboarding/steps';
+// import { steps } from '@/lib/onboarding/steps';
 import OnboardingStart from './components/OnboardingStart';
 import { OnboardingCard } from './components/OnboardingCard';
 
@@ -50,7 +50,9 @@ export default function RootLayout({
             <HelplineModalProvider />
           </LayoutShell>
           <ClientToastContainer />
-          {/* <NextStepProvider>
+          {/* 
+          <OnboardingProvider>{children}</OnboardingProvider>
+          <NextStepProvider>
             <NextStep
               steps={steps}
               cardComponent={OnboardingCard}
