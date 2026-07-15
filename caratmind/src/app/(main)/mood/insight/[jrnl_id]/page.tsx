@@ -366,7 +366,6 @@ export default function MoodInsightPage() {
 
                     {/* delete button */}
                     <button
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                       className={buttonRed}
                       onClick={() => setOpenDelete(true)}
                     >
@@ -382,7 +381,7 @@ export default function MoodInsightPage() {
               )}
             </div>
 
-            <div className="w-full flex flex-col gap-2 md:grid md:grid-cols-2 md:grid-rows-[auto_auto_auto_1fr_auto_auto] md:gap-3">
+            <div className="w-full mb-3.75 flex flex-col gap-2 md:grid md:grid-cols-2 md:grid-rows-[auto_auto_auto_1fr_auto_auto] md:gap-3">
               {/* mood insight */}
               <div
                 className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
