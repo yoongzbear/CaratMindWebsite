@@ -402,7 +402,7 @@ export default function MoodInsightPage() {
                 </h3>
 
                 {/* emoji */}
-                <div className="flex items-center justify-center text-center">
+                <div className="lg:flex items-center justify-center text-center">
                   {!fetchingMoodData && moodData?.mood_id && (
                     <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                       {getMoodStyle(moodData.mood_name).emoji}
@@ -509,7 +509,7 @@ export default function MoodInsightPage() {
                       your entry first.
                     </h5>
                   ) : (
-                    <div className="flex flex-wrap items-center justify-center gap-2">
+                    <div className="mb-2 lg:mb-0 flex flex-wrap items-center justify-center gap-2">
                       <h5
                         className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                         style={{ color: C.navy }}

@@ -1,12 +1,7 @@
 'use client';
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
-import {
-  buttonGradientColor,
-  buttonOutlined,
-  C,
-  styles,
-} from '@/app/styles/styles';
+import { C } from '@/app/styles/styles';
 import {
   Exercise,
   UserExercise,
@@ -15,10 +10,9 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
-import { Eye, Flame, Pi, Snowflake, Star } from 'lucide-react';
+import { Flame, Star } from 'lucide-react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
-import Swal from 'sweetalert2';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
@@ -606,7 +600,7 @@ export default function ExerciseTrackingPage() {
           </h3>
 
           {/* mobile - date selector */}
-          <div className="w-full flex lg:hidden flex-col gap-2">
+          <div className="w-full flex lg:hidden mb-3 flex-col gap-2">
             <label
               className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
               style={{ color: C.navy }}
