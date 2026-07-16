@@ -17,10 +17,16 @@ type Result = {
   error: string | null;
 };
 
-export function useMoodScatterData(range: DateRangeValue): Result {
+// sample for preview page
+type MockData = { chartData: MoodPoint[]; moods: string[] };
+
+export function useMoodScatterData(
+  range: DateRangeValue,
+  mockData?: MockData,
+): Result {
   const { accessToken } = useAuth();
-  const [points, setPoints] = useState<MoodPoint[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [points, setPoints] = useState<MoodPoint[]>(mockData?.chartData ?? []);
+  const [loading, setLoading] = useState(!mockData);
   const [error, setError] = useState<string | null>(null);
 
   const cacheKey =
@@ -29,6 +35,15 @@ export function useMoodScatterData(range: DateRangeValue): Result {
       : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
   useEffect(() => {
+    // mock for preview
+    if (mockData) {
+      setPoints(mockData.chartData);
+      // setMoods(mockData.moods);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     if (!accessToken) return;
 
     const query =
@@ -57,7 +72,7 @@ export function useMoodScatterData(range: DateRangeValue): Result {
     }
 
     fetch_();
-  }, [accessToken, cacheKey]);
+  }, [accessToken, cacheKey, mockData]);
 
   return { points, loading, error };
 }

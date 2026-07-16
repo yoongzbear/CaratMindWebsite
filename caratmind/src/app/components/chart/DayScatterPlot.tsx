@@ -25,17 +25,20 @@ import { useMoodScatterData } from '@/app/hooks/moodScatterData';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
 import { getRangeLabel, resolveLocalDateRange } from '@/app/utils/dateFormat';
+import { MoodPoint } from '@/app/hooks/dailyMoodScatterData';
 
 type Props = {
   range?: DateRangeValue;
   height?: number;
+  mockData?: { chartData: MoodPoint[]; moods: string[] };
 };
 
 export default function DayScatterPlot({
   range = { mode: 'days', days: 30 },
   height = 320,
+  mockData,
 }: Props) {
-  const { points, loading, error } = useMoodScatterData(range);
+  const { points, loading, error } = useMoodScatterData(range, mockData);
   const router = useRouter();
 
   const { startDate, endDate } = resolveLocalDateRange(range);
@@ -44,7 +47,7 @@ export default function DayScatterPlot({
 
   //   ES Lint error
   const handleScatterClick = (point: any) => {
-    console.log('point: ', point);
+    if (mockData) return;
     router.push(`/mood/insight/${point.jrnl_id}`);
   };
 

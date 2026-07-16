@@ -22,7 +22,10 @@ import { C } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
-import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
+import {
+  MoodPoint,
+  useDailyMoodScatterData,
+} from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
 import { buttonGradient } from '@/app/styles/ui';
 
@@ -30,14 +33,19 @@ type Props = {
   // range?: DateRangeValue;
   moodDate: string;
   height?: number;
+  mockData?: { points: MoodPoint[] };
 };
 
 export default function TimeScatterPlot({
   // range = { mode: 'days', days: 1 },
   moodDate,
   height = 320,
+  mockData,
 }: Props) {
-  const { points, loading, error } = useDailyMoodScatterData(moodDate);
+  const { points, loading, error } = useDailyMoodScatterData(
+    moodDate,
+    mockData,
+  );
   const router = useRouter();
   const isToday = moodDate === format(new Date(), 'yyyy-MM-dd'); // check if date is current date
 
@@ -47,6 +55,7 @@ export default function TimeScatterPlot({
 
   //   ES Lint error
   const handleScatterClick = (point: any) => {
+    if (mockData) return;
     router.push(`/mood/insight/${point.jrnl_id}`);
   };
 

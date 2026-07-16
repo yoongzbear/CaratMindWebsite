@@ -17,14 +17,17 @@ type Result = {
   error: string | null;
 };
 
+type MockData = { points: MoodPoint[] };
+
 export function useDailyMoodScatterData(
   // range: DateRangeValue,
   moodDate: string,
   // endDate: string,
+  mockData?: MockData,
 ): Result {
   const { accessToken } = useAuth();
-  const [points, setPoints] = useState<MoodPoint[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [points, setPoints] = useState<MoodPoint[]>(mockData?.points ?? []);
+  const [loading, setLoading] = useState(!mockData);
   const [error, setError] = useState<string | null>(null);
 
   // day = 1
@@ -35,6 +38,14 @@ export function useDailyMoodScatterData(
   //     : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
   useEffect(() => {
+    // preview
+    if (mockData) {
+      setPoints(mockData.points);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     if (!accessToken) return;
 
     const query = `start_date=${moodDate}&end_date=${moodDate}`;
@@ -63,7 +74,7 @@ export function useDailyMoodScatterData(
     }
 
     fetch_();
-  }, [accessToken, cacheKey]);
+  }, [accessToken, cacheKey, mockData]);
 
   return { points, loading, error };
 }

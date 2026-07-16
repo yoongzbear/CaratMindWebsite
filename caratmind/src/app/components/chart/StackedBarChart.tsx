@@ -16,27 +16,32 @@ import { toTitleCase } from '@/app/utils/format';
 import { C } from '@/app/styles/styles';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
-import { useMoodChartData } from '@/app/hooks/moodChartData';
+import { ChartRow, useMoodChartData } from '@/app/hooks/moodChartData';
 import { getRangeLabel } from '@/app/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 
-type ChartRow = {
-  date: string;
-  jrnl_ids?: string[];
-  [mood: string]: string | number | string[] | undefined;
-};
+// type ChartRow = {
+//   date: string;
+//   jrnl_ids?: string[];
+//   [mood: string]: string | number | string[] | undefined;
+// };
 
 type Props = {
   range?: DateRangeValue;
   height?: number;
+  mockData?: { chartData: ChartRow[]; moods: string[] };
 };
 
 export default function StackedBarChart({
   range = { mode: 'days', days: 7 },
   height = 320,
+  mockData,
 }: Props) {
   const { accessToken } = useAuth();
-  const { chartData, moods, loading, error } = useMoodChartData(range);
+  const { chartData, moods, loading, error } = useMoodChartData(
+    range,
+    mockData,
+  );
   const router = useRouter();
 
   if (loading) {
@@ -112,7 +117,7 @@ export default function StackedBarChart({
   });
 
   const handleBarClick = (barData: any) => {
-    console.log('bar data:', barData);
+    if (mockData) return; // disable navigation for mock
     const rowData = barData?.payload;
     const ids: string[] = rowData?.jrnl_ids ?? [];
     if (ids.length === 0) return;

@@ -25,13 +25,18 @@ type ChartRow = {
 
 type Props = {
   range?: DateRangeValue;
+  mockData?: { chartData: ChartRow[]; moods: string[] };
 };
 
 export default function CalendarHeatmap({
   range = { mode: 'days', days: 30 },
+  mockData,
 }: Props) {
   const { accessToken } = useAuth();
-  const { chartData, moods, loading, error } = useMoodChartData(range);
+  const { chartData, moods, loading, error } = useMoodChartData(
+    range,
+    mockData,
+  );
   const router = useRouter();
 
   // read ?date=YYYY-MM-DD from URL

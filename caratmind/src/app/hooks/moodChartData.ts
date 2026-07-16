@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
-// export type ChartRow = { date: string; [mood: string]: string | number };
 export type ChartRow = {
   date: string;
   jrnl_ids?: string[];
@@ -21,20 +20,33 @@ type Result = {
   error: string | null;
 };
 
-export function useMoodChartData(params: Params): Result {
+// sample for preview page
+type MockData = { chartData: ChartRow[]; moods: string[] };
+
+export function useMoodChartData(params: Params, mockData?: MockData): Result {
   const { accessToken } = useAuth();
-  const [chartData, setChartData] = useState<ChartRow[]>([]);
-  const [moods, setMoods] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState<ChartRow[]>(
+    mockData?.chartData ?? [],
+  );
+  const [moods, setMoods] = useState<string[]>(mockData?.moods ?? []);
+  const [loading, setLoading] = useState(!mockData);
   const [error, setError] = useState<string | null>(null);
 
-  // build stable cache key so useEffect only re-runs when params actually change
   const cacheKey =
     params.mode === 'days'
       ? `days=${params.days}`
       : `start=${params.startDate}&end=${params.endDate}`;
 
   useEffect(() => {
+    // mock for preview
+    if (mockData) {
+      setChartData(mockData.chartData);
+      setMoods(mockData.moods);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     if (!accessToken) return;
 
     const query =
@@ -64,7 +76,7 @@ export function useMoodChartData(params: Params): Result {
     }
 
     fetch_();
-  }, [accessToken, cacheKey]);
+  }, [accessToken, cacheKey, mockData]);
 
   return { chartData, moods, loading, error };
 }
