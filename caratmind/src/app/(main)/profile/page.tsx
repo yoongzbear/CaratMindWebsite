@@ -108,13 +108,8 @@ export default function ProfilePage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="profile"
         >
-          {/* <h3 className="sm:text-[24px] md:text-[28px] font-semibold">
-            User Details
-          </h3> */}
-
-          {/* <div className="m-3" style={{ color: C.navy }}> */}
-          {/* Username */}
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)]"
             style={{ color: C.muted }}
@@ -122,11 +117,29 @@ export default function ProfilePage() {
             Username
           </p>
           <p
-            className="mt-1 mb-4 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+            className="mt-1 mb-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
             style={{ color: C.navy }}
           >
             {user.username}
           </p>
+
+          {/* Email */}
+          {user.email && (
+            <>
+              <p
+                className="text-[clamp(0.875rem,1.5vw,1rem)]"
+                style={{ color: C.muted }}
+              >
+                Email
+              </p>
+              <p
+                className="mt-1 mb-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+                style={{ color: C.navy }}
+              >
+                {user.email}
+              </p>
+            </>
+          )}
 
           {/* Preferred name */}
           <p
@@ -185,14 +198,12 @@ export default function ProfilePage() {
           )}
 
           {/* Action buttons */}
-          {/* <p style={{ margin: '8px 0 16px', display: 'flex', gap: '8px' }}> */}
           <div className="mt-2 mb-4 flex gap-2">
             {editing ? (
               <>
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                   className={buttonGradient}
                 >
                   {saving ? 'Saving…' : 'Save'}
@@ -200,7 +211,6 @@ export default function ProfilePage() {
                 <button
                   onClick={handleCancel}
                   disabled={saving}
-                  // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                   className={buttonGrey}
                 >
                   Cancel
@@ -209,41 +219,22 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={handleEditClick}
-                // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
                 className={buttonGradient}
+                id="button-edit-name"
               >
                 Edit Name
               </button>
             )}
           </div>
 
-          {/* Email */}
-          {user.email && (
-            <>
-              <p
-                className="text-[clamp(0.875rem,1.5vw,1rem)]"
-                style={{ color: C.muted }}
-              >
-                Email
-              </p>
-              <p
-                className="mt-1 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-                style={{ color: C.navy }}
-              >
-                {user.email}
-              </p>
-            </>
-          )}
-
           {/* Delete account */}
           <button
             onClick={() => setOpenDeleteAccount(true)}
-            // className={`mt-4 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-            className={`${buttonRed} mt-4`}
+            className={buttonRed}
+            id="button-delete-account"
           >
             Delete Account
           </button>
-          {/* </div> */}
         </div>
       </div>
       <DeleteAccountModal

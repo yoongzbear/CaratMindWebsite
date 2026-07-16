@@ -1,21 +1,14 @@
 'use client';
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
-import {
-  buttonGradientColor,
-  buttonOutlined,
-  C,
-  styles,
-} from '@/app/styles/styles';
-import { buttonGradient, dropdownStyle } from '@/app/styles/ui';
+import { C, styles } from '@/app/styles/styles';
+import { buttonGradient } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
-import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Swal from 'sweetalert2';
 
 export default function ExerciseCatalogPage() {
   const { user, loading, accessToken } = useAuth();
@@ -114,23 +107,23 @@ export default function ExerciseCatalogPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="exercise-catalogue"
         >
           {/* mobile search */}
           <div className="md:hidden w-full gap-5 mb-3">
             {/* search */}
-            {/* <div className="w-[70%]"> */}
             <input
               className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
+              id="mobile-search"
               style={styles.input}
               type="search"
               placeholder="Search Exercise"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             ></input>
-            {/* </div> */}
 
             {/* mood dropdown */}
-            <div className="w-full flex gap-2">
+            <div className="w-full flex gap-2" id="mobile-dropdown">
               <select
                 className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -167,6 +160,7 @@ export default function ExerciseCatalogPage() {
             {/* search */}
             <div className="w-[30%]">
               <input
+                id="desktop-search"
                 className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
                 style={styles.input}
                 type="search"
@@ -177,7 +171,10 @@ export default function ExerciseCatalogPage() {
             </div>
 
             {/* mood dropdown */}
-            <div className="md:w-[60%] lg:w-[40%] flex gap-4">
+            <div
+              className="md:w-[60%] lg:w-[40%] flex gap-4"
+              id="desktop-dropdown"
+            >
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -194,7 +191,6 @@ export default function ExerciseCatalogPage() {
               {/* </div> */}
 
               {/* type dropdown */}
-              {/* <div className="w-40"> */}
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
                 style={{ border: `1px solid ${C.border}`, color: C.navy }}
@@ -232,7 +228,7 @@ export default function ExerciseCatalogPage() {
           )}
 
           {/* exercise card */}
-          {filtered.map((ex) => {
+          {filtered.map((ex, index) => {
             const moods = Array.isArray(ex.exc_mood)
               ? ex.exc_mood
               : [ex.exc_mood];
@@ -242,6 +238,7 @@ export default function ExerciseCatalogPage() {
             return (
               <div
                 key={ex.exc_id}
+                id={index === 0 ? 'exercise-card' : undefined}
                 className="rounded-[10px] border mb-3.75 p-2.5"
                 style={{
                   backgroundColor: 'white',
@@ -344,44 +341,6 @@ export default function ExerciseCatalogPage() {
                       </div>
                     );
                   })()}
-
-                  {/* {visibleMoods.map((mood) => {
-                    const moodStyle = getMoodStyle(mood);
-                    return (
-                      <Pill
-                        key={mood}
-                        bgColor={moodStyle.bgColor}
-                        borderColor={moodStyle.borderColor}
-                        textColor={moodStyle.textColor}
-                      >
-                        {moodStyle.emoji} {toTitleCase(mood)}
-                      </Pill>
-                    );
-                  })}
-
-                  {remainingCount > 0 && (
-                    <div
-                      onClick={() => {
-                        setSelectedExercise(ex);
-                        setOpenDetail(true);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <Pill
-                        bgColor="#f1f3f8"
-                        borderColor="#dde1ea"
-                        textColor={C.faint}
-                        title={moods
-                          .slice(MAX_VISIBLE_MOODS)
-                          .map(toTitleCase)
-                          .join(', ')}
-                      >
-                        +{remainingCount} more
-                      </Pill>
-                    </div>
-                  )} */}
-
-                  {/* <Pill>{toTitleCase(ex.exc_type)}</Pill> */}
                 </div>
 
                 <p
@@ -396,8 +355,8 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                   className={buttonGradient}
+                  id={index === 0 ? 'button-view-exercise' : undefined}
                 >
                   View More
                 </button>

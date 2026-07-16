@@ -116,14 +116,13 @@ export default function Header() {
         backgroundColor: C.bgTopbar,
         borderBottom: `1.5px solid ${C.serenity}`,
         boxShadow: '0 2px 12px rgba(146,168,209,0.10)',
-        // dynamic island safe (iPhone devices)
+        // dynamic island safe (iPhone)
         paddingTop: 'env(safe-area-inset-top, 0px)',
       }}
     >
       <div
         className="w-full lg:w-[90%] mx-auto h-16 lg:h-17 items-center flex justify-between"
         style={{
-          // below/beside dynamic island
           paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
           paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
         }}
@@ -134,7 +133,6 @@ export default function Header() {
             alt="Mental Health System logo"
             width={140}
             height={0}
-            // className="h-auto rounded-lg"
             className="h-auto w-27.5 sm:w-32.5 lg:w-35 rounded-lg"
           />
         </Link>
@@ -260,7 +258,7 @@ export default function Header() {
           {!loading && user && (
             <>
               {/* onboarding */}
-              {/* <HelpButton /> */}
+              {/* <HelpButton id="help-button" /> */}
               <button
                 type="button"
                 onClick={() => router.push('/profile')}
