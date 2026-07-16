@@ -47,7 +47,7 @@ export default function MoodInsightPreviewPage() {
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
           >
-            Mood Insights
+            Mood Insights (Preview)
           </h1>
         </header>
 
