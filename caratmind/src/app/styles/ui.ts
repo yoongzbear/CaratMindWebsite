@@ -1,7 +1,7 @@
 // UI components
 
 import { buttonGradientColor } from './styles';
-import { C, ThemeName, themes } from './themes';
+import { ThemeName, themes } from './themes';
 
 /*
 clamp(minimum, preferred, maximum)
@@ -52,7 +52,7 @@ export const labelStyle = `block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold
 export const inputStyle = `w-full box-border px-3 py-2.75 rounded-lg border border-slate-200 text-[clamp(0.875rem,1.5vw,1rem)] text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
 // export const inputStyle = `w-full px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300`;
 
-export const preInputStyle = `w-full box-border px-3 py-2.75 flex items rounded-lg flex items-center justify-between bg-[${C.backgroundFaint}] border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
+export const preInputStyle = `w-full box-border px-3 py-2.75 flex items rounded-lg flex items-center justify-between border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
 
 export const textareaStyle = `w-full min-h-24 px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 resize-y focus:outline-none focus:ring-2 focus:ring-slate-300`;
 

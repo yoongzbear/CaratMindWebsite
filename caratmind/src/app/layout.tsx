@@ -45,13 +45,6 @@ export default function RootLayout({
           background: '#fff8f8',
         }}
       >
-        {/* <AuthProvider>
-          <LayoutShell>
-            {children}
-            <HelplineModalProvider />
-          </LayoutShell>
-          <ClientToastContainer />
-        </AuthProvider> */}
         <AuthProvider>
           <OnboardingProvider>
             <LayoutShell>
