@@ -161,6 +161,7 @@ export default function HomePage() {
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: C.navy }}
+            id="home"
           >
             Welcome back, {user?.preferredUsername}!
           </h1>

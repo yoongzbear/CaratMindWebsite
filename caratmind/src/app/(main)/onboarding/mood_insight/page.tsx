@@ -1,4 +1,5 @@
 // preview page for mood insights
+'use client';
 
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import Pill from '@/app/components/Pill';
@@ -8,6 +9,8 @@ import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { format } from 'date-fns';
+import { buildMockBarData } from '../mood_chart/page';
+import { useMemo } from 'react';
 
 // sample data
 const sampleJournal = {
@@ -32,6 +35,7 @@ const sampleExercise = {
 };
 
 export default function MoodInsightPreviewPage() {
+  const barData = useMemo(() => buildMockBarData(), []);
   return (
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
@@ -199,8 +203,7 @@ export default function MoodInsightPreviewPage() {
               {/* </div> */}
 
               {/* name + status */}
-              {/* <div className="flex items-center justify-center text-center"> */}
-              <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
                 <h5
                   className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                   style={{ color: C.navy }}
@@ -252,7 +255,7 @@ export default function MoodInsightPreviewPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
-          id="mood-chart"
+          id="mood-chart-div"
         >
           {/* mood chart */}
           <h3
@@ -261,7 +264,12 @@ export default function MoodInsightPreviewPage() {
           >
             Mood This Week
           </h3>
-          <StackedBarChart range={{ mode: 'days', days: 7 }} />
+          <div className="w-full" id="mood-chart">
+            <StackedBarChart
+              range={{ mode: 'days', days: 7 }}
+              mockData={barData}
+            />
+          </div>
           {/* mood dashboard button */}
           <button className={buttonGradient} id="button-mood-chart">
             View Mood Dashboard

@@ -221,9 +221,10 @@ export default function ExerciseTrackingPreviewPage() {
                       {exercise.exc_desc}
                     </p>
 
-                    <div className="flex items-center gap-1" id="rating">
+                    <div className="flex items-center gap-1">
                       <p
                         className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+                        id="rating"
                         style={{ color: C.navy }}
                       >
                         {exercise.uex_rating}

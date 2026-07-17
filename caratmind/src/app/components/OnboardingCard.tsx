@@ -36,7 +36,7 @@ export function OnboardingCard({
           </span>
         )}
         <h3
-          className="font-semibold text-[clamp(1.25rem,5vw,1.75rem)]"
+          className="font-semibold text-[clamp(1rem,3vw,1.5rem)]"
           style={{ color: C.navy }}
         >
           {step.title}
