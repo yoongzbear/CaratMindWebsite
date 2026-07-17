@@ -12,6 +12,7 @@ import { NextStep, NextStepProvider } from 'nextstepjs';
 // import { steps } from '@/lib/onboarding/steps';
 import OnboardingStart from './components/OnboardingStart';
 import { OnboardingCard } from './components/OnboardingCard';
+import { OnboardingProvider } from './components/OnboardingProvider';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -44,33 +45,21 @@ export default function RootLayout({
           background: '#fff8f8',
         }}
       >
-        <AuthProvider>
+        {/* <AuthProvider>
           <LayoutShell>
             {children}
             <HelplineModalProvider />
           </LayoutShell>
           <ClientToastContainer />
-          {/* 
-          <OnboardingProvider>{children}</OnboardingProvider>
-          <NextStepProvider>
-            <NextStep
-              steps={steps}
-              cardComponent={OnboardingCard}
-              onComplete={(tourName) => {
-                if (tourName === 'welcome') {
-                  fetch('/api/onboarding/complete', { method: 'POST' });
-                }
-              }}
-              // onSkip={(_step, tourName) => {
-              //   if (tourName === 'welcome') {
-              //     fetch('/api/onboarding/complete', { method: 'POST' });
-              //   }
-              // }}
-            >
-              <OnboardingStart />
+        </AuthProvider> */}
+        <AuthProvider>
+          <OnboardingProvider>
+            <LayoutShell>
               {children}
-            </NextStep>
-          </NextStepProvider> */}
+              <HelplineModalProvider />
+            </LayoutShell>
+          </OnboardingProvider>
+          <ClientToastContainer />
         </AuthProvider>
       </body>
     </html>

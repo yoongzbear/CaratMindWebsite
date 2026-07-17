@@ -65,7 +65,7 @@ export default function NewEntryPage() {
 
   return (
     <section
-      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-2 lg:pb-12"
+      className="min-h-[calc(100vh-200px)] pt-4 sm:pt-6 pb-2 lg:pb-12"
       style={{
         background: C.bgPage,
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',

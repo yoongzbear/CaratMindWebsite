@@ -32,26 +32,31 @@ const NAV_LINKS = [
 ];
 
 // onboarding quick start
-// const pageTours: Record<string, string> = {
-//   '/': 'home-tour',
-//   '/mood': 'mood-tour',
-//   '/exercise/tracking': 'exercise-tour',
-//   '/journal/new': 'journal-tour',
-// };
+const pageTours: Record<string, string> = {
+  '/': 'home-tour',
+  // TODO: add after checking main onboarding
+  '/mood': 'mood-tour',
+  '/exercise/tracking': 'exercise-tour',
+  '/journal/new': 'journal-tour',
+};
 
-// export function HelpButton() {
-//   const pathname = usePathname();
-//   const { startNextStep } = useNextStep();
-//   const tourName = pageTours[pathname];
+export function HelpButton() {
+  const pathname = usePathname();
+  const { startNextStep } = useNextStep();
+  const tourName = pageTours[pathname];
 
-//   if (!tourName) return null;
+  if (!tourName) return null;
 
-//   return (
-//     <button onClick={() => startNextStep(tourName)} aria-label="Show page tour">
-//       <HelpCircle size={20} />
-//     </button>
-//   );
-// }
+  return (
+    <button
+      id="help-button"
+      onClick={() => startNextStep(tourName)}
+      aria-label="Show page tour"
+    >
+      <HelpCircle size={20} />
+    </button>
+  );
+}
 
 export default function Header() {
   const router = useRouter();
@@ -258,7 +263,7 @@ export default function Header() {
           {!loading && user && (
             <>
               {/* onboarding */}
-              {/* <HelpButton id="help-button" /> */}
+              <HelpButton />
               <button
                 type="button"
                 onClick={() => router.push('/profile')}

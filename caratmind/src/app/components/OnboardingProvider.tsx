@@ -1,10 +1,10 @@
-// components/onboarding/OnboardingProvider.tsx
 'use client';
 import { useMemo } from 'react';
 import { NextStepProvider, NextStep } from 'nextstepjs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { buildSteps } from '@/lib/onboarding/steps';
 import { OnboardingCard } from './OnboardingCard';
+import OnboardingStart from './OnboardingStart';
 
 export function OnboardingProvider({
   children,
@@ -28,6 +28,7 @@ export function OnboardingProvider({
             fetch('/api/onboarding/complete', { method: 'POST' });
         }}
       >
+        <OnboardingStart />
         {children}
       </NextStep>
     </NextStepProvider>

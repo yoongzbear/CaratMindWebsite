@@ -18,7 +18,7 @@ export function OnboardingCard({
 
   return (
     <div
-      className="relative w-75 rounded-2xl p-5 shadow-lg"
+      className="relative w-80 md:w-100 rounded-2xl p-5 shadow-lg"
       style={{
         backgroundColor: 'white',
         border: `1px solid ${C.roseQuartz}30`,
@@ -27,18 +27,34 @@ export function OnboardingCard({
       {arrow}
 
       <div className="flex items-center gap-2 mb-2">
-        {step.icon && <span className="text-xl">{step.icon}</span>}
-        <h3 className="font-semibold text-lg" style={{ color: C.navy }}>
+        {step.icon && (
+          <span
+            className="text-[clamp(1.25rem,5vw,1.75rem)]"
+            style={{ color: C.navy }}
+          >
+            {step.icon}
+          </span>
+        )}
+        <h3
+          className="font-semibold text-[clamp(1.25rem,5vw,1.75rem)]"
+          style={{ color: C.navy }}
+        >
           {step.title}
         </h3>
       </div>
 
-      <p className="text-sm mb-4" style={{ color: C.navy }}>
+      <p
+        className="text-[clamp(0.875rem,1.5vw,1rem)] mb-4"
+        style={{ color: C.navy }}
+      >
         {step.content}
       </p>
 
       <div className="flex items-center justify-between">
-        <span className="text-xs" style={{ color: C.serenity }}>
+        <span
+          className="text-[clamp(0.7rem,1.5vw,0.85rem)]"
+          style={{ color: C.serenity }}
+        >
           {currentStep + 1} / {totalSteps}
         </span>
 
@@ -46,7 +62,7 @@ export function OnboardingCard({
           {step.showSkip !== false && !isLast && (
             <button
               onClick={skipTour}
-              className="text-xs px-2 py-1"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] px-2 py-1 cursor-pointer"
               style={{ color: C.serenity }}
             >
               Skip
@@ -55,7 +71,7 @@ export function OnboardingCard({
           {currentStep > 0 && (
             <button
               onClick={prevStep}
-              className="text-xs px-3 py-1.5 rounded-lg border"
+              className="text-[clamp(0.875rem,1.5vw,1rem)] px-3 py-1.5 rounded-lg border cursor-pointer"
               style={{ borderColor: C.roseQuartz, color: C.navy }}
             >
               Back
@@ -63,7 +79,7 @@ export function OnboardingCard({
           )}
           <button
             onClick={isLast ? skipTour : nextStep}
-            className={`${buttonGradient} text-xs px-3 py-1.5`}
+            className={buttonGradient}
           >
             {isLast ? 'Done' : 'Next'}
           </button>
