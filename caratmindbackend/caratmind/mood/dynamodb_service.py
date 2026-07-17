@@ -12,19 +12,50 @@ def _get_table():
 # upload/update mood into db
 def create_mood(jrnl_id: str, user_id: str, mood_result: dict) -> dict:
     table = _get_table()
-    # mood_result = "mood_name","mood_confidence", "mood_explain", 
     item = {
-        # 'mood_id': str(uuid.uuid4()),
         'jrnl_id': jrnl_id,
         'mood_id': jrnl_id,
         'user_id': user_id,
         'mood_name': mood_result['mood_name'],
-        'mood_confidence': str(mood_result['mood_confidence']),  # Decimal-safe
+        'mood_confidence': str(mood_result['mood_confidence']),  
         'mood_explain': mood_result['mood_explain'],
         'mood_timestamp': datetime.now(timezone.utc).isoformat(),
+        'mood_confirmed': None,
+        'mood_corrected': None,
     }
     table.put_item(Item=item)
     return item
+
+# update confirmed mood
+def confirm_mood(mood_id: str) -> dict | None:
+    table = _get_table()
+    response = table.update_item(
+        Key={'jrnl_id': mood_id},  
+        UpdateExpression=(
+            'SET mood_confirmed = :mood_confirmed'
+        ),
+        ExpressionAttributeValues={
+            ':mood_confirmed': True,
+        },
+        ReturnValues='ALL_NEW',
+    )
+    return response.get('Attributes')
+
+# update corrected mood
+def corrected_mood(mood_id: str, correct_mood: str) -> dict | None:
+    table = _get_table()
+    response = table.update_item(
+        Key={'jrnl_id': mood_id},  
+        UpdateExpression=(
+            'SET mood_confirmed = :mood_confirmed, mood_corrected = :mood_corrected'
+        ),
+        ExpressionAttributeValues={
+            ':mood_confirmed': True,
+            ':mood_corrected': correct_mood,
+        },
+        ReturnValues='ALL_NEW',
+    )
+    return response.get('Attributes')
 
 # get mood info 
 # filter using date 
@@ -72,7 +103,6 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
             & Attr('mood_timestamp').lte(cutoff_end)
         )
     else:
-        # cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
         cutoff = (
             datetime.now(timezone.utc) - timedelta(days=days - 1)
         ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
@@ -108,5 +138,4 @@ def delete_all_user_mood(user_id: str) -> None:
 
     with table.batch_writer() as batch:
         for item in items:
-            # batch.delete_item(Key={'mood_id': item['mood_id']}) 
             batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 

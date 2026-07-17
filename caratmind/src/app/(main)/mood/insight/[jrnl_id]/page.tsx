@@ -237,6 +237,88 @@ export default function MoodInsightPage() {
 
   const isDraft = journal?.jrnl_status === 'draft';
 
+  const handleConfirmMood = async () => {
+    if (!moodData) return;
+    const mood_id = moodData.mood_id;
+    try {
+      const res = await fetch(`/api/mood/${mood_id}/confirm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        // body: JSON.stringify({ rating }),
+        cache: 'no-store',
+      });
+
+      // let data: RatingResponse | ApiErrorResponse;
+      let data: any;
+      const contentType = res.headers.get('content-type') ?? '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error('Non-JSON response from Django:', text);
+        data = { error: 'Unexpected response from server.' };
+      }
+
+      if (!res.ok || 'error' in data) {
+        toastError('error' in data ? data.error : 'Failed to save rating.');
+        return;
+      }
+
+      toastSuccess('Saved confirmed mood.');
+      // setOpenRating(false);
+
+      // refresh today's exercises, history, and streak
+      // await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    }
+  };
+
+  const handleCorrectMood = async (correctMood: string) => {
+    if (!moodData) return;
+    const mood_id = moodData.mood_id;
+    try {
+      const res = await fetch(`/api/mood/${moodData}/corrected`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ correctMood }),
+        cache: 'no-store',
+      });
+
+      // let data: RatingResponse | ApiErrorResponse;
+      let data: any;
+      const contentType = res.headers.get('content-type') ?? '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error('Non-JSON response from Django:', text);
+        data = { error: 'Unexpected response from server.' };
+      }
+
+      if (!res.ok || 'error' in data) {
+        toastError(
+          'error' in data ? data.error : 'Failed to saved corrected mood.',
+        );
+        return;
+      }
+
+      toastSuccess('Saved corrected mood.');
+      // setOpenRating(false);
+
+      // refresh today's exercises, history, and streak
+      // await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    }
+  };
+
   return (
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
@@ -640,6 +722,8 @@ export default function MoodInsightPage() {
           open={openMoodDetail}
           onClose={() => setOpenMoodDetail(false)}
           moodData={moodData}
+          onConfirm={handleConfirmMood}
+          onCorrect={handleCorrectMood}
         />
       )}
       <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />
