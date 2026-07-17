@@ -7,11 +7,11 @@ export async function POST(
   try {
     const { jrnl_id } = await params;
 
-    const { mood } = (await request.json()) as {
-      mood?: string;
+    const { correctMood } = (await request.json()) as {
+      correctMood?: string;
     };
 
-    if (!mood || mood === '') {
+    if (!correctMood || correctMood === '') {
       return NextResponse.json(
         { error: 'Corrected mood cannot be empty.' },
         { status: 400 },
@@ -34,7 +34,7 @@ export async function POST(
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        mood,
+        corrected_mood: correctMood,
       }),
       cache: 'no-store',
     });

@@ -10,6 +10,7 @@ import { Mood } from '@/app/types/mood';
 import { useMemo, useState } from 'react';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { toastError } from '@/utils/toast';
+import Pill from '../Pill';
 
 type Props = {
   open: boolean;
@@ -26,7 +27,8 @@ export default function MoodExplainModal({
   onConfirm,
   onCorrect,
 }: Props) {
-  const [loading, setLoading] = useState(false);
+  const [loadingConfirm, setLoadingConfirm] = useState(false);
+  const [loadingCorrected, setLoadingCorrected] = useState(false);
   const [openMoods, setOpenMoods] = useState(false);
   const [correctMood, setCorrectMood] = useState('');
   const moodOptions = useMemo(() => {
@@ -43,12 +45,12 @@ export default function MoodExplainModal({
     //   return;
     // }
 
-    setLoading(true);
+    setLoadingConfirm(true);
     try {
       await onConfirm();
       onClose();
     } finally {
-      setLoading(false);
+      setLoadingConfirm(false);
     }
   };
 
@@ -58,12 +60,13 @@ export default function MoodExplainModal({
       return;
     }
 
-    setLoading(true);
+    setLoadingCorrected(true);
     try {
+      console.log('modal mood: ', correctMood);
       await onCorrect(correctMood);
       onClose();
     } finally {
-      setLoading(false);
+      setLoadingCorrected(false);
     }
   };
 
@@ -100,6 +103,31 @@ export default function MoodExplainModal({
               : 'Unknown'}
           </p>
 
+          {moodData?.mood_confirmed === true && (
+            <Pill bgColor="#f1f8f4" borderColor="#66bb6a" textColor="#2e7d32">
+              Agreed
+            </Pill>
+          )}
+          {moodData?.mood_confirmed === false && moodData.mood_corrected && (
+            <>
+              <Pill
+                className="mb-2"
+                bgColor="#fff5f5"
+                borderColor="#e57373"
+                textColor="#c62828"
+              >
+                Disagreed
+              </Pill>
+              <p
+                className="text-[clamp(0.875rem,1.5vw,1rem)]"
+                style={{ color: C.navy }}
+              >
+                Chosen Mood: {getMoodStyle(moodData.mood_corrected).emoji}
+                {toTitleCase(moodData.mood_corrected)}
+              </p>
+            </>
+          )}
+
           {/* explanation mood  */}
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2 text-justify"
@@ -119,41 +147,54 @@ export default function MoodExplainModal({
             or help.
           </p>
 
-          <div className="flex gap-2">
-            {/* agree button */}
-            <button
-              className={buttonGradient}
-              onClick={handleConfirm}
-              disabled={loading}
-            >
-              {loading ? 'Saving...' : 'I Agree'}
-            </button>
+          {moodData.mood_confirmed == null && (
+            <div className="md:flex md:gap-2 mt-2">
+              {/* agree button */}
+              <div className="flex gap-2">
+                <button
+                  className={buttonGradient}
+                  onClick={handleConfirm}
+                  disabled={loadingConfirm}
+                >
+                  {loadingConfirm ? 'Saving...' : 'I Agree'}
+                </button>
 
-            {/* disagree button */}
-            <button
-              className={buttonRed}
-              onClick={() => setOpenMoods(true)}
-              disabled={loading}
-            >
-              {loading ? 'Saving...' : 'I Agree'}
-            </button>
+                {/* disagree button */}
+                <button
+                  className={buttonRed}
+                  onClick={() => setOpenMoods(true)}
+                  disabled={loadingCorrected}
+                >
+                  I Disagree
+                </button>
+              </div>
 
-            {openMoods && (
-              <select
-                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: `1px solid ${C.border}`, color: C.navy }}
-                value={correctMood}
-                onChange={(e) => setCorrectMood(e.target.value)}
-              >
-                <option value="">Select Mood</option>
-                {moodOptions.map((mood) => (
-                  <option key={mood.value} value={mood.value}>
-                    {toTitleCase(mood.label)}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
+              {openMoods && (
+                <>
+                  <select
+                    className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 mt-3 lg:mt-0 rounded-[10px] bg-white cursor-pointer"
+                    style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                    value={correctMood}
+                    onChange={(e) => setCorrectMood(e.target.value)}
+                  >
+                    <option value="">Select Correct Mood</option>
+                    {moodOptions.map((mood) => (
+                      <option key={mood.value} value={mood.value}>
+                        {toTitleCase(mood.label)}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className={`${buttonRed} mt-3 lg:mt-0`}
+                    onClick={handleCorrected}
+                    disabled={loadingCorrected}
+                  >
+                    {loadingCorrected ? 'Saving...' : 'Submit'}
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Modal>

@@ -103,13 +103,14 @@ def update_journal_mood_exc(jrnl_id: str, mood_id: str, mood_name: str, uex_id: 
     )
 
 # get journal streak
-def get_journal_dates_for_user(sub: str, start_date: str, end_date: str) -> list[str]:
+def get_user_journal_dates_(sub: str, start_date: str, end_date: str) -> list[str]:
     table = _get_table()
     response = table.query(
         IndexName='user_id-jrnl_created_at-index',
         KeyConditionExpression=(
             Key('user_id').eq(sub) & Key('jrnl_created_at').between(start_date, end_date)
         ),
+        FilterExpression=Attr('jrnl_status').eq("submitted"),
     )
     items = response.get('Items', [])
     return {to_local_date_str(item['jrnl_created_at']) for item in items}
@@ -119,7 +120,7 @@ def calc_journal_streak(sub: str) -> dict:
     start_date = (today_local - timedelta(days=365)).isoformat()
     end_date = (today_local + timedelta(days=1)).isoformat()  
 
-    submitted_dates = get_journal_dates_for_user(sub, start_date, end_date)
+    submitted_dates = get_user_journal_dates_(sub, start_date, end_date)    
 
     streak = 0
     cursor = today_local

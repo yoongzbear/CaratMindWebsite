@@ -50,7 +50,7 @@ def corrected_mood(mood_id: str, correct_mood: str) -> dict | None:
             'SET mood_confirmed = :mood_confirmed, mood_corrected = :mood_corrected'
         ),
         ExpressionAttributeValues={
-            ':mood_confirmed': True,
+            ':mood_confirmed': False,
             ':mood_corrected': correct_mood,
         },
         ReturnValues='ALL_NEW',

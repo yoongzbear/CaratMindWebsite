@@ -8,7 +8,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 from accounts.authentication import authenticate_bearer
-from mood.dynamodb_service import confirm_mood, get_mood_by_id, get_user_recent_moods
+from mood.dynamodb_service import confirm_mood, corrected_mood, get_mood_by_id, get_user_recent_moods
 
 # mood by ID
 @require_GET
@@ -160,7 +160,7 @@ def mood_scatter_view(request):
 # update confirm mood
 @csrf_exempt
 @require_POST
-def confirm_mood_view(request, mood_id):
+def confirm_mood_view(request, jrnl_id):
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
@@ -168,23 +168,23 @@ def confirm_mood_view(request, mood_id):
     sub = principal.claims.get('sub')
 
     # make sure the mood belongs to the caller
-    user_mood = get_mood_by_id(mood_id)
+    user_mood = get_mood_by_id(jrnl_id)
     if not user_mood:
         return JsonResponse({'error': 'User mood not found'}, status=404)
     if user_mood.get('user_id') != sub:
         return JsonResponse({'error': 'Not found'}, status=404)
 
-    try:
-        body = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+    # try:
+    #     body = json.loads(request.body)
+    # except json.JSONDecodeError:
+    #     return JsonResponse({'error': 'Invalid JSON body'}, status=400)
 
     # rating = body.get('rating')
     # if not rating or not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
     #     return JsonResponse({'error': 'Rating must be a number between 1 and 5'}, status=400)
 
     try:
-        updated = confirm_mood(mood_id)
+        updated = confirm_mood(jrnl_id)
     except Exception as e:
         return JsonResponse({'error': f'Failed to save mood confirmation: {e}'}, status=500)
 
@@ -197,14 +197,14 @@ def confirm_mood_view(request, mood_id):
 # update corrected mood
 @csrf_exempt
 @require_POST
-def corrected_mood_view(request, mood_id):
+def corrected_mood_view(request, jrnl_id):
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
     sub = principal.claims.get('sub')
 
-    user_mood = get_mood_by_id(mood_id)
+    user_mood = get_mood_by_id(jrnl_id)
     if not user_mood:
         return JsonResponse({'error': 'User mood not found'}, status=404)
     if user_mood.get('user_id') != sub:
@@ -215,12 +215,12 @@ def corrected_mood_view(request, mood_id):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON body'}, status=400)
 
-    corrected_mood = body.get('corrected_mood')
-    if not corrected_mood:
+    submit_mood = body.get('corrected_mood')
+    if not submit_mood:
         return JsonResponse({'error': 'Corrected mood must be submitted.'}, status=400)
 
     try:
-        updated = corrected_mood(mood_id, corrected_mood)
+        updated = corrected_mood(jrnl_id, submit_mood)
     except Exception as e:
         return JsonResponse({'error': f'Failed to save corrected mood: {e}'}, status=500)
 

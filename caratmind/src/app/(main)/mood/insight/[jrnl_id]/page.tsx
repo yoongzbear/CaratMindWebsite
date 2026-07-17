@@ -20,7 +20,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { startTransition, useEffect, useMemo, useState } from 'react';
 
 export default function MoodInsightPage() {
   const { user, loading, accessToken } = useAuth();
@@ -48,31 +48,73 @@ export default function MoodInsightPage() {
   //   days: 7,
   // });
 
+  const loadEntry = async () => {
+    setFetchingJournal(true);
+    try {
+      const res = await fetch(`/api/journal/${jrnl_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load entry.');
+        setJournal(null);
+        return;
+      }
+      setJournal(data);
+      setEntry(data.entryText);
+    } catch {
+      toastError('Something went wrong loading the entry.');
+    } finally {
+      setFetchingJournal(false);
+    }
+  };
+
+  const loadMood = async () => {
+    setFetchingMoodData(true);
+    try {
+      const res = await fetch(`/api/mood/${jrnl_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load mood.');
+        setMoodData(null);
+        return;
+      }
+      setMoodData(data);
+    } catch {
+      toastError('Something went wrong loading the mood.');
+    } finally {
+      setFetchingMoodData(false);
+    }
+  };
+
+  const loadRecExercise = async () => {
+    setFetchingExercise(true);
+    try {
+      const res = await fetch(`/api/user_exercise/${jrnl_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load recommended coping exercise.');
+        setExerciseData(null);
+        return;
+      }
+      setExerciseData(data);
+    } catch {
+      toastError('Something went wrong loading recommended coping exercise.');
+    } finally {
+      setFetchingExercise(false);
+    }
+  };
+
   useEffect(() => {
     if (!accessToken || !jrnl_id || jrnl_id === 'undefined') return;
 
-    async function loadEntry() {
-      setFetchingJournal(true);
-      try {
-        const res = await fetch(`/api/journal/${jrnl_id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load entry.');
-          setJournal(null);
-          return;
-        }
-        setJournal(data);
-        setEntry(data.entryText);
-      } catch {
-        toastError('Something went wrong loading the entry.');
-      } finally {
-        setFetchingJournal(false);
-      }
-    }
-
-    loadEntry();
+    startTransition(() => {
+      loadEntry();
+    });
   }, [jrnl_id, accessToken]);
 
   useEffect(() => {
@@ -83,28 +125,9 @@ export default function MoodInsightPage() {
       journal?.jrnl_status !== 'submitted'
     )
       return;
-
-    async function loadMood() {
-      setFetchingMoodData(true);
-      try {
-        const res = await fetch(`/api/mood/${jrnl_id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load mood.');
-          setMoodData(null);
-          return;
-        }
-        setMoodData(data);
-      } catch {
-        toastError('Something went wrong loading the mood.');
-      } finally {
-        setFetchingMoodData(false);
-      }
-    }
-
-    loadMood();
+    startTransition(() => {
+      loadMood();
+    });
   }, [jrnl_id, accessToken, journal?.jrnl_status]);
 
   useEffect(() => {
@@ -115,30 +138,9 @@ export default function MoodInsightPage() {
       journal?.jrnl_status !== 'submitted'
     )
       return;
-
-    async function loadRecExercise() {
-      setFetchingExercise(true);
-      try {
-        const res = await fetch(`/api/user_exercise/${jrnl_id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(
-            data.error ?? 'Failed to load recommended coping exercise.',
-          );
-          setExerciseData(null);
-          return;
-        }
-        setExerciseData(data);
-      } catch {
-        toastError('Something went wrong loading recommended coping exercise.');
-      } finally {
-        setFetchingExercise(false);
-      }
-    }
-
-    loadRecExercise();
+    startTransition(() => {
+      loadRecExercise();
+    });
   }, [jrnl_id, accessToken, journal?.jrnl_status]);
 
   // update entry
@@ -189,6 +191,8 @@ export default function MoodInsightPage() {
       //   const updatedJournal = await refresh.json();
       //   setJournal(updatedJournal);
       // }
+      // refresh
+      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -239,6 +243,7 @@ export default function MoodInsightPage() {
 
   const handleConfirmMood = async () => {
     if (!moodData) return;
+    console.log('mood data: ', moodData);
     const mood_id = moodData.mood_id;
     try {
       const res = await fetch(`/api/mood/${mood_id}/confirm`, {
@@ -270,8 +275,7 @@ export default function MoodInsightPage() {
       toastSuccess('Saved confirmed mood.');
       // setOpenRating(false);
 
-      // refresh today's exercises, history, and streak
-      // await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
+      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }
@@ -279,9 +283,10 @@ export default function MoodInsightPage() {
 
   const handleCorrectMood = async (correctMood: string) => {
     if (!moodData) return;
+    console.log('mood:', correctMood);
     const mood_id = moodData.mood_id;
     try {
-      const res = await fetch(`/api/mood/${moodData}/corrected`, {
+      const res = await fetch(`/api/mood/${mood_id}/corrected`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -312,8 +317,7 @@ export default function MoodInsightPage() {
       toastSuccess('Saved corrected mood.');
       // setOpenRating(false);
 
-      // refresh today's exercises, history, and streak
-      // await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
+      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }
@@ -494,16 +498,49 @@ export default function MoodInsightPage() {
                       Mood not available yet. Submit your entry first.
                     </h5>
                   ) : (
-                    <h5
-                      className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                      style={{ color: C.navy }}
-                    >
-                      {toTitleCase(moodData.mood_name) ?? 'Unknown'}
-                    </h5>
+                    <>
+                      <h5
+                        className="m-0 mb-2 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                        style={{ color: C.navy }}
+                      >
+                        {toTitleCase(moodData.mood_name) ?? 'Unknown'}
+                      </h5>
+                      <div className="mb-2 lg:mb-0">
+                        {moodData?.mood_confirmed === true && (
+                          <Pill
+                            bgColor="#f1f8f4"
+                            borderColor="#66bb6a"
+                            textColor="#2e7d32"
+                          >
+                            Agreed
+                          </Pill>
+                        )}
+                        {moodData?.mood_confirmed === false &&
+                          moodData.mood_corrected && (
+                            <div className="lg:flex gap-2 items-center justify-center">
+                              <Pill
+                                bgColor="#fff5f5"
+                                borderColor="#e57373"
+                                textColor="#c62828"
+                              >
+                                Disagreed
+                              </Pill>
+                              <p
+                                className="text-[clamp(0.875rem,1.5vw,1rem)] mt-2 lg:mt-0"
+                                style={{ color: C.navy }}
+                              >
+                                Chosen Mood:{' '}
+                                {getMoodStyle(moodData.mood_corrected).emoji}
+                                {toTitleCase(moodData.mood_corrected)}
+                              </p>
+                            </div>
+                          )}
+                      </div>
+                    </>
                   )}
                 </div>
 
-                <div />
+                {/* <div /> */}
 
                 {/* disclaimer */}
                 <div>
@@ -576,37 +613,39 @@ export default function MoodInsightPage() {
                       your entry first.
                     </h5>
                   ) : (
-                    <div className="mb-2 lg:mb-0 flex flex-wrap items-center justify-center gap-2">
+                    <div className="mb-2 text-center items-center justify-center">
                       <h5
-                        className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
+                        className="m-0 mb-2 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                         style={{ color: C.navy }}
                       >
                         {exerciseData.exc_name}
                       </h5>
-                      {exerciseData.uex_status === 'completed' && (
-                        <Pill
-                          bgColor="#f1f8f4"
-                          borderColor="#66bb6a"
-                          textColor="#2e7d32"
-                        >
-                          Completed
-                        </Pill>
-                      )}
-                      {exerciseData.uex_status === 'incomplete' &&
-                        exerciseData.uex_reason && (
+                      <div className="mb-2 lg:mb-0">
+                        {exerciseData.uex_status === 'completed' && (
                           <Pill
-                            bgColor="#fff5f5"
-                            borderColor="#e57373"
-                            textColor="#c62828"
+                            bgColor="#f1f8f4"
+                            borderColor="#66bb6a"
+                            textColor="#2e7d32"
                           >
-                            Incomplete
+                            Completed
                           </Pill>
                         )}
+                        {exerciseData.uex_status === 'incomplete' &&
+                          exerciseData.uex_reason && (
+                            <Pill
+                              bgColor="#fff5f5"
+                              borderColor="#e57373"
+                              textColor="#c62828"
+                            >
+                              Incomplete
+                            </Pill>
+                          )}
+                      </div>
                     </div>
                   )}
                 </div>
 
-                <div />
+                {/* <div /> */}
 
                 {/* disclaimer */}
                 <div>
