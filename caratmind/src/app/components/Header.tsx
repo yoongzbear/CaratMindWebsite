@@ -33,19 +33,30 @@ const NAV_LINKS = [
 
 // onboarding quick start
 const pageTours: Record<string, string> = {
-  '/': 'welcome',
+  // '/': 'welcome',
   '/home': 'home-tour',
-  // TODO: add after checking main onboarding
-  '/mood': 'mood-tour',
-  '/exercise/tracking': 'exercise-tour',
-  '/journal/new': 'journal-tour',
+  '/journal/new': 'new-entry-tour',
+  '/journal/past': 'past-entry-tour',
+  '/mood': 'mood-charts-tour',
+  '/exercise/tracking': 'exercise-track-tour',
+  '/exercise/catalogue': 'exercise-catalogue-tour',
+  '/helpline': 'helpline-tour',
   '/profile': 'profile-tour',
 };
 
 export function HelpButton() {
   const pathname = usePathname();
   const { startNextStep } = useNextStep();
-  const tourName = pageTours[pathname];
+
+  let tourName: string | undefined;
+
+  if (pathname.startsWith('/journal/edit')) {
+    tourName = 'edit-entry-tour';
+  } else if (pathname.startsWith('/mood/insight')) {
+    tourName = 'mood-insight-tour';
+  } else {
+    tourName = pageTours[pathname];
+  }
 
   if (!tourName) return null;
 

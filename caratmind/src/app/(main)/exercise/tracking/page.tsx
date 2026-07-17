@@ -262,6 +262,7 @@ export default function ExerciseTrackingPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="streak"
         >
           <div className="flex flex-col items-center justify-center px-3">
             <div className="relative z-10 w-24 h-24 flex items-center justify-center transition-transform duration-300">
@@ -302,6 +303,7 @@ export default function ExerciseTrackingPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="today-exercise"
         >
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
@@ -339,7 +341,6 @@ export default function ExerciseTrackingPage() {
                     entry to get started!
                   </p>
                   <button
-                    // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                     className={buttonGradient}
                     onClick={() => router.push('/journal/new')}
                   >
@@ -495,6 +496,7 @@ export default function ExerciseTrackingPage() {
                         <div className="flex items-center gap-1">
                           <p
                             className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
+                            id="rating"
                             style={{ color: C.navy }}
                           >
                             {exercise.uex_rating}
@@ -525,16 +527,16 @@ export default function ExerciseTrackingPage() {
                             setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
-                          // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                           className={buttonGradient}
+                          id="button-exercise-details"
                         >
                           View More
                         </button>
 
                         <button
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
-                          // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                           className={buttonGradient}
+                          id="button-insights"
                         >
                           View Insights
                         </button>
@@ -550,7 +552,7 @@ export default function ExerciseTrackingPage() {
                                 // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGreen} text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
                                 className={buttonGreen}
                               >
-                                {'Completed'}
+                                Completed
                               </button>
 
                               <button
@@ -591,6 +593,7 @@ export default function ExerciseTrackingPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="exercise-history"
         >
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
@@ -600,7 +603,10 @@ export default function ExerciseTrackingPage() {
           </h3>
 
           {/* mobile - date selector */}
-          <div className="w-full flex lg:hidden mb-3 flex-col gap-2">
+          <div
+            className="w-full flex lg:hidden mb-3 flex-col gap-2"
+            id="mobile-date"
+          >
             <label
               className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
               style={{ color: C.navy }}
@@ -638,7 +644,7 @@ export default function ExerciseTrackingPage() {
 
           <div className="flex">
             {/* desktop calendar - 40% */}
-            <div className="w-[40%] hidden lg:flex">
+            <div className="w-[40%] hidden lg:flex" id="desktop-calendar">
               <div className="w-full flex justify-center">
                 <div>
                   <DayPicker
@@ -684,7 +690,10 @@ export default function ExerciseTrackingPage() {
             </div>
 
             {/* recommended coping exercise section - 60% */}
-            <div className="w-full lg:w-[60%] flex flex-col">
+            <div
+              className="w-full lg:w-[60%] flex flex-col"
+              id="exercise-history-list"
+            >
               <h5
                 className="text-[clamp(1rem,3vw,1.5rem)] font-bold underline"
                 style={{ color: C.navy }}
@@ -715,7 +724,6 @@ export default function ExerciseTrackingPage() {
                   excHistoryData.length === 0 &&
                   isSameDay(selectedDate, todayDate) && (
                     <button
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                       className={buttonGradient}
                       onClick={() => router.push('/journal/new')}
                     >
@@ -890,7 +898,6 @@ export default function ExerciseTrackingPage() {
 
                           {/* button to insights page */}
                           <button
-                            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,3vw,2rem)] rounded-xl px-5 py-2.5 transition-colors duration-200`}
                             className={buttonGradient}
                             onClick={() => handleViewEntry(exercise.jrnl_id)}
                           >

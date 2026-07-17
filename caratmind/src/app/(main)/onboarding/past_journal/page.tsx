@@ -101,9 +101,6 @@ export default function PastEntryPreviewPage() {
                   <DayPicker
                     mode="single"
                     selected={new Date()}
-                    // month={calendarMonth}
-                    // onMonthChange={setCalendarMonth}
-                    // onSelect={(date) => date && setSelectedDate(date)}
                     captionLayout="dropdown"
                     className="w-full"
                     style={{ color: C.navy }}
@@ -229,3 +226,4 @@ export default function PastEntryPreviewPage() {
     </section>
   );
 }
+'

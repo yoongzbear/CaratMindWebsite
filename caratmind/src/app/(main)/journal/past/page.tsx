@@ -92,6 +92,7 @@ export default function PastEntryPage() {
 
           <button
             className={buttonGradient}
+            id="button-new-entry"
             onClick={() => router.push('/journal/new')}
           >
             New Entry
@@ -105,6 +106,7 @@ export default function PastEntryPage() {
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
+          id="past-journal"
         >
           {/* mobile - date selector */}
           <div className="w-full flex lg:hidden flex-col gap-2">
@@ -146,7 +148,7 @@ export default function PastEntryPage() {
           {/* desktop calendar */}
           <div className="hidden lg:flex lg:w-[40%]">
             {/* calendar - 40% */}
-            <div className="w-full">
+            <div className="w-full" id="desktop-calendar">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
                 style={{ color: C.navy }}
@@ -199,7 +201,7 @@ export default function PastEntryPage() {
           </div>
 
           {/* saved entries section - 60% */}
-          <div className="w-full lg:w-[60%] flex flex-col">
+          <div className="w-full lg:w-[60%] flex flex-col" id="entry-list">
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold underline"
               style={{ color: C.navy }}
@@ -296,8 +298,8 @@ export default function PastEntryPage() {
 
                     {/* button to insights page */}
                     <button
-                      // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                      className={`${buttonGradient}`}
+                      className={buttonGradient}
+                      id="button-view-insights"
                       onClick={() => handleViewMore(entry.jrnl_id)}
                     >
                       View More

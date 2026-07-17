@@ -145,7 +145,7 @@ export default function EditEntryPage() {
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
     >
-      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto">
+      <div className="w-full sm:w-[95%] md:w-[85%] mx-auto" id="edit-journal">
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
@@ -187,6 +187,7 @@ export default function EditEntryPage() {
           <textarea
             className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] bg-white box-border outline-none font-inherit"
             value={entry}
+            id="entry-text"
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
             style={{
@@ -200,26 +201,27 @@ export default function EditEntryPage() {
             {/* cancel button */}
             <button
               onClick={handleCancel}
-              // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               className={buttonRed}
+              id="button-cancel"
             >
-              {'Cancel Edit'}
+              Cancel Edit
             </button>
 
             {/* reset button */}
             <button
               onClick={handleReset}
-              // className={`mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
               className={buttonRed}
+              id="button-reset"
             >
-              {'Reset'}
+              Reset
             </button>
 
             {/* submit button */}
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={`${buttonGradient}`}
+              className={buttonGradient}
+              id="button-submit"
             >
               {submitting ? 'Submitting…' : 'Submit Entry'}
             </button>
@@ -228,7 +230,8 @@ export default function EditEntryPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={`${buttonGrey}`}
+              className={buttonGrey}
+              id="button-draft"
             >
               {saving ? 'Saving...' : 'Save as Draft'}
             </button>

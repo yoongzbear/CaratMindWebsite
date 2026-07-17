@@ -108,7 +108,7 @@ export default function MoodInsightPreviewPage() {
               Edit Entry
             </button>
 
-            {/* submit/edit entry button */}
+            {/* submit entry button */}
             <button className={buttonGradient} id="button-submit-entry">
               Submit Entry
             </button>

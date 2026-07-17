@@ -128,17 +128,6 @@ export default function MoodPreviewPage() {
 
           {/* calendar heatmap */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
-            <div>
-              {/* <ToggleSwitch
-                leftLabel="Dominant Mood"
-                rightLabel="Average Mood"
-                defaultValue="left"
-                onChange={(value) => {
-                  console.log('Selected:', value); // left | right
-                }}
-              /> */}
-            </div>
-
             <div className="w-full flex justify-center" id="mood-heatmap">
               <CalendarHeatmap mockData={barData} />
             </div>

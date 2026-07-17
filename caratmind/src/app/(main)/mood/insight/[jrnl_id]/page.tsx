@@ -280,6 +280,7 @@ export default function MoodInsightPage() {
                 boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                 border: '1px solid #eef2f9',
               }}
+              id="journal-summary"
             >
               <div className="flex gap-2 items-center mb-2">
                 <h3
@@ -330,38 +331,27 @@ export default function MoodInsightPage() {
                     <button
                       onClick={() => setOpenDetail(true)}
                       className={buttonGradient}
+                      id="button-view-entry"
                     >
                       View More
                     </button>
-
-                    <EntryDetailModal
-                      open={openDetail}
-                      onClose={() => setOpenDetail(false)}
-                      date={format(
-                        new Date(journal.jrnl_created_at),
-                        'dd MMMM yyyy, p',
-                      )}
-                      lastUpdated={format(
-                        new Date(journal.jrnl_updated_at),
-                        'dd MMMM yyyy, p',
-                      )}
-                      journal={journal}
-                    />
 
                     {/* edit entry */}
                     <button
                       onClick={() => handleEdit(journal.jrnl_id)}
                       className={buttonGradient}
+                      id="button-edit-entry"
                     >
                       Edit Entry
                     </button>
 
-                    {/* submit/edit entry button */}
+                    {/* submit entry button */}
                     {isDraft && (
                       <button
                         onClick={handleSubmit}
                         disabled={submitting}
                         className={buttonGradient}
+                        id="button-submit-entry"
                       >
                         {submitting ? 'Submitting...' : 'Submit Entry'}
                       </button>
@@ -371,14 +361,10 @@ export default function MoodInsightPage() {
                     <button
                       className={buttonRed}
                       onClick={() => setOpenDelete(true)}
+                      id="button-delete-entry"
                     >
                       Delete Entry
                     </button>
-
-                    <DeleteEntryModal
-                      open={openDelete}
-                      onClose={() => setOpenDelete(false)}
-                    />
                   </div>
                 </>
               )}
@@ -393,6 +379,7 @@ export default function MoodInsightPage() {
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                   border: '1px solid #eef2f9',
                 }}
+                id="mood"
               >
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
@@ -402,16 +389,14 @@ export default function MoodInsightPage() {
                 </h3>
 
                 {/* emoji */}
-                <div className="lg:flex items-center justify-center text-center">
+                <div className="items-center justify-center text-center">
                   {!fetchingMoodData && moodData?.mood_id && (
                     <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                       {getMoodStyle(moodData.mood_name).emoji}
                     </div>
                   )}
-                  {/* </div> */}
 
                   {/* mood name */}
-                  {/* <div className="flex items-center justify-center text-center"> */}
                   {fetchingMoodData ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
@@ -459,6 +444,7 @@ export default function MoodInsightPage() {
                     <button
                       className={buttonGradient}
                       onClick={() => setOpenMoodDetail(true)}
+                      id="button-view-mood"
                     >
                       View Details
                     </button>
@@ -474,6 +460,7 @@ export default function MoodInsightPage() {
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                   border: '1px solid #eef2f9',
                 }}
+                id="exercise"
               >
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
@@ -489,10 +476,8 @@ export default function MoodInsightPage() {
                       {getExerciseStyle(exerciseData.exc_type).emoji}
                     </div>
                   )}
-                  {/* </div> */}
 
                   {/* name + status / states */}
-                  {/* <div className="flex items-center justify-center text-center"> */}
                   {fetchingExercise ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
@@ -562,6 +547,7 @@ export default function MoodInsightPage() {
                       <button
                         className={buttonGradient}
                         onClick={() => setOpenExcDetail(true)}
+                        id="button-view-exercise"
                       >
                         View Details
                       </button>
@@ -570,6 +556,7 @@ export default function MoodInsightPage() {
                           <button
                             className={buttonGradient}
                             onClick={performExercise}
+                            id="button-track-exercise"
                           >
                             Perform Exercise
                           </button>
@@ -587,6 +574,7 @@ export default function MoodInsightPage() {
                 boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                 border: '1px solid #eef2f9',
               }}
+              id="mood-chart-div"
             >
               {/* mood chart */}
               <h3
@@ -597,11 +585,16 @@ export default function MoodInsightPage() {
                   ? 'Mood This Week'
                   : 'Mood Around This Entry'}
               </h3>
-              <StackedBarChart range={barRange} key={journal.jrnl_updated_at} />
+              <div className="w-full" id="mood-chart">
+                <StackedBarChart
+                  range={barRange}
+                  key={journal.jrnl_updated_at}
+                />
+              </div>
               {/* mood dashboard button */}
               <button
                 onClick={moodDashboard}
-                // className={`mt-2 mb-1 inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                id="button-mood-chart"
                 className={buttonGradient}
               >
                 View Mood Dashboard
@@ -611,6 +604,22 @@ export default function MoodInsightPage() {
         )}
       </div>
       {/* modals */}
+      {journal && openDetail == true && (
+        <EntryDetailModal
+          open={openDetail}
+          onClose={() => setOpenDetail(false)}
+          date={format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
+          lastUpdated={format(
+            new Date(journal.jrnl_updated_at),
+            'dd MMMM yyyy, p',
+          )}
+          journal={journal}
+        />
+      )}
+      <DeleteEntryModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+      />
       {exerciseData && openExcDetail == true && (
         <ExerciseDetailModal
           open={openExcDetail}

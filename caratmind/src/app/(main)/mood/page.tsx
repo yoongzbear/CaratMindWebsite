@@ -50,9 +50,11 @@ export default function MoodPage() {
           {/* stacked bar chart */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
             {/* time range */}
-            <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
+            <div id="select-date">
+              <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
+            </div>
 
-            <div className="w-full mt-2">
+            <div className="w-full mt-2" id="bar-chart">
               <StackedBarChart range={barRange} height={chartHeight} />
             </div>
           </div>
@@ -65,7 +67,7 @@ export default function MoodPage() {
               onChange={setScatterRange}
             />
 
-            <div className="w-full mt-2">
+            <div className="w-full mt-2" id="scatter-plot">
               <DayScatterPlot range={scatterRange} height={chartHeight} />
             </div>
           </div>
@@ -82,6 +84,7 @@ export default function MoodPage() {
 
               {/* date */}
               <input
+                id="daily-date"
                 style={styles.dateInput}
                 type="date"
                 value={moodDate}
@@ -89,25 +92,14 @@ export default function MoodPage() {
               ></input>
             </div>
 
-            <div className="w-full mt-2">
+            <div className="w-full mt-2" id="daily-scatter-plot">
               <TimeScatterPlot moodDate={moodDate} />
             </div>
           </div>
 
           {/* calendar heatmap */}
           <div className="rounded-[14px] border p-4 bg-white shadow-sm">
-            <div>
-              {/* <ToggleSwitch
-                leftLabel="Dominant Mood"
-                rightLabel="Average Mood"
-                defaultValue="left"
-                onChange={(value) => {
-                  console.log('Selected:', value); // left | right
-                }}
-              /> */}
-            </div>
-
-            <div className="w-full flex justify-center">
+            <div className="w-full flex justify-center" id="mood-heatmap">
               <CalendarHeatmap />
             </div>
           </div>
