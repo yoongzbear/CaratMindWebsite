@@ -290,13 +290,15 @@ def api_me_view(request):
     )
 
 # onboarding complete update
+@csrf_exempt
+@require_http_methods(['PATCH'])
 def complete_onboarding_view(request):
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
 
     sub = principal.claims.get('sub')
-    update_onboarding(sub, True)  # your existing DynamoDB update helper
+    update_onboarding(sub, True)  
     return JsonResponse({'allowed': True})
 
 # @require_GET

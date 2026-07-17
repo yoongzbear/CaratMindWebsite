@@ -46,7 +46,6 @@ def update_preferred_name(user_id: str, preferred_name: str):
     )
 
 # update onboarding completion
-# update name 
 def update_onboarding(user_id: str, onboardingDone: bool):
     table = _get_table()
 

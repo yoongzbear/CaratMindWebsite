@@ -33,11 +33,13 @@ const NAV_LINKS = [
 
 // onboarding quick start
 const pageTours: Record<string, string> = {
-  '/': 'home-tour',
+  '/': 'welcome',
+  '/home': 'home-tour',
   // TODO: add after checking main onboarding
   '/mood': 'mood-tour',
   '/exercise/tracking': 'exercise-tour',
   '/journal/new': 'journal-tour',
+  '/profile': 'profile-tour',
 };
 
 export function HelpButton() {
@@ -50,10 +52,12 @@ export function HelpButton() {
   return (
     <button
       id="help-button"
+      className="cursor-pointer"
       onClick={() => startNextStep(tourName)}
       aria-label="Show page tour"
+      style={{ color: C.navy }}
     >
-      <HelpCircle size={20} />
+      <HelpCircle />
     </button>
   );
 }
@@ -144,6 +148,11 @@ export default function Header() {
 
         {/* desktop */}
         <nav className="hidden lg:flex items-center gap-1">
+          {/* onboarding */}
+          <div id="help-button">
+            <HelpButton />
+          </div>
+
           {NAV_LINKS.map((item) => (
             <DropdownItem key={item.label} item={item} />
           ))}
@@ -206,9 +215,6 @@ export default function Header() {
 
                     {/* buttons */}
                     <div className="p-2">
-                      {/* onboarding */}
-                      {/* <HelpButton /> */}
-
                       <button
                         type="button"
                         onClick={() => router.push('/profile')}
@@ -263,7 +269,9 @@ export default function Header() {
           {!loading && user && (
             <>
               {/* onboarding */}
-              <HelpButton />
+              <div id="help-button-mobile">
+                <HelpButton />
+              </div>
               <button
                 type="button"
                 onClick={() => router.push('/profile')}
@@ -385,7 +393,6 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={closeMobile}
-                // className={`mt-3 mb-3 ${buttonBase} ${buttonGradientColor} border-2 text-[15px] justify-center`}
                 className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.95rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
               >
                 Log In
