@@ -3,7 +3,6 @@
 'use client';
 
 import Modal from './Modal';
-import { C } from '@/app/styles/styles';
 
 type Props = {
   open: boolean;
@@ -18,14 +17,14 @@ export default function DetectMoodModal({ open, onClose }: Props) {
         <div
           className="w-20 h-20 rounded-full animate-spin"
           style={{
-            border: `4px solid ${C.roseQuartz}`, //the majority part
-            borderTopColor: C.serenity, // the smaller part
+            border: '4px solid var(--first-color)', //the majority part
+            borderTopColor: 'var(--second-color)', // the smaller part
           }}
         />
       </div>
       <h2
         className="mt-0 mb-2.5 text-[clamp(1.3rem,6vw,1.85rem)]"
-        style={{ color: C.navy }}
+        style={{ color: 'var(--text)' }}
       >
         Detecting your mood and recommending a coping exercise...
       </h2>

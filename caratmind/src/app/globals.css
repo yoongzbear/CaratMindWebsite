@@ -39,6 +39,7 @@ html {
   --second-color: #92a8d1;
   --bg-sidebar: linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%);
   --bg-page: linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%);
+  --bg-topbar: rgba(253, 250, 251, 1);
 }
 
 :root[data-theme='dark'] {

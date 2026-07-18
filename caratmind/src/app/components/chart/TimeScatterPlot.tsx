@@ -17,7 +17,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { addDays, addHours, format, parseISO, startOfDay } from 'date-fns';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,7 @@ import {
 } from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   // range?: DateRangeValue;
@@ -42,6 +43,7 @@ export default function TimeScatterPlot({
   height = 320,
   mockData,
 }: Props) {
+  const { theme } = useTheme();
   const { points, loading, error } = useDailyMoodScatterData(
     moodDate,
     mockData,
@@ -64,7 +66,7 @@ export default function TimeScatterPlot({
       <div className="text-center items-center" style={{ height: height }}>
         <p
           className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-          style={{ color: C.muted }}
+          style={{ color: 'var(--muted)' }}
         >
           Loading daily mood scatter plot chart...
         </p>
@@ -80,7 +82,7 @@ export default function TimeScatterPlot({
       >
         <p
           className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-          style={{ color: C.muted }}
+          style={{ color: 'var(--muted)' }}
         >
           No mood data available for this date.
         </p>
@@ -131,7 +133,7 @@ export default function TimeScatterPlot({
     <div className="w-full">
       <p
         className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
-        style={{ color: C.navy }}
+        style={{ color: 'var(--text)' }}
       >
         {format(parseISO(moodDate), 'EEEE, dd/MM/yyyy')}
       </p>
@@ -147,7 +149,7 @@ export default function TimeScatterPlot({
             domain={[xStart, xEnd]}
             ticks={presentTicks}
             tickFormatter={(ts) => format(new Date(ts), 'p')}
-            tick={{ fontSize: 15, fill: C.navy }}
+            tick={{ fontSize: 15, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
             padding={{ left: 20, right: 20 }}
@@ -163,7 +165,7 @@ export default function TimeScatterPlot({
               // const mood = MOOD_ORDER[maxY - rank];
               // return toTitleCase(mood);
             }}
-            tick={{ fontSize: 12, fill: C.navy }}
+            tick={{ fontSize: 12, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
             width={90}
@@ -181,9 +183,9 @@ export default function TimeScatterPlot({
                   style={{
                     background: 'white',
                     borderRadius: 10,
-                    border: `1px solid ${C.navy}`,
+                    border: `1px solid ${'var(--text)'}`,
                     padding: '6px 10px',
-                    color: C.navy,
+                    color: 'var(--text)',
                   }}
                 >
                   {getMoodStyle(point.mood).emoji}
@@ -205,10 +207,10 @@ export default function TimeScatterPlot({
             }}
             contentStyle={{
               borderRadius: 10,
-              border: `1px solid ${C.navy}`,
+              border: `1px solid ${'var(--text)'}`,
               fontSize: 13,
             }}
-            itemStyle={{ color: C.navy, fontWeight: 600 }}
+            itemStyle={{ color: 'var(--text)', fontWeight: 600 }}
             wrapperStyle={{ zIndex: 100 }}
           /> */}
           <Scatter data={data} onClick={handleScatterClick} cursor="pointer">

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 
 type NavItem = {
   label: string;
@@ -21,14 +21,14 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (!active) {
       e.currentTarget.style.background = 'rgba(146,168,209,0.08)';
-      e.currentTarget.style.color = C.navy;
+      e.currentTarget.style.color = 'var(--text)';
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
     if (!active) {
       e.currentTarget.style.background = 'transparent';
-      e.currentTarget.style.color = C.muted;
+      e.currentTarget.style.color = 'var(--muted)';
     }
   };
 
@@ -43,7 +43,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
         <Link
           href={item.href}
           className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
-          style={{ color: C.muted }}
+          style={{ color: 'var(--muted)' }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -53,7 +53,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       ) : (
         <button
           className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
-          style={{ color: C.muted }}
+          style={{ color: 'var(--muted)' }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >

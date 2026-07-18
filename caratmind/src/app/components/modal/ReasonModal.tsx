@@ -4,9 +4,10 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   open: boolean;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function ReasonModal({ open, onClose, onSubmit }: Props) {
+  const { theme } = useTheme();
   const [reason, setReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,8 +53,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
       footer={
         <div className="flex justify-center">
           <button
-            // className={`inline-flex cursor-pointer items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
-            className={buttonGradient}
+            className={buttonGradient(theme)}
             onClick={handleSubmit}
             disabled={loading}
           >
@@ -74,7 +75,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
             />
             <span
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               {item}
             </span>
@@ -94,7 +95,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
           <div className="flex-1">
             <span
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Other:
             </span>
@@ -107,8 +108,8 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
                 placeholder="Please specify"
                 className="mt-2 w-full rounded-[10px] px-3 py-2"
                 style={{
-                  border: `1px solid ${C.border}`,
-                  color: C.navy,
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
                 }}
               />
             )}
@@ -118,7 +119,7 @@ export default function ReasonModal({ open, onClose, onSubmit }: Props) {
       {/* <input type="radio"></input>
       <select
         className={`sm:text-[14px] md:text-[16px] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer`}
-        style={{ border: `1px solid ${C.border}`, color: C.navy }}
+        style={{ border: `1px solid ${C.border}`, color: 'var(--text)' }}
         value={reason}
         onChange={(e) => setReason(e.target.value)}
       >

@@ -1,7 +1,7 @@
 import { useTheme } from '@/context/ThemeContext';
 import { ThemeName } from '../styles/themes';
 
-function ThemeSelector() {
+export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
   const options: ThemeName[] = [
     'light',

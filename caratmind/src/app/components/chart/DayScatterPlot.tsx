@@ -17,7 +17,7 @@ import {
   Cell,
 } from 'recharts';
 import { format, parseISO, startOfDay } from 'date-fns';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/app/utils/format';
 import { DateRangeValue } from './DateRangeSelector';
@@ -56,7 +56,7 @@ export default function DayScatterPlot({
       <div className="w-full">
         <h5
           className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           {getRangeLabel(range)}
         </h5>
@@ -64,7 +64,7 @@ export default function DayScatterPlot({
         <div style={{ height }} className="flex items-center justify-center">
           <p
             className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Loading mood scatter plot chart..
           </p>
@@ -78,7 +78,7 @@ export default function DayScatterPlot({
       <div className="w-full">
         <h5
           className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           {getRangeLabel(range)}
         </h5>
@@ -86,7 +86,7 @@ export default function DayScatterPlot({
         <div style={{ height }} className="flex items-center justify-center">
           <p
             className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             No mood data available for this period.
           </p>
@@ -119,7 +119,7 @@ export default function DayScatterPlot({
     <div className="w-full">
       <h5
         className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
-        style={{ color: C.navy }}
+        style={{ color: 'var(--text)' }}
       >
         {getRangeLabel(range)}
       </h5>
@@ -135,7 +135,7 @@ export default function DayScatterPlot({
             dataKey="x"
             domain={[xStart, xEnd]}
             tickFormatter={(ts) => format(new Date(ts), 'dd/MM')}
-            tick={{ fontSize: 15, fill: C.navy }}
+            tick={{ fontSize: 15, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
             padding={{ left: 20, right: 20 }}
@@ -151,7 +151,7 @@ export default function DayScatterPlot({
               // const mood = MOOD_ORDER[maxY - rank];
               // return toTitleCase(mood);
             }}
-            tick={{ fontSize: 12, fill: C.navy }}
+            tick={{ fontSize: 12, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
             width={90}
@@ -169,9 +169,9 @@ export default function DayScatterPlot({
                   style={{
                     background: 'white',
                     borderRadius: 10,
-                    border: `1px solid ${C.navy}`,
+                    border: `1px solid ${'var(--text)'}`,
                     padding: '6px 10px',
-                    color: C.navy,
+                    color: 'var(--text)',
                   }}
                 >
                   {getMoodStyle(point.mood).emoji}
@@ -192,10 +192,10 @@ export default function DayScatterPlot({
             }}
             contentStyle={{
               borderRadius: 10,
-              border: `1px solid ${C.navy}`,
+              border: `1px solid ${'var(--text)'}`,
               fontSize: 13,
             }}
-            itemStyle={{ color: C.navy, fontWeight: 600 }}
+            itemStyle={{ color: 'var(--text)', fontWeight: 600 }}
             wrapperStyle={{ zIndex: 100 }}
           /> */}
           <Scatter data={data} onClick={handleScatterClick} cursor="pointer">

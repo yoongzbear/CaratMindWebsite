@@ -9,7 +9,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { format } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';
@@ -61,7 +61,7 @@ export default function CalendarHeatmap({
     return (
       <p
         className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-        style={{ color: C.muted }}
+        style={{ color: 'var(--muted)' }}
       >
         Loading mood calendar heatmap...
       </p>
@@ -72,7 +72,7 @@ export default function CalendarHeatmap({
     return (
       <p
         className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-        style={{ color: C.muted }}
+        style={{ color: 'var(--muted)' }}
       >
         No mood data available for this period.
       </p>
@@ -90,7 +90,7 @@ export default function CalendarHeatmap({
           onSelect={(date) => date && setSelectedDate(date)}
           captionLayout="dropdown"
           className="w-full"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
           components={{
             DayButton: (props) => (
               <MoodDayButton
@@ -122,7 +122,7 @@ export default function CalendarHeatmap({
         />
         <button
           className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold hover:cursor-pointer"
-          style={{ color: C.serenity }}
+          style={{ color: 'var(--second-color)' }}
           onClick={() => setSelectedDate(new Date())}
         >
           Go to Today
@@ -211,7 +211,7 @@ function MoodDayButton({
     >
       <span
         className="relative z-10 text-[clamp(0.875rem,1.5vw,1rem)] font-medium"
-        style={{ color: hasMoods ? C.navy : C.faint }}
+        style={{ color: hasMoods ? 'var(--text)' : 'var(--faint)' }}
       >
         {day.date.getDate()}
       </span>
@@ -224,7 +224,11 @@ function MoodDayButton({
       {hasMoods && (
         <div
           className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-[clamp(0.875rem,1.5vw,1rem)] shadow-md"
-          style={{ background: 'white', borderColor: C.navy, color: C.navy }}
+          style={{
+            background: 'white',
+            borderColor: 'var(--text)',
+            color: 'var(--text)',
+          }}
         >
           {moodCounts.map(({ mood, count }) => (
             <div key={mood} className="flex items-center gap-1 font-normal">

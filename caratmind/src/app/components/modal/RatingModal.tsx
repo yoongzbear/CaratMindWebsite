@@ -4,10 +4,11 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { Star } from 'lucide-react';
 import { toastError } from '@/utils/toast';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   open: boolean;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export default function RatingModal({ open, onClose, onSubmit }: Props) {
+  const { theme } = useTheme();
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
@@ -44,7 +46,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
       footer={
         <div className="flex justify-center">
           <button
-            className={buttonGradient}
+            className={buttonGradient(theme)}
             onClick={handleSubmit}
             disabled={loading}
           >
@@ -56,7 +58,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
       <div className="flex items-center justify-center gap-2 mb-4">
         <p
           className="text-[clamp(1.15rem,4vw,1.65rem)] hidden md:flex font-semibold"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           Did not help
         </p>
@@ -64,16 +66,16 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
           {[1, 2, 3, 4, 5].map((star) => {
             const isFilled =
               hoverRating > 0 ? star <= hoverRating : star <= rating;
-            // const fillColor = hoverRating > 0 ? C.muted : '#facc15';
+            // const fillColor = hoverRating > 0 ? 'var(--muted)' : '#facc15';
 
             // for gradient stars
             const factor = (star - 1) / 4;
             const gradientColor = interpolateColor(
-              C.serenity,
-              C.roseQuartz,
+              'var(--second-color)',
+              'var(--first-color)',
               factor,
             );
-            const fillColor = hoverRating > 0 ? C.muted : gradientColor;
+            const fillColor = hoverRating > 0 ? 'var(--muted)' : gradientColor;
 
             return (
               <button
@@ -83,7 +85,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
               >
                 <Star
                   size={48}
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                   fill={isFilled ? fillColor : 'none'}
                 />
               </button>
@@ -93,7 +95,7 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
 
         <p
           className="text-[clamp(1.15rem,4vw,1.65rem)] hidden md:flex font-semibold"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           Helped a lot
         </p>

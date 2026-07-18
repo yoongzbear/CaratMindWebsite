@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { buttonBase, buttonGradientColor, C } from '@/app/styles/styles';
+import { buttonBase } from '@/app/styles/styles'; //buttonGradientColor, C
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
 
@@ -11,6 +11,8 @@ import { useEffect, useRef, useState } from 'react';
 import { SessionUser } from '../types/user';
 import { ChevronDown, HelpCircle, Menu, X } from 'lucide-react';
 import { useNextStep } from 'nextstepjs';
+import { buttonGradient } from '../styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 const NAV_LINKS = [
   {
@@ -66,7 +68,7 @@ export function HelpButton() {
       className="cursor-pointer"
       onClick={() => startNextStep(tourName)}
       aria-label="Show page tour"
-      style={{ color: C.navy }}
+      style={{ color: 'var(--text)' }}
     >
       <HelpCircle />
     </button>
@@ -75,6 +77,7 @@ export function HelpButton() {
 
 export default function Header() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { user, loading, signOut } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -133,8 +136,8 @@ export default function Header() {
     <header
       className="sticky top-0 z-50 w-full border-b-[1.5px]"
       style={{
-        backgroundColor: C.bgTopbar,
-        borderBottom: `1.5px solid ${C.serenity}`,
+        backgroundColor: 'var(--bg-topbar)',
+        borderBottom: '1.5px solid var(--second-color)',
         boxShadow: '0 2px 12px rgba(146,168,209,0.10)',
         // dynamic island safe (iPhone)
         paddingTop: 'env(safe-area-inset-top, 0px)',
@@ -177,9 +180,10 @@ export default function Header() {
                   className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer text-white font-bold sm:text-sm md:text-base transition-all duration-150 ease-in-out"
                   style={{
                     border: profileOpen
-                      ? `1px solid ${C.serenity}`
-                      : `1px solid ${C.border}`,
-                    background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
+                      ? '1px solid var(--second-color)'
+                      : '1px solid var(--border)',
+                    background:
+                      'linear-gradient(135deg, var(--first-color), var(--second-color))',
                     boxShadow: profileOpen
                       ? '0 4px 16px rgba(146,168,209,0.18)'
                       : 'none',
@@ -194,7 +198,7 @@ export default function Header() {
                     onClick={(e) => e.stopPropagation()}
                     className="absolute top-12 right-0 w-55 bg-white border rounded-[14px] shadow-[0_16px_48px_rgba(92,112,160,0.16)] overflow-hidden z-50"
                     style={{
-                      border: `1px solid ${C.border}`,
+                      border: `1px solid var(--border)`,
                     }}
                   >
                     {/* user info */}
@@ -208,7 +212,7 @@ export default function Header() {
                       <div
                         className="font-bold text-[clamp(0.875rem,1.5vw,1rem)]"
                         style={{
-                          color: C.navy,
+                          color: 'var(--text)',
                         }}
                       >
                         {user.preferredUsername}
@@ -217,7 +221,7 @@ export default function Header() {
                       <div
                         className="text-[clamp(0.7rem,1.5vw,0.85rem)] mt-0.5"
                         style={{
-                          color: C.serenity,
+                          color: 'var(--second-color)',
                         }}
                       >
                         {user.email || '—'}
@@ -231,7 +235,7 @@ export default function Header() {
                         onClick={() => router.push('/profile')}
                         className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
-                          color: C.navy,
+                          color: 'var(--text)',
                         }}
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.background =
@@ -268,7 +272,8 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className={`${buttonBase} ${buttonGradientColor} border-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold`}
+              // className={`${buttonBase} ${buttonGradientColor} border-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold`}
+              className={buttonGradient(theme)}
             >
               Log In
             </Link>
@@ -288,8 +293,8 @@ export default function Header() {
                 onClick={() => router.push('/profile')}
                 className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
                 style={{
-                  border: `1px solid ${C.border}`,
-                  background: `linear-gradient(135deg, ${C.roseQuartz}, ${C.serenity})`,
+                  border: `1px solid var(--border)`,
+                  background: `linear-gradient(135deg, var(--first-color), var(--second-color))`,
                 }}
                 aria-label="Profile"
               >
@@ -302,8 +307,8 @@ export default function Header() {
             onClick={() => setMobile((v) => !v)}
             className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-150"
             style={{
-              border: `1px solid ${C.border}`,
-              color: C.navy,
+              border: `1px solid var(--border)`,
+              color: 'var(--text)',
             }}
             aria-label={mobile ? 'Close menu' : 'Open menu'}
           >
@@ -318,8 +323,8 @@ export default function Header() {
           ref={mobileRef}
           className="lg:hidden w-full border-t max-h-[calc(100vh-4rem)] overflow-y-auto"
           style={{
-            backgroundColor: C.bgTopbar,
-            borderTop: `1px solid ${C.border}`,
+            backgroundColor: 'var(--bg-topbar)',
+            borderTop: `1px solid var(--border)`,
           }}
         >
           <nav
@@ -335,7 +340,7 @@ export default function Header() {
                 <div
                   key={item.label}
                   className="border-b"
-                  style={{ borderColor: C.border }}
+                  style={{ borderColor: 'var(--border)' }}
                 >
                   <button
                     type="button"
@@ -345,7 +350,7 @@ export default function Header() {
                       )
                     }
                     className="w-full flex items-center justify-between py-3.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                   >
                     {item.label}
                     <ChevronDown
@@ -367,7 +372,7 @@ export default function Header() {
                           href={child.href}
                           onClick={closeMobile}
                           className="py-2.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
-                          style={{ color: C.serenity }}
+                          style={{ color: 'var(--second-color)' }}
                         >
                           {child.label}
                         </Link>
@@ -381,7 +386,7 @@ export default function Header() {
                   href={item.href}
                   onClick={closeMobile}
                   className="py-3.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold border-b"
-                  style={{ color: C.navy, borderColor: C.border }}
+                  style={{ color: 'var(--text)', borderColor: 'var(--border)' }}
                 >
                   {item.label}
                 </Link>
@@ -404,7 +409,8 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={closeMobile}
-                className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.95rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                // className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.95rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={buttonGradient(theme)}
               >
                 Log In
               </Link>

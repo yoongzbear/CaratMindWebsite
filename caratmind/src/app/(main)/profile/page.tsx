@@ -3,15 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
 import DeleteAccountModal from '@/app/components/modal/DeleteAccountModal';
 import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
+  const { theme } = useTheme();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
@@ -22,7 +24,7 @@ export default function ProfilePage() {
     return (
       <section
         className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]"
-        style={{ color: C.muted }}
+        style={{ color: 'var(--muted)' }}
       >
         Loading profile...
       </section>
@@ -32,8 +34,11 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <section className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]">
-        <p style={{ color: C.muted }}>You are not signed in.</p>
-        <Link href="/login" style={{ color: C.serenity, fontWeight: 600 }}>
+        <p style={{ color: 'var(--muted)' }}>You are not signed in.</p>
+        <Link
+          href="/login"
+          style={{ color: 'var(--second-color)', fontWeight: 600 }}
+        >
           Log in
         </Link>
       </section>
@@ -86,7 +91,7 @@ export default function ProfilePage() {
     <section
       className="min-h-[calc(100vh-320px)] pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -95,7 +100,7 @@ export default function ProfilePage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             User Profile
           </h1>
@@ -103,7 +108,7 @@ export default function ProfilePage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            color: C.navy,
+            color: 'var(--text)',
             backgroundColor: 'white',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
@@ -112,13 +117,13 @@ export default function ProfilePage() {
         >
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Username
           </p>
           <p
             className="mt-1 mb-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             {user.username}
           </p>
@@ -128,13 +133,13 @@ export default function ProfilePage() {
             <>
               <p
                 className="text-[clamp(0.875rem,1.5vw,1rem)]"
-                style={{ color: C.muted }}
+                style={{ color: 'var(--muted)' }}
               >
                 Email
               </p>
               <p
                 className="mt-1 mb-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {user.email}
               </p>
@@ -144,7 +149,7 @@ export default function ProfilePage() {
           {/* Preferred name */}
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Preferred Name
           </p>
@@ -162,8 +167,8 @@ export default function ProfilePage() {
                     }}
                     className="w-full rounded-lg px-2.5 py-1.5 pr-8 text-[clamp(0.875rem,1.5vw,1rem)] outline-none"
                     style={{
-                      border: `1.5px solid ${C.serenity}`,
-                      color: C.navy,
+                      border: `1.5px solid ${'var(--second-color)'}`,
+                      color: 'var(--text)',
                     }}
                   />
 
@@ -171,7 +176,7 @@ export default function ProfilePage() {
                     type="button"
                     onClick={() => setDraft(generateRandomName())}
                     className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer"
-                    style={{ color: C.muted }}
+                    style={{ color: 'var(--muted)' }}
                   >
                     <Dices size={24} />
                   </button>
@@ -180,7 +185,7 @@ export default function ProfilePage() {
             ) : (
               <p
                 className="mt-1 mb-4 text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {user.preferredUsername ?? '—'}
               </p>
@@ -204,7 +209,7 @@ export default function ProfilePage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className={buttonGradient}
+                  className={buttonGradient(theme)}
                 >
                   {saving ? 'Saving…' : 'Save'}
                 </button>
@@ -219,7 +224,7 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={handleEditClick}
-                className={buttonGradient}
+                className={buttonGradient(theme)}
                 id="button-edit-name"
               >
                 Edit Name

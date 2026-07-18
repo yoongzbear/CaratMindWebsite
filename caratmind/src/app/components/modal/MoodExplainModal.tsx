@@ -3,7 +3,7 @@
 'use client';
 
 import Modal from './Modal';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { Mood } from '@/app/types/mood';
@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { toastError } from '@/utils/toast';
 import Pill from '../Pill';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   open: boolean;
@@ -27,6 +28,7 @@ export default function MoodExplainModal({
   onConfirm,
   onCorrect,
 }: Props) {
+  const { theme } = useTheme();
   const [loadingConfirm, setLoadingConfirm] = useState(false);
   const [loadingCorrected, setLoadingCorrected] = useState(false);
   const [openMoods, setOpenMoods] = useState(false);
@@ -85,7 +87,7 @@ export default function MoodExplainModal({
           </div>
           <h5
             className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             {toTitleCase(moodData.mood_name) ?? 'Unknown'}
           </h5>
@@ -95,7 +97,7 @@ export default function MoodExplainModal({
           {/* mood confidence */}
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)] mb-1"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Confidence:{' '}
             {moodData.mood_confidence
@@ -120,7 +122,7 @@ export default function MoodExplainModal({
               </Pill>
               <p
                 className="text-[clamp(0.875rem,1.5vw,1rem)]"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Chosen Mood: {getMoodStyle(moodData.mood_corrected).emoji}
                 {toTitleCase(moodData.mood_corrected)}
@@ -131,7 +133,7 @@ export default function MoodExplainModal({
           {/* explanation mood  */}
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2 text-justify"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             {moodData.mood_explain?.replace(/^"+|"+$/g, '') ?? 'Unknown'}
           </p>
@@ -139,7 +141,7 @@ export default function MoodExplainModal({
           {/* disclaimer */}
           <p
             className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Your mood is estimated using AI based on the submitted entry. The
             detected mood may not always accurately reflect your actual
@@ -152,7 +154,7 @@ export default function MoodExplainModal({
               {/* agree button */}
               <div className="flex gap-2">
                 <button
-                  className={buttonGradient}
+                  className={buttonGradient(theme)}
                   onClick={handleConfirm}
                   disabled={loadingConfirm}
                 >
@@ -173,7 +175,10 @@ export default function MoodExplainModal({
                 <>
                   <select
                     className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 mt-3 lg:mt-0 rounded-[10px] bg-white cursor-pointer"
-                    style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                    style={{
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
                     value={correctMood}
                     onChange={(e) => setCorrectMood(e.target.value)}
                   >

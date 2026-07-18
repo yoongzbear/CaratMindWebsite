@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { C } from '@/app/styles/styles';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -15,8 +14,9 @@ export default function Footer() {
     <footer
       className="w-full"
       style={{
-        background: `linear-gradient(130deg, ${C.roseQuartz} 0%, ${C.serenity} 100%)`,
-        borderTop: `1.5px solid rgba(58,74,107,0.12)`,
+        background:
+          'linear-gradient(130deg, var(--first-color) 0%, var(--second-color) 100%)',
+        borderTop: '1.5px solid rgba(58,74,107,0.12)',
       }}
     >
       {/* Main footer row */}
@@ -42,7 +42,7 @@ export default function Footer() {
             <div
               className="font-extrabold text-[clamp(1.25rem,5vw,1.75rem)] leading-[1.1] tracking-[-0.5px]"
               style={{
-                color: C.navy,
+                color: 'var(--text)',
               }}
             >
               CaratMind
@@ -80,7 +80,7 @@ export default function Footer() {
                 color: textMid,
               }}
               onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = C.navy)
+                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
               onMouseLeave={(e) =>
                 ((e.currentTarget as HTMLElement).style.color = textMid)
@@ -109,7 +109,7 @@ export default function Footer() {
                   color: textMid,
                 }}
                 onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = C.navy)
+                  ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
                 }
                 onMouseLeave={(e) =>
                   ((e.currentTarget as HTMLElement).style.color = textMid)
@@ -141,7 +141,7 @@ export default function Footer() {
                 color: textMid,
               }}
               onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = C.navy)
+                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
               onMouseLeave={(e) =>
                 ((e.currentTarget as HTMLElement).style.color = textMid)
@@ -180,12 +180,12 @@ export default function Footer() {
             color: textMid,
           }}
         >
-          <strong style={{ color: C.navy }}>Disclaimer:</strong> This system
-          supports mental health management using AI-integrated features. It
-          should not be relied fully as a substitute for licensed mental health
-          professionals or emergency services. If you are experiencing severe
-          emotional distress, thoughts of self-harm, or a crisis, please contact
-          a qualified professional or emergency support immediately.
+          <strong style={{ color: 'var(--text)' }}>Disclaimer:</strong> This
+          system supports mental health management using AI-integrated features.
+          It should not be relied fully as a substitute for licensed mental
+          health professionals or emergency services. If you are experiencing
+          severe emotional distress, thoughts of self-harm, or a crisis, please
+          contact a qualified professional or emergency support immediately.
         </p>
         <p
           className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
@@ -197,7 +197,7 @@ export default function Footer() {
             href="/helpline"
             className="underline font-semibold"
             style={{
-              color: C.navy,
+              color: 'var(--text)',
             }}
           >
             Emergency Helplines

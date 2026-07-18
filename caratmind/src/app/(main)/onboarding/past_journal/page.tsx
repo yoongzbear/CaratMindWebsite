@@ -6,6 +6,7 @@ import Pill from '@/app/components/Pill';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 // sample data
 const sampleJournal = [
@@ -28,11 +29,12 @@ const sampleJournal = [
 ];
 
 export default function PastEntryPreviewPage() {
+  const { theme } = useTheme();
   return (
     <section
       className="pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -41,12 +43,12 @@ export default function PastEntryPreviewPage() {
         <header className="mb-3 flex items-center justify-between">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Past Journal Entry (Preview)
           </h1>
 
-          <button className={buttonGradient} id="button-new-entry">
+          <button className={buttonGradient(theme)} id="button-new-entry">
             New Entry
           </button>
         </header>
@@ -64,7 +66,7 @@ export default function PastEntryPreviewPage() {
           <div className="w-full flex lg:hidden flex-col gap-2">
             <label
               className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Select a Date
             </label>
@@ -74,12 +76,12 @@ export default function PastEntryPreviewPage() {
                 id="mobile-date"
                 value={format(new Date().toISOString(), 'yyyy-MM-dd')}
                 className="flex-1 rounded-lg border px-3 py-2.5 text-[clamp(0.9rem,3.5vw,1rem)] font-medium"
-                style={{ color: C.navy, borderColor: '#eef2f9' }}
+                style={{ color: 'var(--text)', borderColor: '#eef2f9' }}
               />
               <button
                 type="button"
                 className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap hover:cursor-pointer"
-                style={{ color: C.serenity }}
+                style={{ color: 'var(--second-color)' }}
               >
                 Today
               </button>
@@ -92,7 +94,7 @@ export default function PastEntryPreviewPage() {
             <div className="w-full" id="desktop-calendar">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Calendar
               </h3>
@@ -103,7 +105,7 @@ export default function PastEntryPreviewPage() {
                     selected={new Date()}
                     captionLayout="dropdown"
                     className="w-full"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                     classNames={{
                       root: 'w-full',
                       months: 'w-full',
@@ -128,7 +130,7 @@ export default function PastEntryPreviewPage() {
                   />
                   <button
                     className="text-[clamp(0.7rem,1.5vw,0.85rem)] font-semibold hover:cursor-pointer"
-                    style={{ color: C.serenity }}
+                    style={{ color: 'var(--second-color)' }}
                     // onClick={() => setSelectedDate(initialDate)}
                   >
                     Go to Today
@@ -142,7 +144,7 @@ export default function PastEntryPreviewPage() {
           <div className="w-full lg:w-[60%] flex flex-col" id="entry-list">
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold underline"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               {format(new Date().toISOString(), 'dd MMMM yyyy')}
             </h3>
@@ -163,7 +165,7 @@ export default function PastEntryPreviewPage() {
                   <div className="w-full flex gap-3 items-center">
                     <h5
                       className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
-                      style={{ color: C.navy }}
+                      style={{ color: 'var(--text)' }}
                     >
                       {format(new Date(entry.jrnl_created_at), 'p')}
                     </h5>
@@ -183,7 +185,7 @@ export default function PastEntryPreviewPage() {
                   </div>
                   <p
                     className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.65]"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                   >
                     {entry.jrnl_preview
                       ? entry.jrnl_preview.length >= 150
@@ -207,14 +209,17 @@ export default function PastEntryPreviewPage() {
                   ) : (
                     <p
                       className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.65]"
-                      style={{ color: C.navy }}
+                      style={{ color: 'var(--text)' }}
                     >
                       Mood: -
                     </p>
                   )}
 
                   {/* button to insights page */}
-                  <button className={buttonGradient} id="button-view-insights">
+                  <button
+                    className={buttonGradient(theme)}
+                    id="button-view-insights"
+                  >
                     View More
                   </button>
                 </div>
@@ -226,4 +231,3 @@ export default function PastEntryPreviewPage() {
     </section>
   );
 }
-'

@@ -13,7 +13,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { ChartRow, useMoodChartData } from '@/app/hooks/moodChartData';
@@ -49,7 +49,7 @@ export default function StackedBarChart({
       <div className="w-full">
         <h5
           className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           {getRangeLabel(range)}
         </h5>
@@ -57,7 +57,7 @@ export default function StackedBarChart({
         <div style={{ height }} className="flex items-center justify-center">
           <p
             className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Loading mood bar chart...
           </p>
@@ -71,7 +71,7 @@ export default function StackedBarChart({
       <div className="w-full">
         <h5
           className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           {getRangeLabel(range)}
         </h5>
@@ -79,7 +79,7 @@ export default function StackedBarChart({
         <div style={{ height }} className="flex items-center justify-center">
           <p
             className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             No mood data available for this period.
           </p>
@@ -132,7 +132,7 @@ export default function StackedBarChart({
     <div className="w-full">
       <h5
         className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
-        style={{ color: C.navy }}
+        style={{ color: 'var(--text)' }}
       >
         {getRangeLabel(range)}
       </h5>
@@ -144,7 +144,7 @@ export default function StackedBarChart({
         >
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 15, fill: C.navy }}
+            tick={{ fontSize: 15, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
           />
@@ -170,16 +170,16 @@ export default function StackedBarChart({
             }}
             contentStyle={{
               borderRadius: 10,
-              border: `1px solid ${C.navy}`,
+              border: `1px solid ${'var(--text)'}`,
               fontSize: 13,
             }}
             // date label
             labelStyle={{
-              color: C.serenity,
+              color: 'var(--second-color)',
               fontWeight: 700,
             }}
             itemStyle={{
-              color: C.navy,
+              color: 'var(--text)',
             }}
             wrapperStyle={{ zIndex: 100 }} // make it above the legend
           />
@@ -194,7 +194,7 @@ export default function StackedBarChart({
                         height: 16,
                         borderRadius: 3,
                         backgroundColor: entry.color,
-                        border: `1.5px solid ${C.navy}`,
+                        border: `1.5px solid ${'var(--text)'}`,
                         display: 'inline-block',
                       }}
                     />

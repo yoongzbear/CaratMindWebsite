@@ -1,6 +1,6 @@
 'use client';
 
-import { C, styles } from '@/app/styles/styles';
+import { styles } from '@/app/styles/styles';
 import { useEffect, useState } from 'react';
 
 export type DateRangeValue =
@@ -60,7 +60,7 @@ export default function DateRangeSelector({
       <div>
         <label
           className="block text-[clamp(0.875rem,1.5vw,1rem)] font-bold mb-1"
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
         >
           Period
         </label>
@@ -84,7 +84,7 @@ export default function DateRangeSelector({
           <div className="min-w-35 flex-1">
             <label
               className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Start Date
             </label>
@@ -100,7 +100,7 @@ export default function DateRangeSelector({
           <div className="min-w-35 flex-1">
             <label
               className="block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               End Date
             </label>

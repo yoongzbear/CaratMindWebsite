@@ -4,7 +4,7 @@
 
 import Modal from './Modal';
 import Pill from '../Pill';
-import { C, styles } from '@/app/styles/styles';
+// import { C, styles } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
@@ -59,7 +59,7 @@ export default function ExerciseDetailModal({
 
       <p
         className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
-        style={{ color: C.muted }}
+        style={{ color: 'var(--muted)' }}
       >
         {desc}
       </p>
@@ -70,7 +70,7 @@ export default function ExerciseDetailModal({
             <li
               key={index}
               className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               {step}
             </li>
@@ -78,19 +78,6 @@ export default function ExerciseDetailModal({
         </ol>
         <br />
       </div>
-
-      {/* <div className="mt-2 max-h-52 md:max-h-36 overflow-y-auto">
-        <ol className="list-decimal pl-5 space-y-2">
-          <p
-            className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
-            style={{ color: C.navy }}
-          >
-            {steps.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </p>
-        </ol>
-      </div> */}
     </Modal>
   );
 }

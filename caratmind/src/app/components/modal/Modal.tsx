@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import { X } from 'lucide-react';
-import { C } from '@/app/styles/styles';
 import { AnimatePresence, motion } from 'framer-motion';
 
 type ModalProps = {
@@ -51,7 +50,7 @@ export default function Modal({
             style={{
               maxWidth: `${width}px`,
               background: 'white',
-              border: `1px solid ${C.border}`,
+              border: '1px solid var(--border)',
               boxShadow: '0 20px 60px rgba(58,74,107,0.18)',
             }}
             initial={{ opacity: 0, scale: 0.75, y: 10 }}
@@ -66,7 +65,7 @@ export default function Modal({
                   <h2
                     className="text-[clamp(1.3rem,6vw,1.85rem)] font-bold m-0"
                     style={{
-                      color: C.navy,
+                      color: 'var(--text)',
                     }}
                   >
                     {title}
@@ -77,7 +76,7 @@ export default function Modal({
                   <p
                     className="mt-1 text-[clamp(0.875rem,1.5vw,1rem)]"
                     style={{
-                      color: C.muted,
+                      color: 'var(--muted)',
                     }}
                   >
                     {subtitle}
@@ -90,7 +89,7 @@ export default function Modal({
                   onClick={onClose}
                   className="cursor-pointer pt-0 rounded-lg hover:bg-slate-100 transition"
                 >
-                  <X size={24} color={C.muted} />
+                  <X size={24} color={'var(--muted)'} />
                 </button>
               )}
             </div>
