@@ -2,10 +2,13 @@
 export type ThemeName =
   | 'light'
   | 'dark'
-  | 'rose'
+  | 'cherryBlossoms'
   | 'ocean'
   | 'forest'
-  | 'sunset';
+  | 'sunset'
+  | 'winter'
+  | 'emeraldSea'
+  | 'midnightSun';
 
 export const themes: Record<ThemeName, Record<string, string>> = {
   // default
@@ -37,17 +40,18 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     bgInput: '#3e4554',
   },
 
-  rose: {
-    text: '#3a4a6b',
-    muted: '#b48d95',
-    faint: '#e0b8c0',
-    border: '#f3e1e8',
-    bg: '#fff7f8',
-    firstColor: '#F7CAC9',
-    secondColor: '#ffd6d6',
-    gradient: 'linear-gradient(130deg,#F7CAC9,#ffd6d6)',
-    bgPage: 'linear-gradient(150deg, #fff5f6 0%, #fdeef0 100%)',
-    bgTopbar: 'rgba(255,249,250)',
+  cherryBlossoms: {
+    text: '#7a1550',
+    muted: '#c17ba0',
+    faint: '#e8b8d0',
+    border: '#f7dcea',
+    bg: '#fff5fa',
+    firstColor: '#FBD3E9',
+    secondColor: '#BB377D',
+    gradient: 'linear-gradient(130deg,#FBD3E9,#BB377D)',
+    bgPage: 'linear-gradient(150deg, #fff5fa 0%, #fbe8f2 100%)',
+    bgTopbar: 'rgba(255,250,253)',
+    bgInput: '#ffffff',
   },
 
   ocean: {
@@ -61,6 +65,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#92A8D1,#60a5fa)',
     bgPage: 'linear-gradient(150deg, #f2f9ff 0%, #e8f3fd 100%)',
     bgTopbar: 'rgba(247,251,255)',
+    bgInput: '#ffffff',
   },
 
   forest: {
@@ -74,6 +79,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#8fc9a3,#F7CAC9)',
     bgPage: 'linear-gradient(150deg, #f2fbf4 0%, #eef7f0 100%)',
     bgTopbar: 'rgba(248,253,249)',
+    bgInput: '#ffffff',
   },
 
   sunset: {
@@ -87,16 +93,62 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#F7CAC9,#f97316)',
     bgPage: 'linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%)',
     bgTopbar: 'rgba(255,250,245)',
+    bgInput: '#ffffff',
+  },
+
+  winter: {
+    text: '#1c2e33',
+    muted: '#7d9298',
+    faint: '#a9bcc0',
+    border: '#dfe7e8',
+    bg: '#f7f9f9',
+    firstColor: '#E6DADA',
+    secondColor: '#274046',
+    gradient: 'linear-gradient(130deg,#E6DADA,#274046)',
+    bgPage: 'linear-gradient(150deg, #f7f4f4 0%, #eef3f3 100%)',
+    bgTopbar: 'rgba(250,249,249)',
+    bgInput: '#ffffff',
+  },
+
+  emeraldSea: {
+    text: '#04283f',
+    muted: '#3f8a72',
+    faint: '#8fd6b8',
+    border: '#cdeee0',
+    bg: '#f0fbf6',
+    firstColor: '#05386b',
+    secondColor: '#5cdb95',
+    gradient: 'linear-gradient(130deg,#05386b,#5cdb95)',
+    bgPage: 'linear-gradient(150deg, #eef6fb 0%, #eafbf3 100%)',
+    bgTopbar: 'rgba(247,253,251)',
+    bgInput: '#ffffff',
+  },
+
+  midnightSun: {
+    text: '#3a0d2b',
+    muted: '#c76a8f',
+    faint: '#f5c66e',
+    border: '#fadfba',
+    bg: '#fff8ef',
+    firstColor: '#ff1493',
+    secondColor: '#fdda25',
+    gradient: 'linear-gradient(130deg,#ff1493,#fdda25)',
+    bgPage: 'linear-gradient(150deg, #fff0f6 0%, #fffaeb 100%)',
+    bgTopbar: 'rgba(255,251,248)',
+    bgInput: '#ffffff',
   },
 };
 
 export const buttonGradientColor: Record<ThemeName, string> = {
   light: 'bg-gradient-to-r from-[#F7CAC9] to-[#92A8D1] text-[#3a4a6b]',
   dark: 'bg-gradient-to-r from-[#c98f92] to-[#5b6f99] text-white',
-  rose: 'bg-gradient-to-r from-[#F7CAC9] to-[#ffd6d6] text-[#3a4a6b]',
+  cherryBlossoms: 'bg-gradient-to-r from-[#FBD3E9] to-[#BB377D] text-white',
   ocean: 'bg-gradient-to-r from-[#92A8D1] to-[#60a5fa] text-[#1e3a8a]',
   forest: 'bg-gradient-to-r from-[#8fc9a3] to-[#F7CAC9] text-[#14532d]',
   sunset: 'bg-gradient-to-r from-[#F7CAC9] to-[#f97316] text-[#7c2d12]',
+  winter: 'bg-gradient-to-r from-[#E6DADA] to-[#274046] text-white',
+  emeraldSea: 'bg-gradient-to-r from-[#05386b] to-[#5cdb95] text-white',
+  midnightSun: 'bg-gradient-to-r from-[#ff1493] to-[#fdda25] text-[#3a0d2b]',
 };
 
 export const buttonOutlined = buttonGradientColor;

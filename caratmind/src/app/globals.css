@@ -54,17 +54,18 @@ html {
   --bg-topbar: rgba(15, 23, 42);
 }
 
-:root[data-theme='rose'] {
-  --text: #3a4a6b;
-  --muted: #b48d95;
-  --faint: #e0b8c0;
-  --border: #f3e1e8;
-  --bg: #fff7f8;
-  --first-color: #f7cac9;
-  --second-color: #ffd6d6;
-  --gradient: linear-gradient(130deg, #f7cac9, #ffd6d6);
-  --bg-page: linear-gradient(150deg, #fff5f6 0%, #fdeef0 100%);
-  --bg-topbar: rgba(255, 249, 250);
+:root[data-theme='cherryBlossoms'] {
+  --text: #7a1550;
+  --muted: #c17ba0;
+  --faint: #e8b8d0;
+  --border: #f7dcea;
+  --bg: #fff5fa;
+  --first-color: #fbd3e9;
+  --second-color: #bb377d;
+  --gradient: linear-gradient(130deg, #fbd3e9, #bb377d);
+  --bg-page: linear-gradient(150deg, #fff5fa 0%, #fbe8f2 100%);
+  --bg-topbar: rgba(255, 250, 253);
+  --bg-input: #ffffff;
 }
 
 :root[data-theme='ocean'] {
@@ -105,6 +106,62 @@ html {
   --bg-page: linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%);
   --bg-topbar: rgba(255, 250, 245);
 }
+/* 
+sunset: {
+    text: '#7c2d12',
+    muted: '#c68a72',
+    faint: '#e3b7a4',
+    border: '#fadbc8',
+    bg: '#fff7ed',
+    firstColor: '#F7CAC9',
+    secondColor: '#f97316',
+    gradient: 'linear-gradient(130deg,#F7CAC9,#f97316)',
+    bgPage: 'linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%)',
+    bgTopbar: 'rgba(255,250,245)',
+    bgInput: '#ffffff',
+  } */
+/* 
+  winter: {
+    text: '#1c2e33',
+    muted: '#7d9298',
+    faint: '#a9bcc0',
+    border: '#dfe7e8',
+    bg: '#f7f9f9',
+    firstColor: '#E6DADA',
+    secondColor: '#274046',
+    gradient: 'linear-gradient(130deg,#E6DADA,#274046)',
+    bgPage: 'linear-gradient(150deg, #f7f4f4 0%, #eef3f3 100%)',
+    bgTopbar: 'rgba(250,249,249)',
+    bgInput: '#ffffff',
+  },
+
+  emeraldSea: {
+    text: '#04283f',
+    muted: '#3f8a72',
+    faint: '#8fd6b8',
+    border: '#cdeee0',
+    bg: '#f0fbf6',
+    firstColor: '#05386b',
+    secondColor: '#5cdb95',
+    gradient: 'linear-gradient(130deg,#05386b,#5cdb95)',
+    bgPage: 'linear-gradient(150deg, #eef6fb 0%, #eafbf3 100%)',
+    bgTopbar: 'rgba(247,253,251)',
+    bgInput: '#ffffff',
+  },
+
+  midnightSun: {
+    text: '#3a0d2b',
+    muted: '#c76a8f',
+    faint: '#f5c66e',
+    border: '#fadfba',
+    bg: '#fff8ef',
+    firstColor: '#ff1493',
+    secondColor: '#fdda25',
+    gradient: 'linear-gradient(130deg,#ff1493,#fdda25)',
+    bgPage: 'linear-gradient(150deg, #fff0f6 0%, #fffaeb 100%)',
+    bgTopbar: 'rgba(255,251,248)',
+    bgInput: '#ffffff',
+  }, */
 
 .btn-gradient {
   background:

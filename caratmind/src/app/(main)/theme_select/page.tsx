@@ -15,10 +15,13 @@ import { Trash } from 'lucide-react';
 const THEME_OPTIONS: { name: ThemeName; label: string }[] = [
   { name: 'light', label: 'Carat Light' },
   { name: 'dark', label: 'Dark' },
-  { name: 'rose', label: 'Rose' },
+  { name: 'cherryBlossoms', label: 'Cherry Blossoms' },
   { name: 'ocean', label: 'Ocean' },
   { name: 'forest', label: 'Wicked Forest' },
   { name: 'sunset', label: 'Sunset' },
+  { name: 'winter', label: 'Winter' },
+  { name: 'emeraldSea', label: 'Emerald Sea' },
+  { name: 'midnightSun', label: 'Midnight Sun' },
 ];
 
 export default function ThemePage() {
