@@ -32,6 +32,7 @@ html {
 :root[data-theme='light'] {
   --text: #3a4a6b;
   --muted: #9aa8c4;
+  --faint: #b0bcd4;
   --border: #dde4f0;
   --bg: #ffffff;
   --first-color: #f7cac9;

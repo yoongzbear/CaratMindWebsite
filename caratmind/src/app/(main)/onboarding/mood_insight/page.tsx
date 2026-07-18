@@ -153,6 +153,7 @@ export default function MoodInsightPreviewPage() {
               >
                 {toTitleCase(sampleMood.mood_name) ?? 'Unknown'}
               </h5>
+              {/* TODO: add agree */}
             </div>
 
             <div />
@@ -203,6 +204,7 @@ export default function MoodInsightPreviewPage() {
               {/* </div> */}
 
               {/* name + status */}
+              {/* TODO: check the actual page */}
               <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
                 <h5
                   className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"

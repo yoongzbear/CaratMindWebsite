@@ -4,17 +4,19 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
-import { C, styles } from '@/app/styles/styles';
+// import { C, styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
 import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 export function RegisterForm({
   requestedNext,
 }: {
   requestedNext: string | null;
 }) {
+  const { theme } = useTheme();
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [preferredUsername, setPreferredUsername] = useState('');
@@ -81,7 +83,7 @@ export function RegisterForm({
         setSubmitting(false);
       }
     } else {
-      // no consent - cannot register
+      // no consent --> cannot register
       toastError(
         'Unable to register due to no acknowledgement, click the checkbox to acknowledge.',
       );
@@ -96,7 +98,7 @@ export function RegisterForm({
           <>
             <div className="w-full sm:flex gap-4">
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.navy }}>
+                <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Username
                 </label>
                 <input
@@ -106,12 +108,12 @@ export function RegisterForm({
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className={inputStyle}
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 />
               </div>
 
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.navy }}>
+                <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Preferred Name
                 </label>
                 <div className="relative mb-3.5">
@@ -121,11 +123,9 @@ export function RegisterForm({
                     required
                     value={preferredUsername}
                     onChange={(e) => setPreferredUsername(e.target.value)}
-                    className={inputStyle}
+                    className={`${inputStyle} pr-11 mb-0`}
                     style={{
-                      color: C.navy,
-                      paddingRight: '44px',
-                      marginBottom: 0,
+                      color: 'var(--text)',
                     }}
                   />
                   <button
@@ -133,7 +133,7 @@ export function RegisterForm({
                     onClick={() => setPreferredUsername(generateRandomName())}
                     className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
                     style={{
-                      color: C.muted,
+                      color: 'var(--text)',
                     }}
                   >
                     <Dices size={24} />
@@ -142,7 +142,7 @@ export function RegisterForm({
               </div>
             </div>
 
-            <label className={labelStyle} style={{ color: C.navy }}>
+            <label className={labelStyle} style={{ color: 'var(--text)' }}>
               Email
             </label>
             <input
@@ -152,12 +152,12 @@ export function RegisterForm({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={inputStyle}
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             />
 
             <div className="w-full sm:flex gap-4">
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.navy }}>
+                <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Password
                 </label>
                 <div className="relative mb-3.5">
@@ -167,11 +167,9 @@ export function RegisterForm({
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={inputStyle}
+                    className={`${inputStyle} pr-11 mb-0`}
                     style={{
-                      color: C.navy,
-                      paddingRight: '44px',
-                      marginBottom: 0,
+                      color: 'var(--text)',
                     }}
                   />
                   <button
@@ -179,7 +177,7 @@ export function RegisterForm({
                     onClick={() => setShowPassword((p) => !p)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
                     style={{
-                      color: C.faint,
+                      color: 'var(--faint)',
                     }}
                   >
                     {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
@@ -187,7 +185,7 @@ export function RegisterForm({
                 </div>
               </div>
               <div className="w-full">
-                <label className={labelStyle} style={{ color: C.navy }}>
+                <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Confirm Password
                 </label>
                 <div className="relative mb-3.5">
@@ -197,11 +195,9 @@ export function RegisterForm({
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={inputStyle}
+                    className={`${inputStyle} pr-11 mb-0`}
                     style={{
-                      color: C.navy,
-                      paddingRight: '44px',
-                      marginBottom: 0,
+                      color: 'var(--text)',
                     }}
                   />
                   <button
@@ -209,7 +205,7 @@ export function RegisterForm({
                     onClick={() => setShowPassword((p) => !p)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
                     style={{
-                      color: C.faint,
+                      color: 'var(--text)',
                     }}
                   >
                     {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
@@ -228,7 +224,7 @@ export function RegisterForm({
               />
               <label
                 className={`${labelStyle} text-justify`}
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 I am <b>above 18</b> and I acknowledge my data such as journal
                 entries will be used for data processing by AI
@@ -239,17 +235,17 @@ export function RegisterForm({
           <>
             <p
               className="text-[clamp(0.875rem,1.5vw,1rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Enter the verification code sent to <strong>{email}</strong>.
             </p>
             <p
               className="text-[clamp(0.875rem,1.5vw,1rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               You may check your spam emails for the code.
             </p>
-            <label className={labelStyle} style={{ color: C.navy }}>
+            <label className={labelStyle} style={{ color: 'var(--text)' }}>
               Verification code
             </label>
             <input
@@ -260,13 +256,13 @@ export function RegisterForm({
               value={confirmationCode}
               onChange={(e) => setConfirmationCode(e.target.value)}
               className={inputStyle}
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             />
           </>
         )}
 
         <button
-          className={`w-full ${buttonGradient}`}
+          className={`w-full ${buttonGradient(theme)}`}
           type="submit"
           disabled={submitting}
           style={{
@@ -285,7 +281,7 @@ export function RegisterForm({
       <p
         className="mt-5.5 text-center text-[clamp(0.875rem,1.5vw,1rem)]"
         style={{
-          color: C.navy,
+          color: 'var(--text)',
         }}
       >
         Already have an account?{' '}
@@ -296,7 +292,7 @@ export function RegisterForm({
               : '/login'
           }
           className="hover:underline"
-          style={{ color: C.serenity, fontWeight: 600 }}
+          style={{ color: 'var(--second-color)', fontWeight: 600 }}
         >
           Log in
         </Link>

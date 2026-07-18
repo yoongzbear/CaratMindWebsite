@@ -1,16 +1,17 @@
 'use client';
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
-import { C, styles } from '@/app/styles/styles';
-import { buttonGradient } from '@/app/styles/ui';
+import { buttonGradient, inputStyle } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { toastError } from '@/utils/toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 export default function ExerciseCatalogPage() {
+  const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
@@ -85,7 +86,7 @@ export default function ExerciseCatalogPage() {
     <section
       className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -94,7 +95,7 @@ export default function ExerciseCatalogPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Coping Exercise Catalogue
           </h1>
@@ -113,9 +114,9 @@ export default function ExerciseCatalogPage() {
           <div className="md:hidden w-full gap-5 mb-3">
             {/* search */}
             <input
-              className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
+              className={`w-full ${inputStyle} pl-10 text-[clamp(0.875rem,1.5vw,1rem)`}
               id="mobile-search"
-              style={styles.input}
+              // style={styles.input}
               type="search"
               placeholder="Search Exercise"
               value={search}
@@ -126,7 +127,7 @@ export default function ExerciseCatalogPage() {
             <div className="w-full flex gap-2" id="mobile-dropdown">
               <select
                 className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                style={{ border: '1px solid (--border)', color: 'var(--text)' }}
                 value={selectedMood}
                 onChange={(e) => setSelectedMood(e.target.value)}
               >
@@ -141,7 +142,10 @@ export default function ExerciseCatalogPage() {
               {/* type dropdown */}
               <select
                 className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                }}
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
               >
@@ -161,8 +165,8 @@ export default function ExerciseCatalogPage() {
             <div className="w-[30%]">
               <input
                 id="desktop-search"
-                className="w-full pl-10 text-[clamp(0.875rem,1.5vw,1rem)]"
-                style={styles.input}
+                className={`w-full ${inputStyle} pl-10 text-[clamp(0.875rem,1.5vw,1rem)]`}
+                // style={styles.input}
                 type="search"
                 placeholder="Search Exercise"
                 value={search}
@@ -177,7 +181,10 @@ export default function ExerciseCatalogPage() {
             >
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                }}
                 value={selectedMood}
                 onChange={(e) => setSelectedMood(e.target.value)}
               >
@@ -193,7 +200,10 @@ export default function ExerciseCatalogPage() {
               {/* type dropdown */}
               <select
                 className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: `1px solid ${C.border}`, color: C.navy }}
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                }}
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
               >
@@ -210,7 +220,7 @@ export default function ExerciseCatalogPage() {
           {fetching && (
             <p
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.muted }}
+              style={{ color: 'var(--muted)' }}
             >
               Loading coping exercises...
             </p>
@@ -219,7 +229,7 @@ export default function ExerciseCatalogPage() {
           {!fetching && filtered.length === 0 && (
             <p
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.muted }}
+              style={{ color: 'var(--muted)' }}
             >
               {exercises.length === 0
                 ? 'No exercise is available.'
@@ -248,7 +258,7 @@ export default function ExerciseCatalogPage() {
               >
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-0.5"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   {ex.exc_name}
                 </h3>
@@ -286,7 +296,7 @@ export default function ExerciseCatalogPage() {
                               <Pill
                                 bgColor="#f1f3f8"
                                 borderColor="#dde1ea"
-                                textColor={C.faint}
+                                textColor="var(--muted)"
                                 title={moods
                                   .slice(1)
                                   .map(toTitleCase)
@@ -325,7 +335,7 @@ export default function ExerciseCatalogPage() {
                               <Pill
                                 bgColor="#f1f3f8"
                                 borderColor="#dde1ea"
-                                textColor={C.faint}
+                                textColor="var(--muted)"
                                 title={moods
                                   .slice(MAX_VISIBLE_MOODS)
                                   .map(toTitleCase)
@@ -345,7 +355,7 @@ export default function ExerciseCatalogPage() {
 
                 <p
                   className="w-full mb-2 text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   {ex.exc_desc}
                 </p>
@@ -355,7 +365,7 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  className={buttonGradient}
+                  className={buttonGradient(theme)}
                   id={index === 0 ? 'button-view-exercise' : undefined}
                 >
                   View More
