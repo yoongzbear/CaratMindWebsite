@@ -4,15 +4,10 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { LayoutShell } from './components/LayoutShell';
 import { ClientToastContainer } from './components/ClientToastContainer';
-import HelplineModal from './components/modal/HelplineModal';
-import { useMoodStreakAlert } from './hooks/negativeMoodStreak';
 import { HelplineModalProvider } from './components/HelplineModalProvider';
 import '@daypicker/react/style.css';
-import { NextStep, NextStepProvider } from 'nextstepjs';
-// import { steps } from '@/lib/onboarding/steps';
-import OnboardingStart from './components/OnboardingStart';
-import { OnboardingCard } from './components/OnboardingCard';
 import { OnboardingProvider } from './components/OnboardingProvider';
+import './styles/themes';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -33,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <body
         className={dmSans.className}
         style={{

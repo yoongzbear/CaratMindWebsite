@@ -1,7 +1,7 @@
 // UI components
 
-import { buttonGradientColor } from './styles';
-import { ThemeName, themes } from './themes';
+// import { buttonGradientColor } from './styles';
+import { buttonGradientColor, ThemeName, themes } from './themes';
 
 /*
 clamp(minimum, preferred, maximum)
@@ -41,10 +41,6 @@ button - font-bold text-[13px] sm:text-[12px] md:text-[14px]
 button - text-[clamp(0.875rem,1.5vw,1rem)]
 */
 
-// Tailwind classes
-// className={...}
-// className={`w-full ${buttonGradient}`}
-
 // texts
 export const labelStyle = `block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1`;
 //   export const labelStyle = `block text-[12px] sm:text-[14px] md:text-[16px] font-semibold mb-[6px]`;
@@ -75,7 +71,40 @@ export const errorTextStyle = `text-red-500 text-xs pb-2`;
 export const pText = `mt-0 mb-2.5`;
 
 // buttons
-export const buttonGradient = `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
+export const buttonGradient = (theme: ThemeName) =>
+  `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor[theme]} border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
+
+export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semibold text-[13px] font-inherit text-white ml-2 cursor-pointer transition-opacity duration-150 ease-in-out`;
+
+// export const buttonOutlined = (theme: ThemeName) => `
+//   mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
+//   rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[${themes[theme].muted}]
+//   border border-[${themes[theme].border}] bg-[${themes[theme].bg}]
+//   hover:text-[${themes[theme].text}] hover:border-[${themes[theme].muted}] hover:bg-[#f8faff]
+// `;
+
+export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+
+export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
+text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+
+export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold
+rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
+hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
+
+// section / div
+export const table = `w-full border-collapse table-fixed`;
+
+export const th = `px-4 py-2 text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50`;
+
+export const td = `px-4 py-3 text-sm text-slate-600 truncate`; // maxWidth: '200px',
+
+export const containerStyle = `max-w-2xl mx-auto`;
+
+export const cardStyle = `bg-white rounded-xl border border-slate-100 shadow-sm p-4`;
 
 // export const buttonBase = `inline-flex items-center justify-center gap-1 px-5 py-2 rounded-xl text-sm font-semibold transition-opacity duration-150`;
 // export const buttonBase = `
@@ -109,47 +138,3 @@ export const buttonGradient = `inline-flex cursor-pointer items-center px-4 just
 // export const buttonOutlined = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
 // rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#9aa8c4] border border-[#dde4f0] bg-white
 // hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
-
-export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semibold text-[13px] font-inherit text-white ml-2 cursor-pointer transition-opacity duration-150 ease-in-out`;
-
-// export const buttonGradientColor = (theme: ThemeName) => `
-//   bg-[${themes[theme].gradient}]
-//   hover:[background:linear-gradient(#fff,#fff)_padding-box,_${themes[theme].gradient}_border-box]
-//   hover:border-2
-//   hover:border-transparent
-//   hover:text-[${themes[theme].text}]
-// `;
-
-// export const buttonOutlined = (theme: ThemeName) => `
-//   mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
-//   rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[${themes[theme].muted}]
-//   border border-[${themes[theme].border}] bg-[${themes[theme].bg}]
-//   hover:text-[${themes[theme].text}] hover:border-[${themes[theme].muted}] hover:bg-[#f8faff]
-// `;
-
-export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
-text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
-
-export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
-text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
-
-// export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
-// rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#e57373] border border-[#f3caca] bg-white
-// hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
-
-export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold
-rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
-hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
-
-// section / div
-export const table = `w-full border-collapse table-fixed`;
-
-export const th = `px-4 py-2 text-left text-xs uppercase tracking-wider text-slate-400 bg-slate-50`;
-
-export const td = `px-4 py-3 text-sm text-slate-600 truncate`; // maxWidth: '200px',
-
-export const containerStyle = `max-w-2xl mx-auto`;
-
-export const cardStyle = `bg-white rounded-xl border border-slate-100 shadow-sm p-4`;

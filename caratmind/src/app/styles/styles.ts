@@ -1,16 +1,16 @@
 import { CSSProperties } from 'react';
 
-export const C = {
-  roseQuartz: '#F7CAC9',
-  serenity: '#92A8D1',
-  navy: '#3a4a6b',
-  muted: '#9aa8c4',
-  faint: '#b0bcd4',
-  border: '#dde4f0',
-  bgSidebar: 'linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%)',
-  bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
-  bgTopbar: 'rgba(253,250,251)',
-};
+// export const C = {
+//   roseQuartz: '#F7CAC9',
+//   serenity: '#92A8D1',
+//   navy: '#3a4a6b',
+//   muted: '#9aa8c4',
+//   faint: '#b0bcd4',
+//   border: '#dde4f0',
+//   bgSidebar: 'linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%)',
+//   bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
+//   bgTopbar: 'rgba(253,250,251)',
+// };
 
 // shared style for clamped text cells
 export const clampedCell: React.CSSProperties = {

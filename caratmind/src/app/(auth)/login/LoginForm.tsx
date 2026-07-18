@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
 import { useAuth } from '@/context/AuthContext';
-import { buttonGradientColor, C, styles } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
@@ -53,7 +52,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   return (
     <AuthCard title="Log In">
       <form onSubmit={onSubmit}>
-        <label className={labelStyle} style={{ color: C.navy }}>
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
           Username / Email
         </label>
         <input
@@ -63,11 +62,11 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           className={inputStyle}
-          style={{ color: C.navy }}
+          style={{ color: 'var(--text)' }}
           suppressHydrationWarning
         />
 
-        <label className={labelStyle} style={{ color: C.navy }}>
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
           Password
         </label>
         <div className="relative mb-3.5">
@@ -78,7 +77,11 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
             value={password}
             className={inputStyle}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ color: C.navy, paddingRight: '44px', marginBottom: 0 }}
+            style={{
+              color: 'var(--text)',
+              paddingRight: '44px',
+              marginBottom: 0,
+            }}
             suppressHydrationWarning
           />
           <button
@@ -86,7 +89,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
             onClick={() => setShowPassword((p) => !p)}
             className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
             style={{
-              color: C.faint,
+              color: 'var(--text)',
             }}
           >
             {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
@@ -109,7 +112,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
       <p
         className="mt-5.5 text-center text-[clamp(0.875rem,1.5vw,1rem)]"
         style={{
-          color: C.navy,
+          color: 'var(--text)',
         }}
       >
         Don&apos;t have an account?{' '}
@@ -120,7 +123,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
               : '/register'
           }
           className="hover:underline"
-          style={{ color: C.serenity, fontWeight: 600 }}
+          style={{ color: 'var(--second-color)', fontWeight: 600 }}
         >
           Register here
         </Link>

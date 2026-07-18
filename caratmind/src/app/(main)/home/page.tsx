@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { Flame } from 'lucide-react';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
@@ -14,8 +13,10 @@ import {
   HabitStatus,
 } from '@/app/types/habit';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function HomePage() {
+  const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
 
   const [habit, setHabit] = useState<Habit | null>(null);
@@ -151,7 +152,7 @@ export default function HomePage() {
     <section
       className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -160,7 +161,7 @@ export default function HomePage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
             id="home"
           >
             Welcome back, {user?.preferredUsername}!
@@ -180,14 +181,14 @@ export default function HomePage() {
           {fetchingHabit ? (
             <h5
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Loading today&apos;s habit...
             </h5>
           ) : !habit ? (
             <h5
               className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               All habits completed for today! Keep it up for tomorrow.
             </h5>
@@ -195,7 +196,7 @@ export default function HomePage() {
             <>
               <h5
                 className="flex-1 font-semibold text-[clamp(1rem,3vw,1.5rem)]"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {habit.hab_question}
               </h5>
@@ -203,7 +204,7 @@ export default function HomePage() {
               {selectedStatus ? (
                 <p
                   className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   {habitMessage[selectedStatus]}
                 </p>
@@ -214,8 +215,7 @@ export default function HomePage() {
                       key={action.action}
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
-                      // className={`inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`}
-                      className={buttonGradient}
+                      className={buttonGradient(theme)}
                     >
                       {action.action}
                     </button>
@@ -236,13 +236,13 @@ export default function HomePage() {
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Journal
               </h3>
               <h5
                 className="text-[clamp(1rem,3vw,1.5rem)] font-semibold tracking-tight"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Current Journal Streak
               </h5>
@@ -252,16 +252,19 @@ export default function HomePage() {
                     {journalToday ? (
                       <Flame
                         fill="#fc6f03"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                         className="size-full"
                       />
                     ) : (
-                      <Flame style={{ color: C.navy }} className="size-full" />
+                      <Flame
+                        style={{ color: 'var(--text)' }}
+                        className="size-full"
+                      />
                     )}
                   </div>
                   <p
                     className="mt-2 mb-2.5 text-[clamp(1rem,3vw,1.5rem)] font-semibold"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                   >
                     {fetchingJournalStreak
                       ? '...'
@@ -271,7 +274,7 @@ export default function HomePage() {
               </div>
               <p
                 className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-relaxed flex-1 text-justify"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {fetchingJournalStreak
                   ? 'Loading journal streak...'
@@ -281,7 +284,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/journal/new"
-                className={buttonGradient}
+                className={buttonGradient(theme)}
                 id="entry-button"
               >
                 Write an entry
@@ -297,13 +300,13 @@ export default function HomePage() {
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Mood
               </h3>
               {/* mood chart */}
               <StackedBarChart range={barRange} height={280} />
-              <Link href="/mood" className={`${buttonGradient}`}>
+              <Link href="/mood" className={buttonGradient(theme)}>
                 View more
               </Link>
             </div>
@@ -317,37 +320,36 @@ export default function HomePage() {
             <div className="flex flex-col flex-1 p-6 gap-3">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Coping Exercise
               </h3>
               <h5
                 className="text-[clamp(1rem,3vw,1.5rem)] font-semibold tracking-tight"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Current Exercise Streak
               </h5>
               {/* exercise streak */}
-              <div
-                className={`relative w-full h-44 bg-linear-to-br flex items-center justify-center`}
-              >
+              <div className="relative w-full h-44 bg-linear-to-br flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center px-3">
-                  <div
-                    className={`relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300`}
-                  >
+                  <div className="relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
                     {excToday ? (
                       <Flame
                         fill="#fc6f03"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                         className="size-full"
                       />
                     ) : (
-                      <Flame style={{ color: C.navy }} className="size-full" />
+                      <Flame
+                        style={{ color: 'var(--text)' }}
+                        className="size-full"
+                      />
                     )}
                   </div>
                   <p
                     className="mt-2 mb-2.5 text-[clamp(1rem,3vw,1.5rem)] font-semibold"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                   >
                     {fetchingExcStreak
                       ? '...'
@@ -357,7 +359,7 @@ export default function HomePage() {
               </div>
               <p
                 className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium leading-relaxed flex-1 text-justify"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {fetchingExcStreak
                   ? 'Loading coping exercise streak...'
@@ -365,7 +367,7 @@ export default function HomePage() {
                     ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
                     : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
               </p>
-              <Link href="/exercise/tracking" className={`${buttonGradient}`}>
+              <Link href="/exercise/tracking" className={buttonGradient(theme)}>
                 Track exercise
               </Link>
             </div>
