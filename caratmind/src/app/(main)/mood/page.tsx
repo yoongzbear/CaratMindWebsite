@@ -6,12 +6,14 @@ import DateRangeSelector, {
 import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
-import { C, styles } from '@/app/styles/styles';
+import { styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
 export default function MoodPage() {
+  const { theme } = useTheme();
   const { user, loading } = useAuth();
   const chartHeight = 320;
   const [barRange, setBarRange] = useState<DateRangeValue>({
@@ -30,7 +32,7 @@ export default function MoodPage() {
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -39,7 +41,7 @@ export default function MoodPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Mood Dashboard
           </h1>
@@ -77,7 +79,7 @@ export default function MoodPage() {
             <div className="flex w-full items-center justify-between">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Daily Mood
               </h3>
@@ -85,7 +87,7 @@ export default function MoodPage() {
               {/* date */}
               <input
                 id="daily-date"
-                style={styles.dateInput}
+                style={{styles.dateInput}}
                 type="date"
                 value={moodDate}
                 onChange={(e) => setMoodDate(e.target.value)}

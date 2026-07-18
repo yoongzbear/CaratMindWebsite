@@ -8,7 +8,7 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
@@ -21,8 +21,10 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useMemo, useState } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function MoodInsightPage() {
+  const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
@@ -327,7 +329,7 @@ export default function MoodInsightPage() {
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -336,7 +338,7 @@ export default function MoodInsightPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Mood Insights
           </h1>
@@ -345,14 +347,14 @@ export default function MoodInsightPage() {
         {loading || fetchingJournal ? (
           <section
             className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Loading mood insight...
           </section>
         ) : !journal ? (
           <section
             className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Entry not found.
           </section>
@@ -371,7 +373,7 @@ export default function MoodInsightPage() {
               <div className="flex gap-2 items-center mb-2">
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   {format(new Date(journal.jrnl_created_at), 'dd MMMM yyyy, p')}
                 </h3>
@@ -398,12 +400,12 @@ export default function MoodInsightPage() {
                 <>
                   <div
                     className="px-4 py-2 rounded-xl"
-                    style={{ border: `1px solid ${C.border}` }}
+                    style={{ border: '1px solid var(--border)' }}
                   >
                     <p
                       className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
                       style={{
-                        color: C.navy,
+                        color: 'var(--text)',
                       }}
                     >
                       {journal.entryText
@@ -416,7 +418,7 @@ export default function MoodInsightPage() {
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
-                      className={buttonGradient}
+                      className={buttonGradient(theme)}
                       id="button-view-entry"
                     >
                       View More
@@ -425,7 +427,7 @@ export default function MoodInsightPage() {
                     {/* edit entry */}
                     <button
                       onClick={() => handleEdit(journal.jrnl_id)}
-                      className={buttonGradient}
+                      className={buttonGradient(theme)}
                       id="button-edit-entry"
                     >
                       Edit Entry
@@ -436,7 +438,7 @@ export default function MoodInsightPage() {
                       <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className={buttonGradient}
+                        className={buttonGradient(theme)}
                         id="button-submit-entry"
                       >
                         {submitting ? 'Submitting...' : 'Submit Entry'}
@@ -469,7 +471,7 @@ export default function MoodInsightPage() {
               >
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   From your entry, you felt
                 </h3>
@@ -486,14 +488,14 @@ export default function MoodInsightPage() {
                   {fetchingMoodData ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       Loading mood insight...
                     </p>
                   ) : !moodData?.mood_id ? (
                     <h5
                       className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       Mood not available yet. Submit your entry first.
                     </h5>
@@ -501,7 +503,7 @@ export default function MoodInsightPage() {
                     <>
                       <h5
                         className="m-0 mb-2 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {toTitleCase(moodData.mood_name) ?? 'Unknown'}
                       </h5>
@@ -527,7 +529,7 @@ export default function MoodInsightPage() {
                               </Pill>
                               <p
                                 className="text-[clamp(0.875rem,1.5vw,1rem)] mt-2 lg:mt-0"
-                                style={{ color: C.navy }}
+                                style={{ color: 'var(--text)' }}
                               >
                                 Chosen Mood:{' '}
                                 {getMoodStyle(moodData.mood_corrected).emoji}
@@ -547,7 +549,7 @@ export default function MoodInsightPage() {
                   {!fetchingMoodData && moodData?.mood_id && (
                     <p
                       className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       Your mood is estimated using AI based on the submitted
                       entry. The detected mood may not always accurately reflect
@@ -561,7 +563,7 @@ export default function MoodInsightPage() {
                 <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
                   {!fetchingMoodData && moodData?.mood_id && (
                     <button
-                      className={buttonGradient}
+                      className={buttonGradient(theme)}
                       onClick={() => setOpenMoodDetail(true)}
                       id="button-view-mood"
                     >
@@ -583,7 +585,7 @@ export default function MoodInsightPage() {
               >
                 <h3
                   className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   Recommended Coping Exercise
                 </h3>
@@ -600,14 +602,14 @@ export default function MoodInsightPage() {
                   {fetchingExercise ? (
                     <p
                       className="text-[clamp(1rem,3vw,1.5rem)]"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       Loading exercise recommendation...
                     </p>
                   ) : !exerciseData ? (
                     <h5
                       className="text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-semibold"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       Coping exercise recommendation not available yet. Submit
                       your entry first.
@@ -616,7 +618,7 @@ export default function MoodInsightPage() {
                     <div className="mb-2 text-center items-center justify-center">
                       <h5
                         className="m-0 mb-2 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {exerciseData.exc_name}
                       </h5>
@@ -652,7 +654,7 @@ export default function MoodInsightPage() {
                   {!fetchingExercise && exerciseData && (
                     <p
                       className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
-                      style={{ color: C.muted }}
+                      style={{ color: 'var(--muted)' }}
                     >
                       AI-generated recommendation. Suggestions are not a
                       substitute for professional medical or mental health
@@ -666,7 +668,7 @@ export default function MoodInsightPage() {
                   {!fetchingExercise && exerciseData && (
                     <>
                       <button
-                        className={buttonGradient}
+                        className={buttonGradient(theme)}
                         onClick={() => setOpenExcDetail(true)}
                         id="button-view-exercise"
                       >
@@ -675,7 +677,7 @@ export default function MoodInsightPage() {
                       {exerciseData.uex_status === 'incomplete' &&
                         isSameDay(exerciseData.uex_created_at, new Date()) && (
                           <button
-                            className={buttonGradient}
+                            className={buttonGradient(theme)}
                             onClick={performExercise}
                             id="button-track-exercise"
                           >
@@ -700,7 +702,7 @@ export default function MoodInsightPage() {
               {/* mood chart */}
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold w-full"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {barRange.mode === 'days'
                   ? 'Mood This Week'
@@ -716,7 +718,7 @@ export default function MoodInsightPage() {
               <button
                 onClick={moodDashboard}
                 id="button-mood-chart"
-                className={buttonGradient}
+                className={buttonGradient(theme)}
               >
                 View Mood Dashboard
               </button>

@@ -5,7 +5,8 @@ import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
 import { MoodPoint } from '@/app/hooks/moodScatterData';
-import { C, styles } from '@/app/styles/styles';
+import { useTheme } from '@/context/ThemeContext';
+import { styles } from '@/app/styles/styles';
 import { format, subDays } from 'date-fns';
 import { useMemo } from 'react';
 
@@ -34,7 +35,7 @@ export function buildMockScatterPoints(): MoodPoint[] {
 
 export default function MoodPreviewPage() {
   const chartHeight = 320;
-
+  const { theme } = useTheme();
   const barData = useMemo(() => buildMockBarData(), []);
   const scatterPoints = useMemo(() => buildMockScatterPoints(), []);
   const dailyMockPoints = useMemo(
@@ -52,7 +53,7 @@ export default function MoodPreviewPage() {
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -61,7 +62,7 @@ export default function MoodPreviewPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Mood Dashboard (Preview)
           </h1>
@@ -103,7 +104,7 @@ export default function MoodPreviewPage() {
             <div className="flex w-full items-center justify-between">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 Daily Mood
               </h3>

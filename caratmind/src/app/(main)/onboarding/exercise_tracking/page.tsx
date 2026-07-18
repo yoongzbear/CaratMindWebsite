@@ -1,6 +1,6 @@
 'use client';
 import Pill from '@/app/components/Pill';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { DayPicker } from '@daypicker/react';
 import { format } from 'date-fns';
 import { Flame, Star } from 'lucide-react';
@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { buttonGradient } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 // sample data
 const sampleExercise = [
@@ -25,13 +26,14 @@ const sampleExercise = [
 ];
 
 export default function ExerciseTrackingPreviewPage() {
+  const { theme } = useTheme();
   const todayDate = useMemo(() => new Date(), []);
 
   return (
     <section
       className="min-h-[calc(100vh-140px)] items-center pt-4 sm:pt-6 pb-10"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -40,7 +42,7 @@ export default function ExerciseTrackingPreviewPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Coping Exercise Tracking (Preview)
           </h1>
@@ -58,18 +60,22 @@ export default function ExerciseTrackingPreviewPage() {
         >
           <div className="flex flex-col items-center justify-center px-3">
             <div className="relative z-10 w-24 h-24 flex items-center justify-center transition-transform duration-300">
-              <Flame fill="#fc6f03" style={{ color: C.navy }} size={48} />
+              <Flame
+                fill="#fc6f03"
+                style={{ color: 'var(--text)' }}
+                size={48}
+              />
             </div>
             <p
               className="mt-0 mb-1 text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               3 Days
             </p>
           </div>
           <p
             className="mt-0 mb-2.5 text-[clamp(1rem,3vw,1.5rem)]"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Great job! You kept your coping exercise streak going today. Keep it
             up!
@@ -88,13 +94,13 @@ export default function ExerciseTrackingPreviewPage() {
         >
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Today&apos;s Exercise
           </h3>
           <h5
             className="text-[clamp(1rem,3vw,1.5rem)] font-semibold underline"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             {format(todayDate, 'dd MMMM yyyy')}
           </h5>
@@ -124,7 +130,7 @@ export default function ExerciseTrackingPreviewPage() {
                     <div className="w-full flex gap-3 mb-2">
                       <h5
                         className="text-[clamp(1rem,3vw,1.5rem)] font-bold mt-0 mb-0.5"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {exercise.exc_name}
                       </h5>
@@ -164,7 +170,7 @@ export default function ExerciseTrackingPreviewPage() {
                                 <Pill
                                   bgColor="#f1f3f8"
                                   borderColor="#dde1ea"
-                                  textColor={C.faint}
+                                  textColor={'var(--muted)'}
                                   title={moods
                                     .slice(1)
                                     .map(toTitleCase)
@@ -197,7 +203,7 @@ export default function ExerciseTrackingPreviewPage() {
                                 <Pill
                                   bgColor="#f1f3f8"
                                   borderColor="#dde1ea"
-                                  textColor={C.faint}
+                                  textColor={'var(--muted)'}
                                   title={moods
                                     .slice(MAX_VISIBLE_MOODS)
                                     .map(toTitleCase)
@@ -216,7 +222,7 @@ export default function ExerciseTrackingPreviewPage() {
 
                     <p
                       className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
-                      style={{ color: C.navy }}
+                      style={{ color: 'var(--text)' }}
                     >
                       {exercise.exc_desc}
                     </p>
@@ -225,14 +231,14 @@ export default function ExerciseTrackingPreviewPage() {
                       <p
                         className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
                         id="rating"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {exercise.uex_rating}
                       </p>
                       <Star
                         size={18}
                         style={{
-                          color: C.navy,
+                          color: 'var(--text)',
                         }}
                       />
                     </div>
@@ -240,13 +246,16 @@ export default function ExerciseTrackingPreviewPage() {
                     {/* <div className="flex w-full gap-3"> */}
                     <div className="w-full mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-start mt-4">
                       <button
-                        className={buttonGradient}
+                        className={buttonGradient(theme)}
                         id="button-exercise-details"
                       >
                         View More
                       </button>
 
-                      <button className={buttonGradient} id="button-insights">
+                      <button
+                        className={buttonGradient(theme)}
+                        id="button-insights"
+                      >
                         View Insights
                       </button>
                     </div>
@@ -269,7 +278,7 @@ export default function ExerciseTrackingPreviewPage() {
         >
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Recommended Exercises History
           </h3>
@@ -281,7 +290,7 @@ export default function ExerciseTrackingPreviewPage() {
           >
             <label
               className="text-[clamp(0.875rem,1.5vw,1rem)] font-bold"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Select a Date
             </label>
@@ -292,12 +301,12 @@ export default function ExerciseTrackingPreviewPage() {
                 value={format(todayDate, 'yyyy-MM-dd')}
                 onChange={() => {}}
                 className="flex-1 rounded-lg border px-3 py-2.5 text-[clamp(0.9rem,3.5vw,1rem)] font-medium"
-                style={{ color: C.navy, borderColor: '#eef2f9' }}
+                style={{ color: 'var(--text)', borderColor: '#eef2f9' }}
               />
               <button
                 type="button"
                 className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap cursor-pointer"
-                style={{ color: C.serenity }}
+                style={{ color: 'var(--second-color)' }}
               >
                 Today
               </button>
@@ -314,7 +323,7 @@ export default function ExerciseTrackingPreviewPage() {
                     selected={todayDate}
                     captionLayout="dropdown"
                     className="w-full"
-                    style={{ color: C.navy }}
+                    style={{ color: 'var(--text)' }}
                     classNames={{
                       root: 'w-full',
                       months: 'w-full',
@@ -339,7 +348,7 @@ export default function ExerciseTrackingPreviewPage() {
                   />
                   <button
                     className="text-[clamp(0.875rem,1.5vw,1rem)] font-semibold hover:cursor-pointer"
-                    style={{ color: C.serenity }}
+                    style={{ color: 'var(--second-color)' }}
                   >
                     Go to Today
                   </button>
@@ -354,7 +363,7 @@ export default function ExerciseTrackingPreviewPage() {
             >
               <h5
                 className="text-[clamp(1rem,3vw,1.5rem)] font-bold underline"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {format(todayDate, 'dd MMMM yyyy')}
               </h5>
@@ -381,7 +390,7 @@ export default function ExerciseTrackingPreviewPage() {
                     >
                       <h5
                         className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {exercise.exc_name}
                       </h5>
@@ -413,7 +422,7 @@ export default function ExerciseTrackingPreviewPage() {
                                     <Pill
                                       bgColor="#f1f3f8"
                                       borderColor="#dde1ea"
-                                      textColor={C.faint}
+                                      textColor={'var(--muted)'}
                                       title={moods
                                         .slice(1)
                                         .map(toTitleCase)
@@ -446,7 +455,7 @@ export default function ExerciseTrackingPreviewPage() {
                                     <Pill
                                       bgColor="#f1f3f8"
                                       borderColor="#dde1ea"
-                                      textColor={C.faint}
+                                      textColor={'var(--muted)'}
                                       title={moods
                                         .slice(MAX_VISIBLE_MOODS)
                                         .map(toTitleCase)
@@ -467,7 +476,7 @@ export default function ExerciseTrackingPreviewPage() {
                       {/* rating (completed) / reason (incomplete) */}
                       <p
                         className="text-[clamp(0.875rem,1.5vw,1rem)] mb-2"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         <b>Incomplete Reason</b>: {exercise.uex_reason}
                       </p>
@@ -475,17 +484,19 @@ export default function ExerciseTrackingPreviewPage() {
                       {/* exercise description */}
                       <p
                         className="w-full mb-2 overflow-hidden text-justify text-ellipsis line-clamp-2 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
-                        style={{ color: C.navy }}
+                        style={{ color: 'var(--text)' }}
                       >
                         {exercise.exc_desc}
                       </p>
 
                       <div className="mt-1 flex gap-3">
                         {/* button to insights page */}
-                        <button className={buttonGradient}>View More</button>
+                        <button className={buttonGradient(theme)}>
+                          View More
+                        </button>
 
                         {/* button to insights page */}
-                        <button className={buttonGradient}>
+                        <button className={buttonGradient(theme)}>
                           View Insights
                         </button>
                       </div>

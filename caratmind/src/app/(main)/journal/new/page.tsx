@@ -1,6 +1,6 @@
 'use client';
 
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
@@ -8,8 +8,10 @@ import { useRouter } from 'next/navigation';
 import { StatusKey } from '@/app/types/journal';
 import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
 import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function NewEntryPage() {
+  const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
   const [entry, setEntry] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -67,7 +69,7 @@ export default function NewEntryPage() {
     <section
       className="min-h-[calc(100vh-200px)] pt-4 sm:pt-6 pb-2 lg:pb-12"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -76,21 +78,21 @@ export default function NewEntryPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             New Journal Entry
           </h1>
 
           <h5
             className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Write out your thoughts and feelings with no limits. Feel free to
             write about your day or any experiences you faced!
           </h5>
           <p
             className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.5 mb-2 italic"
-            style={{ color: C.muted }}
+            style={{ color: 'var(--muted)' }}
           >
             Entry shall be analyzed using AI to detect your mood.
           </p>
@@ -111,9 +113,9 @@ export default function NewEntryPage() {
             ref={textareaRef}
             onChange={(e) => setEntry(e.target.value)}
             style={{
-              border: `1px solid ${C.border}`,
+              border: '1px solid var(--border)',
               fontFamily: 'inherit',
-              color: C.navy,
+              color: 'var(--text)',
             }}
           ></textarea>
 
@@ -131,7 +133,7 @@ export default function NewEntryPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={buttonGradient}
+              className={buttonGradient(theme)}
               id="button-submit"
             >
               {submitting ? 'Submitting...' : 'Submit Entry'}

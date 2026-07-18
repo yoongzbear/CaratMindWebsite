@@ -3,7 +3,7 @@
 
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import Pill from '@/app/components/Pill';
-import { C } from '@/app/styles/styles';
+// import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { toTitleCase } from '@/app/utils/format';
@@ -11,6 +11,7 @@ import { getMoodStyle } from '@/app/utils/moodUtils';
 import { format } from 'date-fns';
 import { buildMockBarData } from '../mood_chart/page';
 import { useMemo } from 'react';
+import { useTheme } from '@/context/ThemeContext';
 
 // sample data
 const sampleJournal = {
@@ -35,12 +36,13 @@ const sampleExercise = {
 };
 
 export default function MoodInsightPreviewPage() {
+  const { theme } = useTheme();
   const barData = useMemo(() => buildMockBarData(), []);
   return (
     <section
       className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-12"
       style={{
-        background: C.bgPage,
+        background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
         paddingRight: 'max(1rem, env(safe-area-inset-right, 0px))',
       }}
@@ -49,7 +51,7 @@ export default function MoodInsightPreviewPage() {
         <header className="mb-3">
           <h1
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Mood Insights (Preview)
           </h1>
@@ -68,7 +70,7 @@ export default function MoodInsightPreviewPage() {
           <div className="flex gap-2 items-center mb-2">
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               {format(
                 new Date(sampleJournal.jrnl_created_at),
@@ -85,12 +87,12 @@ export default function MoodInsightPreviewPage() {
 
           <div
             className="px-4 py-2 rounded-xl"
-            style={{ border: `1px solid ${C.border}` }}
+            style={{ border: '1px solid var(--border)' }}
           >
             <p
               className="w-full overflow-hidden text-justify text-ellipsis line-clamp-3 wrap-break-word text-[clamp(0.875rem,1.5vw,1rem)]"
               style={{
-                color: C.navy,
+                color: 'var(--text)',
               }}
             >
               {sampleJournal.entryText}
@@ -99,17 +101,17 @@ export default function MoodInsightPreviewPage() {
 
           <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
             {/* view more button */}
-            <button className={buttonGradient} id="button-view-entry">
+            <button className={buttonGradient(theme)} id="button-view-entry">
               View More
             </button>
 
             {/* edit entry */}
-            <button className={buttonGradient} id="button-edit-entry">
+            <button className={buttonGradient(theme)} id="button-edit-entry">
               Edit Entry
             </button>
 
             {/* submit entry button */}
-            <button className={buttonGradient} id="button-submit-entry">
+            <button className={buttonGradient(theme)} id="button-submit-entry">
               Submit Entry
             </button>
 
@@ -133,7 +135,7 @@ export default function MoodInsightPreviewPage() {
           >
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               From your entry, you felt
             </h3>
@@ -149,20 +151,28 @@ export default function MoodInsightPreviewPage() {
               {/* <div className="flex items-center justify-center text-center"> */}
               <h5
                 className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                style={{ color: C.navy }}
+                style={{ color: 'var(--text)' }}
               >
                 {toTitleCase(sampleMood.mood_name) ?? 'Unknown'}
               </h5>
-              {/* TODO: add agree */}
+              <div className="mb-2 lg:mb-0">
+                <Pill
+                  bgColor="#f1f8f4"
+                  borderColor="#66bb6a"
+                  textColor="#2e7d32"
+                >
+                  Agreed
+                </Pill>
+              </div>
             </div>
 
-            <div />
+            {/* <div /> */}
 
             {/* disclaimer */}
             <div>
               <p
                 className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
-                style={{ color: C.muted }}
+                style={{ color: 'var(--muted)' }}
               >
                 Your mood is estimated using AI based on the submitted entry.
                 The detected mood may not always accurately reflect your actual
@@ -173,7 +183,7 @@ export default function MoodInsightPreviewPage() {
 
             {/* button */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
-              <button className={buttonGradient} id="button-view-mood">
+              <button className={buttonGradient(theme)} id="button-view-mood">
                 View Details
               </button>
             </div>
@@ -191,7 +201,7 @@ export default function MoodInsightPreviewPage() {
           >
             <h3
               className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
-              style={{ color: C.navy }}
+              style={{ color: 'var(--text)' }}
             >
               Recommended Coping Exercise:
             </h3>
@@ -204,11 +214,10 @@ export default function MoodInsightPreviewPage() {
               {/* </div> */}
 
               {/* name + status */}
-              {/* TODO: check the actual page */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+              <div className="mb-2 text-center items-center justify-center">
                 <h5
                   className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
-                  style={{ color: C.navy }}
+                  style={{ color: 'var(--text)' }}
                 >
                   {sampleExercise.exc_name}
                 </h5>
@@ -222,13 +231,13 @@ export default function MoodInsightPreviewPage() {
               </div>
             </div>
 
-            <div />
+            {/* <div /> */}
 
             {/* disclaimer */}
             <div>
               <p
                 className="text-[clamp(0.7rem,1.5vw,0.85rem)] italic text-justify"
-                style={{ color: C.muted }}
+                style={{ color: 'var(--muted)' }}
               >
                 AI-generated recommendation. Suggestions are not a substitute
                 for professional medical or mental health advice.
@@ -238,11 +247,17 @@ export default function MoodInsightPreviewPage() {
             {/* buttons */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
               <>
-                <button className={buttonGradient} id="button-view-exercise">
+                <button
+                  className={buttonGradient(theme)}
+                  id="button-view-exercise"
+                >
                   View Details
                 </button>
 
-                <button className={buttonGradient} id="button-track-exercise">
+                <button
+                  className={buttonGradient(theme)}
+                  id="button-track-exercise"
+                >
                   Perform Exercise
                 </button>
               </>
@@ -262,7 +277,7 @@ export default function MoodInsightPreviewPage() {
           {/* mood chart */}
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold w-full"
-            style={{ color: C.navy }}
+            style={{ color: 'var(--text)' }}
           >
             Mood This Week
           </h3>
@@ -273,7 +288,7 @@ export default function MoodInsightPreviewPage() {
             />
           </div>
           {/* mood dashboard button */}
-          <button className={buttonGradient} id="button-mood-chart">
+          <button className={buttonGradient(theme)} id="button-mood-chart">
             View Mood Dashboard
           </button>
         </div>
