@@ -9,7 +9,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-// import { C } from '@/app/styles/styles';
 import { format } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';

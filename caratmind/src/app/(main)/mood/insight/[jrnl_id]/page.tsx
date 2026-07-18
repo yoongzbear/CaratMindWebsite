@@ -8,7 +8,6 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-// import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';

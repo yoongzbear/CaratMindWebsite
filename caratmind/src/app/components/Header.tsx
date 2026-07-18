@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { buttonBase } from '@/app/styles/styles'; //buttonGradientColor, C
+// import { buttonBase } from '@/app/styles/styles'; //buttonGradientColor, C
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
 
@@ -293,8 +293,9 @@ export default function Header() {
                 onClick={() => router.push('/profile')}
                 className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
                 style={{
-                  border: `1px solid var(--border)`,
-                  background: `linear-gradient(135deg, var(--first-color), var(--second-color))`,
+                  border: '1px solid var(--border)',
+                  background:
+                    'linear-gradient(135deg, var(--first-color), var(--second-color))',
                 }}
                 aria-label="Profile"
               >
@@ -307,7 +308,7 @@ export default function Header() {
             onClick={() => setMobile((v) => !v)}
             className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-150"
             style={{
-              border: `1px solid var(--border)`,
+              border: '1px solid var(--border)',
               color: 'var(--text)',
             }}
             aria-label={mobile ? 'Close menu' : 'Open menu'}

@@ -3,7 +3,6 @@
 'use client';
 
 import Modal from './Modal';
-// import { C } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { Mood } from '@/app/types/mood';

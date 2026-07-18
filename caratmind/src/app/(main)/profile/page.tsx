@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-// import { C } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';

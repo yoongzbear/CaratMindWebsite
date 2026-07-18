@@ -2,7 +2,6 @@
 
 'use client';
 import type { CardComponentProps } from 'nextstepjs';
-// import { C } from '@/app/styles/styles';
 import { buttonGradient } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 

@@ -4,7 +4,6 @@
 
 import Modal from './Modal';
 import Pill from '../Pill';
-// import { C, styles } from '@/app/styles/styles';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';

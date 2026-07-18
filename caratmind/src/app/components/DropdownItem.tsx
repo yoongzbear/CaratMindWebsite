@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-// import { C } from '@/app/styles/styles';
 
 type NavItem = {
   label: string;

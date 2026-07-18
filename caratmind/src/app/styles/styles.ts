@@ -1,5 +1,7 @@
 // import { CSSProperties } from 'react';
 
+import { CSSProperties } from 'react';
+
 // // export const C = {
 // //   roseQuartz: '#F7CAC9',
 // //   serenity: '#92A8D1',
@@ -88,6 +90,31 @@
 //   color: '#6a7fa8',
 //   maxWidth: '200px',
 // };
+
+export const styles: Record<string, CSSProperties> = {
+  dateInput: {
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: '1px solid var(--border)',
+    fontFamily: 'inherit',
+    color: 'var(--text)',
+    background: 'white',
+    outline: 'none',
+    cursor: 'pointer',
+    appearance: 'none',
+  },
+  dropdown: {
+    padding: '9px 12px',
+    borderRadius: '10px',
+    border: '1px solid var(--border)',
+    fontFamily: 'inherit',
+    color: 'var(--text)',
+    background: 'white',
+    outline: 'none',
+    cursor: 'pointer',
+  },
+};
 
 // export const styles: Record<string, CSSProperties> = {
 //   container: {
@@ -253,18 +280,7 @@
 //     color: C.navy,
 //   },
 
-//   dateInput: {
-//     boxSizing: 'border-box',
-//     padding: '11px 12px',
-//     borderRadius: '10px',
-//     border: `1px solid ${C.border}`,
-//     fontFamily: 'inherit',
-//     color: C.navy,
-//     background: 'white',
-//     outline: 'none',
-//     cursor: 'pointer',
-//     appearance: 'none',
-//   },
+//
 
 //   textarea: {
 //     width: '100%',
@@ -356,18 +372,6 @@
 //     color: C.navy,
 //     outline: 'none',
 //     width: '180px',
-//   },
-
-//   dropdown: {
-//     padding: '9px 12px',
-//     borderRadius: '10px',
-//     border: `1px solid ${C.border}`,
-//     // fontSize: '13px',
-//     fontFamily: 'inherit',
-//     color: C.navy,
-//     background: 'white',
-//     outline: 'none',
-//     cursor: 'pointer',
 //   },
 
 //   // loading style

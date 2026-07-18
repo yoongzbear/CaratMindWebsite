@@ -8,12 +8,10 @@ import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
 import { styles } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
 export default function MoodPage() {
-  const { theme } = useTheme();
   const { user, loading } = useAuth();
   const chartHeight = 320;
   const [barRange, setBarRange] = useState<DateRangeValue>({
@@ -87,7 +85,7 @@ export default function MoodPage() {
               {/* date */}
               <input
                 id="daily-date"
-                style={{styles.dateInput}}
+                style={styles.dateInput}
                 type="date"
                 value={moodDate}
                 onChange={(e) => setMoodDate(e.target.value)}

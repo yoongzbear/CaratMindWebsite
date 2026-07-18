@@ -3,7 +3,6 @@
 
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import Pill from '@/app/components/Pill';
-// import { C } from '@/app/styles/styles';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { toTitleCase } from '@/app/utils/format';

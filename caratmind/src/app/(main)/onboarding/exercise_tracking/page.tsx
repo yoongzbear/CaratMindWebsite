@@ -1,6 +1,5 @@
 'use client';
 import Pill from '@/app/components/Pill';
-// import { C } from '@/app/styles/styles';
 import { DayPicker } from '@daypicker/react';
 import { format } from 'date-fns';
 import { Flame, Star } from 'lucide-react';

@@ -4,7 +4,6 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-// import { C } from '@/app/styles/styles';
 import { toastError } from '@/utils/toast';
 import { buttonGradient } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';

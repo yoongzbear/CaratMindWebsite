@@ -1,5 +1,4 @@
 'use client';
-// import { C } from '@/app/styles/styles';
 import { Journal } from '@/app/types/journal';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';

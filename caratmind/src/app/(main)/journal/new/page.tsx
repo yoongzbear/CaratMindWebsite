@@ -1,6 +1,5 @@
 'use client';
 
-// import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';

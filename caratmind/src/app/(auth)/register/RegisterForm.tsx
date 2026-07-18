@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/app/components/AuthCard';
-// import { C, styles } from '@/app/styles/styles';
+// import { styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';

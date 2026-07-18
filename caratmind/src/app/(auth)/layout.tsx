@@ -1,5 +1,3 @@
-// import { C } from '@/app/styles/styles';
-
 export default function AuthLayout({
   children,
 }: {

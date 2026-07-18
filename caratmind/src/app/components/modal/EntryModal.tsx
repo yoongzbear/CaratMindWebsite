@@ -4,7 +4,6 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-// import { C } from '@/app/styles/styles';
 import { useRouter } from 'next/navigation';
 import { JournalDetail } from '@/app/types/journal';
 import { buttonGradient, buttonRed } from '@/app/styles/ui';

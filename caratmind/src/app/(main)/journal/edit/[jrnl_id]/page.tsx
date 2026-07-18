@@ -1,5 +1,4 @@
 'use client';
-// import { C } from '@/app/styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
