@@ -8,6 +8,7 @@ import { HelplineModalProvider } from './components/HelplineModalProvider';
 import '@daypicker/react/style.css';
 import { OnboardingProvider } from './components/OnboardingProvider';
 import './styles/themes';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -41,13 +42,15 @@ export default function RootLayout({
         }}
       >
         <AuthProvider>
-          <OnboardingProvider>
-            <LayoutShell>
-              {children}
-              <HelplineModalProvider />
-            </LayoutShell>
-          </OnboardingProvider>
-          <ClientToastContainer />
+          <ThemeProvider>
+            <OnboardingProvider>
+              <LayoutShell>
+                {children}
+                <HelplineModalProvider />
+              </LayoutShell>
+            </OnboardingProvider>
+            <ClientToastContainer />
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

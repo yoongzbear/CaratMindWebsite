@@ -8,17 +8,22 @@ import {
   useState,
   useCallback,
 } from 'react';
+import { useAuth } from './AuthContext';
+import { toastSuccess } from '@/utils/toast';
 
 type ThemeContextType = {
   theme: ThemeName;
   setTheme: (t: ThemeName) => void;
+  saving: boolean;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const STORAGE_KEY = 'app-theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const { user, loading, accessToken } = useAuth();
   const [theme, setThemeState] = useState<ThemeName>('light');
+  const [saving, setSaving] = useState(false);
 
   // load saved theme on mount
   useEffect(() => {
@@ -28,18 +33,56 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (!user || !accessToken) return;
+
+    fetch('/api/theme/get_theme', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.theme && themes[data.theme as ThemeName]) {
+          setThemeState(data.theme);
+          localStorage.setItem(STORAGE_KEY, data.theme);
+        }
+      })
+      .catch(() => {});
+  }, [user, accessToken]);
+
   // apply CSS variables whenever theme changes
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const setTheme = useCallback((t: ThemeName) => {
-    setThemeState(t);
-    localStorage.setItem(STORAGE_KEY, t);
-  }, []);
+  const setTheme = useCallback(
+    async (t: ThemeName) => {
+      setThemeState(t);
+      localStorage.setItem(STORAGE_KEY, t);
+
+      if (!user || !accessToken) return;
+
+      setSaving(true);
+      try {
+        await fetch('/api/theme/update_theme', {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ theme: t }),
+        });
+
+        toastSuccess('Saved theme successfully.');
+      } catch {
+      } finally {
+        setSaving(false);
+      }
+    },
+    [user, accessToken],
+  );
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, saving }}>
       {children}
     </ThemeContext.Provider>
   );

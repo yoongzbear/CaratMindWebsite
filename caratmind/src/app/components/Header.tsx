@@ -247,6 +247,26 @@ export default function Header() {
                       >
                         Profile
                       </button>
+
+                      {/* theme */}
+                      <button
+                        type="button"
+                        onClick={() => router.push('/theme_select')}
+                        className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
+                        style={{
+                          color: 'var(--text)',
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background =
+                            'rgba(146,168,209,0.08)')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = 'transparent')
+                        }
+                      >
+                        Theme
+                      </button>
+
                       <button
                         type="button"
                         onClick={handleLogout}
@@ -395,17 +415,28 @@ export default function Header() {
             )}
 
             {!loading && user ? (
-              <button
-                type="button"
-                onClick={() => {
-                  closeMobile();
-                  handleLogout();
-                }}
-                className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
-                style={{ color: '#dc2626' }}
-              >
-                Log Out
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => router.push('/theme_select')}
+                  className="text-start py-3.5 text-[clamp(0.95rem,1.5vw,1rem)] font-bold border-b"
+                  style={{ color: 'var(--text)', borderColor: 'var(--border)' }}
+                >
+                  Theme
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMobile();
+                    handleLogout();
+                  }}
+                  className="mt-3 mb-3 w-full text-left py-3 rounded-[10px] text-[clamp(0.95rem,1.5vw,1rem)] font-bold"
+                  style={{ color: '#dc2626' }}
+                >
+                  Log Out
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"

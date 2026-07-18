@@ -23,6 +23,7 @@ def create_user_if_not_exists(user_id: str, username: str, email: str, preferred
                 'user_email': email,
                 'preferred_name': preferred_name,
                 'user_complete_onboarding': False,
+                'user_theme': 'light',
             },
             ConditionExpression='attribute_not_exists(user_id)',
         )
@@ -55,6 +56,19 @@ def update_onboarding(user_id: str, onboardingDone: bool):
         },
         UpdateExpression='SET user_complete_onboarding = :user_complete_onboarding',
         ExpressionAttributeValues={':user_complete_onboarding': onboardingDone},
+        ConditionExpression='attribute_exists(user_id)',
+    )
+
+# update theme
+def update_theme(user_id: str, theme: str):
+    table = _get_table()
+
+    table.update_item(
+        Key={
+            'user_id': user_id,
+        },
+        UpdateExpression='SET theme = :theme',
+        ExpressionAttributeValues={':theme': theme},
         ConditionExpression='attribute_exists(user_id)',
     )
 

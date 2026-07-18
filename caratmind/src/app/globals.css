@@ -37,9 +37,8 @@ html {
   --bg: #ffffff;
   --first-color: #f7cac9;
   --second-color: #92a8d1;
-  --bg-sidebar: linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%);
   --bg-page: linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%);
-  --bg-topbar: rgba(253, 250, 251, 1);
+  --bg-topbar: rgba(253, 250, 251);
 }
 
 :root[data-theme='dark'] {
@@ -51,9 +50,8 @@ html {
   --first-color: #c98f92;
   --second-color: #5b6f99;
   --gradient: linear-gradient(130deg, #c98f92, #5b6f99);
-  --bg-sidebar: linear-gradient(180deg, #1e293b 0%, #172033 100%);
   --bg-page: linear-gradient(150deg, #111827 0%, #0f172a 100%);
-  --bg-topbar: rgba(15, 23, 42, 0.9);
+  --bg-topbar: rgba(15, 23, 42);
 }
 
 :root[data-theme='rose'] {
@@ -65,9 +63,8 @@ html {
   --first-color: #f7cac9;
   --second-color: #ffd6d6;
   --gradient: linear-gradient(130deg, #f7cac9, #ffd6d6);
-  --bg-sidebar: linear-gradient(180deg, #fdf0f2 0%, #fbe6ea 100%);
   --bg-page: linear-gradient(150deg, #fff5f6 0%, #fdeef0 100%);
-  --bg-topbar: rgba(255, 249, 250, 1);
+  --bg-topbar: rgba(255, 249, 250);
 }
 
 :root[data-theme='ocean'] {
@@ -79,9 +76,8 @@ html {
   --first-color: #92a8d1;
   --second-color: #60a5fa;
   --gradient: linear-gradient(130deg, #92a8d1, #60a5fa);
-  --bg-sidebar: linear-gradient(180deg, #eaf2fb 0%, #e3f0fb 100%);
   --bg-page: linear-gradient(150deg, #f2f9ff 0%, #e8f3fd 100%);
-  --bg-topbar: rgba(247, 251, 255, 1);
+  --bg-topbar: rgba(247, 251, 255);
 }
 
 :root[data-theme='forest'] {
@@ -93,9 +89,8 @@ html {
   --first-color: #8fc9a3;
   --second-color: #f7cac9;
   --gradient: linear-gradient(130deg, #8fc9a3, #f7cac9);
-  --bg-sidebar: linear-gradient(180deg, #eaf7ee 0%, #f5efe9 100%);
   --bg-page: linear-gradient(150deg, #f2fbf4 0%, #eef7f0 100%);
-  --bg-topbar: rgba(248, 253, 249, 1);
+  --bg-topbar: rgba(248, 253, 249);
 }
 
 :root[data-theme='sunset'] {
@@ -107,9 +102,38 @@ html {
   --first-color: #f7cac9;
   --second-color: #f97316;
   --gradient: linear-gradient(130deg, #f7cac9, #f97316);
-  --bg-sidebar: linear-gradient(180deg, #fdf0e6 0%, #f9e6df 100%);
   --bg-page: linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%);
-  --bg-topbar: rgba(255, 250, 245, 1);
+  --bg-topbar: rgba(255, 250, 245);
+}
+
+.btn-gradient {
+  background:
+    linear-gradient(
+        130deg,
+        var(--btn-second, var(--second-color)),
+        var(--btn-first, var(--first-color))
+      )
+      padding-box,
+    transparent border-box;
+  color: white;
+  border: 2px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.btn-gradient:hover {
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(
+        130deg,
+        var(--btn-first, var(--first-color)),
+        var(--btn-second, var(--second-color))
+      )
+      border-box;
+  border-color: transparent;
+  color: var(--text);
 }
 
 body {

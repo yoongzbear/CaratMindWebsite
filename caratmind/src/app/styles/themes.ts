@@ -18,9 +18,9 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#F7CAC9',
     secondColor: '#92A8D1',
     gradient: 'linear-gradient(130deg,#F7CAC9,#92A8D1)',
-    bgSidebar: 'linear-gradient(180deg, #eef2f9 0%, #f9f0f1 100%)',
     bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
-    bgTopbar: 'rgba(253,250,251,1)',
+    bgTopbar: 'rgba(253,250,251)',
+    bgInput: '#ffffff',
   },
 
   dark: {
@@ -32,9 +32,9 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#c98f92',
     secondColor: '#5b6f99',
     gradient: 'linear-gradient(130deg,#c98f92,#5b6f99)',
-    bgSidebar: 'linear-gradient(180deg, #1e293b 0%, #172033 100%)',
     bgPage: 'linear-gradient(150deg, #111827 0%, #0f172a 100%)',
-    bgTopbar: 'rgba(15,23,42,0.9)',
+    bgTopbar: 'rgba(15,23,42)',
+    bgInput: '#3e4554',
   },
 
   rose: {
@@ -46,9 +46,8 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#F7CAC9',
     secondColor: '#ffd6d6',
     gradient: 'linear-gradient(130deg,#F7CAC9,#ffd6d6)',
-    bgSidebar: 'linear-gradient(180deg, #fdf0f2 0%, #fbe6ea 100%)',
     bgPage: 'linear-gradient(150deg, #fff5f6 0%, #fdeef0 100%)',
-    bgTopbar: 'rgba(255,249,250,1)',
+    bgTopbar: 'rgba(255,249,250)',
   },
 
   ocean: {
@@ -60,9 +59,8 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#92A8D1',
     secondColor: '#60a5fa',
     gradient: 'linear-gradient(130deg,#92A8D1,#60a5fa)',
-    bgSidebar: 'linear-gradient(180deg, #eaf2fb 0%, #e3f0fb 100%)',
     bgPage: 'linear-gradient(150deg, #f2f9ff 0%, #e8f3fd 100%)',
-    bgTopbar: 'rgba(247,251,255,1)',
+    bgTopbar: 'rgba(247,251,255)',
   },
 
   forest: {
@@ -74,9 +72,8 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#8fc9a3',
     secondColor: '#F7CAC9',
     gradient: 'linear-gradient(130deg,#8fc9a3,#F7CAC9)',
-    bgSidebar: 'linear-gradient(180deg, #eaf7ee 0%, #f5efe9 100%)',
     bgPage: 'linear-gradient(150deg, #f2fbf4 0%, #eef7f0 100%)',
-    bgTopbar: 'rgba(248,253,249,1)',
+    bgTopbar: 'rgba(248,253,249)',
   },
 
   sunset: {
@@ -88,9 +85,8 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     firstColor: '#F7CAC9',
     secondColor: '#f97316',
     gradient: 'linear-gradient(130deg,#F7CAC9,#f97316)',
-    bgSidebar: 'linear-gradient(180deg, #fdf0e6 0%, #f9e6df 100%)',
     bgPage: 'linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%)',
-    bgTopbar: 'rgba(255,250,245,1)',
+    bgTopbar: 'rgba(255,250,245)',
   },
 };
 

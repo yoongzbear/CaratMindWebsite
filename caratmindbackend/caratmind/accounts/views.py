@@ -22,7 +22,7 @@ from journal.s3_service import delete_entry_text
 from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
 from .services import CognitoService
-from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_onboarding, update_preferred_name
+from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_onboarding, update_preferred_name, update_theme
 
 def _validate_password(password: str) -> str | None:
     if len(password) < 8:
@@ -464,3 +464,48 @@ def delete_account_view(request):
         )    
 
     return JsonResponse({'success': True})
+
+# update theme
+@csrf_exempt
+@require_http_methods(['PUT'])
+def update_theme_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    theme = (body.get('theme') or '').strip()
+    if not theme:
+        return JsonResponse({'error': 'theme is required'}, status=400)
+
+    sub = principal.claims.get('sub')
+    if not sub:
+        return JsonResponse({'error': 'Missing sub claim'}, status=400)
+
+    try:
+        update_theme(user_id=sub, theme=theme)
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'theme': theme})
+
+@require_GET
+def get_theme_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+
+    user = get_user(sub)
+    if not user:
+        return JsonResponse({'error': 'User not found.'}, status=404)
+
+    return JsonResponse({
+        'theme': user.get('theme_preference', 'light')
+    })

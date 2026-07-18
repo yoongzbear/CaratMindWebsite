@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { buttonGradientColor } from './styles/styles';
+// import { buttonGradientColor } from './styles/styles';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { buttonGradient } from './styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 const cards = [
   {
@@ -87,6 +89,7 @@ const cards = [
 
 export default function SplashPage() {
   const { user, loading } = useAuth();
+  const { theme } = useTheme();
   const router = useRouter();
 
   useEffect(() => {
@@ -181,7 +184,8 @@ export default function SplashPage() {
 
               <Link
                 href={card.href}
-                className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                // className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.875rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
+                className={buttonGradient(theme)}
               >
                 {card.buttonLabel}
               </Link>

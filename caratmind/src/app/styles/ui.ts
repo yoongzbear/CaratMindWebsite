@@ -1,6 +1,7 @@
 // UI components
 
 // import { buttonGradientColor } from './styles';
+import { CSSProperties } from 'react';
 import { buttonGradientColor, ThemeName, themes } from './themes';
 
 /*
@@ -72,7 +73,16 @@ export const pText = `mt-0 mb-2.5`;
 
 // buttons
 export const buttonGradient = (theme: ThemeName) =>
-  `inline-flex cursor-pointer items-center px-4 justify-center gap-1.5 ${buttonGradientColor[theme]} border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50`;
+  'btn-gradient inline-flex cursor-pointer items-center justify-center gap-1.5 border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50';
+// ${buttonGradientColor[theme]}
+export const buttonGradientStyle = (theme: ThemeName): CSSProperties => {
+  const t = themes[theme];
+  return {
+    ['--btn-first' as string]: t.firstColor,
+    ['--btn-second' as string]: t.secondColor,
+    ['--btn-text' as string]: t.text,
+  };
+};
 
 export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semibold text-[13px] font-inherit text-white ml-2 cursor-pointer transition-opacity duration-150 ease-in-out`;
 
