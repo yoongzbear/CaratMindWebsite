@@ -5,6 +5,7 @@ import boto3
 from django.conf import settings
 from boto3.dynamodb.conditions import Attr, Key
 
+from badge.dynamodb_service import save_badge
 from caratmind.datetime import to_local_date_str
 
 def _get_table():
@@ -133,9 +134,12 @@ def calc_journal_streak(sub: str) -> dict:
         streak += 1
         cursor -= timedelta(days=1)
 
+    new_badge = save_badge(sub, 'journal', streak)
+
     return {
         'streak': streak,
         'submitted_today': submitted_today,
+        'new_badge': new_badge
     }
 
 # delete user journal entries

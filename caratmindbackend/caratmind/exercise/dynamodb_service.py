@@ -4,6 +4,7 @@ from zoneinfo import ZoneInfo
 
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
+from badge.dynamodb_service import save_badge
 from caratmind import settings
 from caratmind.datetime import to_local_date_str, today_local
 
@@ -201,9 +202,12 @@ def calc_exc_streak(sub: str) -> dict:
         streak += 1
         cursor -= timedelta(days=1)
 
+    new_badge = save_badge(sub, 'exercise', streak)
+
     return {
         'streak': streak,
         'completed_today': completed_today,
+        'new_badge': new_badge
     }
 
 # delete user exercise records

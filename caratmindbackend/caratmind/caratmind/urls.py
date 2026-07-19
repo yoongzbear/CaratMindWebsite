@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('mood.urls')),
     path('', include('exercise.urls')),
     path('', include('habit.urls')),
+    path('', include('badge.urls')),
 ]

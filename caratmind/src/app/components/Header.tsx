@@ -180,7 +180,7 @@ export default function Header() {
                   onClick={() => setProfileOpen((val) => !val)}
                   className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer font-bold sm:text-sm md:text-base transition-all duration-150 ease-in-out"
                   style={{
-                    color: 'var(--text)',
+                    color: theme === 'light' ? 'white' : 'var(--text)',
                     border: profileOpen
                       ? '1px solid var(--second-color)'
                       : '1px solid var(--border)',

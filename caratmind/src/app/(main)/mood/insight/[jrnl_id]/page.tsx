@@ -8,7 +8,7 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-import { buttonGradient, buttonRed, redButton } from '@/app/styles/ui';
+import { buttonGradient, redButton } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
@@ -21,6 +21,7 @@ import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
+import StreakBadgeModal from '@/app/components/modal/StreakBadgeModal';
 
 export default function MoodInsightPage() {
   const { theme } = useTheme();
@@ -44,11 +45,26 @@ export default function MoodInsightPage() {
   );
   const [openExcDetail, setOpenExcDetail] = useState(false);
   const [detecting, setDetecting] = useState(false);
+  const [badge, setBadge] = useState<string | null>(null);
 
   // const [barRange, setBarRange] = useState<DateRangeValue>({
   //   mode: 'days',
   //   days: 7,
   // });
+
+  const checkBadge = async () => {
+    try {
+      const res = await fetch('/api/journal/streak', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (res.ok && data.new_badge) {
+        setBadge(data.new_badge);
+      }
+    } catch {
+      // silent — badge check isn't critical path
+    }
+  };
 
   const loadEntry = async () => {
     setFetchingJournal(true);
@@ -142,6 +158,19 @@ export default function MoodInsightPage() {
       return;
     startTransition(() => {
       loadRecExercise();
+    });
+  }, [jrnl_id, accessToken, journal?.jrnl_status]);
+
+  useEffect(() => {
+    if (
+      !accessToken ||
+      !jrnl_id ||
+      jrnl_id === 'undefined' ||
+      journal?.jrnl_status !== 'submitted'
+    )
+      return;
+    startTransition(() => {
+      checkBadge();
     });
   }, [jrnl_id, accessToken, journal?.jrnl_status]);
 
@@ -773,6 +802,11 @@ export default function MoodInsightPage() {
         />
       )}
       <DetectMoodModal open={detecting} onClose={() => setDetecting(false)} />
+      <StreakBadgeModal
+        open={!!badge}
+        badgeId={badge}
+        onClose={() => setBadge(null)}
+      />
     </section>
   );
 }

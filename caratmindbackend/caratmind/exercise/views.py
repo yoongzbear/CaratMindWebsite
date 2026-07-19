@@ -186,5 +186,5 @@ def exercise_streak_view(request):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
     sub = principal.claims.get('sub')
-    result = calc_exc_streak(sub)
+    result = calc_exc_streak(sub)    
     return JsonResponse(result)

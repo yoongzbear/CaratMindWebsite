@@ -12,8 +12,10 @@ import {
   habitMessage,
   HabitStatus,
 } from '@/app/types/habit';
-import { buttonGradient, gradientButton } from '@/app/styles/ui';
+import { gradientButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { getBadgeMilestone } from '@/app/utils/format';
+import Image from 'next/image';
 
 export default function HomePage() {
   const { theme } = useTheme();
@@ -249,7 +251,12 @@ export default function HomePage() {
               <div className="relative w-full h-36 sm:h-40 md:h-44 bg-linear-to-br flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center px-3">
                   <div className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
-                    {journalToday ? (
+                    {getBadgeMilestone(journalStreak) ? (
+                      <img
+                        src={`/assets/badge/journal_${getBadgeMilestone(journalStreak)}.png`}
+                        alt="Journal Streak Badge"
+                      />
+                    ) : journalToday ? (
                       <Flame
                         fill="#fc6f03"
                         style={{ color: 'var(--text)' }}
@@ -334,7 +341,13 @@ export default function HomePage() {
               <div className="relative w-full h-44 bg-linear-to-br flex items-center justify-center">
                 <div className="flex flex-col items-center justify-center px-3">
                   <div className="relative z-10 w-20 h-20 rounded-2xl flex items-center justify-center transition-transform duration-300">
-                    {excToday ? (
+                    {getBadgeMilestone(excStreak) ? (
+                      <img
+                        src={`/assets/badge/exercise_${getBadgeMilestone(excStreak)}.png`}
+                        alt="Exercise Streak Badge"
+                        className="h-28 w-28"
+                      />
+                    ) : excToday ? (
                       <Flame
                         fill="#fc6f03"
                         style={{ color: 'var(--text)' }}

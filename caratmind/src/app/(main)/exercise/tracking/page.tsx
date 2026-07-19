@@ -13,19 +13,13 @@ import { Flame, Star } from 'lucide-react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle } from '@/app/utils/moodUtils';
-import { toTitleCase } from '@/app/utils/format';
+import { getBadgeMilestone, toTitleCase } from '@/app/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
 import RatingModal from '@/app/components/modal/RatingModal';
 import ReasonModal from '@/app/components/modal/ReasonModal';
-import {
-  buttonGradient,
-  buttonGreen,
-  buttonRed,
-  gradientButton,
-  greenButton,
-  redButton,
-} from '@/app/styles/ui';
+import { gradientButton, greenButton, redButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import StreakBadgeModal from '@/app/components/modal/StreakBadgeModal';
 
 type RatingResponse = {
   message: string;
@@ -52,6 +46,8 @@ export default function ExerciseTrackingPage() {
   const [streak, setStreak] = useState(0);
   const [completedToday, setCompletedToday] = useState(false);
   const [fetchingStreak, setFetchingStreak] = useState(false);
+
+  const [badge, setBadge] = useState<string | null>(null);
 
   const todayDate = useMemo(() => new Date(), []);
   const [todayExercise, setTodayExercise] = useState<UserExerciseDetail[]>([]);
@@ -86,6 +82,9 @@ export default function ExerciseTrackingPage() {
       }
       setStreak(data.streak);
       setCompletedToday(data.completed_today);
+      if (data.new_badge) {
+        setBadge(data.new_badge);
+      }
     } catch {
       toastError('Something went wrong loading your streak.');
     } finally {
@@ -275,7 +274,12 @@ export default function ExerciseTrackingPage() {
         >
           <div className="flex flex-col items-center justify-center px-3">
             <div className="relative z-10 w-24 h-24 flex items-center justify-center transition-transform duration-300">
-              {completedToday ? (
+              {getBadgeMilestone(streak) ? (
+                <img
+                  src={`/assets/badge/exercise_${getBadgeMilestone(streak)}.png`}
+                  alt="Exercise Streak Badge"
+                />
+              ) : completedToday ? (
                 <Flame
                   fill="#fc6f03"
                   style={{ color: 'var(--text)' }}
@@ -930,6 +934,11 @@ export default function ExerciseTrackingPage() {
           </div>
         </div>
       </div>
+      <StreakBadgeModal
+        open={!!badge}
+        badgeId={badge}
+        onClose={() => setBadge(null)}
+      />
       {selectedExercise && (
         <ExerciseDetailModal
           open={openDetail}
