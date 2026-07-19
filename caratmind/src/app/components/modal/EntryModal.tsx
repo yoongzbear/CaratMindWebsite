@@ -6,7 +6,12 @@ import { useState } from 'react';
 import Modal from './Modal';
 import { useRouter } from 'next/navigation';
 import { JournalDetail } from '@/app/types/journal';
-import { buttonGradient, buttonRed } from '@/app/styles/ui';
+import {
+  buttonGradient,
+  buttonRed,
+  gradientButton,
+  redButton,
+} from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
@@ -45,11 +50,11 @@ export default function EntryDetailModal({
           <div className="flex justify-start gap-3">
             <button
               onClick={() => handleEdit(journal.jrnl_id)}
-              className={buttonGradient(theme)}
+              {...gradientButton(theme)}
             >
               Edit Entry
             </button>
-            <button className={buttonRed} onClick={() => setOpenDelete(true)}>
+            <button {...redButton(theme)} onClick={() => setOpenDelete(true)}>
               Delete Entry
             </button>
           </div>

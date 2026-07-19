@@ -8,7 +8,7 @@ import EntryDetailModal, {
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
 import Pill from '@/app/components/Pill';
-import { buttonGradient, buttonRed } from '@/app/styles/ui';
+import { buttonGradient, buttonRed, redButton } from '@/app/styles/ui';
 import { UserExerciseDetail } from '@/app/types/exercise';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { Mood } from '@/app/types/mood';
@@ -25,6 +25,7 @@ import { useTheme } from '@/context/ThemeContext';
 export default function MoodInsightPage() {
   const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
+  const isDark = theme === 'dark';
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
   const router = useRouter();
@@ -253,7 +254,6 @@ export default function MoodInsightPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
-        // body: JSON.stringify({ rating }),
         cache: 'no-store',
       });
 
@@ -363,7 +363,7 @@ export default function MoodInsightPage() {
             <div
               className="rounded-[10px] border mb-3.75 p-4"
               style={{
-                backgroundColor: 'white',
+                backgroundColor: 'var(--bg-div)',
                 boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                 border: '1px solid #eef2f9',
               }}
@@ -379,6 +379,7 @@ export default function MoodInsightPage() {
                 {!fetchingJournal && (
                   <div className="mt-0 mb-2">
                     <Pill
+                      shaded
                       bgColor={
                         journal.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
                       }
@@ -446,7 +447,7 @@ export default function MoodInsightPage() {
 
                     {/* delete button */}
                     <button
-                      className={buttonRed}
+                      {...redButton(theme)}
                       onClick={() => setOpenDelete(true)}
                       id="button-delete-entry"
                     >
@@ -462,7 +463,7 @@ export default function MoodInsightPage() {
               <div
                 className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: 'var(--bg-div)',
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                   border: '1px solid #eef2f9',
                 }}
@@ -479,7 +480,7 @@ export default function MoodInsightPage() {
                 <div className="items-center justify-center text-center">
                   {!fetchingMoodData && moodData?.mood_id && (
                     <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
-                      {getMoodStyle(moodData.mood_name).emoji}
+                      {getMoodStyle(moodData.mood_name, isDark).emoji}
                     </div>
                   )}
 
@@ -509,6 +510,7 @@ export default function MoodInsightPage() {
                       <div className="mb-2 lg:mb-0">
                         {moodData?.mood_confirmed === true && (
                           <Pill
+                            shaded
                             bgColor="#f1f8f4"
                             borderColor="#66bb6a"
                             textColor="#2e7d32"
@@ -520,6 +522,7 @@ export default function MoodInsightPage() {
                           moodData.mood_corrected && (
                             <div className="lg:flex gap-2 items-center justify-center">
                               <Pill
+                                shaded
                                 bgColor="#fff5f5"
                                 borderColor="#e57373"
                                 textColor="#c62828"
@@ -531,7 +534,10 @@ export default function MoodInsightPage() {
                                 style={{ color: 'var(--text)' }}
                               >
                                 Chosen Mood:{' '}
-                                {getMoodStyle(moodData.mood_corrected).emoji}
+                                {
+                                  getMoodStyle(moodData.mood_corrected, isDark)
+                                    .emoji
+                                }
                                 {toTitleCase(moodData.mood_corrected)}
                               </p>
                             </div>
@@ -576,7 +582,7 @@ export default function MoodInsightPage() {
               <div
                 className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: 'var(--bg-div)',
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                   border: '1px solid #eef2f9',
                 }}
@@ -624,6 +630,7 @@ export default function MoodInsightPage() {
                       <div className="mb-2 lg:mb-0">
                         {exerciseData.uex_status === 'completed' && (
                           <Pill
+                            shaded
                             bgColor="#f1f8f4"
                             borderColor="#66bb6a"
                             textColor="#2e7d32"
@@ -634,6 +641,7 @@ export default function MoodInsightPage() {
                         {exerciseData.uex_status === 'incomplete' &&
                           exerciseData.uex_reason && (
                             <Pill
+                              shaded
                               bgColor="#fff5f5"
                               borderColor="#e57373"
                               textColor="#c62828"
@@ -645,8 +653,6 @@ export default function MoodInsightPage() {
                     </div>
                   )}
                 </div>
-
-                {/* <div /> */}
 
                 {/* disclaimer */}
                 <div>
@@ -692,7 +698,7 @@ export default function MoodInsightPage() {
             <div
               className="rounded-[10px] border mb-3.75 p-4 flex flex-col items-center"
               style={{
-                backgroundColor: 'white',
+                backgroundColor: 'var(--bg-div)',
                 boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                 border: '1px solid #eef2f9',
               }}

@@ -28,7 +28,6 @@ import {
 } from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
 import { buttonGradient } from '@/app/styles/ui';
-import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   // range?: DateRangeValue;
@@ -43,7 +42,6 @@ export default function TimeScatterPlot({
   height = 320,
   mockData,
 }: Props) {
-  const { theme } = useTheme();
   const { points, loading, error } = useDailyMoodScatterData(
     moodDate,
     mockData,
@@ -186,6 +184,7 @@ export default function TimeScatterPlot({
                     border: `1px solid ${'var(--text)'}`,
                     padding: '6px 10px',
                     color: 'var(--text)',
+                    backgroundColor: 'var(--bg-div)',
                   }}
                 >
                   {getMoodStyle(point.mood).emoji}

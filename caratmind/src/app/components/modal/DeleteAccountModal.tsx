@@ -4,12 +4,16 @@
 
 import { useState } from 'react';
 import Modal from './Modal';
-// import { C } from '@/app/styles/styles';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
-import { buttonGradient, buttonRed } from '@/app/styles/ui';
+import {
+  buttonGradient,
+  buttonRed,
+  gradientButton,
+  redButton,
+} from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
@@ -135,8 +139,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
             <button
               onClick={handleConfirmDelete}
               disabled={!isConfirmed || deleting}
-              // className={`inline-flex h-10 cursor-pointer items-center justify-center gap-1.5 ${buttonRed} sm:text-[12px] md:text-[14px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm`}
-              className={`${buttonRed} w-fit mx-auto sm:w-auto`}
+              {...redButton(theme)}
             >
               {deleting ? 'Deleting…' : 'Confirm Delete Account'}
             </button>
@@ -159,7 +162,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className={buttonGradient(theme)}
+          {...gradientButton(theme)}
         >
           {downloading
             ? 'Preparing to Download...'

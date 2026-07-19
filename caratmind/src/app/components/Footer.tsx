@@ -7,7 +7,7 @@ import { useTheme } from '@/context/ThemeContext';
 
 export default function Footer() {
   const year = new Date().getFullYear();
-  const { theme, resetTheme } = useTheme();
+  const { theme } = useTheme();
 
   const divider = 'rgba(58,74,107,0.15)';
 

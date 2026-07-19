@@ -6,7 +6,7 @@ import { Flame, Star } from 'lucide-react';
 import { useMemo } from 'react';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-import { buttonGradient } from '@/app/styles/ui';
+import { gradientButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 // sample data
@@ -26,6 +26,7 @@ const sampleExercise = [
 
 export default function ExerciseTrackingPreviewPage() {
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const todayDate = useMemo(() => new Date(), []);
 
   return (
@@ -51,7 +52,7 @@ export default function ExerciseTrackingPreviewPage() {
         <div
           className="flex mx-auto items-center rounded-[10px] border mb-3.75 p-2.5 w-full lg:w-[80%]"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -85,7 +86,7 @@ export default function ExerciseTrackingPreviewPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -121,7 +122,7 @@ export default function ExerciseTrackingPreviewPage() {
                     key={exercise.uex_id}
                     className="rounded-[10px] border mb-3.75 p-2.5"
                     style={{
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--bg-div)',
                       boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                       border: '1px solid #eef2f9',
                     }}
@@ -134,6 +135,7 @@ export default function ExerciseTrackingPreviewPage() {
                         {exercise.exc_name}
                       </h5>
                       <Pill
+                        shaded
                         bgColor={'#f1f8f4'}
                         borderColor={'#66bb6a'}
                         textColor={'#2e7d32'}
@@ -151,7 +153,7 @@ export default function ExerciseTrackingPreviewPage() {
                           {/* Mobile - 1 pill */}
                           <div className="flex gap-3 sm:hidden">
                             {mobileVisibleMoods.map((mood) => {
-                              const moodStyle = getMoodStyle(mood);
+                              const moodStyle = getMoodStyle(mood, isDark);
                               return (
                                 <Pill
                                   key={mood}
@@ -184,7 +186,7 @@ export default function ExerciseTrackingPreviewPage() {
                           {/* Desktop: existing visibleMoods / MAX_VISIBLE_MOODS */}
                           <div className="hidden sm:flex gap-3">
                             {visibleMoods.map((mood) => {
-                              const moodStyle = getMoodStyle(mood);
+                              const moodStyle = getMoodStyle(mood, isDark);
                               return (
                                 <Pill
                                   key={mood}
@@ -214,7 +216,7 @@ export default function ExerciseTrackingPreviewPage() {
                             )}
                           </div>
 
-                          <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                          <Pill shaded>{toTitleCase(exercise.exc_type)}</Pill>
                         </div>
                       );
                     })()}
@@ -245,16 +247,13 @@ export default function ExerciseTrackingPreviewPage() {
                     {/* <div className="flex w-full gap-3"> */}
                     <div className="w-full mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-start mt-4">
                       <button
-                        className={buttonGradient(theme)}
+                        {...gradientButton(theme)}
                         id="button-exercise-details"
                       >
                         View More
                       </button>
 
-                      <button
-                        className={buttonGradient(theme)}
-                        id="button-insights"
-                      >
+                      <button {...gradientButton(theme)} id="button-insights">
                         View Insights
                       </button>
                     </div>
@@ -269,7 +268,7 @@ export default function ExerciseTrackingPreviewPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -304,7 +303,7 @@ export default function ExerciseTrackingPreviewPage() {
               />
               <button
                 type="button"
-                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap cursor-pointer"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold var(--bg-div)space-nowrap cursor-pointer"
                 style={{ color: 'var(--second-color)' }}
               >
                 Today
@@ -331,9 +330,10 @@ export default function ExerciseTrackingPreviewPage() {
                       weekday:
                         'w-11 text-center text-[clamp(0.875rem,1.5vw,1rem)] font-bold',
                       day_button:
-                        'w-11 h-11 m-1 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
-                      today: 'font-semibold text-[#92A8D1]',
-                      selected: 'bg-[#92A8D1] text-white rounded-full',
+                        'w-11 h-11 m-1 rounded-full flex items-center justify-center hover:bg-[var(--second-color)] transition-colors hover:cursor-pointer',
+                      today: 'font-semibold text-[var(--text)]',
+                      selected:
+                        'bg-[var(--first-color)] text-var(--bg-div) rounded-full',
                       month_caption:
                         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
                       caption_label:
@@ -382,7 +382,7 @@ export default function ExerciseTrackingPreviewPage() {
                       key={exercise.uex_id}
                       className="rounded-[10px] border mb-3.75 p-2.5"
                       style={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bg-div)',
                         boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                         border: '1px solid #eef2f9',
                       }}
@@ -403,7 +403,7 @@ export default function ExerciseTrackingPreviewPage() {
                               {/* mobile - 1 pill */}
                               <div className="flex gap-3 sm:hidden">
                                 {mobileVisibleMoods.map((mood) => {
-                                  const moodStyle = getMoodStyle(mood);
+                                  const moodStyle = getMoodStyle(mood, isDark);
                                   return (
                                     <Pill
                                       key={mood}
@@ -436,7 +436,7 @@ export default function ExerciseTrackingPreviewPage() {
                               {/* desktop mood */}
                               <div className="hidden sm:flex gap-3">
                                 {visibleMoods.map((mood) => {
-                                  const moodStyle = getMoodStyle(mood);
+                                  const moodStyle = getMoodStyle(mood, isDark);
                                   return (
                                     <Pill
                                       key={mood}
@@ -466,7 +466,9 @@ export default function ExerciseTrackingPreviewPage() {
                                 )}
                               </div>
 
-                              <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                              <Pill shaded>
+                                {toTitleCase(exercise.exc_type)}
+                              </Pill>
                             </div>
                           );
                         })()}
@@ -490,12 +492,10 @@ export default function ExerciseTrackingPreviewPage() {
 
                       <div className="mt-1 flex gap-3">
                         {/* button to insights page */}
-                        <button className={buttonGradient(theme)}>
-                          View More
-                        </button>
+                        <button {...gradientButton(theme)}>View More</button>
 
                         {/* button to insights page */}
-                        <button className={buttonGradient(theme)}>
+                        <button {...gradientButton(theme)}>
                           View Insights
                         </button>
                       </div>

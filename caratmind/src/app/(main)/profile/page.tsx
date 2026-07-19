@@ -7,7 +7,7 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
 import { generateRandomName } from '@/app/utils/generateName';
 import DeleteAccountModal from '@/app/components/modal/DeleteAccountModal';
-import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
+import { gradientButton, greyButton, redButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ProfilePage() {
@@ -108,7 +108,7 @@ export default function ProfilePage() {
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
             color: 'var(--text)',
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -166,7 +166,7 @@ export default function ProfilePage() {
                     }}
                     className="w-full rounded-lg px-2.5 py-1.5 pr-8 text-[clamp(0.875rem,1.5vw,1rem)] outline-none"
                     style={{
-                      border: `1.5px solid ${'var(--second-color)'}`,
+                      border: '1.5px solid var(--second-color)',
                       color: 'var(--text)',
                     }}
                   />
@@ -208,14 +208,14 @@ export default function ProfilePage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className={buttonGradient(theme)}
+                  {...gradientButton(theme)}
                 >
                   {saving ? 'Saving…' : 'Save'}
                 </button>
                 <button
                   onClick={handleCancel}
                   disabled={saving}
-                  className={buttonGrey}
+                  {...greyButton(theme)}
                 >
                   Cancel
                 </button>
@@ -223,7 +223,7 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={handleEditClick}
-                className={buttonGradient(theme)}
+                {...gradientButton(theme)}
                 id="button-edit-name"
               >
                 Edit Name
@@ -234,7 +234,7 @@ export default function ProfilePage() {
           {/* Delete account */}
           <button
             onClick={() => setOpenDeleteAccount(true)}
-            className={buttonRed}
+            {...redButton(theme)}
             id="button-delete-account"
           >
             Delete Account

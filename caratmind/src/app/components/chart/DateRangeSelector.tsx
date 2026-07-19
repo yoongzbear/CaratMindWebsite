@@ -1,6 +1,7 @@
 'use client';
 
-import { styles } from '@/app/styles/styles';
+import { styles } from '@/app/styles/ui';
+// import { styles } from '@/app/styles/styles';
 import { useEffect, useState } from 'react';
 
 export type DateRangeValue =

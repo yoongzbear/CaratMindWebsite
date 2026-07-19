@@ -17,7 +17,14 @@ import { toTitleCase } from '@/app/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
 import RatingModal from '@/app/components/modal/RatingModal';
 import ReasonModal from '@/app/components/modal/ReasonModal';
-import { buttonGradient, buttonGreen, buttonRed } from '@/app/styles/ui';
+import {
+  buttonGradient,
+  buttonGreen,
+  buttonRed,
+  gradientButton,
+  greenButton,
+  redButton,
+} from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type RatingResponse = {
@@ -37,6 +44,7 @@ type ApiErrorResponse = {
 export default function ExerciseTrackingPage() {
   const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
+  const isDark = theme === 'dark';
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
   const router = useRouter();
@@ -259,7 +267,7 @@ export default function ExerciseTrackingPage() {
         <div
           className="flex mx-auto items-center rounded-[10px] border mb-3.75 p-2.5 w-full lg:w-[80%]"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -304,7 +312,7 @@ export default function ExerciseTrackingPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -346,7 +354,7 @@ export default function ExerciseTrackingPage() {
                     entry to get started!
                   </p>
                   <button
-                    className={buttonGradient(theme)}
+                    {...gradientButton(theme)}
                     onClick={() => router.push('/journal/new')}
                   >
                     New Entry
@@ -368,7 +376,7 @@ export default function ExerciseTrackingPage() {
                       key={exercise.uex_id}
                       className="rounded-[10px] border mb-3.75 p-2.5"
                       style={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bg-div)',
                         boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                         border: '1px solid #eef2f9',
                       }}
@@ -410,7 +418,7 @@ export default function ExerciseTrackingPage() {
                             {/* Mobile - 1 pill */}
                             <div className="flex gap-3 sm:hidden">
                               {mobileVisibleMoods.map((mood) => {
-                                const moodStyle = getMoodStyle(mood);
+                                const moodStyle = getMoodStyle(mood, isDark);
                                 return (
                                   <Pill
                                     key={mood}
@@ -432,8 +440,8 @@ export default function ExerciseTrackingPage() {
                                   className="cursor-pointer"
                                 >
                                   <Pill
-                                    bgColor="#f1f3f8"
-                                    borderColor="#dde1ea"
+                                    bgColor="var(--bg-div)"
+                                    borderColor="var(--border)"
                                     textColor="var(--muted)"
                                     title={moods
                                       .slice(1)
@@ -449,7 +457,7 @@ export default function ExerciseTrackingPage() {
                             {/* desktop: existing visibleMoods / MAX_VISIBLE_MOODS */}
                             <div className="hidden sm:flex gap-3">
                               {visibleMoods.map((mood) => {
-                                const moodStyle = getMoodStyle(mood);
+                                const moodStyle = getMoodStyle(mood, isDark);
                                 return (
                                   <Pill
                                     key={mood}
@@ -471,8 +479,8 @@ export default function ExerciseTrackingPage() {
                                   className="cursor-pointer"
                                 >
                                   <Pill
-                                    bgColor="#f1f3f8"
-                                    borderColor="#dde1ea"
+                                    bgColor="var(--bg-div)"
+                                    borderColor="var(--border)"
                                     textColor="var(--muted)"
                                     title={moods
                                       .slice(MAX_VISIBLE_MOODS)
@@ -485,7 +493,7 @@ export default function ExerciseTrackingPage() {
                               )}
                             </div>
 
-                            <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                            <Pill shaded>{toTitleCase(exercise.exc_type)}</Pill>
                           </div>
                         );
                       })()}
@@ -531,7 +539,7 @@ export default function ExerciseTrackingPage() {
                             setSelectedExercise(exercise);
                             setOpenDetail(true);
                           }}
-                          className={buttonGradient(theme)}
+                          {...gradientButton(theme)}
                           id="button-exercise-details"
                         >
                           View More
@@ -539,7 +547,7 @@ export default function ExerciseTrackingPage() {
 
                         <button
                           onClick={() => handleViewEntry(exercise.jrnl_id)}
-                          className={buttonGradient(theme)}
+                          {...gradientButton(theme)}
                           id="button-insights"
                         >
                           View Insights
@@ -553,7 +561,7 @@ export default function ExerciseTrackingPage() {
                                   setOpenRating(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={buttonGreen}
+                                {...greenButton(theme)}
                               >
                                 Completed
                               </button>
@@ -563,7 +571,7 @@ export default function ExerciseTrackingPage() {
                                   setOpenReason(true);
                                   setSelectedUserExc(exercise);
                                 }}
-                                className={buttonRed}
+                                {...redButton(theme)}
                               >
                                 Uncompleted
                               </button>
@@ -591,7 +599,7 @@ export default function ExerciseTrackingPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -632,7 +640,7 @@ export default function ExerciseTrackingPage() {
               />
               <button
                 type="button"
-                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap cursor-pointer"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold var(--bg-div)space-nowrap cursor-pointer"
                 style={{ color: 'var(--second-color)' }}
                 onClick={() => {
                   setSelectedDate(todayDate);
@@ -666,9 +674,10 @@ export default function ExerciseTrackingPage() {
                       weekday:
                         'w-11 text-center text-[clamp(0.875rem,1.5vw,1rem)] font-bold',
                       day_button:
-                        'w-11 h-11 m-1 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
-                      today: 'font-semibold text-[#92A8D1]',
-                      selected: 'bg-[#92A8D1] text-white rounded-full',
+                        'w-11 h-11 m-1 rounded-full flex items-center justify-center hover:bg-[var(--second-color)] transition-colors hover:cursor-pointer',
+                      today: 'font-semibold text-[var(--text)]',
+                      selected:
+                        'bg-[var(--first-color)] text-var(--bg-div) rounded-full',
                       month_caption:
                         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
                       caption_label:
@@ -726,7 +735,7 @@ export default function ExerciseTrackingPage() {
                   excHistoryData.length === 0 &&
                   isSameDay(selectedDate, todayDate) && (
                     <button
-                      className={buttonGradient(theme)}
+                      {...gradientButton(theme)}
                       onClick={() => router.push('/journal/new')}
                     >
                       New Entry
@@ -747,7 +756,7 @@ export default function ExerciseTrackingPage() {
                         key={exercise.uex_id}
                         className="rounded-[10px] border mb-3.75 p-2.5"
                         style={{
-                          backgroundColor: 'white',
+                          backgroundColor: 'var(--bg-div)',
                           boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                           border: '1px solid #eef2f9',
                         }}
@@ -768,7 +777,10 @@ export default function ExerciseTrackingPage() {
                                 {/* mobile - 1 pill */}
                                 <div className="flex gap-3 sm:hidden">
                                   {mobileVisibleMoods.map((mood) => {
-                                    const moodStyle = getMoodStyle(mood);
+                                    const moodStyle = getMoodStyle(
+                                      mood,
+                                      isDark,
+                                    );
                                     return (
                                       <Pill
                                         key={mood}
@@ -790,8 +802,8 @@ export default function ExerciseTrackingPage() {
                                       className="cursor-pointer"
                                     >
                                       <Pill
-                                        bgColor="#f1f3f8"
-                                        borderColor="#dde1ea"
+                                        bgColor="var(--bg-div)"
+                                        borderColor="var(--border)"
                                         textColor="var(--muted)"
                                         title={moods
                                           .slice(1)
@@ -807,7 +819,10 @@ export default function ExerciseTrackingPage() {
                                 {/* desktop mood */}
                                 <div className="hidden sm:flex gap-3">
                                   {visibleMoods.map((mood) => {
-                                    const moodStyle = getMoodStyle(mood);
+                                    const moodStyle = getMoodStyle(
+                                      mood,
+                                      isDark,
+                                    );
                                     return (
                                       <Pill
                                         key={mood}
@@ -829,8 +844,8 @@ export default function ExerciseTrackingPage() {
                                       className="cursor-pointer"
                                     >
                                       <Pill
-                                        bgColor="#f1f3f8"
-                                        borderColor="#dde1ea"
+                                        bgColor="var(--bg-div)"
+                                        borderColor="var(--border)"
                                         textColor="var(--muted)"
                                         title={moods
                                           .slice(MAX_VISIBLE_MOODS)
@@ -843,7 +858,9 @@ export default function ExerciseTrackingPage() {
                                   )}
                                 </div>
 
-                                <Pill>{toTitleCase(exercise.exc_type)}</Pill>
+                                <Pill shaded>
+                                  {toTitleCase(exercise.exc_type)}
+                                </Pill>
                               </div>
                             );
                           })()}
@@ -888,7 +905,7 @@ export default function ExerciseTrackingPage() {
                         <div className="mt-1 flex gap-3">
                           {/* button to insights page */}
                           <button
-                            className={buttonGradient(theme)}
+                            {...gradientButton(theme)}
                             onClick={() => {
                               setSelectedExercise(exercise);
                               setOpenDetail(true);
@@ -899,7 +916,7 @@ export default function ExerciseTrackingPage() {
 
                           {/* button to insights page */}
                           <button
-                            className={buttonGradient(theme)}
+                            {...gradientButton(theme)}
                             onClick={() => handleViewEntry(exercise.jrnl_id)}
                           >
                             View Insights

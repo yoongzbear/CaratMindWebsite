@@ -2,8 +2,7 @@
 
 // use Recharts <ScatterChart> with <Scatter>
 // x = date (example: 25/6, 26/6 etc)
-// y = all moods (?) in order from most positive (top) to most negative (bottom)
-// TODO: decide to use all moods or only existing moods
+// y = all moods in order from most positive (top) to most negative (bottom)
 
 'use client';
 
@@ -126,7 +125,6 @@ export default function DayScatterPlot({
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart
           margin={{ top: 10, right: 0, left: -20, bottom: 10 }}
-          // style={{ backgroundColor: C.serenity }}
           responsive
         >
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
@@ -172,6 +170,7 @@ export default function DayScatterPlot({
                     border: `1px solid ${'var(--text)'}`,
                     padding: '6px 10px',
                     color: 'var(--text)',
+                    backgroundColor: 'var(--bg-div)',
                   }}
                 >
                   {getMoodStyle(point.mood).emoji}

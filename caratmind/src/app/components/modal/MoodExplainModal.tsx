@@ -7,7 +7,7 @@ import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
 import { Mood } from '@/app/types/mood';
 import { useMemo, useState } from 'react';
-import { buttonGradient, buttonRed } from '@/app/styles/ui';
+import { buttonGradient, buttonRed, redButton } from '@/app/styles/ui';
 import { toastError } from '@/utils/toast';
 import Pill from '../Pill';
 import { useTheme } from '@/context/ThemeContext';
@@ -105,13 +105,19 @@ export default function MoodExplainModal({
           </p>
 
           {moodData?.mood_confirmed === true && (
-            <Pill bgColor="#f1f8f4" borderColor="#66bb6a" textColor="#2e7d32">
+            <Pill
+              shaded
+              bgColor="#f1f8f4"
+              borderColor="#66bb6a"
+              textColor="#2e7d32"
+            >
               Agreed
             </Pill>
           )}
           {moodData?.mood_confirmed === false && moodData.mood_corrected && (
             <>
               <Pill
+                shaded
                 className="mb-2"
                 bgColor="#fff5f5"
                 borderColor="#e57373"
@@ -162,7 +168,7 @@ export default function MoodExplainModal({
 
                 {/* disagree button */}
                 <button
-                  className={buttonRed}
+                  {...redButton(theme)}
                   onClick={() => setOpenMoods(true)}
                   disabled={loadingCorrected}
                 >

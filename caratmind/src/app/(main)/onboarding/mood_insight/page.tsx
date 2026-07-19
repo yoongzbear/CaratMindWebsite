@@ -3,7 +3,12 @@
 
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import Pill from '@/app/components/Pill';
-import { buttonGradient, buttonRed } from '@/app/styles/ui';
+import {
+  buttonGradient,
+  buttonRed,
+  gradientButton,
+  redButton,
+} from '@/app/styles/ui';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
@@ -60,7 +65,7 @@ export default function MoodInsightPreviewPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -78,7 +83,12 @@ export default function MoodInsightPreviewPage() {
             </h3>
 
             <div className="">
-              <Pill bgColor="#f1f8f4" textColor="#2e7d32" borderColor="#c8e6c9">
+              <Pill
+                shaded
+                bgColor="#f1f8f4"
+                textColor="#2e7d32"
+                borderColor="#c8e6c9"
+              >
                 Submitted
               </Pill>
             </div>
@@ -100,22 +110,22 @@ export default function MoodInsightPreviewPage() {
 
           <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
             {/* view more button */}
-            <button className={buttonGradient(theme)} id="button-view-entry">
+            <button {...gradientButton(theme)} id="button-view-entry">
               View More
             </button>
 
             {/* edit entry */}
-            <button className={buttonGradient(theme)} id="button-edit-entry">
+            <button {...gradientButton(theme)} id="button-edit-entry">
               Edit Entry
             </button>
 
             {/* submit entry button */}
-            <button className={buttonGradient(theme)} id="button-submit-entry">
+            <button {...gradientButton(theme)} id="button-submit-entry">
               Submit Entry
             </button>
 
             {/* delete button */}
-            <button className={buttonRed} id="button-delete-entry">
+            <button {...redButton(theme)} id="button-delete-entry">
               Delete Entry
             </button>
           </div>
@@ -126,7 +136,7 @@ export default function MoodInsightPreviewPage() {
           <div
             className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--bg-div)',
               boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
               border: '1px solid #eef2f9',
             }}
@@ -144,10 +154,8 @@ export default function MoodInsightPreviewPage() {
               <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 flex items-center justify-center">
                 {getMoodStyle(sampleMood.mood_name).emoji}
               </div>
-              {/* </div> */}
 
               {/* mood name */}
-              {/* <div className="flex items-center justify-center text-center"> */}
               <h5
                 className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"
                 style={{ color: 'var(--text)' }}
@@ -156,6 +164,7 @@ export default function MoodInsightPreviewPage() {
               </h5>
               <div className="mb-2 lg:mb-0">
                 <Pill
+                  shaded
                   bgColor="#f1f8f4"
                   borderColor="#66bb6a"
                   textColor="#2e7d32"
@@ -164,8 +173,6 @@ export default function MoodInsightPreviewPage() {
                 </Pill>
               </div>
             </div>
-
-            {/* <div /> */}
 
             {/* disclaimer */}
             <div>
@@ -182,7 +189,7 @@ export default function MoodInsightPreviewPage() {
 
             {/* button */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
-              <button className={buttonGradient(theme)} id="button-view-mood">
+              <button {...gradientButton(theme)} id="button-view-mood">
                 View Details
               </button>
             </div>
@@ -192,7 +199,7 @@ export default function MoodInsightPreviewPage() {
           <div
             className="flex flex-col rounded-[10px] border p-4 md:grid md:grid-rows-subgrid md:row-span-6"
             style={{
-              backgroundColor: 'white',
+              backgroundColor: 'var(--bg-div)',
               boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
               border: '1px solid #eef2f9',
             }}
@@ -221,6 +228,7 @@ export default function MoodInsightPreviewPage() {
                   {sampleExercise.exc_name}
                 </h5>
                 <Pill
+                  shaded
                   bgColor="#fff5f5"
                   borderColor="#e57373"
                   textColor="#c62828"
@@ -246,17 +254,11 @@ export default function MoodInsightPreviewPage() {
             {/* buttons */}
             <div className="w-fit mx-auto mt-3 lg:mt-0 flex gap-4">
               <>
-                <button
-                  className={buttonGradient(theme)}
-                  id="button-view-exercise"
-                >
+                <button {...gradientButton(theme)} id="button-view-exercise">
                   View Details
                 </button>
 
-                <button
-                  className={buttonGradient(theme)}
-                  id="button-track-exercise"
-                >
+                <button {...gradientButton(theme)} id="button-track-exercise">
                   Perform Exercise
                 </button>
               </>
@@ -267,7 +269,7 @@ export default function MoodInsightPreviewPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4 flex flex-col items-center"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -287,7 +289,7 @@ export default function MoodInsightPreviewPage() {
             />
           </div>
           {/* mood dashboard button */}
-          <button className={buttonGradient(theme)} id="button-mood-chart">
+          <button {...gradientButton(theme)} id="button-mood-chart">
             View Mood Dashboard
           </button>
         </div>

@@ -6,7 +6,7 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { JournalDetail, StatusKey } from '@/app/types/journal';
 import { format } from 'date-fns';
 import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
-import { buttonGradient, buttonGrey, buttonRed } from '@/app/styles/ui';
+import { gradientButton, greyButton, redButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function EditEntryPage() {
@@ -125,7 +125,7 @@ export default function EditEntryPage() {
     return (
       <section
         className="px-8 py-6 text-center"
-        style={{ color: 'var(--muted)' }}
+        style={{ color: 'var(--muted)', backgroundColor: 'var(--bg-div)' }}
       >
         Loading...
       </section>
@@ -136,7 +136,7 @@ export default function EditEntryPage() {
     return (
       <section
         className="px-8 py-6 text-center"
-        style={{ color: 'var(--muted)' }}
+        style={{ color: 'var(--muted)', backgroundColor: 'var(--bg-div)' }}
       >
         Entry not found.
       </section>
@@ -186,13 +186,13 @@ export default function EditEntryPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
         >
           <textarea
-            className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] bg-white box-border outline-none font-inherit"
+            className="w-full min-h-64 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] box-border outline-none font-inherit"
             value={entry}
             id="entry-text"
             ref={textareaRef}
@@ -201,14 +201,18 @@ export default function EditEntryPage() {
               border: '1px solid var(--border)',
               fontFamily: 'inherit',
               color: 'var(--text)',
+              backgroundColor: 'var(--bg-div)',
             }}
           ></textarea>
 
-          <div className="w-full sm:w-[40%] md:w-[60%] mx-auto flex items-stretch justify-between mt-4">
+          <div
+            className="w-full sm:w-[40%] md:w-[60%] mx-auto grid grid-cols-2 gap-2
+                sm:flex sm:items-stretch sm:justify-between mt-4"
+          >
             {/* cancel button */}
             <button
               onClick={handleCancel}
-              className={buttonRed}
+              {...redButton(theme)}
               id="button-cancel"
             >
               Cancel Edit
@@ -217,7 +221,7 @@ export default function EditEntryPage() {
             {/* reset button */}
             <button
               onClick={handleReset}
-              className={buttonRed}
+              {...redButton(theme)}
               id="button-reset"
             >
               Reset
@@ -227,7 +231,7 @@ export default function EditEntryPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className={buttonGradient(theme)}
+              {...gradientButton(theme)}
               id="button-submit"
             >
               {submitting ? 'Submitting…' : 'Submit Entry'}
@@ -237,7 +241,7 @@ export default function EditEntryPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className={buttonGrey}
+              {...greyButton(theme)}
               id="button-draft"
             >
               {saving ? 'Saving...' : 'Save as Draft'}

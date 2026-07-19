@@ -49,7 +49,7 @@ export default function Modal({
             className="w-full max-h-[90vh] rounded-md overflow-hidden modal-pop"
             style={{
               maxWidth: `${width}px`,
-              background: 'white',
+              background: 'var(--bg-div)',
               border: '1px solid var(--border)',
               boxShadow: '0 20px 60px rgba(58,74,107,0.18)',
             }}

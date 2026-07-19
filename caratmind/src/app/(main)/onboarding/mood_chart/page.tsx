@@ -5,8 +5,9 @@ import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
 import StackedBarChart from '@/app/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
 import { MoodPoint } from '@/app/hooks/moodScatterData';
+import { styles } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { styles } from '@/app/styles/styles';
+// import { styles } from '@/app/styles/styles';
 import { format, subDays } from 'date-fns';
 import { useMemo } from 'react';
 
@@ -71,7 +72,7 @@ export default function MoodPreviewPage() {
         {/* cards grid */}
         <div className="grid lg:grid-cols-2 gap-4 mt-4 mb-3.75">
           {/* stacked bar chart */}
-          <div className="rounded-[14px] border p-4 bg-white shadow-sm">
+          <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
             {/* time range */}
             <div id="select-date">
               <DateRangeSelector presets={[7, 30, 90]} onChange={() => {}} />
@@ -86,7 +87,7 @@ export default function MoodPreviewPage() {
           </div>
 
           {/* scatter plot */}
-          <div className="rounded-[14px] border p-4 bg-white shadow-sm">
+          <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
             {/* time range */}
             <DateRangeSelector presets={[7, 30, 90]} onChange={() => {}} />
 
@@ -100,7 +101,7 @@ export default function MoodPreviewPage() {
           </div>
 
           {/* daily scatter plot */}
-          <div className="rounded-[14px] border p-4 bg-white shadow-sm">
+          <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
             <div className="flex w-full items-center justify-between">
               <h3
                 className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold"
@@ -128,7 +129,7 @@ export default function MoodPreviewPage() {
           </div>
 
           {/* calendar heatmap */}
-          <div className="rounded-[14px] border p-4 bg-white shadow-sm">
+          <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
             <div className="w-full flex justify-center" id="mood-heatmap">
               <CalendarHeatmap mockData={barData} />
             </div>

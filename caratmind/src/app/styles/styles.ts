@@ -91,31 +91,6 @@ import { CSSProperties } from 'react';
 //   maxWidth: '200px',
 // };
 
-export const styles: Record<string, CSSProperties> = {
-  dateInput: {
-    boxSizing: 'border-box',
-    padding: '11px 12px',
-    borderRadius: '10px',
-    border: '1px solid var(--border)',
-    fontFamily: 'inherit',
-    color: 'var(--text)',
-    background: 'white',
-    outline: 'none',
-    cursor: 'pointer',
-    appearance: 'none',
-  },
-  dropdown: {
-    padding: '9px 12px',
-    borderRadius: '10px',
-    border: '1px solid var(--border)',
-    fontFamily: 'inherit',
-    color: 'var(--text)',
-    background: 'white',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-};
-
 // export const styles: Record<string, CSSProperties> = {
 //   container: {
 //     maxWidth: '520px',

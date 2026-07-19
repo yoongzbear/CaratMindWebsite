@@ -107,7 +107,7 @@ export default function CalendarHeatmap({
             month_grid: 'w-full table-fixed border-collapse',
             weekday: 'text-center text-[clamp(1rem,3vw,1.5rem)] font-bold py-1',
             day: 'p-0 text-center align-middle',
-            today: 'font-semibold text-[#92A8D1]',
+            today: 'font-semibold underline text-[var(--text)]',
             month_caption:
               'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
             caption_label:
@@ -202,9 +202,9 @@ function MoodDayButton({
     <button
       {...buttonProps}
       onClick={handleClick}
-      className="group relative w-11 m-1 h-11 rounded-full inline-flex items-center justify-center transition-opacity hover:cursor-pointer hover:opacity-100"
+      className="group bg-[(--bg-div)] relative w-11 m-1 h-11 rounded-full inline-flex items-center justify-center transition-opacity hover:cursor-pointer hover:opacity-100"
       style={{
-        background: hasMoods ? gradientBackground : '#f4f6fb',
+        background: hasMoods ? gradientBackground : 'var(--bg-div)',
         zIndex: 1,
       }}
     >
@@ -224,7 +224,7 @@ function MoodDayButton({
         <div
           className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col gap-0.5 z-50 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-[clamp(0.875rem,1.5vw,1rem)] shadow-md"
           style={{
-            background: 'white',
+            background: 'var(--bg-div)',
             borderColor: 'var(--text)',
             color: 'var(--text)',
           }}

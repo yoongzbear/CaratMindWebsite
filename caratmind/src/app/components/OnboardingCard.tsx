@@ -2,7 +2,7 @@
 
 'use client';
 import type { CardComponentProps } from 'nextstepjs';
-import { buttonGradient } from '@/app/styles/ui';
+import { gradientButton, greyButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export function OnboardingCard({
@@ -21,7 +21,7 @@ export function OnboardingCard({
     <div
       className="relative w-80 md:w-100 rounded-2xl p-5 shadow-lg"
       style={{
-        backgroundColor: 'white',
+        backgroundColor: 'var(--bg-div)',
         border: '1px solid var(--first-color)30',
       }}
     >
@@ -70,20 +70,13 @@ export function OnboardingCard({
             </button>
           )}
           {currentStep > 0 && (
-            <button
-              onClick={prevStep}
-              className="text-[clamp(0.875rem,1.5vw,1rem)] px-3 py-1.5 rounded-lg border cursor-pointer"
-              style={{
-                borderColor: 'var(--first-color)',
-                color: 'var(--text)',
-              }}
-            >
+            <button onClick={prevStep} {...greyButton(theme)}>
               Back
             </button>
           )}
           <button
             onClick={isLast ? skipTour : nextStep}
-            className={buttonGradient(theme)}
+            {...gradientButton(theme)}
           >
             {isLast ? 'Done' : 'Next'}
           </button>

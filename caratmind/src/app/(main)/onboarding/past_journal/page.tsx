@@ -4,7 +4,7 @@ import { DayPicker } from '@daypicker/react';
 import Pill from '@/app/components/Pill';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
-import { buttonGradient } from '@/app/styles/ui';
+import { gradientButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 // sample data
@@ -29,6 +29,7 @@ const sampleJournal = [
 
 export default function PastEntryPreviewPage() {
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
   return (
     <section
       className="pt-4 sm:pt-6 pb-10"
@@ -47,7 +48,7 @@ export default function PastEntryPreviewPage() {
             Past Journal Entry (Preview)
           </h1>
 
-          <button className={buttonGradient(theme)} id="button-new-entry">
+          <button {...gradientButton(theme)} id="button-new-entry">
             New Entry
           </button>
         </header>
@@ -55,7 +56,7 @@ export default function PastEntryPreviewPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4 flex flex-col lg:flex-row gap-3 lg:gap-0"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -79,7 +80,7 @@ export default function PastEntryPreviewPage() {
               />
               <button
                 type="button"
-                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap hover:cursor-pointer"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold space-nowrap hover:cursor-pointer"
                 style={{ color: 'var(--second-color)' }}
               >
                 Today
@@ -113,9 +114,10 @@ export default function PastEntryPreviewPage() {
                       weekday:
                         'w-11 text-center text-[clamp(0.875rem,1.5vw,1rem)] font-bold',
                       day_button:
-                        'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
-                      today: 'font-semibold text-[#92A8D1]',
-                      selected: 'bg-[#92A8D1] text-white rounded-full',
+                        'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[var(--second-color)] transition-colors hover:cursor-pointer',
+                      today: 'font-semibold text-[var(--text)]',
+                      selected:
+                        'bg-[var(--first-color)] text-[var(--bg-div)] rounded-full',
                       month_caption:
                         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
                       caption_label:
@@ -156,7 +158,7 @@ export default function PastEntryPreviewPage() {
                   key={entry.jrnl_id}
                   className="rounded-[10px] border mb-3.75 p-2.5"
                   style={{
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--bg-div)',
                     boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                     border: '1px solid #eef2f9',
                   }}
@@ -169,6 +171,7 @@ export default function PastEntryPreviewPage() {
                       {format(new Date(entry.jrnl_created_at), 'p')}
                     </h5>
                     <Pill
+                      shaded
                       bgColor={
                         entry.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
                       }
@@ -197,8 +200,10 @@ export default function PastEntryPreviewPage() {
                   {entry.mood_name ? (
                     <div className="my-1.5 leading-[1.65]">
                       <Pill
-                        bgColor={getMoodStyle(entry.mood_name).bgColor}
-                        borderColor={getMoodStyle(entry.mood_name).borderColor}
+                        bgColor={getMoodStyle(entry.mood_name, isDark).bgColor}
+                        borderColor={
+                          getMoodStyle(entry.mood_name, isDark).borderColor
+                        }
                         textColor={getMoodStyle(entry.mood_name).textColor}
                       >
                         {getMoodStyle(entry.mood_name).emoji}{' '}
@@ -215,10 +220,7 @@ export default function PastEntryPreviewPage() {
                   )}
 
                   {/* button to insights page */}
-                  <button
-                    className={buttonGradient(theme)}
-                    id="button-view-insights"
-                  >
+                  <button {...gradientButton(theme)} id="button-view-insights">
                     View More
                   </button>
                 </div>

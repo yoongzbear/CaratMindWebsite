@@ -6,10 +6,13 @@ export function ThemeSelector() {
   const options: ThemeName[] = [
     'light',
     'dark',
-    'rose',
+    'cherryBlossoms',
     'ocean',
     'forest',
     'sunset',
+    'winter',
+    'emeraldSea',
+    'midnightSun',
   ];
 
   return (

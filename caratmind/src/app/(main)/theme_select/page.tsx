@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { themes, ThemeName, buttonGradientColor } from '@/app/styles/themes';
+import { themes, ThemeName } from '@/app/styles/themes';
 import {
-  buttonGradient,
-  buttonGradientStyle,
-  buttonGreen,
-  buttonGrey,
-  buttonRed,
+  gradientButton,
+  greenButton,
+  greyButton,
+  redButton,
 } from '@/app/styles/ui';
 import { Trash } from 'lucide-react';
 
@@ -51,7 +50,7 @@ export default function ThemePage() {
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: 'var(--text)' }}
           >
-            Appearance
+            Theme
           </h1>
           <h5
             className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
@@ -132,15 +131,10 @@ export default function ThemePage() {
             </p>
 
             <div className="flex flex-wrap gap-3 items-center">
-              <button
-                className={buttonGradient(previewTheme)}
-                style={buttonGradientStyle(previewTheme)}
-              >
-                Button
-              </button>
-              <button className={buttonGreen}>Button</button>
-              <button className={buttonRed}>Button</button>
-              <button className={buttonGrey}>Button</button>
+              <button {...gradientButton(previewTheme)}>Button</button>
+              <button {...greenButton(previewTheme)}>Button</button>
+              <button {...redButton(previewTheme)}>Button</button>
+              <button {...greyButton(previewTheme)}>Button</button>
             </div>
 
             <input
@@ -150,7 +144,7 @@ export default function ThemePage() {
               style={{
                 borderColor: t.border,
                 color: t.text,
-                backgroundColor: t.bgInput ? t.bgInput : 'white',
+                backgroundColor: t.bgDiv ? t.bgDiv : 'white',
               }}
             />
           </div>
@@ -161,7 +155,7 @@ export default function ThemePage() {
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving}
-            className={buttonGradient(savedTheme)}
+            {...gradientButton(savedTheme)}
           >
             {saving ? 'Saving…' : 'Save theme'}
           </button>

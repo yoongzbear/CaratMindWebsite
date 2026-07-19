@@ -15,6 +15,7 @@ import { useTheme } from '@/context/ThemeContext';
 export default function PastEntryPage() {
   const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
+  const isDark = theme === 'dark';
   const [entries, setEntries] = useState<Journal[]>([]);
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
@@ -103,7 +104,7 @@ export default function PastEntryPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4 flex flex-col lg:flex-row gap-3 lg:gap-0"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -134,7 +135,7 @@ export default function PastEntryPage() {
               />
               <button
                 type="button"
-                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold whitespace-nowrap hover:cursor-pointer"
+                className="text-[clamp(0.75rem,2.5vw,0.875rem)] font-bold var(--bg-div)space-nowrap hover:cursor-pointer"
                 style={{ color: 'var(--second-color)' }}
                 onClick={() => {
                   setSelectedDate(initialDate);
@@ -175,9 +176,10 @@ export default function PastEntryPage() {
                       weekday:
                         'w-11 text-center text-[clamp(0.875rem,1.5vw,1rem)] font-bold',
                       day_button:
-                        'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[#eef2f9] transition-colors hover:cursor-pointer',
-                      today: 'font-semibold text-[#92A8D1]',
-                      selected: 'bg-[#92A8D1] text-white rounded-full',
+                        'w-11 h-11 rounded-full flex items-center justify-center hover:bg-[var(--second-color)] transition-colors hover:cursor-pointer',
+                      today: 'font-semibold text-[var(--text)]',
+                      selected:
+                        'bg-[var(--first-color)] text-[var(--bg-div)] rounded-full',
                       month_caption:
                         'flex items-center justify-between flex justify-center mb-3 hover:cursor-pointer',
                       caption_label:
@@ -237,7 +239,7 @@ export default function PastEntryPage() {
                     key={entry.jrnl_id}
                     className="rounded-[10px] border mb-3.75 p-2.5"
                     style={{
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--bg-div)',
                       boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                       border: '1px solid #eef2f9',
                     }}
@@ -250,6 +252,7 @@ export default function PastEntryPage() {
                         {format(new Date(entry.jrnl_created_at), 'p')}
                       </h5>
                       <Pill
+                        shaded
                         bgColor={
                           entry.jrnl_status === 'draft' ? '#fff5f5' : '#f1f8f4'
                         }
@@ -278,13 +281,17 @@ export default function PastEntryPage() {
                     {entry.mood_name ? (
                       <div className="my-1.5 leading-[1.65]">
                         <Pill
-                          bgColor={getMoodStyle(entry.mood_name).bgColor}
-                          borderColor={
-                            getMoodStyle(entry.mood_name).borderColor
+                          bgColor={
+                            getMoodStyle(entry.mood_name, isDark).bgColor
                           }
-                          textColor={getMoodStyle(entry.mood_name).textColor}
+                          borderColor={
+                            getMoodStyle(entry.mood_name, isDark).borderColor
+                          }
+                          textColor={
+                            getMoodStyle(entry.mood_name, isDark).textColor
+                          }
                         >
-                          {getMoodStyle(entry.mood_name).emoji}{' '}
+                          {getMoodStyle(entry.mood_name, isDark).emoji}{' '}
                           {toTitleCase(entry.mood_name)}
                         </Pill>
                       </div>

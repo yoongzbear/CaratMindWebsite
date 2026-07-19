@@ -7,6 +7,7 @@ import Pill from '../Pill';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { getExerciseStyle } from '@/app/utils/exerciseUtils';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   open: boolean;
@@ -27,6 +28,8 @@ export default function ExerciseDetailModal({
   desc,
   steps,
 }: Props) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   return (
     <Modal
       open={open}
@@ -40,7 +43,7 @@ export default function ExerciseDetailModal({
     >
       <div className="max-h-24 lg:max-h-32 overflow-y-auto flex flex-wrap gap-2 mb-3">
         {moods.map((mood) => {
-          const moodStyle = getMoodStyle(mood);
+          const moodStyle = getMoodStyle(mood, isDark);
           return (
             <Pill
               key={mood}
@@ -54,7 +57,7 @@ export default function ExerciseDetailModal({
         })}
       </div>
 
-      <Pill>{toTitleCase(type)}</Pill>
+      <Pill shaded>{toTitleCase(type)}</Pill>
 
       <p
         className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"

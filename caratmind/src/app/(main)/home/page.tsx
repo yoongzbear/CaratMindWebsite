@@ -12,7 +12,7 @@ import {
   habitMessage,
   HabitStatus,
 } from '@/app/types/habit';
-import { buttonGradient } from '@/app/styles/ui';
+import { buttonGradient, gradientButton } from '@/app/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function HomePage() {
@@ -173,7 +173,7 @@ export default function HomePage() {
           className="rounded-[10px] border mb-4 p-3 flex flex-col sm:flex-row gap-3 sm:items-center"
           id="banner"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -215,7 +215,7 @@ export default function HomePage() {
                       key={action.action}
                       disabled={submittingAction}
                       onClick={() => handleActionClick(action)}
-                      className={buttonGradient(theme)}
+                      {...gradientButton(theme)}
                     >
                       {action.action}
                     </button>
@@ -230,7 +230,7 @@ export default function HomePage() {
         <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mx-auto">
           {/* journal */}
           <div
-            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            className="group flex flex-col bg-(--bg-div) rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
             id="journal-streak"
           >
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
@@ -284,7 +284,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/journal/new"
-                className={buttonGradient(theme)}
+                {...gradientButton(theme)}
                 id="entry-button"
               >
                 Write an entry
@@ -294,7 +294,7 @@ export default function HomePage() {
 
           {/* mood */}
           <div
-            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            className="group flex flex-col bg-(--bg-div) rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
             id="mood-chart"
           >
             <div className="flex flex-col flex-1 p-6 gap-3">
@@ -306,7 +306,7 @@ export default function HomePage() {
               </h3>
               {/* mood chart */}
               <StackedBarChart range={barRange} height={280} />
-              <Link href="/mood" className={buttonGradient(theme)}>
+              <Link href="/mood" {...gradientButton(theme)}>
                 View more
               </Link>
             </div>
@@ -314,7 +314,7 @@ export default function HomePage() {
 
           {/* exercise */}
           <div
-            className="group flex flex-col bg-white rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
+            className="group flex flex-col bg-(--bg-div) rounded-3xl border border-slate-100 shadow-sm transition-shadow duration-300 overflow-hidden"
             id="exercise-streak"
           >
             <div className="flex flex-col flex-1 p-6 gap-3">
@@ -367,7 +367,7 @@ export default function HomePage() {
                     ? 'Great job! You kept your coping exercise streak going today. Keep it up!'
                     : 'You have not performed a coping exercise today. Complete one to continue your streak!'}
               </p>
-              <Link href="/exercise/tracking" className={buttonGradient(theme)}>
+              <Link href="/exercise/tracking" {...gradientButton(theme)}>
                 Track exercise
               </Link>
             </div>

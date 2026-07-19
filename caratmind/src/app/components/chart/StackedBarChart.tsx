@@ -13,7 +13,6 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/app/utils/moodUtils';
 import { toTitleCase } from '@/app/utils/format';
-// import { C } from '@/app/styles/styles';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { ChartRow, useMoodChartData } from '@/app/hooks/moodChartData';
@@ -172,6 +171,7 @@ export default function StackedBarChart({
               borderRadius: 10,
               border: `1px solid ${'var(--text)'}`,
               fontSize: 13,
+              backgroundColor: 'var(--bg-div)',
             }}
             // date label
             labelStyle={{

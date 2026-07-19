@@ -4,7 +4,7 @@ import { Clock, Phone } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function HelplinePage() {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"
@@ -35,8 +35,9 @@ export default function HelplinePage() {
           {HELPLINES.map((line) => (
             <article
               key={line.name}
-              className="bg-white flex flex-col gap-2.5 rounded-[14px] mb-0 px-6 py-5.5"
+              className="flex flex-col gap-2.5 rounded-[14px] mb-0 px-6 py-5.5"
               style={{
+                backgroundColor: 'var(--bg-div)',
                 border: '1px solid var(--border)',
                 boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
               }}

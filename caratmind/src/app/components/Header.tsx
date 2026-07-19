@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-// import { buttonBase } from '@/app/styles/styles'; //buttonGradientColor, C
 import DropdownItem from './DropdownItem';
 import { useAuth } from '@/context/AuthContext';
 
@@ -11,7 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SessionUser } from '../types/user';
 import { ChevronDown, HelpCircle, Menu, X } from 'lucide-react';
 import { useNextStep } from 'nextstepjs';
-import { buttonGradient, getLogoLong } from '../styles/ui';
+import { getLogoLong, gradientButton } from '../styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 const NAV_LINKS = [
@@ -178,8 +177,9 @@ export default function Header() {
                 <button
                   type="button"
                   onClick={() => setProfileOpen((val) => !val)}
-                  className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer text-white font-bold sm:text-sm md:text-base transition-all duration-150 ease-in-out"
+                  className="w-10.5 h-10.5 rounded-full flex items-center justify-center cursor-pointer font-bold sm:text-sm md:text-base transition-all duration-150 ease-in-out"
                   style={{
+                    color: 'var(--text)',
                     border: profileOpen
                       ? '1px solid var(--second-color)'
                       : '1px solid var(--border)',
@@ -197,7 +197,7 @@ export default function Header() {
                 {profileOpen && (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className="absolute top-12 right-0 w-55 bg-white border rounded-[14px] shadow-[0_16px_48px_rgba(92,112,160,0.16)] overflow-hidden z-50"
+                    className="absolute top-12 right-0 w-55 bg-(--bg-div) border rounded-[14px] shadow-[0_16px_48px_rgba(92,112,160,0.16)] overflow-hidden z-50"
                     style={{
                       border: `1px solid var(--border)`,
                     }}
@@ -294,7 +294,7 @@ export default function Header() {
             <Link
               href="/login"
               // className={`${buttonBase} ${buttonGradientColor} border-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold`}
-              className={buttonGradient(theme)}
+              {...gradientButton(theme)}
             >
               Log In
             </Link>
@@ -312,8 +312,9 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => router.push('/profile')}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-[13px]"
+                className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-[13px]"
                 style={{
+                  color: 'var(--text)',
                   border: '1px solid var(--border)',
                   background:
                     'linear-gradient(135deg, var(--first-color), var(--second-color))',
@@ -442,8 +443,7 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={closeMobile}
-                // className={`w-fit mt-1 mb-2 sm:mb-0 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white text-[clamp(0.95rem,1.5vw,1rem)] font-bold rounded-xl px-5 py-2.5 transition-colors duration-200`}
-                className={buttonGradient(theme)}
+                {...gradientButton(theme)}
               >
                 Log In
               </Link>

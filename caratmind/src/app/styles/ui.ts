@@ -2,7 +2,7 @@
 
 // import { buttonGradientColor } from './styles';
 import { CSSProperties } from 'react';
-import { buttonGradientColor, ThemeName, themes } from './themes';
+import { ThemeName, themes } from './themes';
 
 /*
 clamp(minimum, preferred, maximum)
@@ -71,6 +71,8 @@ export const errorTextStyle = `text-red-500 text-xs pb-2`;
 
 export const pText = `mt-0 mb-2.5`;
 
+const isDark = (theme: ThemeName) => theme === 'dark';
+
 // logo
 export const getLogoLong = (theme: ThemeName) =>
   theme === 'light' || theme === 'dark'
@@ -83,17 +85,26 @@ export const getLogoMini = (theme: ThemeName) =>
     : '/assets/CM_mini_mono.png';
 
 // buttons
+const baseButtonClass =
+  'mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm btn-outline';
+
 export const buttonGradient = (theme: ThemeName) =>
   'btn-gradient inline-flex cursor-pointer items-center justify-center gap-1.5 border-2 text-white text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 disabled:opacity-50';
-// ${buttonGradientColor[theme]}
+
 export const buttonGradientStyle = (theme: ThemeName): CSSProperties => {
   const t = themes[theme];
+  const dark = isDark(theme);
   return {
     ['--btn-first' as string]: t.firstColor,
     ['--btn-second' as string]: t.secondColor,
     ['--btn-text' as string]: t.text,
   };
 };
+
+export const gradientButton = (theme: ThemeName) => ({
+  className: buttonGradient(theme),
+  style: buttonGradientStyle(theme),
+});
 
 export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semibold text-[13px] font-inherit text-white ml-2 cursor-pointer transition-opacity duration-150 ease-in-out`;
 
@@ -103,18 +114,74 @@ export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semi
 //   border border-[${themes[theme].border}] bg-[${themes[theme].bg}]
 //   hover:text-[${themes[theme].text}] hover:border-[${themes[theme].muted}] hover:bg-[#f8faff]
 // `;
+export const buttonRed = (theme: ThemeName) => baseButtonClass;
 
-export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
-text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+export const buttonRedStyle = (theme: ThemeName): CSSProperties => {
+  const dark = isDark(theme);
+  return {
+    ['--btn-outline-bg' as string]: dark ? '#2a1616' : '#ffffff',
+    ['--btn-outline-text' as string]: dark ? '#ef9a9a' : '#e57373',
+    ['--btn-outline-border' as string]: dark ? '#5c2b28' : '#f3caca',
+    ['--btn-outline-hover-bg' as string]: dark ? '#3d1f1d' : '#fff5f5',
+    ['--btn-outline-hover-text' as string]: dark ? '#ffb3b3' : '#c62828',
+    ['--btn-outline-hover-border' as string]: dark ? '#e57373' : '#e57373',
+  };
+};
 
-export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 
-text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
-text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+export const redButton = (theme: ThemeName) => ({
+  className: buttonRed(theme),
+  style: buttonRedStyle(theme),
+});
 
-export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold
-rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white 
-hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
+export const buttonGrey = (theme: ThemeName) => baseButtonClass;
+
+export const buttonGreyStyle = (theme: ThemeName): CSSProperties => {
+  const dark = isDark(theme);
+  return {
+    ['--btn-outline-bg' as string]: dark ? '#1e2432' : '#ffffff',
+    ['--btn-outline-text' as string]: dark ? '#9ca3af' : '#6b7280',
+    ['--btn-outline-border' as string]: dark ? '#3a4152' : '#cbd5e1',
+    ['--btn-outline-hover-bg' as string]: dark ? '#2a3142' : '#f8faff',
+    ['--btn-outline-hover-text' as string]: dark ? '#e5e7eb' : '#3a4a6b',
+    ['--btn-outline-hover-border' as string]: dark ? '#9aa8c4' : '#9aa8c4',
+  };
+};
+
+export const greyButton = (theme: ThemeName) => ({
+  className: buttonGrey(theme),
+  style: buttonGreyStyle(theme),
+});
+
+export const buttonGreen = (theme: ThemeName) => baseButtonClass;
+
+export const buttonGreenStyle = (theme: ThemeName): CSSProperties => {
+  const dark = isDark(theme);
+  return {
+    ['--btn-outline-bg' as string]: dark ? '#16261a' : '#ffffff',
+    ['--btn-outline-text' as string]: dark ? '#81c784' : '#66bb6a',
+    ['--btn-outline-border' as string]: dark ? '#2a4d31' : '#c8e6c9',
+    ['--btn-outline-hover-bg' as string]: dark ? '#1b3320' : '#f1f8f4',
+    ['--btn-outline-hover-text' as string]: dark ? '#a5d6a7' : '#2e7d32',
+    ['--btn-outline-hover-border' as string]: dark ? '#66bb6a' : '#66bb6a',
+  };
+};
+
+export const greenButton = (theme: ThemeName) => ({
+  className: buttonGreen(theme),
+  style: buttonGreenStyle(theme),
+});
+
+// export const buttonRed = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5
+// text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+// text-[#e57373] border border-[#f3caca] bg-white hover:text-[#c62828] hover:border-[#e57373] hover:bg-[#fff5f5]`;
+
+// export const buttonGrey = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5
+// text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm
+// text-[#6b7280] border border-[#cbd5e1] bg-white hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+
+// export const buttonGreen = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-[clamp(1rem,1.2vw,1.25rem)] font-medium lg:font-semibold
+// rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#66bb6a] border border-[#c8e6c9] bg-white
+// hover:text-[#2e7d32] hover:border-[#66bb6a] hover:bg-[#f1f8f4]`;
 
 // section / div
 export const table = `w-full border-collapse table-fixed`;
@@ -159,3 +226,28 @@ export const cardStyle = `bg-white rounded-xl border border-slate-100 shadow-sm 
 // export const buttonOutlined = `mt-1 inline-flex cursor-pointer items-center justify-center gap-1.5 text-sm font-medium
 // rounded-xl px-5 py-2.5 transition-colors duration-200 shadow-sm text-[#9aa8c4] border border-[#dde4f0] bg-white
 // hover:text-[#3a4a6b] hover:border-[#9aa8c4] hover:bg-[#f8faff]`;
+
+export const styles: Record<string, CSSProperties> = {
+  dateInput: {
+    boxSizing: 'border-box',
+    padding: '11px 12px',
+    borderRadius: '10px',
+    border: '1px solid var(--border)',
+    fontFamily: 'inherit',
+    color: 'var(--text)',
+    background: 'var(--bg-div)',
+    outline: 'none',
+    cursor: 'pointer',
+    appearance: 'none',
+  },
+  dropdown: {
+    padding: '9px 12px',
+    borderRadius: '10px',
+    border: '1px solid var(--border)',
+    fontFamily: 'inherit',
+    color: 'var(--text)',
+    background: 'var(--bg-div)',
+    outline: 'none',
+    cursor: 'pointer',
+  },
+};

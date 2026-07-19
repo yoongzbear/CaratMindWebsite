@@ -56,6 +56,16 @@ html {
   --bg-div: #3e4554;
 }
 
+:root[data-theme='dark'] select {
+  color: var(--text);
+  background-color: var(--bg-div);
+}
+
+:root[data-theme='dark'] option {
+  color: var(--text);
+  background-color: var(--bg-div);
+}
+
 :root[data-theme='cherryBlossoms'] {
   --text: #7a1550;
   --muted: #c17ba0;
@@ -172,7 +182,7 @@ html {
 
 .btn-gradient:hover {
   background:
-    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(var(--bg-div)) padding-box,
     linear-gradient(
         130deg,
         var(--btn-first, var(--first-color)),
@@ -181,6 +191,23 @@ html {
       border-box;
   border-color: transparent;
   color: var(--text);
+}
+
+.btn-outline {
+  background: var(--btn-outline-bg, white);
+  color: var(--btn-outline-text);
+  border: 2px solid var(--btn-outline-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.btn-outline:hover {
+  background: var(--btn-outline-hover-bg);
+  color: var(--btn-outline-hover-text);
+  border-color: var(--btn-outline-hover-border);
 }
 
 body {

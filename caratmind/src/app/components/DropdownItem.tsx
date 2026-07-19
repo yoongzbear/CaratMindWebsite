@@ -64,7 +64,7 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
       {/* Dropdown Menu */}
       {hasChildren && open && (
         <div
-          className="absolute bg-white rounded-xl text-[clamp(0.875rem,1.5vw,1rem)] font-bold
+          className="absolute bg-(--bg-div) rounded-xl text-[clamp(0.875rem,1.5vw,1rem)] font-bold
         shadow-[0_8px_24px_rgba(146,168,209,0.18)] min-w-50 p-1.5 z-100 border top-full left-0 peer-hover:top-0 peer-hover:left-full"
         >
           {item.children?.map((child) => (

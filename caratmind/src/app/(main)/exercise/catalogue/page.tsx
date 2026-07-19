@@ -1,7 +1,7 @@
 'use client';
 import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
 import Pill from '@/app/components/Pill';
-import { buttonGradient, inputStyle } from '@/app/styles/ui';
+import { gradientButton, inputStyle } from '@/app/styles/ui';
 import { Exercise } from '@/app/types/exercise';
 import { toTitleCase } from '@/app/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
@@ -378,7 +378,8 @@ export default function ExerciseCatalogPage() {
                     setSelectedExercise(ex);
                     setOpenDetail(true);
                   }}
-                  className={buttonGradient(theme)}
+                  // className={buttonGradient(theme)}
+                  {...gradientButton(theme)}
                   id={index === 0 ? 'button-view-exercise' : undefined}
                 >
                   View More
