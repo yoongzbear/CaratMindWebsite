@@ -62,7 +62,10 @@ export default function ThemePage() {
         </header>
 
         {/* theme sample */}
-        <div className="mb-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div
+          className="mb-3 grid grid-cols-2 sm:grid-cols-3 gap-3"
+          id="theme-list"
+        >
           {THEME_OPTIONS.map((option) => {
             const optTheme = themes[option.name];
             const isSelected = previewTheme === option.name;
@@ -108,6 +111,7 @@ export default function ThemePage() {
         <div
           className="rounded-[10px] border p-5 space-y-5"
           style={{ borderColor: t.border, background: t.bg }}
+          id="theme-preview"
         >
           <h3
             className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold"
@@ -156,8 +160,9 @@ export default function ThemePage() {
             onClick={handleSave}
             disabled={!hasChanges || saving}
             {...gradientButton(savedTheme)}
+            id="button-apply-theme"
           >
-            {saving ? 'Saving…' : 'Save theme'}
+            {saving ? 'Applying...' : 'Apply Theme'}
           </button>
 
           {hasChanges && !saving && (
@@ -165,9 +170,10 @@ export default function ThemePage() {
               onClick={() => setPreviewTheme(savedTheme)}
               className="flex gap-1 text-[clamp(0.875rem,1.5vw,1rem)]"
               style={{ color: 'var(--muted)' }}
+              id="button-discard"
             >
               <Trash />
-              Discard changes
+              Discard Changes
             </button>
           )}
         </div>

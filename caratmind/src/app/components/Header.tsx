@@ -43,6 +43,7 @@ const pageTours: Record<string, string> = {
   '/exercise/catalogue': 'exercise-catalogue-tour',
   '/helpline': 'helpline-tour',
   '/profile': 'profile-tour',
+  '/theme_select': 'theme-tour',
 };
 
 export function HelpButton() {
