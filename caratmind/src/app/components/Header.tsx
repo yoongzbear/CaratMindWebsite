@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SessionUser } from '../types/user';
 import { ChevronDown, HelpCircle, Menu, X } from 'lucide-react';
 import { useNextStep } from 'nextstepjs';
-import { buttonGradient } from '../styles/ui';
+import { buttonGradient, getLogoLong } from '../styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 const NAV_LINKS = [
@@ -67,7 +67,7 @@ export function HelpButton() {
       id="help-button"
       className="cursor-pointer"
       onClick={() => startNextStep(tourName)}
-      aria-label="Show page tour"
+      aria-label="Show tour"
       style={{ color: 'var(--text)' }}
     >
       <HelpCircle />
@@ -77,7 +77,7 @@ export function HelpButton() {
 
 export default function Header() {
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme, resetTheme } = useTheme();
   const { user, loading, signOut } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -88,6 +88,7 @@ export default function Header() {
 
   async function handleLogout() {
     await signOut();
+    resetTheme();
     router.push('/login');
     router.refresh();
   }
@@ -152,7 +153,7 @@ export default function Header() {
       >
         <Link href="/" className="no-underline flex items-center shrink-0">
           <Image
-            src="/assets/CM_long.png"
+            src={getLogoLong(theme)}
             alt="Mental Health System logo"
             width={140}
             height={0}

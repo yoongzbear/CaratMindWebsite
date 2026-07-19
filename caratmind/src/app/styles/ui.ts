@@ -46,7 +46,7 @@ button - text-[clamp(0.875rem,1.5vw,1rem)]
 export const labelStyle = `block text-[clamp(0.875rem,1.5vw,1rem)] font-semibold mb-1`;
 //   export const labelStyle = `block text-[12px] sm:text-[14px] md:text-[16px] font-semibold mb-[6px]`;
 
-export const inputStyle = `w-full box-border px-3 py-2.75 rounded-lg border border-slate-200 text-[clamp(0.875rem,1.5vw,1rem)] text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
+export const inputStyle = `w-full box-border px-3 py-2.75 rounded-lg border border-slate-200 text-[clamp(0.875rem,1.5vw,1rem)] focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
 // export const inputStyle = `w-full px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300`;
 
 export const preInputStyle = `w-full box-border px-3 py-2.75 flex items rounded-lg flex items-center justify-between border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-300 mb-3.5 font-inherit`;
@@ -70,6 +70,17 @@ export const subtitle = `text-xs text-slate-400 mt-1`;
 export const errorTextStyle = `text-red-500 text-xs pb-2`;
 
 export const pText = `mt-0 mb-2.5`;
+
+// logo
+export const getLogoLong = (theme: ThemeName) =>
+  theme === 'light' || theme === 'dark'
+    ? '/assets/CM_long.png'
+    : '/assets/CM_long_mono.png';
+
+export const getLogoMini = (theme: ThemeName) =>
+  theme === 'light' || theme === 'dark'
+    ? '/assets/CM_mini.png'
+    : '/assets/CM_mini_mono.png';
 
 // buttons
 export const buttonGradient = (theme: ThemeName) =>

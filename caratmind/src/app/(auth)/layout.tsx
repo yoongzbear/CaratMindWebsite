@@ -5,7 +5,7 @@ export default function AuthLayout({
 }) {
   return (
     <div
-      className="h-dvh min-h-screen flex items-center justify-center p-4 sm:p-6"
+      className="min-h-dvh flex items-center justify-center p-4 sm:p-6"
       style={{
         background:
           'linear-gradient(130deg, var(--second-color), var(--first-color))',

@@ -507,5 +507,5 @@ def get_theme_view(request):
         return JsonResponse({'error': 'User not found.'}, status=404)
 
     return JsonResponse({
-        'theme': user.get('theme', 'light')
+        'theme': user.get('user_theme', 'light')
     })

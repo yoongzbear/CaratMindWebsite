@@ -6,16 +6,18 @@ type PillItems = {
   size?: 'sm' | 'md';
   title?: string;
   className?: string;
+  shaded?: boolean;
 };
 
 export default function Pill({
   children,
-  bgColor = '#f4f7fc',
-  textColor = '#3a4a6b',
-  borderColor = '#dde4f0',
+  bgColor = 'var(--bg-div)',
+  textColor = 'var(--text)',
+  borderColor = 'var(--border)',
   size = 'md',
   title,
   className = '',
+  shaded = false,
 }: PillItems) {
   return (
     <span
@@ -29,6 +31,7 @@ export default function Pill({
         borderRadius: '999px',
         border: `1px solid ${borderColor}`,
         background: bgColor,
+        filter: shaded ? 'brightness(0.95)' : undefined,
         color: textColor,
         fontWeight: 600,
         whiteSpace: 'nowrap',

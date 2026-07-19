@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { getLogoMini } from '../styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { theme, resetTheme } = useTheme();
 
-  const textMid = '#5a6e99';
-  const textLight = '#7a90b8';
   const divider = 'rgba(58,74,107,0.15)';
 
   return (
@@ -32,7 +33,7 @@ export default function Footer() {
         {/* Logo + tagline */}
         <div className="flex items-center gap-3.5 shrink-0">
           <Image
-            src="/assets/CM_mini.png"
+            src={getLogoMini(theme)}
             alt="CaratMind"
             width={100}
             height={100}
@@ -50,7 +51,7 @@ export default function Footer() {
             <div
               className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0.75 tracking-[0.06em]"
               style={{
-                color: textMid,
+                color: 'var(--text)',
               }}
             >
               Mental Health System
@@ -63,7 +64,7 @@ export default function Footer() {
           <div
             className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
-              color: textMid,
+              color: 'var(--text)',
             }}
           >
             Journal
@@ -77,13 +78,13 @@ export default function Footer() {
               href={href}
               className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
               style={{
-                color: textMid,
+                color: 'var(--text)',
               }}
               onMouseEnter={(e) =>
                 ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = textMid)
+                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
             >
               {label}
@@ -94,7 +95,7 @@ export default function Footer() {
           <div
             className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
-              color: textMid,
+              color: 'var(--text)',
             }}
           >
             Mood
@@ -106,13 +107,13 @@ export default function Footer() {
                 href={href}
                 className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
                 style={{
-                  color: textMid,
+                  color: 'var(--text)',
                 }}
                 onMouseEnter={(e) =>
                   ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = textMid)
+                  ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
                 }
               >
                 {label}
@@ -124,7 +125,7 @@ export default function Footer() {
           <div
             className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
             style={{
-              color: textMid,
+              color: 'var(--text)',
             }}
           >
             Coping Exercise
@@ -138,13 +139,13 @@ export default function Footer() {
               href={href}
               className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
               style={{
-                color: textMid,
+                color: 'var(--text)',
               }}
               onMouseEnter={(e) =>
                 ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
               onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = textMid)
+                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
               }
             >
               {label}
@@ -166,7 +167,7 @@ export default function Footer() {
         <p
           className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
-            color: textMid,
+            color: 'var(--text)',
           }}
         >
           Mental well-being improves through long-term and consistent
@@ -177,7 +178,7 @@ export default function Footer() {
         <p
           className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
-            color: textMid,
+            color: 'var(--text)',
           }}
         >
           <strong style={{ color: 'var(--text)' }}>Disclaimer:</strong> This
@@ -190,7 +191,7 @@ export default function Footer() {
         <p
           className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{
-            color: textMid,
+            color: 'var(--text)',
           }}
         >
           <Link
@@ -206,7 +207,7 @@ export default function Footer() {
         <p
           className="mt-2.5 text-[clamp(0.875rem,1.5vw,1rem)] text-center"
           style={{
-            color: textLight,
+            color: 'var(--muted)',
           }}
         >
           © {year} CaratMind Mental Health System. All rights reserved.

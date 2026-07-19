@@ -67,7 +67,7 @@ def update_theme(user_id: str, theme: str):
         Key={
             'user_id': user_id,
         },
-        UpdateExpression='SET theme = :theme',
+        UpdateExpression='SET user_theme = :theme',
         ExpressionAttributeValues={':theme': theme},
         ConditionExpression='attribute_exists(user_id)',
     )

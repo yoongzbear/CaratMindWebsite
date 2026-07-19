@@ -15,6 +15,7 @@ type ThemeContextType = {
   theme: ThemeName;
   setTheme: (t: ThemeName) => void;
   saving: boolean;
+  resetTheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -81,8 +82,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     [user, accessToken],
   );
 
+  // reset when logout
+  const resetTheme = useCallback(() => {
+    setThemeState('light');
+    localStorage.removeItem(STORAGE_KEY);
+    document.documentElement.setAttribute('data-theme', 'light');
+  }, []);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, saving }}>
+    <ThemeContext.Provider value={{ theme, setTheme, saving, resetTheme }}>
       {children}
     </ThemeContext.Provider>
   );

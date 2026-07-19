@@ -23,21 +23,21 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#F7CAC9,#92A8D1)',
     bgPage: 'linear-gradient(150deg, #f9f4f5 0%, #f0f4fa 100%)',
     bgTopbar: 'rgba(253,250,251)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   dark: {
-    text: '#e5e7eb',
-    muted: '#9ca3af',
-    faint: '#6b7280',
-    border: '#374151',
+    text: '#f8fafc',
+    muted: '#d1d5db',
+    faint: '#b6beca',
+    border: '#4b5563',
     bg: '#0f172a',
     firstColor: '#c98f92',
     secondColor: '#5b6f99',
     gradient: 'linear-gradient(130deg,#c98f92,#5b6f99)',
     bgPage: 'linear-gradient(150deg, #111827 0%, #0f172a 100%)',
     bgTopbar: 'rgba(15,23,42)',
-    bgInput: '#3e4554',
+    bgDiv: '#3e4554',
   },
 
   cherryBlossoms: {
@@ -51,7 +51,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#FBD3E9,#BB377D)',
     bgPage: 'linear-gradient(150deg, #fff5fa 0%, #fbe8f2 100%)',
     bgTopbar: 'rgba(255,250,253)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   ocean: {
@@ -65,7 +65,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#92A8D1,#60a5fa)',
     bgPage: 'linear-gradient(150deg, #f2f9ff 0%, #e8f3fd 100%)',
     bgTopbar: 'rgba(247,251,255)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   forest: {
@@ -79,7 +79,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#8fc9a3,#F7CAC9)',
     bgPage: 'linear-gradient(150deg, #f2fbf4 0%, #eef7f0 100%)',
     bgTopbar: 'rgba(248,253,249)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   sunset: {
@@ -93,7 +93,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#F7CAC9,#f97316)',
     bgPage: 'linear-gradient(150deg, #fff6ec 0%, #fdeee4 100%)',
     bgTopbar: 'rgba(255,250,245)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   winter: {
@@ -107,7 +107,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#E6DADA,#274046)',
     bgPage: 'linear-gradient(150deg, #f7f4f4 0%, #eef3f3 100%)',
     bgTopbar: 'rgba(250,249,249)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   emeraldSea: {
@@ -121,7 +121,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#05386b,#5cdb95)',
     bgPage: 'linear-gradient(150deg, #eef6fb 0%, #eafbf3 100%)',
     bgTopbar: 'rgba(247,253,251)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 
   midnightSun: {
@@ -135,7 +135,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
     gradient: 'linear-gradient(130deg,#ff1493,#fdda25)',
     bgPage: 'linear-gradient(150deg, #fff0f6 0%, #fffaeb 100%)',
     bgTopbar: 'rgba(255,251,248)',
-    bgInput: '#ffffff',
+    bgDiv: '#ffffff',
   },
 };
 

@@ -176,6 +176,178 @@ export const MOOD_EMOJIS: Record<string, MoodStyle> = {
   },
 };
 
+// dark theme
+export const MOOD_EMOJIS_DARK: Record<string, MoodStyle> = {
+  admiration: {
+    emoji: '🤩',
+    bgColor: '#3d3418',
+    textColor: '#FFD54F',
+    borderColor: '#5c4d1f',
+  },
+  amusement: {
+    emoji: '😄',
+    bgColor: '#3d3418',
+    textColor: '#FFCA28',
+    borderColor: '#5c4d1f',
+  },
+  anger: {
+    emoji: '😠',
+    bgColor: '#3d1f1d',
+    textColor: '#EF9A9A',
+    borderColor: '#5c2b28',
+  },
+  annoyance: {
+    emoji: '🙄',
+    bgColor: '#3a1a26',
+    textColor: '#F48FB1',
+    borderColor: '#552538',
+  },
+  approval: {
+    emoji: '👍',
+    bgColor: '#1b3320',
+    textColor: '#A5D6A7',
+    borderColor: '#2a4d31',
+  },
+  caring: {
+    emoji: '🤗',
+    bgColor: '#2e2038',
+    textColor: '#CE93D8',
+    borderColor: '#443053',
+  },
+  confusion: {
+    emoji: '😕',
+    bgColor: '#2a2f33',
+    textColor: '#B0BEC5',
+    borderColor: '#3f474d',
+  },
+  curiosity: {
+    emoji: '🤔',
+    bgColor: '#1a2c3d',
+    textColor: '#90CAF9',
+    borderColor: '#26415c',
+  },
+  desire: {
+    emoji: '😏',
+    bgColor: '#3a1a26',
+    textColor: '#F48FB1',
+    borderColor: '#552538',
+  },
+  disappointment: {
+    emoji: '😞',
+    bgColor: '#2a2a2a',
+    textColor: '#BDBDBD',
+    borderColor: '#404040',
+  },
+  disapproval: {
+    emoji: '👎',
+    bgColor: '#3d1f1f',
+    textColor: '#EF9A9A',
+    borderColor: '#5c2b2b',
+  },
+  disgust: {
+    emoji: '🤢',
+    bgColor: '#242f1a',
+    textColor: '#C5E1A5',
+    borderColor: '#374526',
+  },
+  embarrassment: {
+    emoji: '😳',
+    bgColor: '#3a1a26',
+    textColor: '#F48FB1',
+    borderColor: '#552538',
+  },
+  excitement: {
+    emoji: '🤩',
+    bgColor: '#3d2a15',
+    textColor: '#FFCC80',
+    borderColor: '#5c3f1f',
+  },
+  fear: {
+    emoji: '😱',
+    bgColor: '#242a4d',
+    textColor: '#9FA8DA',
+    borderColor: '#363f70',
+  },
+  gratitude: {
+    emoji: '🙏',
+    bgColor: '#1b3320',
+    textColor: '#A5D6A7',
+    borderColor: '#2a4d31',
+  },
+  grief: {
+    emoji: '😭',
+    bgColor: '#1a2c3d',
+    textColor: '#90CAF9',
+    borderColor: '#26415c',
+  },
+  joy: {
+    emoji: '😊',
+    bgColor: '#3d3418',
+    textColor: '#FFF59D',
+    borderColor: '#5c4d1f',
+  },
+  love: {
+    emoji: '🥰',
+    bgColor: '#3a1a26',
+    textColor: '#F48FB1',
+    borderColor: '#552538',
+  },
+  nervousness: {
+    emoji: '😰',
+    bgColor: '#2a2140',
+    textColor: '#B39DDB',
+    borderColor: '#3f305c',
+  },
+  neutral: {
+    emoji: '😐',
+    bgColor: '#2a2f33',
+    textColor: '#CFD8DC',
+    borderColor: '#3f474d',
+  },
+  optimism: {
+    emoji: '🙂',
+    bgColor: '#1b3320',
+    textColor: '#A5D6A7',
+    borderColor: '#2a4d31',
+  },
+  pride: {
+    emoji: '👑',
+    bgColor: '#3d3418',
+    textColor: '#FFD54F',
+    borderColor: '#5c4d1f',
+  },
+  realization: {
+    emoji: '💡',
+    bgColor: '#3d3418',
+    textColor: '#FFF59D',
+    borderColor: '#5c4d1f',
+  },
+  relief: {
+    emoji: '😌',
+    bgColor: '#123338',
+    textColor: '#80DEEA',
+    borderColor: '#1c4d54',
+  },
+  remorse: {
+    emoji: '😔',
+    bgColor: '#2e2038',
+    textColor: '#CE93D8',
+    borderColor: '#443053',
+  },
+  sadness: {
+    emoji: '😢',
+    bgColor: '#1a2c3d',
+    textColor: '#90CAF9',
+    borderColor: '#26415c',
+  },
+  surprise: {
+    emoji: '😲',
+    bgColor: '#3d2a15',
+    textColor: '#FFCC80',
+    borderColor: '#5c3f1f',
+  },
+};
+
 const DEFAULT_MOOD_STYLE: MoodStyle = {
   emoji: '🙂',
   bgColor: '#f4f7fc',
@@ -183,10 +355,22 @@ const DEFAULT_MOOD_STYLE: MoodStyle = {
   borderColor: '#dde4f0',
 };
 
-export function getMoodStyle(mood?: string | null): MoodStyle {
-  if (!mood) return DEFAULT_MOOD_STYLE;
+const DEFAULT_MOOD_STYLE_DARK: MoodStyle = {
+  emoji: '🙂',
+  bgColor: '#1e2536',
+  textColor: '#c7d2e8',
+  borderColor: '#2f3a52',
+};
 
-  return MOOD_EMOJIS[mood.toLowerCase()] ?? DEFAULT_MOOD_STYLE;
+export function getMoodStyle(
+  mood?: string | null,
+  isDark: boolean = false,
+): MoodStyle {
+  const map = isDark ? MOOD_EMOJIS_DARK : MOOD_EMOJIS; // map dark and normal theme emojis
+  const fallback = isDark ? DEFAULT_MOOD_STYLE_DARK : DEFAULT_MOOD_STYLE;
+
+  if (!mood) return fallback;
+  return map[mood.toLowerCase()] ?? fallback;
 }
 
 // negative mood

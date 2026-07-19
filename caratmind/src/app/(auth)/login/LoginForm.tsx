@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
+import { useTheme } from '@/context/ThemeContext';
 
 function resolvePostLoginPath(requestedNext: string | null): string {
   if (
@@ -23,6 +24,7 @@ function resolvePostLoginPath(requestedNext: string | null): string {
 export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
   const router = useRouter();
   const { signIn, user, loading } = useAuth();
+  const { theme } = useTheme();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -97,7 +99,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
         </div>
 
         <button
-          className={`w-full ${buttonGradient}`}
+          className={`w-full ${buttonGradient(theme)}`}
           type="submit"
           disabled={submitting}
           style={{
@@ -105,7 +107,7 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
             cursor: submitting ? 'wait' : 'pointer',
           }}
         >
-          {submitting ? 'Signing in…' : 'Log In'}
+          {submitting ? 'Logging in…' : 'Log In'}
         </button>
       </form>
 

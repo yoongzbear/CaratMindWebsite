@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 export default function ExerciseCatalogPage() {
   const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
+  const isDark = theme === 'dark';
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
@@ -104,7 +105,7 @@ export default function ExerciseCatalogPage() {
         <div
           className="rounded-[10px] border mb-3.75 p-4"
           style={{
-            backgroundColor: 'white',
+            backgroundColor: 'var(--bg-div)',
             boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
             border: '1px solid #eef2f9',
           }}
@@ -116,7 +117,7 @@ export default function ExerciseCatalogPage() {
             <input
               className={`w-full ${inputStyle} pl-10 text-[clamp(0.875rem,1.5vw,1rem)`}
               id="mobile-search"
-              // style={styles.input}
+              style={{ color: 'var(--text)', backgroundColor: 'var(--bg-div)' }}
               type="search"
               placeholder="Search Exercise"
               value={search}
@@ -126,8 +127,12 @@ export default function ExerciseCatalogPage() {
             {/* mood dropdown */}
             <div className="w-full flex gap-2" id="mobile-dropdown">
               <select
-                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
-                style={{ border: '1px solid (--border)', color: 'var(--text)' }}
+                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] cursor-pointer"
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
+                }}
                 value={selectedMood}
                 onChange={(e) => setSelectedMood(e.target.value)}
               >
@@ -141,10 +146,11 @@ export default function ExerciseCatalogPage() {
 
               {/* type dropdown */}
               <select
-                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
+                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] cursor-pointer"
                 style={{
                   border: '1px solid var(--border)',
                   color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
                 }}
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
@@ -166,7 +172,11 @@ export default function ExerciseCatalogPage() {
               <input
                 id="desktop-search"
                 className={`w-full ${inputStyle} pl-10 text-[clamp(0.875rem,1.5vw,1rem)]`}
-                // style={styles.input}
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
+                }}
                 type="search"
                 placeholder="Search Exercise"
                 value={search}
@@ -180,10 +190,11 @@ export default function ExerciseCatalogPage() {
               id="desktop-dropdown"
             >
               <select
-                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
+                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] cursor-pointer"
                 style={{
                   border: '1px solid var(--border)',
                   color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
                 }}
                 value={selectedMood}
                 onChange={(e) => setSelectedMood(e.target.value)}
@@ -199,10 +210,11 @@ export default function ExerciseCatalogPage() {
 
               {/* type dropdown */}
               <select
-                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] bg-white cursor-pointer"
+                className="text-[clamp(0.875rem,1.5vw,1rem)] w-full px-3 py-2.25 rounded-[10px] cursor-pointer"
                 style={{
                   border: '1px solid var(--border)',
                   color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
                 }}
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
@@ -251,9 +263,10 @@ export default function ExerciseCatalogPage() {
                 id={index === 0 ? 'exercise-card' : undefined}
                 className="rounded-[10px] border mb-3.75 p-2.5"
                 style={{
-                  backgroundColor: 'white',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                  backgroundColor: 'var(--bg-div)',
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
-                  border: '1px solid #eef2f9',
                 }}
               >
                 <h3
@@ -272,7 +285,7 @@ export default function ExerciseCatalogPage() {
                         {/* Mobile - 1 pill */}
                         <div className="flex gap-3 sm:hidden">
                           {mobileVisibleMoods.map((mood) => {
-                            const moodStyle = getMoodStyle(mood);
+                            const moodStyle = getMoodStyle(mood, isDark);
                             return (
                               <Pill
                                 key={mood}
@@ -294,8 +307,8 @@ export default function ExerciseCatalogPage() {
                               className="cursor-pointer"
                             >
                               <Pill
-                                bgColor="#f1f3f8"
-                                borderColor="#dde1ea"
+                                bgColor="var(--bg-div)"
+                                borderColor="var(--border)"
                                 textColor="var(--muted)"
                                 title={moods
                                   .slice(1)
@@ -311,7 +324,7 @@ export default function ExerciseCatalogPage() {
                         {/* Desktop: existing visibleMoods / MAX_VISIBLE_MOODS logic */}
                         <div className="hidden sm:flex gap-3">
                           {visibleMoods.map((mood) => {
-                            const moodStyle = getMoodStyle(mood);
+                            const moodStyle = getMoodStyle(mood, isDark);
                             return (
                               <Pill
                                 key={mood}
@@ -333,8 +346,8 @@ export default function ExerciseCatalogPage() {
                               className="cursor-pointer"
                             >
                               <Pill
-                                bgColor="#f1f3f8"
-                                borderColor="#dde1ea"
+                                bgColor="var(--bg-div)"
+                                borderColor="var(--border)"
                                 textColor="var(--muted)"
                                 title={moods
                                   .slice(MAX_VISIBLE_MOODS)
@@ -347,7 +360,7 @@ export default function ExerciseCatalogPage() {
                           )}
                         </div>
 
-                        <Pill>{toTitleCase(ex.exc_type)}</Pill>
+                        <Pill shaded>{toTitleCase(ex.exc_type)}</Pill>
                       </div>
                     );
                   })()}
