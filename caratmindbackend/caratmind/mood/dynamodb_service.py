@@ -121,6 +121,29 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
     items.sort(key=lambda i: i.get('mood_timestamp', ''), reverse=True)
     return items
 
+# calculate number of days with negative mood
+NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
+
+def calc_negative_mood_streak(user_id: str) -> int:
+    recent_moods = get_user_recent_moods(user_id, 7)  # 7 days
+
+    # group by calendar date, take the latest mood per day
+    by_date = {}
+    for m in recent_moods:
+        date_str = m['mood_timestamp'][:10]  
+        if date_str not in by_date:  
+            by_date[date_str] = m['mood_name']
+
+    sorted_dates = sorted(by_date.keys(), reverse=True)
+    streak = 0
+    for date_str in sorted_dates:
+        if by_date[date_str] in NEGATIVE_MOOD:
+            streak += 1
+        else:
+            break
+
+    return streak
+
 # delete user mood records
 def delete_all_user_mood(user_id: str) -> None:
     table = _get_table()

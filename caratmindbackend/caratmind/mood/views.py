@@ -8,7 +8,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 from accounts.authentication import authenticate_bearer
-from mood.dynamodb_service import confirm_mood, corrected_mood, get_mood_by_id, get_user_recent_moods
+from mood.dynamodb_service import calc_negative_mood_streak, confirm_mood, corrected_mood, get_mood_by_id, get_user_recent_moods
 
 # mood by ID
 @require_GET
@@ -27,7 +27,7 @@ def get_mood_view(request, jrnl_id):
 
     return JsonResponse({**mood})
 
-NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
+# NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
 # negative mood streak
 @require_GET
 def negative_mood_streak_view(request):
@@ -38,25 +38,26 @@ def negative_mood_streak_view(request):
     sub = principal.claims.get('sub')
 
     try:
-        recent_moods = get_user_recent_moods(sub, 7) # 7 days
+        # recent_moods = get_user_recent_moods(sub, 7) # 7 days
+        streak = calc_negative_mood_streak(sub)
     except Exception as e:
-        return JsonResponse({'error': f'Failed to load mood history: {e}'}, status=500)
+        return JsonResponse({'error': f'Failed to calculate negative mood streak: {e}'}, status=500)
 
-    # group by calendar date, take the latest mood per day
-    by_date = {}
-    for m in recent_moods:
-        date_str = m['mood_timestamp'][:10]  # 'YYYY-MM-DD'
-        if date_str not in by_date:  # already sorted newest-first
-            by_date[date_str] = m['mood_name']
+    # # group by calendar date, take the latest mood per day
+    # by_date = {}
+    # for m in recent_moods:
+    #     date_str = m['mood_timestamp'][:10]  # 'YYYY-MM-DD'
+    #     if date_str not in by_date:  # already sorted newest-first
+    #         by_date[date_str] = m['mood_name']
 
-    # count consecutive negative days, walking backward from today
-    sorted_dates = sorted(by_date.keys(), reverse=True)
-    streak = 0
-    for date_str in sorted_dates:
-        if by_date[date_str] in NEGATIVE_MOOD:
-            streak += 1
-        else:
-            break
+    # # count consecutive negative days, walking backward from today
+    # sorted_dates = sorted(by_date.keys(), reverse=True)
+    # streak = 0
+    # for date_str in sorted_dates:
+    #     if by_date[date_str] in NEGATIVE_MOOD:
+    #         streak += 1
+    #     else:
+    #         break
 
     return JsonResponse({'negative_streak_days': streak})
 

@@ -12,7 +12,7 @@ ses = boto3.client("ses", region_name=settings.AWS_DEFAULT_REGION)
 
 # journal 
 ses.create_template(Template={
-    "TemplateName": "journal-reminder",
+    "TemplateName": "journal_reminder",
     "SubjectPart": "A few minutes for yourself today?",
     "HtmlPart": """
     <html>
@@ -43,10 +43,13 @@ ses.create_template(Template={
 # TODO: add unsubscribe footer --> make notification_pref all false 
 
 # exercise
+# exercise_reminder
 
 # negative mood
+# mood-helpline
 
 # summary habit
+# habit_summary
 
 # habit reminder
 

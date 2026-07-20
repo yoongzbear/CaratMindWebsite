@@ -1,5 +1,5 @@
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import random
 import uuid
 from zoneinfo import ZoneInfo
@@ -49,6 +49,36 @@ def save_user_habit(user_id: str, hab_id: str, action: str, status: str) -> dict
     }
     table.put_item(Item=item)
     return item
+
+# get user completed habit in a week - start and end dates
+def get_user_habit(user_id: str, start_date: str, end_date: str) -> list[dict]:
+    table = _get_user_habit_table()
+    # if start_date and end_date: 
+    cutoff_start = f"{start_date}T00:00:00+00:00"
+    cutoff_end = f"{end_date}T23:59:59+00:00"
+    filter = (
+        Attr('user_id').eq(user_id)
+        & Attr('uhab_updated_at').gte(cutoff_start)
+        & Attr('uhab_updated_at').lte(cutoff_end)
+    )
+    # else:
+    #     cutoff = (
+    #         datetime.now(timezone.utc) - timedelta(days=days - 1)
+    #     ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+    #     filter = Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
+
+    response = table.scan(FilterExpression=filter)
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression = filter,
+            ExclusiveStartKey = response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    items.sort(key=lambda i: i.get('mood_timestamp', ''), reverse=True)
+    return items
 
 # get user completed habit for current date 
 def get_today_user_habit(user_id: str) -> list[dict]:

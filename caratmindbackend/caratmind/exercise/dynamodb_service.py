@@ -139,6 +139,33 @@ def get_user_exercises_on_date(user_id: str, date_str: str) -> list[dict]:
 
     return items
 
+# get incomplete exercise - created but incomplete status with NULL incompletion reason 
+def get_incomplete_exercise_on_date(user_id: str, date_str: str) -> list[dict]:
+    table = _get_user_exercise_table()
+    response = table.scan(
+        FilterExpression=(
+            Attr('user_id').eq(user_id) 
+            & Attr('uex_created_at').begins_with(date_str)
+            & Attr('uex_status').eq('incomplete')
+            & Attr('uex_reason').eq(None)
+        )
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=(
+                Attr('user_id').eq(user_id) 
+                & Attr('uex_created_at').begins_with(date_str)
+                & Attr('uex_status').eq('incomplete')
+                & Attr('uex_reason').eq(None)
+            ),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    return items
+
 # update rating 
 def update_user_exercise_rating(uex_id: str, rating: int) -> dict | None:
     table = _get_user_exercise_table()

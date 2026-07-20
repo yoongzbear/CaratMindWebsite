@@ -54,9 +54,9 @@ export default function EntryDetailModal({
             >
               Edit Entry
             </button>
-            <button {...redButton(theme)} onClick={() => setOpenDelete(true)}>
+            {/* <button {...redButton(theme)} onClick={() => setOpenDelete(true)}>
               Delete Entry
-            </button>
+            </button> */}
           </div>
         }
       >
@@ -68,10 +68,10 @@ export default function EntryDetailModal({
         </p>
       </Modal>
 
-      <DeleteEntryModal
+      {/* <DeleteEntryModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}
-      />
+      /> */}
     </>
   );
 }

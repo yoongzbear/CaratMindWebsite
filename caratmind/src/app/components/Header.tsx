@@ -234,7 +234,10 @@ export default function Header() {
                     <div className="p-2">
                       <button
                         type="button"
-                        onClick={() => router.push('/profile')}
+                        onClick={() => {
+                          router.push('/profile');
+                          setProfileOpen(false);
+                        }}
                         className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: 'var(--text)',
@@ -253,7 +256,10 @@ export default function Header() {
                       {/* theme */}
                       <button
                         type="button"
-                        onClick={() => router.push('/theme_select')}
+                        onClick={() => {
+                          router.push('/theme_select');
+                          setProfileOpen(false);
+                        }}
                         className="w-full px-3 py-2.5 rounded-[10px] border-none bg-transparent text-left cursor-pointer text-[clamp(0.875rem,1.5vw,1rem)] font-medium transition-colors duration-150 ease-in-out border hover:bg-[rgba(146,168,209,0.08)]"
                         style={{
                           color: 'var(--text)',

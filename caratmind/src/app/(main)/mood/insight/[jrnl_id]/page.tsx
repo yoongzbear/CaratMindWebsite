@@ -443,7 +443,7 @@ export default function MoodInsightPage() {
                     </p>
                   </div>
 
-                  <div className="w-full sm:w-[40%] md:w-[70%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
+                  <div className="w-full sm:w-[40%] mx-auto flex flex-wrap items-stretch justify-center gap-3 md:justify-between md:gap-0 mt-4">
                     {/* view more button */}
                     <button
                       onClick={() => setOpenDetail(true)}
@@ -475,13 +475,13 @@ export default function MoodInsightPage() {
                     )}
 
                     {/* delete button */}
-                    <button
+                    {/* <button
                       {...redButton(theme)}
                       onClick={() => setOpenDelete(true)}
                       id="button-delete-entry"
                     >
                       Delete Entry
-                    </button>
+                    </button> */}
                   </div>
                 </>
               )}
@@ -773,10 +773,10 @@ export default function MoodInsightPage() {
           journal={journal}
         />
       )}
-      <DeleteEntryModal
+      {/* <DeleteEntryModal
         open={openDelete}
         onClose={() => setOpenDelete(false)}
-      />
+      /> */}
       {exerciseData && openExcDetail == true && (
         <ExerciseDetailModal
           open={openExcDetail}

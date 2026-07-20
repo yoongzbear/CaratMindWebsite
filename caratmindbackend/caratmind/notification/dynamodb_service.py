@@ -11,8 +11,10 @@ from boto3.dynamodb.conditions import Attr, Key
 
 from caratmind import datetime
 from caratmind.datetime import today_local
-from exercise.dynamodb_service import get_user_exercises_on_date
+from exercise.dynamodb_service import get_incomplete_exercise_on_date, get_user_exercises_on_date
+from habit.dynamodb_services import get_user_habit
 from journal.dynamodb_service import get_entries_for_user_on_date
+from mood.dynamodb_service import calc_negative_mood_streak
 from notification.ses_service import send_notification
 
 STREAK_THRESHOLD_DAYS = 3
@@ -80,7 +82,7 @@ def check_journal_reminder(user: dict) -> None:
     journal_today = get_entries_for_user_on_date(user['user_id'], today_str)    
 
     if not journal_today:
-        send_notification(user['email'], 'journal-reminder', {'name': user.get('name', '')})
+        send_notification(user['email'], 'journal_reminder', {'name': user.get('name', '')})
         mark_notified(user['user_id'], 'journal_reminder')
 
 # exercise reminder only if got a journal submitted today
@@ -93,60 +95,60 @@ def check_exercise_reminder(user: dict) -> None:
     if not journal_today:
         return  
 
-    exercises_today = get_user_exercises_on_date(user['user_id'], today_str)
-    # TODO: replace with incomplete and no reason exercise
-    if not exercises_today:
-        send_notification(user['email'], 'exercise-reminder', {'name': user.get('name', '')})
+    incomplete_exercise = get_incomplete_exercise_on_date(user['user_id'], today_str)
+    if not incomplete_exercise:
+        send_notification(user['email'], 'exercise_reminder', {'name': user.get('name', '')})
         mark_notified(user['user_id'], 'exercise_reminder')
 
 # negative mood
-# TODO: change this
-def get_negative_mood_streak(user_id: str) -> int:
-    table = _get_mood_table()
-    today = today_local()
-    streak = 0
+# def get_negative_mood_streak(user_id: str) -> int:
+#     table = _get_mood_table()
+#     today = today_local()
+#     streak = 0
 
-    for i in range(30):  
-        day_str = (today - timedelta(days=i)).isoformat()
-        response = table.query(
-            KeyConditionExpression=Key('user_id').eq(user_id) & Key('date').eq(day_str)
-        )
-        items = response.get('Items', [])
-        if not items:
-            break  # gap in journaling breaks the streak
+#     for i in range(30):  
+#         day_str = (today - timedelta(days=i)).isoformat()
+#         response = table.query(
+#             KeyConditionExpression=Key('user_id').eq(user_id) & Key('date').eq(day_str)
+#         )
+#         items = response.get('Items', [])
+#         if not items:
+#             break  # gap in journaling breaks the streak
 
-        dominant_mood = items[0].get('dominant_mood')
-        if dominant_mood in NEGATIVE_MOODS:
-            streak += 1
-        else:
-            break
+#         dominant_mood = items[0].get('dominant_mood')
+#         if dominant_mood in NEGATIVE_MOODS:
+#             streak += 1
+#         else:
+#             break
 
-    return streak
+#     return streak
 
 # long-term negative mood - helpline email
 def check_mood_helpline(user: dict) -> None:
     if already_notified(user['user_id'], 'mood_helpline'):
         return
 
-    streak = get_negative_mood_streak(user['user_id'])
+    streak = calc_negative_mood_streak(user['user_id'])
     if streak >= STREAK_THRESHOLD_DAYS:
-        send_notification_email(user['email'], 'mood-helpline', {
+        send_notification(user['email'], 'mood-helpline', {
             'name': user.get('name', ''),
             'streak_days': streak,
         })
         mark_notified(user['user_id'], 'mood_helpline')
 
-# weekly habit stats digest - only send once per week
-def maybe_send_weekly_habit_digest(user: dict) -> None:
+# weekly habit summary once per week on Sunday
+def send_weekly_habit(user: dict) -> None:
     today = today_local()
-    if today.weekday() != 6:  # Sunday
+    if today.weekday() != 6: # Sunday
         return
 
     week_str = f'{today.isocalendar()[0]}-W{today.isocalendar()[1]}'
-    if already_notified(user['user_id'], 'habit_digest', period_str=week_str):
+    if already_notified(user['user_id'], 'habit_summary', period_str=week_str):
         return
+    
+    start_date = (today - timedelta(days=6)).isoformat()
+    end_date = today.isoformat()
 
-    # stats = get_habit_stats(user['user_id'])  # plug in your real habit stats lookup
-    stats = {'name': user.get('name', '')}
-    send_notification_email(user['email'], 'habit-digest', stats)
-    mark_notified(user['user_id'], 'habit_digest', period_str=week_str)
+    stats = get_user_habit(user['user_id'], start_date, end_date) 
+    send_notification(user['email'], 'habit_summary', stats)
+    mark_notified(user['user_id'], 'habit_summary', period_str=week_str)
