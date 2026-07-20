@@ -1,5 +1,6 @@
 import json
 import uuid
+import logging
 from datetime import datetime, timezone
 
 from django.conf import settings
@@ -8,7 +9,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
+from accounts.dynamodb_service import get_user
+from mood.dynamodb_service import calc_negative_mood_streak
 from mood.services import detect_store_mood
+from notification.dynamodb_service import STREAK_THRESHOLD_DAYS, already_notified, mark_notified
+from notification.ses_service import send_notification
 from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, update_journal_entry
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
@@ -17,6 +22,8 @@ from .s3_service import get_entry_text
 
 VALID_STATUSES = {'draft', 'submitted'}
 PREVIEW_LENGTH = 150 # 150 characters
+
+logger = logging.getLogger(__name__)
 
 # new journal
 @csrf_exempt
@@ -74,7 +81,19 @@ def create_journal_view(request):
         create_journal_entry(item)
         # detect mood if entry submitted
         if status == 'submitted':            
-            detect_store_mood(jrnl_id, sub, entry_text)            
+            detect_store_mood(jrnl_id, sub, entry_text)  
+            # TODO: check helpline trigger
+            try:
+                streak = calc_negative_mood_streak(sub)
+                if streak >= STREAK_THRESHOLD_DAYS and not already_notified(sub, 'mood_helpline'):
+                    user = get_user(sub) 
+                    send_notification(user['email'], 'mood-helpline', {
+                        'name': user.get('name', ''),
+                        'streak_days': streak,
+                    })
+                    mark_notified(sub, 'mood_helpline')
+            except Exception:
+                logger.exception('mood helpline email failed')           
             
     except Exception as e:
         return JsonResponse({'error': f'Failed to save entry metadata: {e}'}, status=500)

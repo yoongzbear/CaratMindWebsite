@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta, timezone
+import logging
 import uuid
 from zoneinfo import ZoneInfo
 
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
+from accounts.dynamodb_service import get_user
 from badge.dynamodb_service import save_badge
 from caratmind import settings
 from caratmind.datetime import to_local_date_str, today_local
+from notification.ses_service import send_notification
 
 def _get_exercise_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -210,6 +213,8 @@ def get_completed_dates_for_user(sub: str, start_date: str, end_date: str) -> se
     items = response.get('Items', [])
     return {to_local_date_str(item['uex_done_date']) for item in items}
 
+logger = logging.getLogger(__name__)
+
 def calc_exc_streak(sub: str) -> dict:
     # today_local = datetime.fromisoformat(today_local_str()).date()
     today = today_local()
@@ -230,6 +235,17 @@ def calc_exc_streak(sub: str) -> dict:
         cursor -= timedelta(days=1)
 
     new_badge = save_badge(sub, 'exercise', streak)
+
+    if new_badge:
+        try:
+            user = get_user(sub)
+            send_notification(user['email'], 'new_badge', {
+                'name': user.get('name', ''),
+                'streak': streak,
+                'type': 'exercise',
+            })
+        except Exception:
+            logger.exception('coping exercise badge email failed')
 
     return {
         'streak': streak,

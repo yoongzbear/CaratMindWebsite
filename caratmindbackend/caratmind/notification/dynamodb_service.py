@@ -82,7 +82,7 @@ def check_journal_reminder(user: dict) -> None:
     journal_today = get_entries_for_user_on_date(user['user_id'], today_str)    
 
     if not journal_today:
-        send_notification(user['email'], 'journal_reminder', {'name': user.get('name', '')})
+        send_notification(user['user_email'], 'journal_reminder', {'name': user.get('name', '')})
         mark_notified(user['user_id'], 'journal_reminder')
 
 # exercise reminder only if got a journal submitted today
@@ -97,7 +97,7 @@ def check_exercise_reminder(user: dict) -> None:
 
     incomplete_exercise = get_incomplete_exercise_on_date(user['user_id'], today_str)
     if not incomplete_exercise:
-        send_notification(user['email'], 'exercise_reminder', {'name': user.get('name', '')})
+        send_notification(user['user_email'], 'exercise_reminder', {'name': user.get('name', '')})
         mark_notified(user['user_id'], 'exercise_reminder')
 
 # negative mood
@@ -130,7 +130,7 @@ def check_mood_helpline(user: dict) -> None:
 
     streak = calc_negative_mood_streak(user['user_id'])
     if streak >= STREAK_THRESHOLD_DAYS:
-        send_notification(user['email'], 'mood-helpline', {
+        send_notification(user['user_email'], 'mood_helpline', {
             'name': user.get('name', ''),
             'streak_days': streak,
         })
@@ -150,5 +150,17 @@ def send_weekly_habit(user: dict) -> None:
     end_date = today.isoformat()
 
     stats = get_user_habit(user['user_id'], start_date, end_date) 
-    send_notification(user['email'], 'habit_summary', stats)
+    send_notification(user['user_email'], 'habit_summary', stats)
     mark_notified(user['user_id'], 'habit_summary', period_str=week_str)
+
+# habit reminder
+def check_habit_reminder(user: dict) -> None:
+    if already_notified(user['user_id'], 'habit_reminder'):
+        return
+
+    today_str = today_local().isoformat()
+    habit_today = get_user_habit(user['user_id'], today_str)    
+
+    if not habit_today:
+        send_notification(user['user_email'], 'habit_reminder', {'name': user.get('name', '')})
+        mark_notified(user['user_id'], 'habit_reminder')

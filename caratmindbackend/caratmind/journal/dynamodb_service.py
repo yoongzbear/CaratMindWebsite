@@ -1,12 +1,15 @@
 from datetime import datetime, timedelta, timezone
+import logging
 from zoneinfo import ZoneInfo
 
 import boto3
 from django.conf import settings
 from boto3.dynamodb.conditions import Attr, Key
 
+from accounts.dynamodb_service import get_user
 from badge.dynamodb_service import save_badge
 from caratmind.datetime import to_local_date_str
+from notification.ses_service import send_notification
 
 def _get_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -116,6 +119,8 @@ def get_user_journal_dates_(sub: str, start_date: str, end_date: str) -> list[st
     items = response.get('Items', [])
     return {to_local_date_str(item['jrnl_created_at']) for item in items}
 
+logger = logging.getLogger(__name__)
+
 def calc_journal_streak(sub: str) -> dict:
     today_local = datetime.now(ZoneInfo('Asia/Kuala_Lumpur')).date()
     start_date = (today_local - timedelta(days=365)).isoformat()
@@ -135,6 +140,17 @@ def calc_journal_streak(sub: str) -> dict:
         cursor -= timedelta(days=1)
 
     new_badge = save_badge(sub, 'journal', streak)
+
+    if new_badge:
+        try:
+            user = get_user(sub)
+            send_notification(user['email'], 'new_badge', {
+                'name': user.get('name', ''),
+                'streak': streak,
+                'type': 'journal',
+            })
+        except Exception:
+            logger.exception('journal badge email failed')
 
     return {
         'streak': streak,
