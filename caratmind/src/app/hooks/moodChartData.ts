@@ -2,12 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-
-export type ChartRow = {
-  date: string;
-  jrnl_ids?: string[];
-  [mood: string]: string | number | string[] | undefined;
-};
+import { getMoodChartData } from '@/lib/api/moodApi';
+import { ChartRow } from '@/types/mood';
 
 type Params =
   | { mode: 'days'; days: number }
@@ -58,16 +54,12 @@ export function useMoodChartData(params: Params, mockData?: MockData): Result {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/mood/chart?${query}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? 'Failed to load chart data.');
-          return;
+        if (accessToken) {
+          const data = await getMoodChartData(query, accessToken);
+
+          setChartData(data.chart_data);
+          setMoods(data.moods);
         }
-        setChartData(data.chart_data);
-        setMoods(data.moods);
       } catch {
         setError('Something went wrong loading chart data.');
       } finally {

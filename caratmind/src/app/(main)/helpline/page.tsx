@@ -1,10 +1,7 @@
-// import { styles } from '@/app/styles/styles';
 import { HELPLINES } from '@/app/copywriting/helpline';
 import { Clock, Phone } from 'lucide-react';
-import { useTheme } from '@/context/ThemeContext';
 
 export default function HelplinePage() {
-  // const { theme } = useTheme();
   return (
     <section
       className="min-h-[calc(100vh-140px)] px-8 pt-6 pb-12"

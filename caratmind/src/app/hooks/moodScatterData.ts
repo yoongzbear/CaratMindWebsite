@@ -4,12 +4,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { DateRangeValue } from '@/components/chart/DateRangeSelector';
-
-export type MoodPoint = {
-  jrnl_id: string;
-  mood_name: string;
-  mood_timestamp: string;
-};
+import { getMoodScatterData } from '@/lib/api/moodApi';
+import { MoodPoint } from '@/types/mood';
 
 type Result = {
   points: MoodPoint[];
@@ -55,15 +51,11 @@ export function useMoodScatterData(
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/mood/chart/scatter?${query}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? 'Failed to load scatter data.');
-          return;
+        if (accessToken) {
+          const data = await getMoodScatterData(query, accessToken);
+
+          setPoints(data);
         }
-        setPoints(data.points);
       } catch {
         setError('Something went wrong loading scatter data.');
       } finally {

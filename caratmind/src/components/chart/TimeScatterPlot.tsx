@@ -17,27 +17,22 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { addDays, addHours, format, parseISO, startOfDay } from 'date-fns';
-// import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/utils/format';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/utils/moodUtils';
-import {
-  MoodPoint,
-  useDailyMoodScatterData,
-} from '@/app/hooks/dailyMoodScatterData';
+import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
 import { buttonGradient } from '@/styles/ui';
+import { MoodPoint } from '@/types/mood';
 
 type Props = {
-  // range?: DateRangeValue;
   moodDate: string;
   height?: number;
   mockData?: { points: MoodPoint[] };
 };
 
 export default function TimeScatterPlot({
-  // range = { mode: 'days', days: 1 },
   moodDate,
   height = 320,
   mockData,

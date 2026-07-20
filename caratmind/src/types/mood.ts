@@ -14,3 +14,15 @@ export type Mood = {
 //   mood_label: string;
 //   mood_confidence: number;
 // };
+
+export type MoodPoint = {
+  jrnl_id: string;
+  mood_name: string;
+  mood_timestamp: string;
+};
+
+export type ChartRow = {
+  date: string;
+  jrnl_ids?: string[];
+  [mood: string]: string | number | string[] | undefined;
+};

@@ -1,30 +1,30 @@
-import { useTheme } from '@/context/ThemeContext';
-import { ThemeName } from '../styles/themes';
+// import { useTheme } from '@/context/ThemeContext';
+// import { ThemeName } from '../styles/themes';
 
-export function ThemeSelector() {
-  const { theme, setTheme } = useTheme();
-  const options: ThemeName[] = [
-    'light',
-    'dark',
-    'cherryBlossoms',
-    'ocean',
-    'forest',
-    'sunset',
-    'winter',
-    'emeraldSea',
-    'midnightSun',
-  ];
+// export function ThemeSelector() {
+//   const { theme, setTheme } = useTheme();
+//   const options: ThemeName[] = [
+//     'light',
+//     'dark',
+//     'cherryBlossoms',
+//     'ocean',
+//     'forest',
+//     'sunset',
+//     'winter',
+//     'emeraldSea',
+//     'midnightSun',
+//   ];
 
-  return (
-    <select
-      value={theme}
-      onChange={(e) => setTheme(e.target.value as ThemeName)}
-    >
-      {options.map((t) => (
-        <option key={t} value={t}>
-          {t}
-        </option>
-      ))}
-    </select>
-  );
-}
+//   return (
+//     <select
+//       value={theme}
+//       onChange={(e) => setTheme(e.target.value as ThemeName)}
+//     >
+//       {options.map((t) => (
+//         <option key={t} value={t}>
+//           {t}
+//         </option>
+//       ))}
+//     </select>
+//   );
+// }

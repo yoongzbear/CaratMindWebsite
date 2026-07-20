@@ -10,6 +10,7 @@ import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { StreakBadgeDisplay } from '@/components/StreakBadgeDisplay';
+import { getUserBadge } from '@/lib/api/profileApi';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -28,15 +29,11 @@ export default function ProfilePage() {
     async function loadBadges() {
       setFetchingBadges(true);
       try {
-        const res = await fetch('/api/badge', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load badges.');
-          return;
+        if (accessToken) {
+          const data = await getUserBadge(accessToken);
+
+          setBadges(data ?? []);
         }
-        setBadges(data.badges ?? []);
       } catch {
         toastError('Something went wrong loading your badges.');
       } finally {

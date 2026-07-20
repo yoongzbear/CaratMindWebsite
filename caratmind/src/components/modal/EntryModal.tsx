@@ -6,12 +6,7 @@ import { useState } from 'react';
 import Modal from './Modal';
 import { useRouter } from 'next/navigation';
 import { JournalDetail } from '@/types/journal';
-import {
-  buttonGradient,
-  buttonRed,
-  gradientButton,
-  redButton,
-} from '@/styles/ui';
+import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
@@ -28,7 +23,6 @@ export default function EntryDetailModal({
   onClose,
   date,
   lastUpdated,
-  // entry,
   journal,
 }: Props) {
   const { theme } = useTheme();

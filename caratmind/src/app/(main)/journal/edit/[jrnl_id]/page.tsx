@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import DetectMoodModal from '@/components/modal/DetectMoodModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { editJournal } from '@/lib/api/journalApi';
 
 export default function EditEntryPage() {
   const router = useRouter();
@@ -72,22 +73,15 @@ export default function EditEntryPage() {
     }
 
     try {
-      const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ entry: content, status }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save.');
-        return;
+      if (accessToken) {
+        const data = await editJournal(jrnl_id, content, status, accessToken);
+
+        toastSuccess(
+          status === 'draft' ? 'Saved as draft.' : 'Entry submitted.',
+        );
+        // route to mood insight page
+        router.push(`/mood/insight/${data.jrnl_id}`);
       }
-      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-      // route to mood insight page
-      router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

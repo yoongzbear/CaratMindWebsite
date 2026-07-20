@@ -16,7 +16,6 @@ import {
   Cell,
 } from 'recharts';
 import { format, parseISO, startOfDay } from 'date-fns';
-// import { C } from '@/app/styles/styles';
 
 import { toTitleCase } from '@/utils/format';
 import { DateRangeValue } from './DateRangeSelector';
@@ -24,7 +23,7 @@ import { useMoodScatterData } from '@/app/hooks/moodScatterData';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/utils/moodUtils';
 import { getRangeLabel, resolveLocalDateRange } from '@/utils/dateFormat';
-import { MoodPoint } from '@/app/hooks/dailyMoodScatterData';
+import { MoodPoint } from '@/types/mood';
 
 type Props = {
   range?: DateRangeValue;

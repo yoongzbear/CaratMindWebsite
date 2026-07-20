@@ -10,11 +10,13 @@ import { Habit, HabitAction, habitMessage, HabitStatus } from '@/types/habit';
 import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { getBadgeMilestone } from '@/utils/format';
-import Image from 'next/image';
+import { getTodayHabit, saveTodayHabit } from '@/lib/api/habitApi';
+import { getJournalStreak } from '@/lib/api/journalApi';
+import { getExerciseStreak } from '@/lib/api/exerciseApi';
 
 export default function HomePage() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { user, accessToken } = useAuth();
 
   const [habit, setHabit] = useState<Habit | null>(null);
   const [fetchingHabit, setFetchingHabit] = useState(true);
@@ -31,22 +33,17 @@ export default function HomePage() {
   const [excToday, setExcToday] = useState(false);
   const [fetchingExcStreak, setFetchingExcStreak] = useState(true);
 
-  const [barRange, setBarRange] = useState<DateRangeValue>({
+  const [barRange] = useState<DateRangeValue>({
     mode: 'days',
     days: 7,
   });
 
   const loadHabit = async () => {
     try {
-      const res = await fetch('/api/habit/today', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? "Failed to load today's habit.");
-        return;
+      if (accessToken) {
+        const data = await getTodayHabit(accessToken);
+        setHabit(data);
       }
-      setHabit(data.habit);
     } catch {
       toastError("Something went wrong loading today's habit.");
     } finally {
@@ -57,17 +54,11 @@ export default function HomePage() {
   const loadJournalStreak = async () => {
     setFetchingJournalStreak(true);
     try {
-      const res = await fetch('/api/journal/streak', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load journal streak.');
-        return;
+      if (accessToken) {
+        const data = await getJournalStreak(accessToken);
+        setJournalStreak(data.streak);
+        setJournalToday(data.submitted_today);
       }
-      console.log('journal streak: ', data);
-      setJournalStreak(data.streak);
-      setJournalToday(data.submitted_today);
     } catch {
       toastError('Something went wrong loading your journal streak.');
     } finally {
@@ -78,17 +69,12 @@ export default function HomePage() {
   const loadExcStreak = async () => {
     setFetchingExcStreak(true);
     try {
-      const res = await fetch('/api/user_exercise/streak', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load coping exercise streak.');
-        return;
+      if (accessToken) {
+        const data = await getExerciseStreak(accessToken);
+
+        setExcStreak(data.streak);
+        setExcToday(data.completed_today);
       }
-      console.log('exercise streak: ', data);
-      setExcStreak(data.streak);
-      setExcToday(data.completed_today);
     } catch {
       toastError('Something went wrong loading your coping exercise streak.');
     } finally {
@@ -122,24 +108,17 @@ export default function HomePage() {
     if (!habit) return;
     setSubmittingAction(true);
     try {
-      const res = await fetch('/api/habit/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          hab_id: habit.hab_id,
-          action: action.action,
-          status: action.status,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save.');
-        return;
+      if (accessToken) {
+        await saveTodayHabit(
+          {
+            hab_id: habit.hab_id,
+            action: action.action,
+            status: action.status,
+          },
+          accessToken,
+        );
+        setSelectedStatus(action.status);
       }
-      setSelectedStatus(action.status);
     } catch {
       toastError(
         'Something went wrong in saving habit action. Please try again.',

@@ -6,17 +6,9 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { useRouter } from 'next/navigation';
 import { StatusKey } from '@/types/journal';
 import DetectMoodModal from '@/components/modal/DetectMoodModal';
-import {
-  buttonGradient,
-  buttonGradientStyle,
-  buttonGrey,
-  buttonRed,
-  buttonRedStyle,
-  gradientButton,
-  greyButton,
-  redButton,
-} from '@/styles/ui';
+import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { createNewJournal } from '@/lib/api/journalApi';
 
 export default function NewEntryPage() {
   const { theme } = useTheme();
@@ -42,22 +34,15 @@ export default function NewEntryPage() {
       setDetecting(true);
     }
     try {
-      const res = await fetch('/api/journal/new', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ entry, status }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save.');
-        return;
+      if (accessToken) {
+        const data = await createNewJournal(entry, status, accessToken);
+
+        toastSuccess(
+          status === 'draft' ? 'Saved as draft.' : 'Entry submitted.',
+        );
+        // navigate to view journal entry
+        router.push(`/mood/insight/${data.jrnl_id}`);
       }
-      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-      // navigate to view journal entry
-      router.push(`/mood/insight/${data.jrnl_id}`);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {

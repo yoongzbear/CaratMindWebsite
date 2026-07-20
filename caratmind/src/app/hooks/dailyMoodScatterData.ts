@@ -3,13 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { DateRangeValue } from '@/components/chart/DateRangeSelector';
-
-export type MoodPoint = {
-  jrnl_id: string;
-  mood_name: string;
-  mood_timestamp: string;
-};
+import { getMoodScatterData } from '@/lib/api/moodApi';
+import { MoodPoint } from '@/types/mood';
 
 type Result = {
   points: MoodPoint[];
@@ -20,9 +15,7 @@ type Result = {
 type MockData = { points: MoodPoint[] };
 
 export function useDailyMoodScatterData(
-  // range: DateRangeValue,
   moodDate: string,
-  // endDate: string,
   mockData?: MockData,
 ): Result {
   const { accessToken } = useAuth();
@@ -32,10 +25,6 @@ export function useDailyMoodScatterData(
 
   // day = 1
   const cacheKey = `start_date=${moodDate}&end_date=${moodDate}`;
-  // const cacheKey =
-  //   range.mode === 'days'
-  //     ? `days=${range.days}`
-  //     : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
   useEffect(() => {
     // preview
@@ -49,23 +38,16 @@ export function useDailyMoodScatterData(
     if (!accessToken) return;
 
     const query = `start_date=${moodDate}&end_date=${moodDate}`;
-    // range.mode === 'days'
-    //   ? `days=${range.days}`
-    //   : `start_date=${range.startDate}&end_date=${range.endDate}`;
 
     async function fetch_() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/mood/chart/scatter?${query}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? 'Failed to load scatter data.');
-          return;
+        if (accessToken) {
+          const data = await getMoodScatterData(query, accessToken);
+
+          setPoints(data);
         }
-        setPoints(data.points);
       } catch {
         setError('Something went wrong loading scatter data.');
       } finally {

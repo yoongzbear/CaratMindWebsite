@@ -1,7 +1,7 @@
 'use client';
 import ExerciseDetailModal from '@/components/modal/ExerciseModal';
 import Pill from '@/components/Pill';
-import { Exercise, UserExercise, UserExerciseDetail } from '@/types/exercise';
+import { Exercise, UserExerciseDetail } from '@/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
@@ -16,20 +16,12 @@ import ReasonModal from '@/components/modal/ReasonModal';
 import { gradientButton, greenButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
-
-type RatingResponse = {
-  message: string;
-  user_exercise: UserExercise;
-};
-
-type ReasonResponse = {
-  message: string;
-  user_exercise: UserExercise;
-};
-
-type ApiErrorResponse = {
-  error: string;
-};
+import {
+  getExerciseByDate,
+  getExerciseStreak,
+  saveRating,
+  saveReason,
+} from '@/lib/api/exerciseApi';
 
 export default function ExerciseTrackingPage() {
   const { theme } = useTheme();
@@ -68,18 +60,13 @@ export default function ExerciseTrackingPage() {
     if (!accessToken) return;
     setFetchingStreak(true);
     try {
-      const res = await fetch('/api/user_exercise/streak', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load streak.');
-        return;
-      }
-      setStreak(data.streak);
-      setCompletedToday(data.completed_today);
-      if (data.new_badge) {
-        setBadge(data.new_badge);
+      if (accessToken) {
+        const data = await getExerciseStreak(accessToken);
+        setStreak(data.streak);
+        setCompletedToday(data.completed_today);
+        if (data.new_badge) {
+          setBadge(data.new_badge);
+        }
       }
     } catch {
       toastError('Something went wrong loading your streak.');
@@ -93,18 +80,10 @@ export default function ExerciseTrackingPage() {
     setFetchingTodayExc(true);
     try {
       const dateStr = format(todayDate, 'yyyy-MM-dd');
-      const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(
-          data.error ?? 'Failed to load recommended coping exercises today.',
-        );
-        setTodayExercise([]);
-        return;
+      if (accessToken) {
+        const data = await getExerciseByDate(dateStr, accessToken);
+        setTodayExercise(data ?? []);
       }
-      setTodayExercise(data.exercises ?? []);
     } catch {
       toastError(
         'Something went wrong loading recommended coping exercises today.',
@@ -119,18 +98,10 @@ export default function ExerciseTrackingPage() {
     setFetchingExcHistory(true);
     try {
       const dateStr = format(selectedDate, 'yyyy-MM-dd');
-      const res = await fetch(`/api/user_exercise/list?date=${dateStr}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(
-          data.error ?? 'Failed to load recommended coping exercises.',
-        );
-        setExcHistoryData([]);
-        return;
+      if (accessToken) {
+        const data = await getExerciseByDate(dateStr, accessToken);
+        setExcHistoryData(data ?? []);
       }
-      setExcHistoryData(data.exercises ?? []);
     } catch {
       toastError('Something went wrong loading recommended coping exercises.');
     } finally {
@@ -163,36 +134,15 @@ export default function ExerciseTrackingPage() {
     if (!selectedUserExc) return;
     const uex_id = selectedUserExc.uex_id;
     try {
-      const res = await fetch(`/api/user_exercise/${uex_id}/rating`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ rating }),
-        cache: 'no-store',
-      });
+      if (accessToken) {
+        await saveRating(uex_id, rating, accessToken);
 
-      let data: RatingResponse | ApiErrorResponse;
-      const contentType = res.headers.get('content-type') ?? '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error('Non-JSON response from Django:', text);
-        data = { error: 'Unexpected response from server.' };
+        toastSuccess('Saved coping exercise rating.');
+        setOpenRating(false);
+
+        // refresh today's exercises, history, and streak
+        await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
       }
-
-      if (!res.ok || 'error' in data) {
-        toastError('error' in data ? data.error : 'Failed to save rating.');
-        return;
-      }
-
-      toastSuccess('Saved coping exercise rating.');
-      setOpenRating(false);
-
-      // refresh today's exercises, history, and streak
-      await Promise.all([loadTodayExc(), loadExcHistory(), loadStreak()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }
@@ -202,38 +152,15 @@ export default function ExerciseTrackingPage() {
     if (!selectedUserExc) return;
     const uex_id = selectedUserExc.uex_id;
     try {
-      const res = await fetch(`/api/user_exercise/${uex_id}/reason`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ reason }),
-        cache: 'no-store',
-      });
+      if (accessToken) {
+        await saveReason(uex_id, reason, accessToken);
 
-      let data: ReasonResponse | ApiErrorResponse;
-      const contentType = res.headers.get('content-type') ?? '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error('Non-JSON response from Django:', text);
-        data = { error: 'Unexpected response from server.' };
+        toastSuccess('Saved coping exercise incompletion reason.');
+        setOpenReason(false);
+
+        // refresh today's exercises and history
+        await Promise.all([loadTodayExc(), loadExcHistory()]);
       }
-
-      if (!res.ok || 'error' in data) {
-        toastError(
-          'error' in data ? data.error : 'Failed to save incompletion reason.',
-        );
-        return;
-      }
-
-      toastSuccess('Saved coping exercise incompletion reason.');
-      setOpenReason(false);
-
-      // refresh today's exercises and history
-      await Promise.all([loadTodayExc(), loadExcHistory()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }

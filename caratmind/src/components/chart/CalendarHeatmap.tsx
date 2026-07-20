@@ -15,12 +15,7 @@ import { useMoodChartData } from '@/app/hooks/moodChartData';
 import { useRouter } from 'next/navigation';
 import { DayPicker } from '@daypicker/react';
 import { useMemo, useState } from 'react';
-
-type ChartRow = {
-  date: string;
-  jrnl_ids?: string[];
-  [mood: string]: string | number | string[] | undefined;
-};
+import { ChartRow } from '@/types/mood';
 
 type Props = {
   range?: DateRangeValue;
@@ -217,7 +212,7 @@ function MoodDayButton({
 
       {/* today ring */}
       {modifiers.today && (
-        <div className="absolute inset-0 rounded-full ring-2 ring-[#92A8D1] pointer-events-none" />
+        <div className="absolute inset-0 rounded-full ring-2 ring-(--first-color) pointer-events-none" />
       )}
 
       {hasMoods && (

@@ -8,6 +8,7 @@ import { Star } from 'lucide-react';
 import { toastError } from '@/utils/toast';
 import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { themes } from '@/styles/themes';
 
 type Props = {
   open: boolean;
@@ -17,6 +18,7 @@ type Props = {
 
 export default function RatingModal({ open, onClose, onSubmit }: Props) {
   const { theme } = useTheme();
+  const t = themes[theme];
   const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
@@ -70,11 +72,11 @@ export default function RatingModal({ open, onClose, onSubmit }: Props) {
             // for gradient stars
             const factor = (star - 1) / 4;
             const gradientColor = interpolateColor(
-              'var(--second-color)',
-              'var(--first-color)',
+              t.secondColor,
+              t.firstColor,
               factor,
             );
-            const fillColor = hoverRating > 0 ? 'var(--muted)' : gradientColor;
+            const fillColor = hoverRating > 0 ? t.muted : gradientColor;
 
             return (
               <button

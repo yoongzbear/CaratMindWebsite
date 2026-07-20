@@ -20,7 +20,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
-import { getJournalEntry } from '@/lib/api/journalApi';
+import { editJournal, getJournalEntry } from '@/lib/api/journalApi';
+import { confirmMood, getMood, saveCorrectMood } from '@/lib/api/moodApi';
+import { getJournalExercise } from '@/lib/api/exerciseApi';
 
 export default function MoodInsightPage() {
   const { theme } = useTheme();
@@ -66,17 +68,9 @@ export default function MoodInsightPage() {
   const loadEntry = async () => {
     setFetchingJournal(true);
     try {
-      // const res = await fetch(`/api/journal/${jrnl_id}`, {
-      //   headers: { Authorization: `Bearer ${accessToken}` },
-      // });
-      // const data = await res.json();
       if (accessToken) {
         const data = await getJournalEntry(jrnl_id, accessToken);
-        // if (!res.ok) {
-        //   toastError(data.error ?? 'Failed to load entry.');
-        //   setJournal(null);
-        //   return;
-        // }
+
         setJournal(data);
         setEntry(data.entryText);
       }
@@ -91,16 +85,11 @@ export default function MoodInsightPage() {
   const loadMood = async () => {
     setFetchingMoodData(true);
     try {
-      const res = await fetch(`/api/mood/${jrnl_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load mood.');
-        setMoodData(null);
-        return;
+      if (accessToken) {
+        const data = await getMood(jrnl_id, accessToken);
+
+        setMoodData(data);
       }
-      setMoodData(data);
     } catch {
       toastError('Something went wrong loading the mood.');
     } finally {
@@ -111,16 +100,11 @@ export default function MoodInsightPage() {
   const loadRecExercise = async () => {
     setFetchingExercise(true);
     try {
-      const res = await fetch(`/api/user_exercise/${jrnl_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load recommended coping exercise.');
-        setExerciseData(null);
-        return;
+      if (accessToken) {
+        const data = await getJournalExercise(jrnl_id, accessToken);
+
+        setExerciseData(data);
       }
-      setExerciseData(data);
     } catch {
       toastError('Something went wrong loading recommended coping exercise.');
     } finally {
@@ -191,40 +175,22 @@ export default function MoodInsightPage() {
     }
 
     try {
-      const res = await fetch(`/api/journal/${jrnl_id}/edit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ entry: content, status }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to save.');
-        return;
+      if (accessToken) {
+        await editJournal(jrnl_id, content, status, accessToken);
+        toastSuccess(
+          status === 'draft' ? 'Saved as draft.' : 'Entry submitted.',
+        );
+        setJournal((prev) =>
+          prev
+            ? {
+                ...prev,
+                jrnl_status: status,
+              }
+            : prev,
+        );
+        // refresh
+        await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
       }
-      toastSuccess(status === 'draft' ? 'Saved as draft.' : 'Entry submitted.');
-      setJournal((prev) =>
-        prev
-          ? {
-              ...prev,
-              jrnl_status: status,
-            }
-          : prev,
-      );
-      // if (status === 'submitted') {
-      //   const refresh = await fetch(`/api/journal/${jrnl_id}`, {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   });
-
-      //   const updatedJournal = await refresh.json();
-      //   setJournal(updatedJournal);
-      // }
-      // refresh
-      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -278,35 +244,12 @@ export default function MoodInsightPage() {
     console.log('mood data: ', moodData);
     const mood_id = moodData.mood_id;
     try {
-      const res = await fetch(`/api/mood/${mood_id}/confirm`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        cache: 'no-store',
-      });
+      if (accessToken) {
+        await confirmMood(mood_id, accessToken);
+        toastSuccess('Saved confirmed mood.');
 
-      // let data: RatingResponse | ApiErrorResponse;
-      let data: any;
-      const contentType = res.headers.get('content-type') ?? '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error('Non-JSON response from Django:', text);
-        data = { error: 'Unexpected response from server.' };
+        await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
       }
-
-      if (!res.ok || 'error' in data) {
-        toastError('error' in data ? data.error : 'Failed to save rating.');
-        return;
-      }
-
-      toastSuccess('Saved confirmed mood.');
-      // setOpenRating(false);
-
-      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }
@@ -314,41 +257,13 @@ export default function MoodInsightPage() {
 
   const handleCorrectMood = async (correctMood: string) => {
     if (!moodData) return;
-    console.log('mood:', correctMood);
     const mood_id = moodData.mood_id;
     try {
-      const res = await fetch(`/api/mood/${mood_id}/corrected`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ correctMood }),
-        cache: 'no-store',
-      });
-
-      // let data: RatingResponse | ApiErrorResponse;
-      let data: any;
-      const contentType = res.headers.get('content-type') ?? '';
-      if (contentType.includes('application/json')) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        console.error('Non-JSON response from Django:', text);
-        data = { error: 'Unexpected response from server.' };
+      if (accessToken) {
+        await saveCorrectMood(mood_id, correctMood, accessToken);
+        toastSuccess('Saved corrected mood.');
+        await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
       }
-
-      if (!res.ok || 'error' in data) {
-        toastError(
-          'error' in data ? data.error : 'Failed to saved corrected mood.',
-        );
-        return;
-      }
-
-      toastSuccess('Saved corrected mood.');
-      // setOpenRating(false);
-
-      await Promise.all([loadEntry(), loadMood(), loadRecExercise()]);
     } catch {
       toastError('Something went wrong. Please try again.');
     }

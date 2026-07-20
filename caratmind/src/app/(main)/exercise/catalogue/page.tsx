@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { toastError } from '@/utils/toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { getExerciseList } from '@/lib/api/exerciseApi';
 
 export default function ExerciseCatalogPage() {
   const { theme } = useTheme();
@@ -28,19 +29,14 @@ export default function ExerciseCatalogPage() {
   useEffect(() => {
     if (!accessToken) return;
 
-    async function loadEntries() {
+    async function loadExercises() {
       setFetching(true);
       try {
-        const res = await fetch(`/api/exercise/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load coping exercises.');
-          setExercises([]);
-          return;
+        if (accessToken) {
+          const data = await getExerciseList(accessToken);
+
+          setExercises(data ?? []);
         }
-        setExercises(data.exercises ?? []);
       } catch {
         toastError('Something went wrong loading coping exercises.');
       } finally {
@@ -48,7 +44,7 @@ export default function ExerciseCatalogPage() {
       }
     }
 
-    loadEntries();
+    loadExercises();
   }, [accessToken]);
 
   const moodOptions = useMemo(() => {

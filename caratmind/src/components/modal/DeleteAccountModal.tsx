@@ -8,13 +8,9 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
-import {
-  buttonGradient,
-  buttonRed,
-  gradientButton,
-  redButton,
-} from '@/styles/ui';
+import { gradientButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { downloadJournalEntry } from '@/lib/api/journalApi';
 
 type Props = {
   open: boolean;
@@ -30,51 +26,42 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
   const [downloading, setDownloading] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const handleEdit = (jrnl_id: string) => {
-    router.push(`/journal/edit/${jrnl_id}`);
-  };
-
   const isConfirmed = confirmInput.trim() === user?.username;
 
   async function handleDownload() {
     setDownloading(true);
     try {
-      const res = await fetch('/api/journal/download', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to download journal entries.');
-        return;
+      if (accessToken) {
+        const data = await downloadJournalEntry(accessToken);
+
+        const entries: { jrnl_created_at: string; entryText: string }[] =
+          data.entries ?? [];
+
+        if (entries.length === 0) {
+          toastError('No journal entries to download.');
+          return;
+        }
+
+        // combine all entries into one .txt file
+        const combined = entries
+          .map(
+            (e) =>
+              `Date: ${format(new Date(e.jrnl_created_at), 'dd/MMMM/yyyy, h:mm a')}\n\n${e.entryText}\n\n${'-'.repeat(40)}\n`,
+          )
+          .join('\n');
+        const blob = new Blob([combined], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        //   create element to enable download
+        const entriesFile = document.createElement('a');
+        entriesFile.href = url;
+        entriesFile.download = `caratmind_journal_entries_${Date.now()}.txt`;
+        document.body.appendChild(entriesFile);
+        entriesFile.click();
+        entriesFile.remove();
+        URL.revokeObjectURL(url);
+
+        toastSuccess('Journal entries downloaded.');
       }
-
-      const entries: { jrnl_created_at: string; entryText: string }[] =
-        data.entries ?? [];
-
-      if (entries.length === 0) {
-        toastError('No journal entries to download.');
-        return;
-      }
-
-      // combine all entries into one .txt file
-      const combined = entries
-        .map(
-          (e) =>
-            `Date: ${format(new Date(e.jrnl_created_at), 'dd/MMMM/yyyy, h:mm a')}\n\n${e.entryText}\n\n${'-'.repeat(40)}\n`,
-        )
-        .join('\n');
-      const blob = new Blob([combined], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      //   create element to enable download
-      const entriesFile = document.createElement('a');
-      entriesFile.href = url;
-      entriesFile.download = `caratmind_journal_entries_${Date.now()}.txt`;
-      document.body.appendChild(entriesFile);
-      entriesFile.click();
-      entriesFile.remove();
-      URL.revokeObjectURL(url);
-
-      toastSuccess('Journal entries downloaded.');
     } catch {
       toastError('Something went wrong downloading your entries.');
     } finally {

@@ -15,15 +15,10 @@ import { getMoodStyle } from '@/utils/moodUtils';
 import { toTitleCase } from '@/utils/format';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
-import { ChartRow, useMoodChartData } from '@/app/hooks/moodChartData';
+import { useMoodChartData } from '@/app/hooks/moodChartData';
 import { getRangeLabel } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
-
-// type ChartRow = {
-//   date: string;
-//   jrnl_ids?: string[];
-//   [mood: string]: string | number | string[] | undefined;
-// };
+import { ChartRow } from '@/types/mood';
 
 type Props = {
   range?: DateRangeValue;

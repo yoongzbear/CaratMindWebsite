@@ -11,6 +11,7 @@ import { toTitleCase } from '@/utils/format';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { getEntriesList } from '@/lib/api/journalApi';
 
 export default function PastEntryPage() {
   const { theme } = useTheme();
@@ -39,16 +40,11 @@ export default function PastEntryPage() {
       setFetching(true);
       try {
         const dateStr = format(selectedDate, 'yyyy-MM-dd');
-        const res = await fetch(`/api/journal/list?date=${dateStr}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load entries.');
-          setEntries([]);
-          return;
+        if (accessToken) {
+          const data = await getEntriesList(dateStr, accessToken);
+
+          setEntries(data ?? []);
         }
-        setEntries(data.entries ?? []);
       } catch {
         toastError('Something went wrong loading entries.');
       } finally {

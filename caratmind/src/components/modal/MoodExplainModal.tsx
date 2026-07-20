@@ -7,7 +7,7 @@ import { toTitleCase } from '@/utils/format';
 import { getMoodStyle, MOOD_EMOJIS } from '@/utils/moodUtils';
 import { Mood } from '@/types/mood';
 import { useMemo, useState } from 'react';
-import { buttonGradient, buttonRed, redButton } from '@/styles/ui';
+import { buttonGradient, redButton } from '@/styles/ui';
 import { toastError } from '@/utils/toast';
 import Pill from '../Pill';
 import { useTheme } from '@/context/ThemeContext';
@@ -41,11 +41,6 @@ export default function MoodExplainModal({
       }));
   }, []);
   const handleConfirm = async () => {
-    // if (rating === 0) {
-    //   toastError('Please enter rating before submitting.');
-    //   return;
-    // }
-
     setLoadingConfirm(true);
     try {
       await onConfirm();
@@ -195,7 +190,8 @@ export default function MoodExplainModal({
                     ))}
                   </select>
                   <button
-                    className={`${buttonRed} mt-3 lg:mt-0`}
+                    // className={`${buttonRed} mt-3 lg:mt-0`}
+                    {...redButton(theme)}
                     onClick={handleCorrected}
                     disabled={loadingCorrected}
                   >

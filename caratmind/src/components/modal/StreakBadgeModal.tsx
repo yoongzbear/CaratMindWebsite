@@ -19,14 +19,7 @@ const BADGE_LABELS: Record<string, string> = {
   journal: 'Journal',
 };
 
-export default function StreakBadgeModal({
-  open,
-  onClose,
-  badgeId,
-  // moodData,
-  // onConfirm,
-  // onCorrect,
-}: Props) {
+export default function StreakBadgeModal({ open, onClose, badgeId }: Props) {
   const router = useRouter();
   const { theme } = useTheme();
   if (!open || !badgeId) return null;
@@ -48,10 +41,7 @@ export default function StreakBadgeModal({
           {/* bagde */}
           <img
             src={`/assets/badge/${badgeId}.png`}
-            // src={`/assets/badge/exercise_7.png`}
             alt="Streak Badge"
-            // width={140}
-            // height={140}
             className="h-28 w-28"
           />
         </div>
