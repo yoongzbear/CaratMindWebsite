@@ -1,10 +1,10 @@
 'use client';
-import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
-import Pill from '@/app/components/Pill';
-import { gradientButton, inputStyle } from '@/app/styles/ui';
-import { Exercise } from '@/app/types/exercise';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
+import ExerciseDetailModal from '@/components/modal/ExerciseModal';
+import Pill from '@/components/Pill';
+import { gradientButton, inputStyle } from '@/styles/ui';
+import { Exercise } from '@/types/exercise';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle, MOOD_EMOJIS } from '@/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { toastError } from '@/utils/toast';

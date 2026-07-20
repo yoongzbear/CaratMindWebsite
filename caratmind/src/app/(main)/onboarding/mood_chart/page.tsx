@@ -1,11 +1,11 @@
 'use client';
-import CalendarHeatmap from '@/app/components/chart/CalendarHeatmap';
-import DateRangeSelector from '@/app/components/chart/DateRangeSelector';
-import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
-import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
+import CalendarHeatmap from '@/components/chart/CalendarHeatmap';
+import DateRangeSelector from '@/components/chart/DateRangeSelector';
+import DayScatterPlot from '@/components/chart/DayScatterPlot';
+import StackedBarChart from '@/components/chart/StackedBarChart';
+import TimeScatterPlot from '@/components/chart/TimeScatterPlot';
 import { MoodPoint } from '@/app/hooks/moodScatterData';
-import { styles } from '@/app/styles/ui';
+import { styles } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 // import { styles } from '@/app/styles/styles';
 import { format, subDays } from 'date-fns';

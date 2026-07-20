@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from '@/context/ThemeContext';
-import { buttonGradient, getLogoLong } from '@/app/styles/ui';
+import { buttonGradient, getLogoLong } from '@/styles/ui';
 import { HeartCrack } from 'lucide-react';
 
 export default function NotFound() {

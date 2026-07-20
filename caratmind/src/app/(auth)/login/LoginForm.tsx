@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthCard } from '@/app/components/AuthCard';
+import { AuthCard } from '@/components/AuthCard';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
-import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
+import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 function resolvePostLoginPath(requestedNext: string | null): string {

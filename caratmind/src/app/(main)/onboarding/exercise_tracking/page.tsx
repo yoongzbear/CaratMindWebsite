@@ -1,12 +1,12 @@
 'use client';
-import Pill from '@/app/components/Pill';
+import Pill from '@/components/Pill';
 import { DayPicker } from '@daypicker/react';
 import { format } from 'date-fns';
 import { Flame, Star } from 'lucide-react';
 import { useMemo } from 'react';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { toTitleCase } from '@/app/utils/format';
-import { gradientButton } from '@/app/styles/ui';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { toTitleCase } from '@/utils/format';
+import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 // sample data

@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { themes, ThemeName } from '@/app/styles/themes';
+import { themes, ThemeName } from '@/styles/themes';
 import {
   gradientButton,
   greenButton,
   greyButton,
   redButton,
-} from '@/app/styles/ui';
+} from '@/styles/ui';
 import { Trash } from 'lucide-react';
 
 const THEME_OPTIONS: { name: ThemeName; label: string }[] = [

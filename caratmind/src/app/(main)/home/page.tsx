@@ -2,19 +2,14 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Flame } from 'lucide-react';
-import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import { useEffect, useState } from 'react';
-import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
+import StackedBarChart from '@/components/chart/StackedBarChart';
+import { startTransition, useEffect, useState } from 'react';
+import { DateRangeValue } from '@/components/chart/DateRangeSelector';
 import { toastError } from '@/utils/toast';
-import {
-  Habit,
-  HabitAction,
-  habitMessage,
-  HabitStatus,
-} from '@/app/types/habit';
-import { gradientButton } from '@/app/styles/ui';
+import { Habit, HabitAction, habitMessage, HabitStatus } from '@/types/habit';
+import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { getBadgeMilestone } from '@/app/utils/format';
+import { getBadgeMilestone } from '@/utils/format';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -41,82 +36,86 @@ export default function HomePage() {
     days: 7,
   });
 
+  const loadHabit = async () => {
+    try {
+      const res = await fetch('/api/habit/today', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? "Failed to load today's habit.");
+        return;
+      }
+      setHabit(data.habit);
+    } catch {
+      toastError("Something went wrong loading today's habit.");
+    } finally {
+      setFetchingHabit(false);
+    }
+  };
+
+  const loadJournalStreak = async () => {
+    setFetchingJournalStreak(true);
+    try {
+      const res = await fetch('/api/journal/streak', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load journal streak.');
+        return;
+      }
+      console.log('journal streak: ', data);
+      setJournalStreak(data.streak);
+      setJournalToday(data.submitted_today);
+    } catch {
+      toastError('Something went wrong loading your journal streak.');
+    } finally {
+      setFetchingJournalStreak(false);
+    }
+  };
+
+  const loadExcStreak = async () => {
+    setFetchingExcStreak(true);
+    try {
+      const res = await fetch('/api/user_exercise/streak', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Failed to load coping exercise streak.');
+        return;
+      }
+      console.log('exercise streak: ', data);
+      setExcStreak(data.streak);
+      setExcToday(data.completed_today);
+    } catch {
+      toastError('Something went wrong loading your coping exercise streak.');
+    } finally {
+      setFetchingExcStreak(false);
+    }
+  };
+
   useEffect(() => {
     if (!accessToken) return;
-
-    async function loadHabit() {
-      try {
-        const res = await fetch('/api/habit/today', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? "Failed to load today's habit.");
-          return;
-        }
-        setHabit(data.habit);
-      } catch {
-        toastError("Something went wrong loading today's habit.");
-      } finally {
-        setFetchingHabit(false);
-      }
-    }
-
-    loadHabit();
+    startTransition(() => {
+      loadHabit();
+    });
   }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken) return;
 
-    async function loadJournalStreak() {
-      setFetchingJournalStreak(true);
-      try {
-        const res = await fetch('/api/journal/streak', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load journal streak.');
-          return;
-        }
-        console.log('journal streak: ', data);
-        setJournalStreak(data.streak);
-        setJournalToday(data.submitted_today);
-      } catch {
-        toastError('Something went wrong loading your journal streak.');
-      } finally {
-        setFetchingJournalStreak(false);
-      }
-    }
-
-    loadJournalStreak();
+    startTransition(() => {
+      loadJournalStreak();
+    });
   }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken) return;
-
-    async function loadExcStreak() {
-      setFetchingExcStreak(true);
-      try {
-        const res = await fetch('/api/user_exercise/streak', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Failed to load coping exercise streak.');
-          return;
-        }
-        console.log('exercise streak: ', data);
-        setExcStreak(data.streak);
-        setExcToday(data.completed_today);
-      } catch {
-        toastError('Something went wrong loading your coping exercise streak.');
-      } finally {
-        setFetchingExcStreak(false);
-      }
-    }
-
-    loadExcStreak();
+    startTransition(() => {
+      loadExcStreak();
+    });
   }, [accessToken]);
 
   async function handleActionClick(action: HabitAction) {

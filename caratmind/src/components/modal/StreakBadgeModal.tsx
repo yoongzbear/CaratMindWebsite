@@ -3,7 +3,7 @@
 'use client';
 
 import Modal from './Modal';
-import { gradientButton, greyButton } from '@/app/styles/ui';
+import { gradientButton, greyButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

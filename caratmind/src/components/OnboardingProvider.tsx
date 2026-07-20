@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { NextStepProvider, NextStep } from 'nextstepjs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { buildSteps } from '@/lib/onboarding/steps';
+import { buildSteps } from '@/app/copywriting/onboarding/steps';
 import { OnboardingCard } from './OnboardingCard';
 import OnboardingStart from './OnboardingStart';
 

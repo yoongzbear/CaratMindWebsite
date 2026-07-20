@@ -1,15 +1,15 @@
 'use client';
-import { Journal } from '@/app/types/journal';
+import { Journal } from '@/types/journal';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { format, isValid, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { DayPicker } from '@daypicker/react';
-import Pill from '@/app/components/Pill';
+import Pill from '@/components/Pill';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { buttonGradient } from '@/app/styles/ui';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function PastEntryPage() {

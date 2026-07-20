@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Modal from './Modal';
 import { toastError } from '@/utils/toast';
-import { buttonGradient } from '@/app/styles/ui';
+import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {

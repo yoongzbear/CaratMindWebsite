@@ -1,6 +1,6 @@
 'use client';
 
-import { styles } from '@/app/styles/ui';
+import { styles } from '@/styles/ui';
 // import { styles } from '@/app/styles/styles';
 import { useEffect, useState } from 'react';
 

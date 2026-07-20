@@ -7,8 +7,8 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { toTitleCase } from '@/app/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { toTitleCase } from '@/utils/format';
 import { format } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';

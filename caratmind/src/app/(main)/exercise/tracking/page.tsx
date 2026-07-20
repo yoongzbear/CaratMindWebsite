@@ -1,25 +1,21 @@
 'use client';
-import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
-import Pill from '@/app/components/Pill';
-import {
-  Exercise,
-  UserExercise,
-  UserExerciseDetail,
-} from '@/app/types/exercise';
+import ExerciseDetailModal from '@/components/modal/ExerciseModal';
+import Pill from '@/components/Pill';
+import { Exercise, UserExercise, UserExerciseDetail } from '@/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import { Flame, Star } from 'lucide-react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { getBadgeMilestone, toTitleCase } from '@/app/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { getBadgeMilestone, toTitleCase } from '@/utils/format';
 import { toastError, toastSuccess } from '@/utils/toast';
-import RatingModal from '@/app/components/modal/RatingModal';
-import ReasonModal from '@/app/components/modal/ReasonModal';
-import { gradientButton, greenButton, redButton } from '@/app/styles/ui';
+import RatingModal from '@/components/modal/RatingModal';
+import ReasonModal from '@/components/modal/ReasonModal';
+import { gradientButton, greenButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import StreakBadgeModal from '@/app/components/modal/StreakBadgeModal';
+import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
 
 type RatingResponse = {
   message: string;

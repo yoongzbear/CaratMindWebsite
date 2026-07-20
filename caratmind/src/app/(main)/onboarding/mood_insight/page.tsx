@@ -1,17 +1,17 @@
 // preview page for mood insights
 'use client';
 
-import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import Pill from '@/app/components/Pill';
+import StackedBarChart from '@/components/chart/StackedBarChart';
+import Pill from '@/components/Pill';
 import {
   buttonGradient,
   buttonRed,
   gradientButton,
   redButton,
-} from '@/app/styles/ui';
-import { getExerciseStyle } from '@/app/utils/exerciseUtils';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodUtils';
+} from '@/styles/ui';
+import { getExerciseStyle } from '@/utils/exerciseUtils';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
 import { format } from 'date-fns';
 import { buildMockBarData } from '../mood_chart/page';
 import { useMemo } from 'react';

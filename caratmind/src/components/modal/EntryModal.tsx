@@ -5,13 +5,13 @@
 import { useState } from 'react';
 import Modal from './Modal';
 import { useRouter } from 'next/navigation';
-import { JournalDetail } from '@/app/types/journal';
+import { JournalDetail } from '@/types/journal';
 import {
   buttonGradient,
   buttonRed,
   gradientButton,
   redButton,
-} from '@/app/styles/ui';
+} from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {

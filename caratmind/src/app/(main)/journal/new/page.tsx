@@ -4,8 +4,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRef, useState } from 'react';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { useRouter } from 'next/navigation';
-import { StatusKey } from '@/app/types/journal';
-import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
+import { StatusKey } from '@/types/journal';
+import DetectMoodModal from '@/components/modal/DetectMoodModal';
 import {
   buttonGradient,
   buttonGradientStyle,
@@ -15,7 +15,7 @@ import {
   gradientButton,
   greyButton,
   redButton,
-} from '@/app/styles/ui';
+} from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function NewEntryPage() {

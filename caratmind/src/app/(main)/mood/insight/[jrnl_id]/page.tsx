@@ -1,27 +1,26 @@
 'use client';
-import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
-import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
-import EntryDetailModal, {
-  DeleteEntryModal,
-} from '@/app/components/modal/EntryModal';
-import ExerciseDetailModal from '@/app/components/modal/ExerciseModal';
-import MoodExplainModal from '@/app/components/modal/MoodExplainModal';
-import Pill from '@/app/components/Pill';
-import { buttonGradient, redButton } from '@/app/styles/ui';
-import { UserExerciseDetail } from '@/app/types/exercise';
-import { JournalDetail, StatusKey } from '@/app/types/journal';
-import { Mood } from '@/app/types/mood';
-import { toTitleCase } from '@/app/utils/format';
-import { getExerciseStyle } from '@/app/utils/exerciseUtils';
-import { getMoodStyle } from '@/app/utils/moodUtils';
+import { DateRangeValue } from '@/components/chart/DateRangeSelector';
+import StackedBarChart from '@/components/chart/StackedBarChart';
+import DetectMoodModal from '@/components/modal/DetectMoodModal';
+import EntryDetailModal from '@/components/modal/EntryModal';
+import ExerciseDetailModal from '@/components/modal/ExerciseModal';
+import MoodExplainModal from '@/components/modal/MoodExplainModal';
+import Pill from '@/components/Pill';
+import { buttonGradient } from '@/styles/ui';
+import { UserExerciseDetail } from '@/types/exercise';
+import { JournalDetail, StatusKey } from '@/types/journal';
+import { Mood } from '@/types/mood';
+import { toTitleCase } from '@/utils/format';
+import { getExerciseStyle } from '@/utils/exerciseUtils';
+import { getMoodStyle } from '@/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { format, subDays, isAfter, startOfDay, isSameDay } from 'date-fns';
 import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import StreakBadgeModal from '@/app/components/modal/StreakBadgeModal';
+import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
+import { getJournalEntry } from '@/lib/api/journalApi';
 
 export default function MoodInsightPage() {
   const { theme } = useTheme();
@@ -61,27 +60,29 @@ export default function MoodInsightPage() {
       if (res.ok && data.new_badge) {
         setBadge(data.new_badge);
       }
-    } catch {
-      // silent — badge check isn't critical path
-    }
+    } catch {}
   };
 
   const loadEntry = async () => {
     setFetchingJournal(true);
     try {
-      const res = await fetch(`/api/journal/${jrnl_id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to load entry.');
-        setJournal(null);
-        return;
+      // const res = await fetch(`/api/journal/${jrnl_id}`, {
+      //   headers: { Authorization: `Bearer ${accessToken}` },
+      // });
+      // const data = await res.json();
+      if (accessToken) {
+        const data = await getJournalEntry(jrnl_id, accessToken);
+        // if (!res.ok) {
+        //   toastError(data.error ?? 'Failed to load entry.');
+        //   setJournal(null);
+        //   return;
+        // }
+        setJournal(data);
+        setEntry(data.entryText);
       }
-      setJournal(data);
-      setEntry(data.entryText);
     } catch {
       toastError('Something went wrong loading the entry.');
+      setJournal(null);
     } finally {
       setFetchingJournal(false);
     }

@@ -3,10 +3,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { JournalDetail, StatusKey } from '@/app/types/journal';
+import { JournalDetail, StatusKey } from '@/types/journal';
 import { format } from 'date-fns';
-import DetectMoodModal from '@/app/components/modal/DetectMoodModal';
-import { gradientButton, greyButton, redButton } from '@/app/styles/ui';
+import DetectMoodModal from '@/components/modal/DetectMoodModal';
+import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function EditEntryPage() {

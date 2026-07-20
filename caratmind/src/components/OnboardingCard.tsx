@@ -2,7 +2,7 @@
 
 'use client';
 import type { CardComponentProps } from 'nextstepjs';
-import { gradientButton, greyButton } from '@/app/styles/ui';
+import { gradientButton, greyButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export function OnboardingCard({

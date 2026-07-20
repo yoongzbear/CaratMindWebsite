@@ -1,6 +1,6 @@
 'use client';
 
-import { SessionUser } from '@/app/types/user';
+import { SessionUser } from '@/types/user';
 import {
   createContext,
   useCallback,

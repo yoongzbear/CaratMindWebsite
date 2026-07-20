@@ -1,4 +1,4 @@
-import { Helpline } from '../types/helpline';
+import { Helpline } from '../../types/helpline';
 
 export const HELPLINES: Helpline[] = [
   {

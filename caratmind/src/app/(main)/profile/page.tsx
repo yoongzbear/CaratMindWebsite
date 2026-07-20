@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices } from 'lucide-react';
-import { generateRandomName } from '@/app/utils/generateName';
-import DeleteAccountModal from '@/app/components/modal/DeleteAccountModal';
-import { gradientButton, greyButton, redButton } from '@/app/styles/ui';
+import { generateRandomName } from '@/utils/generateName';
+import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
+import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { StreakBadgeDisplay } from '@/app/components/StreakBadgeDisplay';
+import { StreakBadgeDisplay } from '@/components/StreakBadgeDisplay';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();

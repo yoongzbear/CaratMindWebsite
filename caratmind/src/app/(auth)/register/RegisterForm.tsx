@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthCard } from '@/app/components/AuthCard';
+import { AuthCard } from '@/components/AuthCard';
 // import { styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
-import { generateRandomName } from '@/app/utils/generateName';
-import { buttonGradient, inputStyle, labelStyle } from '@/app/styles/ui';
+import { generateRandomName } from '@/utils/generateName';
+import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export function RegisterForm({

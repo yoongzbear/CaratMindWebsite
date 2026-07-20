@@ -13,7 +13,7 @@ import {
   buttonRed,
   gradientButton,
   redButton,
-} from '@/app/styles/ui';
+} from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {

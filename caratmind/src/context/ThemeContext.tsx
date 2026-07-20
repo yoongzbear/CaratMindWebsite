@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeName, themes } from '@/app/styles/themes';
+import { ThemeName, themes } from '@/styles/themes';
 import {
   createContext,
   useContext,

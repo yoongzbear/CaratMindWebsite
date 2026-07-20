@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
-import { LayoutShell } from './components/LayoutShell';
-import { ClientToastContainer } from './components/ClientToastContainer';
-import { HelplineModalProvider } from './components/HelplineModalProvider';
+import { LayoutShell } from '../components/LayoutShell';
+import { ClientToastContainer } from '../components/ClientToastContainer';
+import { HelplineModalProvider } from '../components/HelplineModalProvider';
 import '@daypicker/react/style.css';
-import { OnboardingProvider } from './components/OnboardingProvider';
-import './styles/themes';
+import { OnboardingProvider } from '../components/OnboardingProvider';
+import '../styles/themes';
 import { ThemeProvider } from '@/context/ThemeContext';
 
 const dmSans = DM_Sans({ subsets: ['latin'] });

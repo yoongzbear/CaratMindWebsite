@@ -1,12 +1,12 @@
 'use client';
-import CalendarHeatmap from '@/app/components/chart/CalendarHeatmap';
+import CalendarHeatmap from '@/components/chart/CalendarHeatmap';
 import DateRangeSelector, {
   DateRangeValue,
-} from '@/app/components/chart/DateRangeSelector';
-import DayScatterPlot from '@/app/components/chart/DayScatterPlot';
-import StackedBarChart from '@/app/components/chart/StackedBarChart';
-import TimeScatterPlot from '@/app/components/chart/TimeScatterPlot';
-import { styles } from '@/app/styles/ui';
+} from '@/components/chart/DateRangeSelector';
+import DayScatterPlot from '@/components/chart/DayScatterPlot';
+import StackedBarChart from '@/components/chart/StackedBarChart';
+import TimeScatterPlot from '@/components/chart/TimeScatterPlot';
+import { styles } from '@/styles/ui';
 import { useAuth } from '@/context/AuthContext';
 import { format } from 'date-fns';
 import { useState } from 'react';

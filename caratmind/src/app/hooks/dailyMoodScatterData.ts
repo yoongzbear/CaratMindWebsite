@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { DateRangeValue } from '@/app/components/chart/DateRangeSelector';
+import { DateRangeValue } from '@/components/chart/DateRangeSelector';
 
 export type MoodPoint = {
   jrnl_id: string;

@@ -1,8 +1,8 @@
-// mood scatter plot over time in a day
+// mood scatter plot over a range of days
 
-// <ScatterChart>
-// x = time (example: 10:00AM 11:00AM etc)
-// y = moods
+// use Recharts <ScatterChart> with <Scatter>
+// x = date (example: 25/6, 26/6 etc)
+// y = all moods in order from most positive (top) to most negative (bottom)
 
 'use client';
 
@@ -14,44 +14,35 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-  CartesianGrid,
 } from 'recharts';
-import { addDays, addHours, format, parseISO, startOfDay } from 'date-fns';
+import { format, parseISO, startOfDay } from 'date-fns';
 // import { C } from '@/app/styles/styles';
 
-import { toTitleCase } from '@/app/utils/format';
+import { toTitleCase } from '@/utils/format';
+import { DateRangeValue } from './DateRangeSelector';
+import { useMoodScatterData } from '@/app/hooks/moodScatterData';
 import { useRouter } from 'next/navigation';
-import { getMoodStyle, MOOD_ORDER } from '@/app/utils/moodUtils';
-import {
-  MoodPoint,
-  useDailyMoodScatterData,
-} from '@/app/hooks/dailyMoodScatterData';
-import Link from 'next/link';
-import { buttonGradient } from '@/app/styles/ui';
+import { getMoodStyle, MOOD_ORDER } from '@/utils/moodUtils';
+import { getRangeLabel, resolveLocalDateRange } from '@/utils/dateFormat';
+import { MoodPoint } from '@/app/hooks/dailyMoodScatterData';
 
 type Props = {
-  // range?: DateRangeValue;
-  moodDate: string;
+  range?: DateRangeValue;
   height?: number;
-  mockData?: { points: MoodPoint[] };
+  mockData?: { chartData: MoodPoint[]; moods: string[] };
 };
 
-export default function TimeScatterPlot({
-  // range = { mode: 'days', days: 1 },
-  moodDate,
+export default function DayScatterPlot({
+  range = { mode: 'days', days: 30 },
   height = 320,
   mockData,
 }: Props) {
-  const { points, loading, error } = useDailyMoodScatterData(
-    moodDate,
-    mockData,
-  );
+  const { points, loading, error } = useMoodScatterData(range, mockData);
   const router = useRouter();
-  const isToday = moodDate === format(new Date(), 'yyyy-MM-dd'); // check if date is current date
 
-  // time for start and end of the day
-  const xStart = startOfDay(parseISO(moodDate)).getTime();
-  const xEnd = addDays(startOfDay(parseISO(moodDate)), 1).getTime();
+  const { startDate, endDate } = resolveLocalDateRange(range);
+  const xStart = startOfDay(parseISO(startDate)).getTime();
+  const xEnd = startOfDay(parseISO(endDate)).getTime();
 
   //   ES Lint error
   const handleScatterClick = (point: any) => {
@@ -61,39 +52,44 @@ export default function TimeScatterPlot({
 
   if (loading) {
     return (
-      <div className="text-center items-center" style={{ height: height }}>
-        <p
-          className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-          style={{ color: 'var(--muted)' }}
+      <div className="w-full">
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: 'var(--text)' }}
         >
-          Loading daily mood scatter plot chart...
-        </p>
+          {getRangeLabel(range)}
+        </h5>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: 'var(--muted)' }}
+          >
+            Loading mood scatter plot chart..
+          </p>
+        </div>
       </div>
     );
   }
 
   if (!points.length) {
     return (
-      <div
-        className="flex flex-col text-center items-center justify-center"
-        style={{ height: height }}
-      >
-        <p
-          className="text-center text-[clamp(1rem,3vw,1.5rem)]"
-          style={{ color: 'var(--muted)' }}
+      <div className="w-full">
+        <h5
+          className="text-[clamp(1rem,3vw,1.5rem)] mb-2"
+          style={{ color: 'var(--text)' }}
         >
-          No mood data available for this date.
-        </p>
-        {/* button to new journal entry if the date is today */}
-        {isToday && (
-          <Link
-            href="/journal/new"
-            className={`${buttonGradient} mt-2`}
-            // className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
+          {getRangeLabel(range)}
+        </h5>
+
+        <div style={{ height }} className="flex items-center justify-center">
+          <p
+            className="text-center text-[clamp(1rem,3vw,1.5rem)]"
+            style={{ color: 'var(--muted)' }}
           >
-            Write an entry
-          </Link>
-        )}
+            No mood data available for this period.
+          </p>
+        </div>
       </div>
     );
   }
@@ -103,6 +99,7 @@ export default function TimeScatterPlot({
     points.some((p) => p.mood_name === mood),
   );
 
+  // map each present mood to a Y index (0 = most negative present, top = most positive present)
   const presentMoodRankMap = Object.fromEntries(
     presentMoods.map((mood, i) => [mood, presentMoods.length - 1 - i]),
   );
@@ -110,43 +107,32 @@ export default function TimeScatterPlot({
   const maxY = presentMoods.length - 1;
 
   const data = points.map((p) => ({
-    x: new Date(p.mood_timestamp).getTime(),
+    x: startOfDay(new Date(p.mood_timestamp)).getTime(), // not considering actual time of the day
     y: presentMoodRankMap[p.mood_name] ?? 0,
     mood: p.mood_name,
     jrnl_id: p.jrnl_id,
     timestamp: p.mood_timestamp,
   }));
 
-  // show time when mood exists
-  // const presentTicks = Array.from(new Set(data.map((d) => d.x))).sort(
-  //   (a, b) => a - b,
-  // );
-
-  // show all time
-  const presentTicks = Array.from({ length: 24 }, (_, i) =>
-    addHours(startOfDay(parseISO(moodDate)), i).getTime(),
-  );
-
   return (
     <div className="w-full">
-      <p
+      <h5
         className="text-[clamp(1rem,3vw,1.5rem)] mb-2 w-full"
         style={{ color: 'var(--text)' }}
       >
-        {format(parseISO(moodDate), 'EEEE, dd/MM/yyyy')}
-      </p>
+        {getRangeLabel(range)}
+      </h5>
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart
-          margin={{ top: 10, right: 0, left: -20, bottom: 5 }}
+          margin={{ top: 10, right: 0, left: -20, bottom: 10 }}
           responsive
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis
             type="number"
             dataKey="x"
             domain={[xStart, xEnd]}
-            ticks={presentTicks}
-            tickFormatter={(ts) => format(new Date(ts), 'p')}
+            tickFormatter={(ts) => format(new Date(ts), 'dd/MM')}
             tick={{ fontSize: 15, fill: 'var(--text)' }}
             axisLine={false}
             tickLine={false}
@@ -189,7 +175,7 @@ export default function TimeScatterPlot({
                 >
                   {getMoodStyle(point.mood).emoji}
                   {toTitleCase(point.mood)} -{' '}
-                  {format(new Date(point.timestamp), 'p')}
+                  {format(new Date(point.timestamp), 'dd/MM/yyyy, p')}
                 </div>
               );
             }}
@@ -198,9 +184,8 @@ export default function TimeScatterPlot({
           {/* <Tooltip
             formatter={(_, __, props) => {
               const point = props.payload;
-              //   show time only
               return [
-                `${toTitleCase(point.mood)} - ${format(new Date(point.timestamp), 'p')}`,
+                `${toTitleCase(point.mood)} - ${format(new Date(point.timestamp), 'dd/MM/yyyy, p')}`,
                 '',
               ];
             }}

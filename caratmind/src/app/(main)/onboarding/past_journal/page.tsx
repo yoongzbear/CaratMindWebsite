@@ -1,10 +1,10 @@
 'use client';
 import { format } from 'date-fns';
 import { DayPicker } from '@daypicker/react';
-import Pill from '@/app/components/Pill';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { gradientButton } from '@/app/styles/ui';
+import Pill from '@/components/Pill';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 // sample data

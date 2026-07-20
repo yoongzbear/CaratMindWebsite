@@ -11,12 +11,12 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useAuth } from '@/context/AuthContext';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { toTitleCase } from '@/app/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { toTitleCase } from '@/utils/format';
 import { format, parseISO } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { ChartRow, useMoodChartData } from '@/app/hooks/moodChartData';
-import { getRangeLabel } from '@/app/utils/dateFormat';
+import { getRangeLabel } from '@/utils/dateFormat';
 import { useRouter } from 'next/navigation';
 
 // type ChartRow = {

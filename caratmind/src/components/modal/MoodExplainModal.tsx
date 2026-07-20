@@ -3,11 +3,11 @@
 'use client';
 
 import Modal from './Modal';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle, MOOD_EMOJIS } from '@/app/utils/moodUtils';
-import { Mood } from '@/app/types/mood';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle, MOOD_EMOJIS } from '@/utils/moodUtils';
+import { Mood } from '@/types/mood';
 import { useMemo, useState } from 'react';
-import { buttonGradient, buttonRed, redButton } from '@/app/styles/ui';
+import { buttonGradient, buttonRed, redButton } from '@/styles/ui';
 import { toastError } from '@/utils/toast';
 import Pill from '../Pill';
 import { useTheme } from '@/context/ThemeContext';

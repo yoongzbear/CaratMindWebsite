@@ -4,9 +4,9 @@
 
 import Modal from './Modal';
 import Pill from '../Pill';
-import { toTitleCase } from '@/app/utils/format';
-import { getMoodStyle } from '@/app/utils/moodUtils';
-import { getExerciseStyle } from '@/app/utils/exerciseUtils';
+import { toTitleCase } from '@/utils/format';
+import { getMoodStyle } from '@/utils/moodUtils';
+import { getExerciseStyle } from '@/utils/exerciseUtils';
 import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
