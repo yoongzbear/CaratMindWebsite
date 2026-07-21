@@ -40,7 +40,8 @@ export default function StreakBadgeModal({ open, onClose, badgeId }: Props) {
         <div className="mx-auto text-center w-fit">
           {/* bagde */}
           <img
-            src={`/assets/badge/${badgeId}.png`}
+            // src={`/assets/badge/${badgeId}.png`}
+            src={`https://caratmind-assets.s3.ap-southeast-5.amazonaws.com/badge/${badgeId}.png`}
             alt="Streak Badge"
             className="h-28 w-28"
           />

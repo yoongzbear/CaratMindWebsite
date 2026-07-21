@@ -2,7 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 from caratmind import settings
-from caratmind.datetime import today_local
+from caratmind.datetime_utils import today_local
 from boto3.dynamodb.conditions import Attr, Key
 
 BADGE_MILESTONES = {7, 30, 60, 100}

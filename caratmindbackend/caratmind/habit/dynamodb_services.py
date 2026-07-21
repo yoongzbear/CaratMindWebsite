@@ -8,7 +8,7 @@ import boto3
 from boto3.dynamodb.conditions import Attr, Key
 
 from caratmind import settings
-from caratmind.datetime import today_local
+from caratmind.datetime_utils import today_local
 
 def _get_habit_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -32,6 +32,11 @@ def get_all_habit() -> list[dict]:
         items.extend(response.get("Items", []))
 
     return items
+
+def get_habit_by_id(hab_id: str) -> dict:
+    table = _get_habit_table()
+    response = table.get_item(Key={'hab_id': hab_id})
+    return response.get('Item')
 
 # save habit
 def save_user_habit(user_id: str, hab_id: str, action: str, status: str) -> dict:
@@ -61,11 +66,6 @@ def get_user_habit(user_id: str, start_date: str, end_date: str) -> list[dict]:
         & Attr('uhab_updated_at').gte(cutoff_start)
         & Attr('uhab_updated_at').lte(cutoff_end)
     )
-    # else:
-    #     cutoff = (
-    #         datetime.now(timezone.utc) - timedelta(days=days - 1)
-    #     ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-    #     filter = Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
 
     response = table.scan(FilterExpression=filter)
     items = response.get('Items', [])
@@ -77,7 +77,7 @@ def get_user_habit(user_id: str, start_date: str, end_date: str) -> list[dict]:
         )
         items.extend(response.get('Items', []))
 
-    items.sort(key=lambda i: i.get('mood_timestamp', ''), reverse=True)
+    items.sort(key=lambda i: i.get('uhab_updated_at', ''), reverse=True)
     return items
 
 # get user completed habit for current date 
@@ -148,3 +148,24 @@ def delete_all_user_habit(user_id: str) -> None:
     with table.batch_writer() as batch:
         for item in items:
             batch.delete_item(Key={'uhab_id': item['uhab_id']}) 
+
+def list_habit_summary(items: list[dict]) -> list[dict]:
+    by_date = {}
+    habit_cache = {}  
+
+    for item in items:
+        hab_id = item['hab_id']
+        if hab_id not in habit_cache:
+            habit_cache[hab_id] = get_habit_by_id(hab_id)
+        habit_data = habit_cache[hab_id] or {}
+
+        date_str = item['uhab_updated_at'][:10]
+        by_date.setdefault(date_str, []).append({
+            'habit_question': habit_data.get('hab_question', 'Unknown habit'),
+            'action': item.get('uhab_action', '—'),
+        })
+
+    return [
+        {'date': date_str, 'habits': by_date[date_str]}
+        for date_str in sorted(by_date.keys(), reverse=True)
+    ]

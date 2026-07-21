@@ -2,17 +2,17 @@
 
 # NEGATIVE_MOODS = {"sad", "anger", "fear", "disgust", "grief", "disappointment"}
 # NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
-from datetime import timedelta, timezone
+from datetime import datetime, timedelta, timezone
 
 import boto3
 
 from caratmind import settings
 from boto3.dynamodb.conditions import Attr, Key
 
-from caratmind import datetime
-from caratmind.datetime import today_local
+from caratmind import datetime_utils
+from caratmind.datetime_utils import today_local
 from exercise.dynamodb_service import get_incomplete_exercise_on_date, get_user_exercises_on_date
-from habit.dynamodb_services import get_user_habit
+from habit.dynamodb_services import get_user_habit, list_habit_summary
 from journal.dynamodb_service import get_entries_for_user_on_date
 from mood.dynamodb_service import calc_negative_mood_streak
 from notification.ses_service import send_notification
@@ -82,7 +82,7 @@ def check_journal_reminder(user: dict) -> None:
     journal_today = get_entries_for_user_on_date(user['user_id'], today_str)    
 
     if not journal_today:
-        send_notification(user['user_email'], 'journal_reminder', {'name': user.get('name', '')})
+        send_notification(user['user_email'], 'journal_reminder', {'name': user.get('preferred_name', '')})
         mark_notified(user['user_id'], 'journal_reminder')
 
 # exercise reminder only if got a journal submitted today
@@ -97,7 +97,7 @@ def check_exercise_reminder(user: dict) -> None:
 
     incomplete_exercise = get_incomplete_exercise_on_date(user['user_id'], today_str)
     if not incomplete_exercise:
-        send_notification(user['user_email'], 'exercise_reminder', {'name': user.get('name', '')})
+        send_notification(user['user_email'], 'exercise_reminder', {'name': user.get('preferred_name', '')})
         mark_notified(user['user_id'], 'exercise_reminder')
 
 # negative mood
@@ -131,7 +131,7 @@ def check_mood_helpline(user: dict) -> None:
     streak = calc_negative_mood_streak(user['user_id'])
     if streak >= STREAK_THRESHOLD_DAYS:
         send_notification(user['user_email'], 'mood_helpline', {
-            'name': user.get('name', ''),
+            'name': user.get('preferred_name', ''),
             'streak_days': streak,
         })
         mark_notified(user['user_id'], 'mood_helpline')
@@ -149,8 +149,14 @@ def send_weekly_habit(user: dict) -> None:
     start_date = (today - timedelta(days=6)).isoformat()
     end_date = today.isoformat()
 
-    stats = get_user_habit(user['user_id'], start_date, end_date) 
-    send_notification(user['user_email'], 'habit_summary', stats)
+    raw_items = get_user_habit(user['user_id'], start_date, end_date)
+    summary = list_habit_summary(raw_items)
+
+    # stats = get_user_habit(user['user_id'], start_date, end_date) 
+    send_notification(user['user_email'], 'habit_summary', {
+        'name': user.get('preferred_name', ''),
+        'days': summary,
+    })
     mark_notified(user['user_id'], 'habit_summary', period_str=week_str)
 
 # habit reminder
@@ -159,8 +165,8 @@ def check_habit_reminder(user: dict) -> None:
         return
 
     today_str = today_local().isoformat()
-    habit_today = get_user_habit(user['user_id'], today_str)    
+    habit_today = get_user_habit(user['user_id'], today_str, today_str)    
 
     if not habit_today:
-        send_notification(user['user_email'], 'habit_reminder', {'name': user.get('name', '')})
+        send_notification(user['user_email'], 'habit_reminder', {'name': user.get('preferred_name', '')})
         mark_notified(user['user_id'], 'habit_reminder')

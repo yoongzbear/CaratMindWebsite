@@ -8,7 +8,7 @@ from boto3.dynamodb.conditions import Attr, Key
 from accounts.dynamodb_service import get_user
 from badge.dynamodb_service import save_badge
 from caratmind import settings
-from caratmind.datetime import to_local_date_str, today_local
+from caratmind.datetime_utils import to_local_date_str, today_local
 from notification.ses_service import send_notification
 
 def _get_exercise_table():

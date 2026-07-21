@@ -36,7 +36,8 @@ export function StreakBadgeDisplay({
         return (
           <div key={badgeId} className="group relative">
             <img
-              src={`/assets/badge/${badgeId}.png`}
+              // src={`/assets/badge/${badgeId}.png`}
+              src={`https://caratmind-assets.s3.ap-southeast-5.amazonaws.com/badge/${badgeId}.png`}
               alt={badgeId}
               className="h-20 w-20 rounded-lg"
             />
