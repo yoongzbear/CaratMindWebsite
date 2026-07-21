@@ -81,3 +81,17 @@ def get_user(user_id: str) -> dict | None:
 def delete_user_record(user_id: str) -> None:
     table = _get_table()
     table.delete_item(Key={'user_id': user_id})
+
+def update_email_preference(user_id: str, prefs: dict) -> dict:
+    table = _get_table()
+
+    response = table.update_item(
+        Key={
+            'user_id': user_id,
+        },
+        UpdateExpression='SET notification_pref = :prefs',
+        ExpressionAttributeValues={':prefs': prefs},
+        ConditionExpression='attribute_exists(user_id)',
+        ReturnValues='ALL_NEW'
+    )
+    return response.get('Attributes', {})

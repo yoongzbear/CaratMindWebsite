@@ -22,7 +22,7 @@ from journal.s3_service import delete_entry_text
 from mood.dynamodb_service import delete_all_user_mood
 from .authentication import authenticate_bearer
 from .services import CognitoService
-from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_onboarding, update_preferred_name, update_theme
+from .dynamodb_service import create_user_if_not_exists, delete_user_record, get_user, update_email_preference, update_onboarding, update_preferred_name, update_theme
 
 def _validate_password(password: str) -> str | None:
     if len(password) < 8:
@@ -509,3 +509,42 @@ def get_theme_view(request):
     return JsonResponse({
         'theme': user.get('user_theme', 'light')
     })
+
+@require_GET
+def get_email_notification_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    user = get_user(sub)
+    if not user:
+        return JsonResponse({'error': 'User not found.'}, status=404)
+    
+    return JsonResponse(user.get('notification_pref', {}))
+
+@csrf_exempt
+@require_http_methods(['PATCH'])
+def update_email_notification_view(request):
+    print("hellooo")
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    if not sub:
+        return JsonResponse({'error': 'Missing sub claim'}, status=400)
+    
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+    prefs = body.get('notification_pref')
+    print("prefs", prefs)
+    try: 
+        updated = update_email_preference(sub, prefs)
+        print("woozie")
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse(updated.get('notification_pref', prefs))

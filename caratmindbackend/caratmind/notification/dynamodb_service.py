@@ -51,25 +51,6 @@ def get_enabled_users() -> list[dict]:
 
     return items
 
-# def get_enabled_users(preference: str = 'journal_reminder') -> list[dict]:
-#     """
-#     use GSI when growing 
-#     """
-#     table = _get_users_table()
-#     response = table.scan(
-#         FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True)
-#     )
-#     items = response.get('Items', [])
-
-#     while 'LastEvaluatedKey' in response:
-#         response = table.scan(
-#             FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True),
-#             ExclusiveStartKey=response['LastEvaluatedKey'],
-#         )
-#         items.extend(response.get('Items', []))
-
-#     return items
-
 # check if sent notification already or not
 def already_notified(user_id: str, notif_type: str, period_str: str | None = None) -> bool:
     date_str = period_str or today_local().isoformat()
@@ -121,29 +102,6 @@ def check_exercise_reminder(user: dict) -> None:
     if not incomplete_exercise:
         send_notification(user['user_email'], 'exercise_reminder', {'name': user.get('preferred_name', '')})
         mark_notified(user['user_id'], 'exercise_reminder')
-
-# negative mood
-# def get_negative_mood_streak(user_id: str) -> int:
-#     table = _get_mood_table()
-#     today = today_local()
-#     streak = 0
-
-#     for i in range(30):  
-#         day_str = (today - timedelta(days=i)).isoformat()
-#         response = table.query(
-#             KeyConditionExpression=Key('user_id').eq(user_id) & Key('date').eq(day_str)
-#         )
-#         items = response.get('Items', [])
-#         if not items:
-#             break  # gap in journaling breaks the streak
-
-#         dominant_mood = items[0].get('dominant_mood')
-#         if dominant_mood in NEGATIVE_MOODS:
-#             streak += 1
-#         else:
-#             break
-
-#     return streak
 
 # long-term negative mood - helpline email
 def check_mood_helpline(user: dict) -> None:

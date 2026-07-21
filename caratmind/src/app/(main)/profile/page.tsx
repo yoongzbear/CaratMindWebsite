@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
@@ -10,7 +10,14 @@ import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { StreakBadgeDisplay } from '@/components/StreakBadgeDisplay';
-import { getUserBadge } from '@/lib/api/profileApi';
+import {
+  getEmailPreference,
+  getUserBadge,
+  updateEmailPreference,
+  updateName,
+} from '@/lib/api/profileApi';
+import { EmailPreference } from '@/types/notification';
+import NotificationPreferenceModal from '@/components/modal/NotificationPreferenceModal';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -22,6 +29,9 @@ export default function ProfilePage() {
   const [openDeleteAccount, setOpenDeleteAccount] = useState(false);
   const [badges, setBadges] = useState<string[]>([]);
   const [fetchingBadges, setFetchingBadges] = useState(true);
+  const [prefs, setPrefs] = useState<EmailPreference | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [savePref, setSavePref] = useState(false);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -44,10 +54,23 @@ export default function ProfilePage() {
     loadBadges();
   }, [accessToken]);
 
+  useEffect(() => {
+    if (!accessToken) return;
+    startTransition(() => {
+      const loadPrefs = async () => {
+        const data = await getEmailPreference(accessToken);
+        console.log('data email preference: ', data);
+        setPrefs(data);
+      };
+
+      loadPrefs();
+    });
+  }, [accessToken]);
+
   if (loading) {
     return (
       <section
-        className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]"
+        className="min-h-[calc(100vh-140px)] px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]"
         style={{ color: 'var(--muted)' }}
       >
         Loading profile...
@@ -57,7 +80,7 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <section className="px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]">
+      <section className="min-h-[calc(100vh-140px)] px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]">
         <p style={{ color: 'var(--muted)' }}>You are not signed in.</p>
         <Link
           href="/login"
@@ -80,6 +103,24 @@ export default function ProfilePage() {
     setError('');
   }
 
+  async function handleSavePreference(updatedPref: EmailPreference) {
+    setSavePref(true);
+    try {
+      if (accessToken && prefs) {
+        console.log('selected preference:', prefs);
+        await updateEmailPreference(updatedPref, accessToken);
+        await refreshUser?.();
+        toastSuccess('Preferred email notifications updated.');
+        setPrefs(updatedPref);
+        setOpenModal(false);
+      }
+    } catch {
+      toastError('Something went wrong. Please try again.');
+    } finally {
+      setSavePref(false);
+    }
+  }
+
   async function handleSave() {
     if (!draft.trim()) {
       setError('Preferred username cannot be empty.');
@@ -88,22 +129,13 @@ export default function ProfilePage() {
     setSaving(true);
     setError('');
     try {
-      const res = await fetch('/api/auth/profile/update-name', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ preferredUsername: draft.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toastError(data.error ?? 'Failed to update.');
-        return;
+      if (accessToken) {
+        await updateName(draft.trim(), accessToken);
+
+        await refreshUser?.();
+        toastSuccess('Preferred name updated.');
+        setEditing(false);
       }
-      await refreshUser?.();
-      toastSuccess('Preferred name updated.');
-      setEditing(false);
     } catch {
       toastError('Something went wrong. Please try again.');
     } finally {
@@ -274,15 +306,32 @@ export default function ProfilePage() {
           </div>
 
           {/* Delete account */}
-          <button
-            onClick={() => setOpenDeleteAccount(true)}
-            {...redButton(theme)}
-            id="button-delete-account"
-          >
-            Delete Account
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setOpenModal(true)}
+              {...gradientButton(theme)}
+              id="button-manage-notification"
+            >
+              Manage Email Notification
+            </button>
+            <button
+              onClick={() => setOpenDeleteAccount(true)}
+              {...redButton(theme)}
+              id="button-delete-account"
+            >
+              Delete Account
+            </button>
+          </div>
         </div>
       </div>
+      {prefs && (
+        <NotificationPreferenceModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          onSave={handleSavePreference}
+          initialPreference={prefs}
+        />
+      )}
       <DeleteAccountModal
         open={openDeleteAccount}
         onClose={() => setOpenDeleteAccount(false)}
