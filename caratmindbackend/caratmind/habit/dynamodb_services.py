@@ -161,7 +161,7 @@ def list_habit_summary(items: list[dict]) -> list[dict]:
 
         date_str = item['uhab_updated_at'][:10]
         by_date.setdefault(date_str, []).append({
-            'habit_question': habit_data.get('hab_question', 'Unknown habit'),
+            'hab_question': habit_data.get('hab_question', 'Unknown habit'),
             'action': item.get('uhab_action', '—'),
         })
 

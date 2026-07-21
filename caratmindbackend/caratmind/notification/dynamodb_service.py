@@ -3,6 +3,7 @@
 # NEGATIVE_MOODS = {"sad", "anger", "fear", "disgust", "grief", "disappointment"}
 # NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
 from datetime import datetime, timedelta, timezone
+import logging
 
 import boto3
 
@@ -33,24 +34,41 @@ def _get_mood_table():
 
 # users with notifications enabled
 # exercise, habit, journal, negative_mood, streak, summary_habit
-def get_enabled_users(preference: str = 'journal') -> list[dict]:
-    """
-    use GSI when growing 
-    """
+def is_notification_enabled(user: dict, notif_type: str) -> bool:
+    return user.get('notification_pref', {}).get(notif_type, False)
+
+def get_enabled_users() -> list[dict]:
     table = _get_users_table()
-    response = table.scan(
-        FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True)
-    )
+    response = table.scan(FilterExpression=Attr('user_email').exists())
     items = response.get('Items', [])
 
     while 'LastEvaluatedKey' in response:
         response = table.scan(
-            FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True),
+            FilterExpression=Attr('user_email').exists(),
             ExclusiveStartKey=response['LastEvaluatedKey'],
         )
         items.extend(response.get('Items', []))
 
     return items
+
+# def get_enabled_users(preference: str = 'journal_reminder') -> list[dict]:
+#     """
+#     use GSI when growing 
+#     """
+#     table = _get_users_table()
+#     response = table.scan(
+#         FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True)
+#     )
+#     items = response.get('Items', [])
+
+#     while 'LastEvaluatedKey' in response:
+#         response = table.scan(
+#             FilterExpression=Attr('user_email').exists() & Attr(f'notification_pref.{preference}').eq(True),
+#             ExclusiveStartKey=response['LastEvaluatedKey'],
+#         )
+#         items.extend(response.get('Items', []))
+
+#     return items
 
 # check if sent notification already or not
 def already_notified(user_id: str, notif_type: str, period_str: str | None = None) -> bool:
@@ -75,6 +93,8 @@ def mark_notified(user_id: str, notif_type: str, period_str: str | None = None) 
 
 # journal reminder
 def check_journal_reminder(user: dict) -> None:
+    if not is_notification_enabled(user, 'journal_reminder'):
+        return
     if already_notified(user['user_id'], 'journal_reminder'):
         return
 
@@ -87,6 +107,8 @@ def check_journal_reminder(user: dict) -> None:
 
 # exercise reminder only if got a journal submitted today
 def check_exercise_reminder(user: dict) -> None:
+    if not is_notification_enabled(user, 'exercise_reminder'):
+        return
     if already_notified(user['user_id'], 'exercise_reminder'):
         return
 
@@ -125,6 +147,8 @@ def check_exercise_reminder(user: dict) -> None:
 
 # long-term negative mood - helpline email
 def check_mood_helpline(user: dict) -> None:
+    if not is_notification_enabled(user, 'mood_helpline'):
+        return
     if already_notified(user['user_id'], 'mood_helpline'):
         return
 
@@ -136,8 +160,12 @@ def check_mood_helpline(user: dict) -> None:
         })
         mark_notified(user['user_id'], 'mood_helpline')
 
+logger = logging.getLogger(__name__)
+
 # weekly habit summary once per week on Sunday
 def send_weekly_habit(user: dict) -> None:
+    if not is_notification_enabled(user, 'habit_summary'):
+        return
     today = today_local()
     if today.weekday() != 6: # Sunday
         return
@@ -150,17 +178,21 @@ def send_weekly_habit(user: dict) -> None:
     end_date = today.isoformat()
 
     raw_items = get_user_habit(user['user_id'], start_date, end_date)
+    logger.info(f"raw_items: {raw_items}")
     summary = list_habit_summary(raw_items)
 
     # stats = get_user_habit(user['user_id'], start_date, end_date) 
-    send_notification(user['user_email'], 'habit_summary', {
+    response = send_notification(user['user_email'], 'habit_summary', {
         'name': user.get('preferred_name', ''),
         'days': summary,
     })
+    print(f"SES response: {response}")
     mark_notified(user['user_id'], 'habit_summary', period_str=week_str)
 
 # habit reminder
 def check_habit_reminder(user: dict) -> None:
+    if not is_notification_enabled(user, 'habit_reminder'):
+        return
     if already_notified(user['user_id'], 'habit_reminder'):
         return
 
