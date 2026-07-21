@@ -15,6 +15,7 @@ import {
   Gem,
   House,
   Lightbulb,
+  Mail,
   NotebookText,
   Palette,
   PenLine,
@@ -748,6 +749,19 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           ),
           showControls: true,
           selector: '#button-edit-name',
+          side: 'top-left',
+        },
+        {
+          icon: <Mail />,
+          title: 'Email Notification',
+          content: (
+            <>
+              Click to manage your email notification preference. You can choose
+              to disable them anytime.
+            </>
+          ),
+          showControls: true,
+          selector: '#button-manage-notification',
           side: 'top-left',
         },
         {
@@ -1490,6 +1504,19 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           ),
           showControls: true,
           selector: '#button-edit-name',
+          side: 'top-left',
+        },
+        {
+          icon: <Mail />,
+          title: 'Email Notification',
+          content: (
+            <>
+              Click to manage your email notification preference. You can choose
+              to disable them anytime.
+            </>
+          ),
+          showControls: true,
+          selector: '#button-manage-notification',
           side: 'top-left',
         },
         {

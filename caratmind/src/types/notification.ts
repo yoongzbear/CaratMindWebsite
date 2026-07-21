@@ -15,27 +15,29 @@ export const EMAIL_OPTIONS: {
   {
     key: 'journal_reminder',
     label: 'Journal reminders',
-    description: "Nudge me if I haven't journaled today",
+    description: "Remind me if I haven't journaled today",
   },
   {
     key: 'exercise_reminder',
     label: 'Exercise reminders',
-    description: "Nudge me if I journaled but haven't done my coping exercise",
+    description:
+      "Remind me if I journaled today but haven't done my coping exercise",
   },
   {
     key: 'mood_helpline',
-    label: 'Mood check-ins',
-    description: 'Notify me if I\u2019ve had a difficult stretch of days',
+    label: 'Emergency Helpline',
+    description:
+      'Send emergency helpline if I had negative mood for 3 days or more',
   },
   {
     key: 'habit_reminder',
     label: 'Habit reminders',
-    description: "Nudge me if I haven't tracked a habit today",
+    description: "Remind me if I haven't tracked a habit today",
   },
   {
     key: 'habit_summary',
     label: 'Weekly habit summary',
-    description: 'Send me a weekly recap of my habit tracking',
+    description: 'Send me a weekly summary of my habit tracking',
   },
   {
     key: 'new_badge',
