@@ -27,6 +27,18 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+// check user account confirmation status - need to confirm
+export class NeedsConfirmationError extends Error {
+  username: string;
+  sub: string;
+  constructor(message: string, username: string, sub: string) {
+    super(message);
+    this.name = 'NeedsConfirmationError';
+    this.username = username;
+    this.sub = sub;
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -90,6 +102,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.needsConfirmation) {
+          throw new NeedsConfirmationError(
+            data.error ?? 'Account has not verified',
+            data.username,
+            data.sub,
+          );
+        }
         throw new Error(data.error ?? 'Sign in failed');
       }
       applySession({ accessToken: data.accessToken, user: data.user });

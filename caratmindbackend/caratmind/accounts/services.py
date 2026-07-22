@@ -185,17 +185,16 @@ class CognitoService:
                 UserPoolId=self.user_pool_id,
                 Username=username,
             )
-            sub = next(
-                (a['Value'] for a in response.get('UserAttributes', []) if a['Name'] == 'sub'),
-                None,
-            )
+            attrs = {a['Name']: a['Value'] for a in response.get('UserAttributes', [])}
             return {
                 'exists': True,
                 'confirmed': response.get('UserStatus') == 'CONFIRMED',
-                'sub': sub,
+                'sub': attrs.get('sub'),
+                'email': attrs.get('email'),
+                'preferredUsername': attrs.get('preferred_username'),
             }
         except client.exceptions.UserNotFoundException:
-            return {'exists': False, 'confirmed': False, 'sub': None}
+            return {'exists': False, 'confirmed': False, 'sub': None, 'email': None, 'preferredUsername': None}
         
     def find_confirmed_email(self, email: str) -> bool:
         client = self._get_client()

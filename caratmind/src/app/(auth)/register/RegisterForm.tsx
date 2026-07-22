@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthCard } from '@/components/AuthCard';
-// import { styles } from '@/app/styles/styles';
 import { toastError, toastSuccess } from '@/utils/toast';
 import { Dices, Eye, EyeOff } from 'lucide-react';
 import { generateRandomName } from '@/utils/generateName';
@@ -18,6 +17,7 @@ export function RegisterForm({
 }) {
   const { theme } = useTheme();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState('');
   const [preferredUsername, setPreferredUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -30,63 +30,77 @@ export function RegisterForm({
   const [consent, setConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // not confirmed account login's verification
+  useEffect(() => {
+    const paramUsername = searchParams.get('username');
+    const paramSub = searchParams.get('sub');
+    const paramEmail = searchParams.get('email');
+    const paramConfirm = searchParams.get('needsConfirmation');
+
+    if (paramConfirm === 'true' && paramUsername && paramSub) {
+      setUsername(paramUsername);
+      setSub(paramSub);
+      if (paramEmail) setEmail(paramEmail); // set email in the verification page
+      setNeedsConfirmation(true);
+    }
+  }, [searchParams]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitting(true);
-    if (consent) {
-      try {
-        const res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(
-            needsConfirmation
-              ? { username, confirmationCode, sub, email, preferredUsername }
-              : {
-                  username,
-                  preferredUsername,
-                  email,
-                  password,
-                  confirmPassword,
-                },
-          ),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          toastError(data.error ?? 'Registration failed');
-          return;
-        }
-
-        if (needsConfirmation) {
-          toastSuccess('Email confirmed. You can sign in now.');
-          const loginHref = requestedNext
-            ? `/login?next=${encodeURIComponent(requestedNext)}`
-            : '/login';
-          router.push(loginHref);
-          return;
-        }
-
-        if (data.userConfirmed) {
-          toastSuccess('Account created. You can sign in now.');
-          router.push(
-            requestedNext
-              ? `/login?next=${encodeURIComponent(requestedNext)}`
-              : '/login',
-          );
-        } else {
-          setSub(data.sub ?? '');
-          setNeedsConfirmation(true);
-          toastSuccess('Check your email for the verification code.');
-        }
-      } catch (err) {
-        toastError(err instanceof Error ? err.message : 'Registration failed');
-      } finally {
-        setSubmitting(false);
-      }
-    } else {
-      // no consent --> cannot register
+    if (!needsConfirmation && !consent) {
       toastError(
         'Unable to register due to no acknowledgement, click the checkbox to acknowledge.',
       );
+      return;
+    }
+    setSubmitting(true);
+    console.log(username, confirmationCode, sub, email, preferredUsername);
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          needsConfirmation
+            ? { username, confirmationCode, sub, email, preferredUsername }
+            : {
+                username,
+                preferredUsername,
+                email,
+                password,
+                confirmPassword,
+              },
+        ),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error ?? 'Registration failed');
+        return;
+      }
+
+      if (needsConfirmation) {
+        toastSuccess('Email confirmed. You can sign in now.');
+        const loginHref = requestedNext
+          ? `/login?next=${encodeURIComponent(requestedNext)}`
+          : '/login';
+        router.push(loginHref);
+        return;
+      }
+
+      if (data.userConfirmed) {
+        toastSuccess('Account created. You can sign in now.');
+        router.push(
+          requestedNext
+            ? `/login?next=${encodeURIComponent(requestedNext)}`
+            : '/login',
+        );
+      } else {
+        setSub(data.sub ?? '');
+        setNeedsConfirmation(true);
+        toastSuccess('Check your email for the verification code.');
+      }
+    } catch (err) {
+      toastError(err instanceof Error ? err.message : 'Registration failed');
+    } finally {
       setSubmitting(false);
     }
   }
@@ -271,7 +285,7 @@ export function RegisterForm({
           }}
         >
           {submitting
-            ? 'Please wait…'
+            ? 'Please wait...'
             : needsConfirmation
               ? 'Confirm email'
               : 'Create account'}

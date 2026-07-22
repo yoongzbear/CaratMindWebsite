@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthCard } from '@/components/AuthCard';
-import { useAuth } from '@/context/AuthContext';
+import { NeedsConfirmationError, useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
@@ -45,6 +45,17 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
       router.replace(resolvePostLoginPath(requestedNext));
       router.refresh();
     } catch (err) {
+      if (err instanceof NeedsConfirmationError) {
+        // navigate to register with prefilled email and username
+        const params = new URLSearchParams({
+          needsConfirmation: 'true',
+          username: err.username,
+          sub: err.sub,
+        });
+        if (requestedNext) params.set('next', requestedNext);
+        router.push(`/register?${params.toString()}`);
+        return;
+      }
       toastError(err instanceof Error ? err.message : 'Sign in failed');
     } finally {
       setSubmitting(false);

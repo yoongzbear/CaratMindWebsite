@@ -40,7 +40,14 @@ export async function POST(request: Request) {
 
     if (!res.ok) {
       return NextResponse.json(
-        { error: data.error ?? 'Login failed.' },
+        {
+          error: data.error ?? 'Login failed.',
+          needsConfirmation: data.needsConfirmation,
+          username: data.username,
+          sub: data.sub,
+          email: data.email,
+          preferredUsername: data.preferredUsername,
+        },
         { status: res.status },
       );
     }

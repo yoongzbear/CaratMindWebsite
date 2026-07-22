@@ -158,6 +158,25 @@ def login_view(request):
             },
         })
     except Exception as e:
+        error_name = e.__class__.__name__
+
+        # enable verification in login if not confirmed yet 
+        if error_name == 'UserNotConfirmedException':
+            try:
+                status = cognito.get_user_status(identifier)
+                if status['exists'] and status['sub']:
+                    cognito.resend_confirmation_code(identifier)
+                    return JsonResponse({
+                        'error': cognito.map_cognito_error(e),
+                        'needsConfirmation': True,
+                        'username': identifier,
+                        'sub': status['sub'],
+                        'email': status['email'],
+                        'preferredUsername': status['preferredUsername'],
+                        'message': 'This account is not verified yet. A new verification code has been sent to your email.',
+                    }, status=403)
+            except Exception:
+                pass
         logger.error(f'Login error: {e.__class__.__name__}: {e}', exc_info=True)
         return JsonResponse({'error': cognito.map_cognito_error(e)}, status=401)
 

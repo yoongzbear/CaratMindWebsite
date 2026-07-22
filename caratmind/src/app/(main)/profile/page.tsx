@@ -123,7 +123,7 @@ export default function ProfilePage() {
 
   async function handleSave() {
     if (!draft.trim()) {
-      setError('Preferred username cannot be empty.');
+      toastError('Preferred name cannot be empty.');
       return;
     }
     setSaving(true);
