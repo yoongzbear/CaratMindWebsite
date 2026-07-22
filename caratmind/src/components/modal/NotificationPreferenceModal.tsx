@@ -4,7 +4,6 @@
 
 import { startTransition, useEffect, useState } from 'react';
 import Modal from './Modal';
-import { useRouter } from 'next/navigation';
 import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { EMAIL_OPTIONS, EmailPreference } from '@/types/notification';
@@ -23,7 +22,6 @@ export default function NotificationPreferenceModal({
   initialPreference,
 }: Props) {
   const { theme } = useTheme();
-  const router = useRouter();
 
   const [preference, setPreference] =
     useState<EmailPreference>(initialPreference);

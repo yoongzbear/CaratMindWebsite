@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 import uuid
 from zoneinfo import ZoneInfo
-
+from botocore.exceptions import ClientError
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
 from accounts.dynamodb_service import get_user
@@ -278,3 +278,78 @@ def delete_all_user_exercise(user_id: str) -> None:
                 'jrnl_id': item['jrnl_id']
             }
         )
+
+# update incomplete exercises' incompletion reason on a day
+def update_missing_reason(items: list[dict]) -> int:
+    table = _get_user_exercise_table()
+    updated = 0
+
+    for item in items: 
+        # skip if got a reason 
+        if item.get('uex_reason'): 
+            continue
+
+        try:
+            table.update_item(
+                        Key={'jrnl_id': item['jrnl_id']},
+                        UpdateExpression='SET uex_reason = :reason',
+                        ExpressionAttributeValues={':reason': 'Reason not entered'},
+                    )
+            updated += 1
+        except ClientError as e:
+            logger.error(f"Failed to update jrnl_id={item['jrnl_id']}: {e}")
+            continue
+
+    return updated
+
+def close_daily_incomplete_exercises(date_str: str) -> int:
+    table = _get_user_exercise_table()
+    # filter_expr = (
+    #     Attr('uex_status').eq('incomplete')
+    #     & Attr('uex_reason').not_exists()
+    #     | Attr('uex_reason').eq(None)
+    # ) & Attr('uex_created_at').begins_with(date_str)
+
+    response = table.scan(
+        FilterExpression=(
+            Attr('uex_status').eq('incomplete')
+            & Attr('uex_created_at').begins_with(date_str)
+        )
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=(
+                Attr('uex_status').eq('incomplete')
+                & Attr('uex_created_at').begins_with(date_str)
+            ),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    return update_missing_reason(items)
+
+# check and update previous incomplete exercise with no reason
+def close_prev_incomplete_exercises(date_str: str) -> int:
+    table = _get_user_exercise_table()
+
+    response = table.scan(
+        FilterExpression=(
+            Attr('uex_status').eq('incomplete')
+            & Attr('uex_created_at').lt(date_str)
+        )
+    )
+    items = response.get('Items', [])
+
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(
+            FilterExpression=(
+                Attr('uex_status').eq('incomplete')
+                & Attr('uex_created_at').begins_with(date_str)
+            ),
+            ExclusiveStartKey=response['LastEvaluatedKey'],
+        )
+        items.extend(response.get('Items', []))
+
+    return update_missing_reason(items)
