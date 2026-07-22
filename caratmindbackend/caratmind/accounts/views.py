@@ -148,9 +148,14 @@ def login_view(request):
     try:
         tokens = cognito.sign_in_with_password(identifier, password)
         profile = cognito.get_user_profile(tokens['access_token'])
+        sub = profile.get('sub')
+        dynamo_user = get_user(sub) if sub else None
         return JsonResponse({
             'tokens': tokens,
-            'profile': profile,
+            'profile': {
+                **profile,
+                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+            },
         })
     except Exception as e:
         logger.error(f'Login error: {e.__class__.__name__}: {e}', exc_info=True)
@@ -224,13 +229,20 @@ def refresh_token_view(request):
     try:
         tokens = cognito.refresh_tokens(username, refresh_token)
         profile = cognito.get_user_profile(tokens['access_token'])
+        sub = profile.get('sub')
+        dynamo_user = get_user(sub) if sub else None
         return JsonResponse({
             'tokens': tokens,
-            'profile': profile,
+            'profile': {
+                **profile,
+                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+            },
         })
     except Exception as e:
         return JsonResponse({'error': cognito.map_cognito_error(e)}, status=401)
 
+@csrf_exempt
+@require_POST
 def logout_view(request):
     try:
         body = json.loads(request.body)
@@ -526,7 +538,6 @@ def get_email_notification_view(request):
 @csrf_exempt
 @require_http_methods(['PATCH'])
 def update_email_notification_view(request):
-    print("hellooo")
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
@@ -540,10 +551,8 @@ def update_email_notification_view(request):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON body'}, status=400)
     prefs = body.get('notification_pref')
-    print("prefs", prefs)
     try: 
         updated = update_email_preference(sub, prefs)
-        print("woozie")
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
     

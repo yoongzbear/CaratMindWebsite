@@ -262,10 +262,10 @@ class CognitoService:
         response = client.get_user(AccessToken=access_token)
         attrs = {a['Name']: a['Value'] for a in response.get('UserAttributes', [])}
         return {
+            'sub': attrs.get('sub'),
             'username': response.get('Username', ''),
             'email': attrs.get('email'),
-            'preferred_username': attrs.get('preferred_username'),
-            'completedOnboarding': attrs.get('user_complete_onboarding'),
+            'preferred_username': attrs.get('preferred_username'),            
         }
     
     @staticmethod

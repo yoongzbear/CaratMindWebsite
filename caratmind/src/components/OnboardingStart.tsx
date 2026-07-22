@@ -10,6 +10,7 @@ export default function OnboardingStart() {
 
   useEffect(() => {
     if (loading || !user || started.current) return;
+    console.log('user onvoardig:', user.completedOnboarding);
     if (!user.completedOnboarding) {
       started.current = true;
       startNextStep('welcome');
