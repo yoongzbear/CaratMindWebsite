@@ -4,39 +4,15 @@ import DateRangeSelector from '@/components/chart/DateRangeSelector';
 import DayScatterPlot from '@/components/chart/DayScatterPlot';
 import StackedBarChart from '@/components/chart/StackedBarChart';
 import TimeScatterPlot from '@/components/chart/TimeScatterPlot';
-import { MoodPoint } from '@/app/hooks/moodScatterData';
 import { styles } from '@/styles/ui';
-import { useTheme } from '@/context/ThemeContext';
-// import { styles } from '@/app/styles/styles';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
 import { useMemo } from 'react';
+import { buildMockBarData, buildMockScatterPoints } from '@/utils/moodUtils';
 
 const previewDate = format(new Date(), 'yyyy-MM-dd');
 
-export function buildMockBarData() {
-  const moods = ['joy', 'fear', 'anger'];
-  const chartData = Array.from({ length: 7 }).map((_, i) => ({
-    date: format(subDays(new Date(), 6 - i), 'yyyy-MM-dd'),
-    jrnl_ids: [],
-    joy: Math.floor(Math.random() * 3),
-    fear: Math.floor(Math.random() * 3),
-    anger: Math.floor(Math.random() * 2),
-  }));
-  return { chartData, moods };
-}
-
-export function buildMockScatterPoints(): MoodPoint[] {
-  const moods = ['joy', 'fear', 'anger'];
-  return Array.from({ length: 7 }).map((_, i) => ({
-    jrnl_id: `mock-${i}`,
-    mood_name: moods[i % moods.length],
-    mood_timestamp: subDays(new Date(), 6 - i).toISOString(),
-  }));
-}
-
 export default function MoodPreviewPage() {
   const chartHeight = 320;
-  const { theme } = useTheme();
   const barData = useMemo(() => buildMockBarData(), []);
   const scatterPoints = useMemo(() => buildMockScatterPoints(), []);
   const dailyMockPoints = useMemo(

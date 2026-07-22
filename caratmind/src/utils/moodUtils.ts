@@ -1,9 +1,33 @@
+import { MoodPoint } from '@/types/mood';
+import { format, subDays } from 'date-fns';
+
 type MoodStyle = {
   emoji: string;
   bgColor: string;
   textColor: string;
   borderColor: string;
 };
+
+export function buildMockBarData() {
+  const moods = ['joy', 'fear', 'anger'];
+  const chartData = Array.from({ length: 7 }).map((_, i) => ({
+    date: format(subDays(new Date(), 6 - i), 'yyyy-MM-dd'),
+    jrnl_ids: [],
+    joy: Math.floor(Math.random() * 3),
+    fear: Math.floor(Math.random() * 3),
+    anger: Math.floor(Math.random() * 2),
+  }));
+  return { chartData, moods };
+}
+
+export function buildMockScatterPoints(): MoodPoint[] {
+  const moods = ['joy', 'fear', 'anger'];
+  return Array.from({ length: 7 }).map((_, i) => ({
+    jrnl_id: `mock-${i}`,
+    mood_name: moods[i % moods.length],
+    mood_timestamp: subDays(new Date(), 6 - i).toISOString(),
+  }));
+}
 
 export const MOOD_EMOJIS: Record<string, MoodStyle> = {
   admiration: {
