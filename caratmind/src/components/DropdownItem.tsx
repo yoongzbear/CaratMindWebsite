@@ -12,23 +12,19 @@ type NavItem = {
 
 function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const pathname = usePathname();
 
   const hasChildren = !!item.children?.length;
   const active = item.href ? pathname === item.href : false;
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (!active) {
-      e.currentTarget.style.background = 'rgba(146,168,209,0.08)';
-      e.currentTarget.style.color = 'var(--text)';
-    }
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (!active) {
-      e.currentTarget.style.background = 'transparent';
-      e.currentTarget.style.color = 'var(--muted)';
-    }
+  const itemStyle = {
+    color: active ? 'var(--text)' : hovered ? 'var(--text)' : 'var(--muted)',
+    background: active
+      ? 'transparent'
+      : hovered
+        ? 'rgba(146,168,209,0.08)'
+        : 'transparent',
   };
 
   return (
@@ -42,19 +38,18 @@ function DropdownItem({ item, level = 0 }: { item: NavItem; level?: number }) {
         <Link
           href={item.href}
           className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
-          style={{ color: 'var(--muted)' }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          style={itemStyle}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
           {item.label}
-          {hasChildren && <span>▸</span>}
         </Link>
       ) : (
         <button
           className="text-[clamp(0.875rem,1.5vw,1rem)] no-underline px-4 py-2.25 rounded-lg font-medium bg-transparent border border-transparent transition-all duration-150 ease-in-out flex items-center justify-between gap-2 whitespace-nowrap cursor-pointer w-max"
-          style={{ color: 'var(--muted)' }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          style={itemStyle}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
           {item.label}
           {hasChildren && <span>{level === 0 ? '▾' : '▸'}</span>}

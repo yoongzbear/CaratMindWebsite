@@ -140,7 +140,7 @@ export default function Header() {
         backgroundColor: 'var(--bg-topbar)',
         borderBottom: '1.5px solid var(--second-color)',
         boxShadow: '0 2px 12px rgba(146,168,209,0.10)',
-        // dynamic island safe (iPhone)
+        // dynamic island safe for iPhone
         paddingTop: 'env(safe-area-inset-top, 0px)',
       }}
     >
@@ -298,11 +298,7 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <Link
-              href="/login"
-              // className={`${buttonBase} ${buttonGradientColor} border-2 text-[clamp(0.875rem,1.5vw,1rem)] font-bold`}
-              {...gradientButton(theme)}
-            >
+            <Link href="/login" {...gradientButton(theme)}>
               Log In
             </Link>
           )}

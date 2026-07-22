@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Flame } from 'lucide-react';
 import StackedBarChart from '@/components/chart/StackedBarChart';
-import { startTransition, useEffect, useState } from 'react';
+import { startTransition, useEffect, useRef, useState } from 'react';
 import { DateRangeValue } from '@/components/chart/DateRangeSelector';
 import { toastError } from '@/utils/toast';
 import { Habit, HabitAction, habitMessage, HabitStatus } from '@/types/habit';
@@ -20,6 +20,7 @@ export default function HomePage() {
 
   const [habit, setHabit] = useState<Habit | null>(null);
   const [fetchingHabit, setFetchingHabit] = useState(true);
+  const habitFetchedRef = useRef(false);
   const [selectedStatus, setSelectedStatus] = useState<HabitStatus | null>(
     null,
   );
@@ -83,7 +84,8 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    if (!accessToken) return;
+    if (!accessToken || habitFetchedRef.current) return;
+    habitFetchedRef.current = true; // avoid flashing 2 different habits
     startTransition(() => {
       loadHabit();
     });
