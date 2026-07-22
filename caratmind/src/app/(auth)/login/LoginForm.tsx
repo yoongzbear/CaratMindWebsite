@@ -71,25 +71,23 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
         <label className={labelStyle} style={{ color: 'var(--text)' }}>
           Password
         </label>
-        <div className="relative mb-3.5">
+        <div className={`${inputStyle} relative items-center`}>
           <input
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             required
             value={password}
-            className={inputStyle}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full border-none focus:outline-none"
             style={{
               color: 'var(--text)',
-              paddingRight: '44px',
-              marginBottom: 0,
             }}
             suppressHydrationWarning
           />
           <button
             type="button"
             onClick={() => setShowPassword((p) => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+            className="absolute right-3 cursor-pointer"
             style={{
               color: 'var(--text)',
             }}

@@ -116,14 +116,14 @@ export function RegisterForm({
                 <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Preferred Name
                 </label>
-                <div className="relative mb-3.5">
+                <div className={`${inputStyle} relative items-center`}>
                   <input
                     type="text"
                     autoComplete="nickname"
                     required
                     value={preferredUsername}
                     onChange={(e) => setPreferredUsername(e.target.value)}
-                    className={`${inputStyle} pr-11 mb-0`}
+                    className="w-full border-none focus:outline-none"
                     style={{
                       color: 'var(--text)',
                     }}
@@ -131,7 +131,7 @@ export function RegisterForm({
                   <button
                     type="button"
                     onClick={() => setPreferredUsername(generateRandomName())}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    className="absolute right-3 cursor-pointer"
                     style={{
                       color: 'var(--text)',
                     }}
@@ -160,14 +160,14 @@ export function RegisterForm({
                 <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Password
                 </label>
-                <div className="relative mb-3.5">
+                <div className={`${inputStyle} relative items-center`}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`${inputStyle} pr-11 mb-0`}
+                    className="w-full border-none focus:outline-none"
                     style={{
                       color: 'var(--text)',
                     }}
@@ -175,9 +175,9 @@ export function RegisterForm({
                   <button
                     type="button"
                     onClick={() => setShowPassword((p) => !p)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    className="absolute right-3 cursor-pointer"
                     style={{
-                      color: 'var(--faint)',
+                      color: 'var(--text)',
                     }}
                   >
                     {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
@@ -188,14 +188,14 @@ export function RegisterForm({
                 <label className={labelStyle} style={{ color: 'var(--text)' }}>
                   Confirm Password
                 </label>
-                <div className="relative mb-3.5">
+                <div className={`${inputStyle} relative items-center`}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`${inputStyle} pr-11 mb-0`}
+                    className="w-full border-none focus:outline-none"
                     style={{
                       color: 'var(--text)',
                     }}
@@ -203,7 +203,7 @@ export function RegisterForm({
                   <button
                     type="button"
                     onClick={() => setShowPassword((p) => !p)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer p-0 flex items-center"
+                    className="absolute right-3 cursor-pointer"
                     style={{
                       color: 'var(--text)',
                     }}

@@ -24,6 +24,14 @@ def create_user_if_not_exists(user_id: str, username: str, email: str, preferred
                 'preferred_name': preferred_name,
                 'user_complete_onboarding': False,
                 'user_theme': 'light',
+                'notification_pref': {
+                    'journal_reminder': True, 
+                    'exercise_reminder': True, 
+                    'mood_helpline': True, 
+                    'habit_reminder': True,
+                    'habit_summary': True, 
+                    'new_badge' : True
+                }
             },
             ConditionExpression='attribute_not_exists(user_id)',
         )

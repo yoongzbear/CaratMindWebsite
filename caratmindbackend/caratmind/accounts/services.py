@@ -265,6 +265,7 @@ class CognitoService:
             'username': response.get('Username', ''),
             'email': attrs.get('email'),
             'preferred_username': attrs.get('preferred_username'),
+            'completedOnboarding': attrs.get('user_complete_onboarding'),
         }
     
     @staticmethod
