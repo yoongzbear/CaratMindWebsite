@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 from botocore.exceptions import ClientError
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
+from botocore.exceptions import ClientError
 from accounts.dynamodb_service import get_user
 from badge.dynamodb_service import save_badge
 from caratmind import settings
@@ -353,3 +354,11 @@ def close_prev_incomplete_exercises(date_str: str) -> int:
         items.extend(response.get('Items', []))
 
     return update_missing_reason(items)
+
+def delete_user_exercise_by_id(jrnl_id: str) -> None:
+    table = _get_user_exercise_table()
+    try:
+        table.delete_item(Key={'jrnl_id': jrnl_id})
+    except ClientError as e:
+        print(f"DeleteItem failed on user_exercise table: {e.response['Error']['Code']} - {e.response['Error']['Message']}")
+        raise

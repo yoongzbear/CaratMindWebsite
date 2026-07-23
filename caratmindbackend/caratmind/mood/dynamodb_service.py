@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime, timedelta, timezone
 from boto3.dynamodb.conditions import Attr
+from botocore.exceptions import ClientError
 
 import boto3
 from django.conf import settings
@@ -162,3 +163,11 @@ def delete_all_user_mood(user_id: str) -> None:
     with table.batch_writer() as batch:
         for item in items:
             batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 
+
+def delete_mood_by_id(jrnl_id: str) -> None:
+    table = _get_table()
+    try:
+        table.delete_item(Key={'jrnl_id': jrnl_id})
+    except ClientError as e:
+        print(f"DeleteItem failed on mood table: {e.response['Error']['Code']} - {e.response['Error']['Message']}")
+        raise

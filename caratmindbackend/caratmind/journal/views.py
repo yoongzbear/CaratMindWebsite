@@ -10,11 +10,12 @@ from django.views.decorators.http import require_POST
 
 from accounts.authentication import authenticate_bearer
 from accounts.dynamodb_service import get_user
-from mood.dynamodb_service import calc_negative_mood_streak
+from exercise.dynamodb_service import delete_user_exercise_by_id
+from mood.dynamodb_service import calc_negative_mood_streak, delete_mood_by_id
 from mood.services import detect_store_mood
 from notification.dynamodb_service import STREAK_THRESHOLD_DAYS, already_notified, mark_notified
 from notification.ses_service import send_notification
-from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, update_journal_entry
+from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, update_journal_entry, update_journal_mood_exc
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -164,12 +165,6 @@ def update_journal_view(request, jrnl_id):
 
     if not entry or entry.get('user_id') != sub:
         return JsonResponse({'error': 'Not found'}, status=404)
-
-    # if entry.get("jrnl_status") == "submitted":
-    #     return JsonResponse(
-    #         {"error": "Submitted journals cannot be edited"},
-    #         status=400,
-    #     )
     
     try:
         body = json.loads(request.body)
@@ -199,6 +194,11 @@ def update_journal_view(request, jrnl_id):
         # detect mood if entry submitted
         if jrnl_status == 'submitted':
             detect_store_mood(jrnl_id, sub, entry_text)
+        # delete mood and user exercise when save as draft 
+        elif jrnl_status == 'draft':
+            update_journal_mood_exc(jrnl_id, None, None, None, None)
+            delete_mood_by_id(jrnl_id)
+            delete_user_exercise_by_id(jrnl_id)
 
     except Exception as e:
         return JsonResponse(
