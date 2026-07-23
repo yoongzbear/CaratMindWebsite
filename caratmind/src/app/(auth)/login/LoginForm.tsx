@@ -52,6 +52,9 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           username: err.username,
           sub: err.sub,
         });
+        if (err.email) params.set('email', err.email);
+        if (err.preferredUserName)
+          params.set('preferredUsername', err.preferredUserName);
         if (requestedNext) params.set('next', requestedNext);
         router.push(`/register?${params.toString()}`);
         return;

@@ -35,12 +35,14 @@ export function RegisterForm({
     const paramUsername = searchParams.get('username');
     const paramSub = searchParams.get('sub');
     const paramEmail = searchParams.get('email');
+    const paramName = searchParams.get('preferredUsername');
     const paramConfirm = searchParams.get('needsConfirmation');
 
     if (paramConfirm === 'true' && paramUsername && paramSub) {
       setUsername(paramUsername);
       setSub(paramSub);
       if (paramEmail) setEmail(paramEmail); // set email in the verification page
+      if (paramName) setPreferredUsername(paramName);
       setNeedsConfirmation(true);
     }
   }, [searchParams]);
@@ -54,7 +56,6 @@ export function RegisterForm({
       return;
     }
     setSubmitting(true);
-    console.log(username, confirmationCode, sub, email, preferredUsername);
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',

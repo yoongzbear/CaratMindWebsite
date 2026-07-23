@@ -1,9 +1,4 @@
 import { NextResponse } from 'next/server';
-// import {
-//   getUserProfile,
-//   mapCognitoError,
-//   signInWithPassword,
-// } from '@/lib/cognito/server';
 import { setAuthCookies } from '@/lib/auth/cookies';
 import { buildSessionPayload } from '@/lib/auth/session-response';
 

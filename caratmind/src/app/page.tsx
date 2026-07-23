@@ -65,7 +65,7 @@ export default function SplashPage() {
             <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3">
               {/* textarea */}
               <textarea
-                className="w-full h-32 md:h-48 px-3 py-2.5 rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] box-border outline-none font-inherit"
+                className="w-full h-32 md:h-48 px-3 py-2.5 text-justify rounded-lg text-[clamp(0.875rem,1.5vw,1rem)] box-border outline-none font-inherit"
                 id="entry-text"
                 style={{
                   border: '1px solid var(--border)',
@@ -73,11 +73,10 @@ export default function SplashPage() {
                   color: 'var(--text)',
                   backgroundColor: 'var(--bg-div)',
                 }}
-              >
-                I went out with my friends to our favorite restaurant and shared
-                stories on our lives. I will miss them a lot and I hope to see
-                them again soon.
-              </textarea>
+                defaultValue="I went out with my friends to our favorite restaurant and shared
+                stories about our lives. I will miss them a lot and I hope to see
+                them again soon."
+              ></textarea>
 
               <h3 className="text-(--text) text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight">
                 Journal Entry

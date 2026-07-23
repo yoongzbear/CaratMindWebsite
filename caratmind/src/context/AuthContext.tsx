@@ -31,11 +31,21 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export class NeedsConfirmationError extends Error {
   username: string;
   sub: string;
-  constructor(message: string, username: string, sub: string) {
+  email: string;
+  preferredUserName: string;
+  constructor(
+    message: string,
+    username: string,
+    sub: string,
+    email: string,
+    preferredUserName: string,
+  ) {
     super(message);
     this.name = 'NeedsConfirmationError';
     this.username = username;
     this.sub = sub;
+    this.email = email;
+    this.preferredUserName = preferredUserName;
   }
 }
 
@@ -107,6 +117,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             data.error ?? 'Account has not verified',
             data.username,
             data.sub,
+            data.email,
+            data.preferredUsername,
           );
         }
         throw new Error(data.error ?? 'Sign in failed');
