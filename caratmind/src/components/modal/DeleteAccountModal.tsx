@@ -70,7 +70,8 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
   }
 
   async function handleConfirmDelete() {
-    if (!isConfirmed) return;
+    if (!isConfirmed)
+      toastError('Please enter your username to confirm account deletion.');
 
     setDeleting(true);
     try {
@@ -126,9 +127,9 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
             <button
               onClick={handleConfirmDelete}
               disabled={!isConfirmed || deleting}
-              {...redButton(theme)}
+              {...redButton(theme, !isConfirmed || deleting)}
             >
-              {deleting ? 'Deleting…' : 'Confirm Delete Account'}
+              {deleting ? 'Deleting...' : 'Confirm Delete Account'}
             </button>
           </div>
         }

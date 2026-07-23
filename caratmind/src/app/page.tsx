@@ -73,9 +73,7 @@ export default function SplashPage() {
                   color: 'var(--text)',
                   backgroundColor: 'var(--bg-div)',
                 }}
-                defaultValue="I went out with my friends to our favorite restaurant and shared
-                stories about our lives. I will miss them a lot and I hope to see
-                them again soon."
+                defaultValue="I went out with my friends to our favorite restaurant and shared stories about our lives. I will miss them a lot and I hope to see them again soon."
               ></textarea>
 
               <h3 className="text-(--text) text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight">

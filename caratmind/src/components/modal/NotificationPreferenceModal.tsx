@@ -22,6 +22,7 @@ export default function NotificationPreferenceModal({
   initialPreference,
 }: Props) {
   const { theme } = useTheme();
+  const [updating, setUpdating] = useState(false);
 
   const [preference, setPreference] =
     useState<EmailPreference>(initialPreference);
@@ -52,7 +53,7 @@ export default function NotificationPreferenceModal({
         footer={
           <div className="flex justify-start gap-3">
             <button onClick={handleSave} {...gradientButton(theme)}>
-              Update Preference
+              {updating ? 'Updating...' : 'Update Preference'}
             </button>
           </div>
         }

@@ -114,7 +114,8 @@ export const buttonStyle = `w-full px-5 py-2.5 rounded-[10px] border-0 font-semi
 //   border border-[${themes[theme].border}] bg-[${themes[theme].bg}]
 //   hover:text-[${themes[theme].text}] hover:border-[${themes[theme].muted}] hover:bg-[#f8faff]
 // `;
-export const buttonRed = (theme: ThemeName) => baseButtonClass;
+export const buttonRed = (theme: ThemeName, disabled = false) =>
+  `${baseButtonClass} ${disabled ? 'pointer-events-none opacity-50' : ''}`;
 
 export const buttonRedStyle = (theme: ThemeName): CSSProperties => {
   const dark = isDark(theme);
@@ -128,8 +129,8 @@ export const buttonRedStyle = (theme: ThemeName): CSSProperties => {
   };
 };
 
-export const redButton = (theme: ThemeName) => ({
-  className: buttonRed(theme),
+export const redButton = (theme: ThemeName, disabled = false) => ({
+  className: buttonRed(theme, disabled),
   style: buttonRedStyle(theme),
 });
 

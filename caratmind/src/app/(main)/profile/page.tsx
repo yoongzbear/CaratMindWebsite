@@ -305,7 +305,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Delete account */}
           <div className="flex gap-2">
             <button
               onClick={() => setOpenModal(true)}
