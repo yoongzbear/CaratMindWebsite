@@ -187,7 +187,7 @@ function MoodDayButton({
   const handleClick = () => {
     const ids = row?.jrnl_ids ?? [];
     if (ids.length === 1) {
-      router.push(`/mood/insight/${ids[0]}`);
+      router.push(`/journal/insight/${ids[0]}`);
     } else if (ids.length > 1) {
       router.push(`/journal/past?date=${dateStr}`);
     }

@@ -127,7 +127,7 @@ export default function ExerciseTrackingPage() {
   }, [selectedDate, accessToken]);
 
   const handleViewEntry = (jrnl_id: string) => {
-    router.push(`/mood/insight/${jrnl_id}`);
+    router.push(`/journal/insight/${jrnl_id}`);
   };
 
   const handleRatingSubmit = async (rating: number) => {

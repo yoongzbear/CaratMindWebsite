@@ -187,15 +187,15 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           ),
           showControls: true,
           // onboarding sample page
-          nextRoute: '/onboarding/mood_insight',
+          nextRoute: '/onboarding/journal_insight',
         },
 
-        //   mood insight
+        //   journal insight
         {
           icon: <Gem />,
-          title: 'Mood Insights',
+          title: 'Journal Insights',
           content: (
-            <>Here are the mood insights analyzed from your journal entry!</>
+            <>Here are the journal insights analyzed from your journal entry!</>
           ),
           showControls: true,
           prevRoute: '/journal/new',
@@ -334,10 +334,10 @@ export function buildSteps(isDesktop: boolean): Tour[] {
 
         {
           icon: <Check />,
-          title: 'Mood Insights',
+          title: 'Journal Insights',
           content: (
             <>
-              That is all for the Mood Insight page!
+              That is all for the Journal Insights page!
               <br />
               You may access this page after <b>submitting</b> a journal entry.
             </>
@@ -352,7 +352,7 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           title: 'Past Journal Entry',
           content: <>View all of your past journal entries here.</>,
           showControls: true,
-          prevRoute: '/onboarding/mood_insight',
+          prevRoute: '/onboarding/journal_insight',
         },
         {
           icon: <CalendarDays />,
@@ -575,10 +575,10 @@ export function buildSteps(isDesktop: boolean): Tour[] {
         },
         {
           icon: <Smile />,
-          title: 'Mood Insights',
+          title: 'Journal Insights',
           content: (
             <>
-              View details of the mood insights for the recommended coping
+              View details of the journal insights for the recommended coping
               exercise here.
             </>
           ),
@@ -1031,8 +1031,8 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           title: 'Cancel Update',
           content: (
             <>
-              Cancel journal entry update and return to the Mood Insights page
-              for the entry.
+              Cancel journal entry update and return to the Journal Insights
+              page for the entry.
             </>
           ),
           showControls: true,
@@ -1325,10 +1325,10 @@ export function buildSteps(isDesktop: boolean): Tour[] {
         },
         {
           icon: <Smile />,
-          title: 'Mood Insights',
+          title: 'Journal Insights',
           content: (
             <>
-              View details of the mood insights for the recommended coping
+              View details of the journal insights for the recommended coping
               exercise here.
             </>
           ),
@@ -1542,13 +1542,13 @@ export function buildSteps(isDesktop: boolean): Tour[] {
       ],
     },
     {
-      tour: 'mood-insight-tour',
+      tour: 'journal-insight-tour',
       steps: [
         {
           icon: <Gem />,
-          title: 'Mood Insights',
+          title: 'Journal Insights',
           content: (
-            <>Here are the mood insights analyzed from your journal entry!</>
+            <>Here are the journal insights analyzed from your journal entry!</>
           ),
           showControls: true,
         },
@@ -1685,12 +1685,13 @@ export function buildSteps(isDesktop: boolean): Tour[] {
         },
         {
           icon: <Check />,
-          title: 'Mood Insights',
-          content: <>That is all for the Mood Insight page!</>,
+          title: 'Journal Insights',
+          content: <>That is all for the Journal Insights page!</>,
           showControls: true,
         },
       ],
     },
+
     {
       tour: 'theme-tour',
       steps: [

@@ -116,7 +116,7 @@ export default function StackedBarChart({
     const ids: string[] = rowData?.jrnl_ids ?? [];
     if (ids.length === 0) return;
     if (ids.length === 1) {
-      router.push(`/mood/insight/${ids[0]}`);
+      router.push(`/journal/insight/${ids[0]}`);
     } else {
       router.push(`/journal/past?date=${rowData?.raw_date}`);
     }

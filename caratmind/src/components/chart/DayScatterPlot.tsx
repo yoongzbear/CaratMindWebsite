@@ -46,7 +46,7 @@ export default function DayScatterPlot({
   //   ES Lint error
   const handleScatterClick = (point: any) => {
     if (mockData) return;
-    router.push(`/mood/insight/${point.jrnl_id}`);
+    router.push(`/journal/insight/${point.jrnl_id}`);
   };
 
   if (loading) {

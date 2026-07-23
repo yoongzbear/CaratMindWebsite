@@ -284,7 +284,7 @@ export default function MoodInsightPage() {
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: 'var(--text)' }}
           >
-            Mood Insights
+            Journal Insights
           </h1>
         </header>
 
@@ -293,7 +293,7 @@ export default function MoodInsightPage() {
             className="text-[clamp(1rem,3vw,1.5rem)] px-8 py-6 text-center"
             style={{ color: 'var(--muted)' }}
           >
-            Loading mood insight...
+            Loading journal insight...
           </section>
         ) : !journal ? (
           <section

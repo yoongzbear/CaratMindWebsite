@@ -67,7 +67,7 @@ export default function PastEntryPage() {
   }
 
   const handleViewMore = (jrnl_id: string) => {
-    router.push(`/mood/insight/${jrnl_id}`);
+    router.push(`/journal/insight/${jrnl_id}`);
   };
 
   return (

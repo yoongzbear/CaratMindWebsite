@@ -79,8 +79,8 @@ export default function EditEntryPage() {
         toastSuccess(
           status === 'draft' ? 'Saved as draft.' : 'Entry submitted.',
         );
-        // route to mood insight page
-        router.push(`/mood/insight/${data.jrnl_id}`);
+        // route to journal insight page
+        router.push(`/journal/insight/${data.jrnl_id}`);
       }
     } catch {
       toastError('Something went wrong. Please try again.');

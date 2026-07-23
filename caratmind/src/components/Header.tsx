@@ -38,6 +38,7 @@ const pageTours: Record<string, string> = {
   '/home': 'home-tour',
   '/journal/new': 'new-entry-tour',
   '/journal/past': 'past-entry-tour',
+  '/journal/insight': 'journal-insight-tour',
   '/mood': 'mood-charts-tour',
   '/exercise/tracking': 'exercise-track-tour',
   '/exercise/catalogue': 'exercise-catalogue-tour',
@@ -54,7 +55,7 @@ export function HelpButton() {
 
   if (pathname.startsWith('/journal/edit')) {
     tourName = 'edit-entry-tour';
-  } else if (pathname.startsWith('/mood/insight')) {
+  } else if (pathname.startsWith('/journal/insight')) {
     tourName = 'mood-insight-tour';
   } else {
     tourName = pageTours[pathname];

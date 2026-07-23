@@ -41,7 +41,7 @@ export default function NewEntryPage() {
           status === 'draft' ? 'Saved as draft.' : 'Entry submitted.',
         );
         // navigate to view journal entry
-        router.push(`/mood/insight/${data.jrnl_id}`);
+        router.push(`/journal/insight/${data.jrnl_id}`);
       }
     } catch {
       toastError('Something went wrong. Please try again.');

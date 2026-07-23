@@ -1,19 +1,13 @@
-// preview page for mood insights
+// preview page for journal insights
 'use client';
 
 import StackedBarChart from '@/components/chart/StackedBarChart';
 import Pill from '@/components/Pill';
-import {
-  buttonGradient,
-  buttonRed,
-  gradientButton,
-  redButton,
-} from '@/styles/ui';
+import { gradientButton, redButton } from '@/styles/ui';
 import { getExerciseStyle } from '@/utils/exerciseUtils';
 import { toTitleCase } from '@/utils/format';
-import { getMoodStyle } from '@/utils/moodUtils';
+import { buildMockBarData, getMoodStyle } from '@/utils/moodUtils';
 import { format } from 'date-fns';
-import { buildMockBarData } from '../mood_chart/page';
 import { useMemo } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -57,7 +51,7 @@ export default function MoodInsightPreviewPage() {
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-2"
             style={{ color: 'var(--text)' }}
           >
-            Mood Insights (Preview)
+            Journal Insights (Preview)
           </h1>
         </header>
 
