@@ -165,11 +165,12 @@ export default function ThemePage() {
             {saving ? 'Applying...' : 'Apply Theme'}
           </button>
 
-          {hasChanges && !saving && (
+          {!saving && (
             <button
               onClick={() => setPreviewTheme(savedTheme)}
               className="flex gap-1 text-[clamp(0.875rem,1.5vw,1rem)]"
               style={{ color: 'var(--muted)' }}
+              disabled={!hasChanges}
               id="button-discard"
             >
               <Trash />

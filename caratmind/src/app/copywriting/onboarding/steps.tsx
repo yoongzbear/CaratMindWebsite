@@ -778,6 +778,12 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           showControls: true,
           selector: '#button-delete-account',
           side: 'top-left',
+        },
+        {
+          icon: <Check />,
+          title: 'Profile',
+          content: <>That is all for the Profile page!</>,
+          showControls: true,
           nextRoute: '/theme_select',
         },
 

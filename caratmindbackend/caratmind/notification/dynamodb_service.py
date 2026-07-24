@@ -1,6 +1,3 @@
-# meow
-
-# NEGATIVE_MOODS = {"sad", "anger", "fear", "disgust", "grief", "disappointment"}
 # NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
 from datetime import datetime, timedelta, timezone
 import logging
@@ -99,7 +96,7 @@ def check_exercise_reminder(user: dict) -> None:
         return  
 
     incomplete_exercise = get_incomplete_exercise_on_date(user['user_id'], today_str)
-    if not incomplete_exercise:
+    if incomplete_exercise:
         send_notification(user['user_email'], 'exercise_reminder', {'name': user.get('preferred_name', '')})
         mark_notified(user['user_id'], 'exercise_reminder')
 
