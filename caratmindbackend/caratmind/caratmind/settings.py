@@ -21,11 +21,20 @@ load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'dev')
+
+# table name
+def env_table(base_name: str) -> str:
+    if ENVIRONMENT == 'production':
+        return base_name  # USER
+    return f"{base_name}_{ENVIRONMENT.upper()}" # USER_STAGING
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v57=r_zu8-t0!zj71b71@1x#2piej!@kw=gf+7t5p*hc=lab3i'
+# SECRET_KEY = 'django-insecure-v57=r_zu8-t0!zj71b71@1x#2piej!@kw=gf+7t5p*hc=lab3i'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
@@ -44,15 +53,24 @@ COGNITO_LOGOUT_URI = os.getenv('COGNITO_LOGOUT_URI', 'http://localhost:8000/')
 # AWS DynamoDB
 DYNAMODB_REGION = AWS_DEFAULT_REGION  
 INTERNAL_API_KEY = os.getenv('INTERNAL_API_KEY')
-DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
-DYNAMODB_JOURNAL_TABLE = os.getenv('DYNAMODB_JOURNAL_TABLE')
-DYNAMODB_MOOD_TABLE = os.getenv('DYNAMODB_MOOD_TABLE')
+DYNAMODB_USERS_TABLE = env_table('USER')
+DYNAMODB_JOURNAL_TABLE = env_table('JOURNAL')
+DYNAMODB_MOOD_TABLE = env_table('MOOD')
 DYNAMODB_EXERCISE_TABLE = os.getenv('DYNAMODB_EXERCISE_TABLE')
-DYNAMODB_USER_EXERCISE_TABLE= os.getenv('DYNAMODB_USER_EXERCISE_TABLE')
+DYNAMODB_USER_EXERCISE_TABLE= env_table('USER_EXERCISE')
 DYNAMODB_HABIT_TABLE= os.getenv('DYNAMODB_HABIT_TABLE')
-DYNAMODB_USER_HABIT_TABLE= os.getenv('DYNAMODB_USER_HABIT_TABLE')
-DYNAMODB_USER_BADGE_TABLE= os.getenv('DYNAMODB_USER_BADGE_TABLE')
-DYNAMODB_NOTIFICATION_TABLE= os.getenv('DYNAMODB_NOTIFICATION_TABLE')
+DYNAMODB_USER_HABIT_TABLE= env_table('USER_HABIT')
+DYNAMODB_USER_BADGE_TABLE= env_table('USER_BADGE')
+DYNAMODB_NOTIFICATION_TABLE= env_table('NOTIFICATION')
+# DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
+# DYNAMODB_JOURNAL_TABLE = os.getenv('DYNAMODB_JOURNAL_TABLE')
+# DYNAMODB_MOOD_TABLE = os.getenv('DYNAMODB_MOOD_TABLE')
+# DYNAMODB_EXERCISE_TABLE = os.getenv('DYNAMODB_EXERCISE_TABLE')
+# DYNAMODB_USER_EXERCISE_TABLE= os.getenv('DYNAMODB_USER_EXERCISE_TABLE')
+# DYNAMODB_HABIT_TABLE= os.getenv('DYNAMODB_HABIT_TABLE')
+# DYNAMODB_USER_HABIT_TABLE= os.getenv('DYNAMODB_USER_HABIT_TABLE')
+# DYNAMODB_USER_BADGE_TABLE= os.getenv('DYNAMODB_USER_BADGE_TABLE')
+# DYNAMODB_NOTIFICATION_TABLE= os.getenv('DYNAMODB_NOTIFICATION_TABLE')
 
 # AWS S3
 AWS_S3_REGION = AWS_DEFAULT_REGION  
@@ -66,7 +84,6 @@ CORS_ALLOWED_ORIGINS = os.getenv(
 CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
