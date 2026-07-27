@@ -4,9 +4,9 @@ import { NextResponse } from 'next/server';
 //   mapCognitoError,
 //   refreshTokens,
 // } from '@/lib/cognito/server';
-import { readAuthCookies, setAuthCookies } from '@/lib/auth/cookies';
-import { buildSessionPayload } from '@/lib/auth/session-response';
-import { refreshAccessToken } from '@/lib/auth/refresh';
+import { readAuthCookies, setAuthCookies } from '@/utils/auth/cookies';
+import { buildSessionPayload } from '@/utils/auth/session-response';
+import { refreshAccessToken } from '@/utils/auth/refresh';
 
 export async function GET() {
   try {

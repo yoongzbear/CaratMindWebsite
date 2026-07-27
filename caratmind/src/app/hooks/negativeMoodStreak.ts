@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { getNegativeMoodStreak } from '@/lib/api/moodApi';
+import { getNegativeMoodStreak } from '@/utils/api/moodApi';
 
 const STREAK_THRESHOLD = 3;
 const DISMISS_KEY = 'helplineModalDismissedDate';

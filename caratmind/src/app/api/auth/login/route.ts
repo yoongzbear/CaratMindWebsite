@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { setAuthCookies } from '@/lib/auth/cookies';
-import { buildSessionPayload } from '@/lib/auth/session-response';
+import { setAuthCookies } from '@/utils/auth/cookies';
+import { buildSessionPayload } from '@/utils/auth/session-response';
 
 export async function POST(request: Request) {
   try {

@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { getMoodScatterData } from '@/lib/api/moodApi';
+import { getMoodScatterData } from '@/utils/api/moodApi';
 import { MoodPoint } from '@/types/mood';
 
 type Result = {

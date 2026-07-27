@@ -1,10 +1,13 @@
+import logging
 import os
 import re
+import requests
 import threading
 from functools import lru_cache
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from llama_cpp import Llama
+from django.conf import settings
 
 # detect mood
 _lockDetect = threading.Lock()
@@ -18,7 +21,7 @@ _llmExplain = None
 
 DETECT_MODEL_NAME = "AnasAlokla/multilingual_go_emotions"
 # EXPLAIN_MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
-EXPLAIN_MODEL_PATH = "./models/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+# EXPLAIN_MODEL_PATH = "./models/qwen2.5-1.5b-instruct-q4_k_m.gguf"
 NEUTRAL_LABEL = "neutral"
 SECONDARY_THRESHOLD = 0.10 # below value considered as neutral
 CONFIDENCE_THRESHOLD = 0.5 # below value considered as mixed feelings 
@@ -34,19 +37,19 @@ def _loadDetect():
                 _modelDetect.eval()
     return _tokenizerDetect, _modelDetect
 
-def _loadExplain():
-    global _llmExplain
-    if _llmExplain is None:
-        with _lockExplain:
-            if _llmExplain is None:
-                _llmExplain = Llama(
-                    model_path=EXPLAIN_MODEL_PATH,
-                    n_ctx=2048,        # context window
-                    # n_threads=4,       # tune to EC2 vCPU count
-                    n_threads=os.cpu_count(),
-                    verbose=False,
-                )
-    return _llmExplain
+# def _loadExplain():
+#     global _llmExplain
+#     if _llmExplain is None:
+#         with _lockExplain:
+#             if _llmExplain is None:
+#                 _llmExplain = Llama(
+#                     model_path=EXPLAIN_MODEL_PATH,
+#                     n_ctx=2048,        # context window
+#                     # n_threads=4,       # tune to EC2 vCPU count
+#                     n_threads=os.cpu_count(),
+#                     verbose=False,
+#                 )
+#     return _llmExplain
 
 def predict_mood(text: str, threshold: float = EXPLAIN_THRESHOLD) -> dict:
     """
@@ -139,62 +142,80 @@ def trim_explanation(text: str) -> str:
     # if no complete sentence at all
     return text
 
+logger = logging.getLogger(__name__)
+
 # generate feedback
 def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
-    # short entry (10 words)
-    word_count = len(text.split())
-    if word_count < 10:
-        return (
-            f"Your entry is short, but it carries a tone that leans towards {mood_label}. "
-            "Consider writing more next time for a deeper mood insight!"
+    try:
+        response = requests.post(
+            f"{settings.LLM_SERVICE_URL}/explain",
+            json={
+                "text": text,
+                "mood_label": mood_label,
+                "mood_score": mood_score,
+                "is_mixed": is_mixed,
+            },
+            timeout=30,
         )
+        response.raise_for_status()
+        return response.json()["explanation"]
+    except requests.RequestException:
+        logger.exception("LLM explanation service call failed")
+        return "Unable to generate an explanation right now."
+    # # short entry (10 words)
+    # word_count = len(text.split())
+    # if word_count < 10:
+    #     return (
+    #         f"Your entry is short, but it carries a tone that leans towards {mood_label}. "
+    #         "Consider writing more next time for a deeper mood insight!"
+    #     )
 
-    llm = _loadExplain()
+    # llm = _loadExplain()
 
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                f"You explain the output of a mood classifier. The classifier has already selected the mood.\n"
-                "Never disagree with the classifier. Do not evaluate whether the classifier is correct.\n"
-                "Your only task is to explain which words or events in the journal support the detected mood."
-            )
-        },
-        {
-            "role": "user",
-            "content": (
-                f"Journal Entry:\n{text}\n\n"
-                f"Detected mood:\n{mood_label}\n\n"
-                # f"Detected mood confidence score:\n{mood_score}\n\n"
-                # f"Is mood mixed:\n{is_mixed}\n\n"
-                "Task:\n"
-                "Explain what parts of the journal support this detected mood. Your only task is to explain which words or events in the journal support the detected mood.\n"
-                "Rules:\n"
-                "- Write exactly two sentences.\n"
-                "- Only use information written in the journal.\n"
-                "- Do not use bullet points.\n"
-                "- Do not use numbered lists.\n"
-                "- Do not write headings.\n"
-                "- End after the second sentence.\n"
-                "- End with a period.\n"
-                "- Refer to the author as 'you'\n"
-                "- Ensure the grammar is proper."
-            )
-        }
-    ]
+    # messages = [
+    #     {
+    #         "role": "system",
+    #         "content": (
+    #             f"You explain the output of a mood classifier. The classifier has already selected the mood.\n"
+    #             "Never disagree with the classifier. Do not evaluate whether the classifier is correct.\n"
+    #             "Your only task is to explain which words or events in the journal support the detected mood."
+    #         )
+    #     },
+    #     {
+    #         "role": "user",
+    #         "content": (
+    #             f"Journal Entry:\n{text}\n\n"
+    #             f"Detected mood:\n{mood_label}\n\n"
+    #             # f"Detected mood confidence score:\n{mood_score}\n\n"
+    #             # f"Is mood mixed:\n{is_mixed}\n\n"
+    #             "Task:\n"
+    #             "Explain what parts of the journal support this detected mood. Your only task is to explain which words or events in the journal support the detected mood.\n"
+    #             "Rules:\n"
+    #             "- Write exactly two sentences.\n"
+    #             "- Only use information written in the journal.\n"
+    #             "- Do not use bullet points.\n"
+    #             "- Do not use numbered lists.\n"
+    #             "- Do not write headings.\n"
+    #             "- End after the second sentence.\n"
+    #             "- End with a period.\n"
+    #             "- Refer to the author as 'you'\n"
+    #             "- Ensure the grammar is proper."
+    #         )
+    #     }
+    # ]
 
-    output = llm.create_chat_completion(
-        messages=messages,
-        # max_tokens=120,
-        max_tokens= 100, # lower token
-        temperature=0.4,
-        top_p=0.9,
-        repeat_penalty=1.3,
-        stop=["\nTask:", "\nRules:", "\nJournal Entry:", "\nDetected mood"], # stop when it starts to generate prompts
-    )
+    # output = llm.create_chat_completion(
+    #     messages=messages,
+    #     # max_tokens=120,
+    #     max_tokens= 100, # lower token
+    #     temperature=0.4,
+    #     top_p=0.9,
+    #     repeat_penalty=1.3,
+    #     stop=["\nTask:", "\nRules:", "\nJournal Entry:", "\nDetected mood"], # stop when it starts to generate prompts
+    # )
 
-    # return output["choices"][0]["message"]["content"]
-    raw_text = output["choices"][0]["message"]["content"]
-    cleaned = _clean_explanation(raw_text)
-    print(cleaned)
-    return trim_explanation(cleaned)
+    # # return output["choices"][0]["message"]["content"]
+    # raw_text = output["choices"][0]["message"]["content"]
+    # cleaned = _clean_explanation(raw_text)
+    # print(cleaned)
+    # return trim_explanation(cleaned)

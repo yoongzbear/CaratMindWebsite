@@ -10,7 +10,7 @@ import { toastError, toastSuccess } from '@/utils/toast';
 import { format } from 'date-fns';
 import { gradientButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { downloadJournalEntry } from '@/lib/api/journalApi';
+import { downloadJournalEntry } from '@/utils/api/journalApi';
 
 type Props = {
   open: boolean;

@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import DetectMoodModal from '@/components/modal/DetectMoodModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { editJournal } from '@/lib/api/journalApi';
+import { editJournal } from '@/utils/api/journalApi';
 
 export default function EditEntryPage() {
   const router = useRouter();

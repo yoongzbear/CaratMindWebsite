@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { toastError } from '@/utils/toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getExerciseList } from '@/lib/api/exerciseApi';
+import { getExerciseList } from '@/utils/api/exerciseApi';
 
 export default function ExerciseCatalogPage() {
   const { theme } = useTheme();

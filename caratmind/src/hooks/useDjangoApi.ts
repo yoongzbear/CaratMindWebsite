@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { djangoApiUrl } from '@/lib/api/django';
+import { djangoApiUrl } from '@/utils/api/django';
 
 /**
  * Calls the Django API with `Authorization: Bearer <Cognito access token>`.

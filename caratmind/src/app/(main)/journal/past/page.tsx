@@ -11,7 +11,7 @@ import { toTitleCase } from '@/utils/format';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { getEntriesList } from '@/lib/api/journalApi';
+import { getEntriesList } from '@/utils/api/journalApi';
 
 export default function PastEntryPage() {
   const { theme } = useTheme();

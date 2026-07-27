@@ -79,6 +79,8 @@ AWS_S3_JOURNAL_BUCKET = os.getenv('AWS_S3_JOURNAL_BUCKET') or (
     else f'caratmind-journal-{ENVIRONMENT}'
 )
 
+LLM_SERVICE_URL = os.getenv('LLM_SERVICE_URL')
+
 # CORS — Next.js frontend sends Authorization: Bearer <JWT>
 CORS_ALLOWED_ORIGINS = os.getenv(
     'CORS_ALLOWED_ORIGINS',

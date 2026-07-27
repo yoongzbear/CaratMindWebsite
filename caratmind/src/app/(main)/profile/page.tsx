@@ -15,7 +15,7 @@ import {
   getUserBadge,
   updateEmailPreference,
   updateName,
-} from '@/lib/api/profileApi';
+} from '@/utils/api/profileApi';
 import { EmailPreference } from '@/types/notification';
 import NotificationPreferenceModal from '@/components/modal/NotificationPreferenceModal';
 

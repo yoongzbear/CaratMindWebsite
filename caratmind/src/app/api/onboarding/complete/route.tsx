@@ -1,5 +1,5 @@
-import { readAuthCookies } from '@/lib/auth/cookies';
-import { refreshAccessToken } from '@/lib/auth/refresh';
+import { readAuthCookies } from '@/utils/auth/cookies';
+import { refreshAccessToken } from '@/utils/auth/refresh';
 import { NextResponse } from 'next/server';
 
 export async function POST() {

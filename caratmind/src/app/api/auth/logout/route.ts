@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 // import { globalSignOut } from '@/lib/cognito/server';
-import { clearAuthCookies } from '@/lib/auth/cookies';
+import { clearAuthCookies } from '@/utils/auth/cookies';
 
 export async function POST(request: Request) {
   try {
