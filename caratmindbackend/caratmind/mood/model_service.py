@@ -157,7 +157,7 @@ def generate_mood_explanation(text, mood_label, mood_score, is_mixed):
                 "mood_score": mood_score,
                 "is_mixed": is_mixed,
             },
-            timeout=30,
+            timeout=90,
         )
         response.raise_for_status()
         return response.json()["explanation"]

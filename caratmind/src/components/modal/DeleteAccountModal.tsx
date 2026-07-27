@@ -20,7 +20,7 @@ type Props = {
 export default function DeleteAccountModal({ open, onClose }: Props) {
   const { user, accessToken, signOut } = useAuth();
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme, resetTheme } = useTheme();
 
   const [confirmInput, setConfirmInput] = useState('');
   const [downloading, setDownloading] = useState(false);
@@ -87,6 +87,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
 
       toastSuccess('Account deleted successfully.');
       await signOut?.();
+      resetTheme();
       router.push('/login');
     } catch {
       toastError('Something went wrong deleting your account.');
