@@ -74,7 +74,10 @@ DYNAMODB_NOTIFICATION_TABLE= env_table('NOTIFICATION')
 
 # AWS S3
 AWS_S3_REGION = AWS_DEFAULT_REGION  
-AWS_S3_JOURNAL_BUCKET = os.getenv('AWS_S3_JOURNAL_BUCKET')
+AWS_S3_JOURNAL_BUCKET = os.getenv('AWS_S3_JOURNAL_BUCKET') or (
+    'caratmind-journal' if ENVIRONMENT == 'production'
+    else f'caratmind-journal-{ENVIRONMENT}'
+)
 
 # CORS — Next.js frontend sends Authorization: Bearer <JWT>
 CORS_ALLOWED_ORIGINS = os.getenv(
