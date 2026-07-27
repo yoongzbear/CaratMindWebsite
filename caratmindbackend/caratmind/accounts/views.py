@@ -276,13 +276,13 @@ def logout_view(request):
 
     return JsonResponse({'logout': True})
 
-def dashboard_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    return render(request, 'accounts/dashboard.html', {'user': request.user})
+# def dashboard_view(request):
+#     if not request.user.is_authenticated:
+#         return redirect('login')
+#     return render(request, 'accounts/dashboard.html', {'user': request.user})
 
-def home_view(request):
-    return render(request, 'accounts/home.html')
+# def home_view(request):
+#     return render(request, 'accounts/home.html')
 
 @require_GET
 def api_me_view(request):
