@@ -1,2 +1,2 @@
 #!/bin/bash
-mount -o remount,size=2G /tmp
+mount -o remount,size=1G /tmp
