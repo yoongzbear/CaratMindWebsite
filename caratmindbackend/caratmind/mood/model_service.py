@@ -7,7 +7,9 @@ from functools import lru_cache
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 from llama_cpp import Llama
-from django.conf import settings
+
+from caratmind import settings
+# from django.conf import settings
 
 # detect mood
 _lockDetect = threading.Lock()
