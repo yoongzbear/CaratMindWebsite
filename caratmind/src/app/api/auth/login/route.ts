@@ -19,8 +19,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // const tokens = await signInWithPassword(identifier, password);
-    // const profile = await getUserProfile(tokens.accessToken);
     const res = await fetch(
       `${process.env.DJANGO_API_BASE_URL}/api/accounts/login/`,
       {
