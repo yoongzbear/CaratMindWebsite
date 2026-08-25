@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/exercise/<str:exc_id>/', views.get_exercise_view, name='get_exercise'),
     path('api/user_exercise/list/', views.list_user_exercises_view, name='list_user_exercises'),
     path('api/user_exercise/streak/', views.exercise_streak_view, name='exercise_streak'),
+    path('api/user_exercise/calendar_dates/', views.exercise_calendar_dates_view, name='exercise_calendar_dates'),
     path('api/user_exercise/<str:uex_id>/', views.get_user_exercise_view, name='get_user_exercise'),
     path('api/user_exercise/<str:uex_id>/rating/', views.rating_user_exercise_view, name='rating_user_exercise'),
     path('api/user_exercise/<str:uex_id>/reason/', views.reason_user_exercise_view, name='reason_user_exercise'),

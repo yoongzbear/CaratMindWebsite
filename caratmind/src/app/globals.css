@@ -269,6 +269,23 @@ html {
   background: #f0f6ff !important;
 }
 
+/* calendar shade */
+.has-journal-day {
+  background-color: #e8f4fd;
+  border-radius: 9999px;
+}
+
+.has-exercise-day {
+  background-color: #e8f5e9;
+  border-radius: 9999px;
+}
+
+.has-journal-day[aria-selected='true'],
+.has-exercise-day[aria-selected='true'] {
+  background-color: var(--first-color);
+  color: var(--bg-div);
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

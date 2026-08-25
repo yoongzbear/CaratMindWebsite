@@ -1,3 +1,5 @@
+import calendar
+from datetime import date
 import json
 import logging
 import traceback
@@ -8,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
-from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
+from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_completed_dates_for_user, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
 
 # retrieve coping exercises
 @require_GET
@@ -199,3 +201,32 @@ def exercise_streak_view(request):
         logger.exception("Exercise streak failed")
         traceback.print_exc()
         raise
+
+@require_GET
+def exercise_calendar_dates_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    month_str = request.GET.get('month')  # 'YYYY-MM'
+    if not month_str:
+        return JsonResponse({'error': 'month query param is required (YYYY-MM)'}, status=400)
+
+    try:
+        year, month = map(int, month_str.split('-'))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid month format, expected YYYY-MM'}, status=400)
+
+    start_date = date(year, month, 1).isoformat()
+    last_day = calendar.monthrange(year, month)[1]
+    end_date = date(year, month, last_day).isoformat()
+
+    try:
+        exercise_dates = get_completed_dates_for_user(sub, start_date, end_date + 'T23:59:59')
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load calendar dates: {e}'}, status=500)
+
+    return JsonResponse({
+        'exerciseDates': sorted(exercise_dates),
+    })

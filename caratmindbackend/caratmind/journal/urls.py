@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/journal/new', views.create_journal_view, name='create_journal'),
     path('api/journal/list/', views.list_journals_view, name='list_journals'),
     path('api/journal/streak/', views.journal_streak_view, name='journal_streak'),
+    path('api/journal/calendar_dates/', views.journal_calendar_dates_view, name='journal_calendar_dates'),
     path('api/journal/<str:jrnl_id>/', views.get_journal_view, name='get_journal'),
     path('api/journal/<str:jrnl_id>/update/', views.update_journal_view, name='update_journal'),
 ]

@@ -91,6 +91,19 @@ export async function getEntriesList(
   return data.entries;
 }
 
+export async function getJournalCalendarDates(
+  month: string,
+  accessToken: string,
+): Promise<{ journalDates: string[] }> {
+  return request<{ journalDates: string[] }>(
+    `/api/journal/calendar_dates?month=${month}`,
+    {
+      accessToken,
+    },
+  );
+  // return data.entries;
+}
+
 export async function downloadJournalEntry(
   accessToken: string,
 ): Promise<{ entries: JournalInsightToDownload[] }> {

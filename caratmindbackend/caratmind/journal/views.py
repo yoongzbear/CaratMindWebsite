@@ -1,7 +1,8 @@
+import calendar
 import json
 import uuid
 import logging
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 from django.conf import settings
 from django.http import JsonResponse
@@ -15,7 +16,7 @@ from mood.dynamodb_service import calc_negative_mood_streak, delete_mood_by_id
 from mood.services import detect_store_mood
 from notification.dynamodb_service import STREAK_THRESHOLD_DAYS, already_notified, mark_notified
 from notification.ses_service import send_notification
-from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, update_journal_entry, update_journal_mood_exc
+from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, get_user_journal_dates, update_journal_entry, update_journal_mood_exc
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -255,3 +256,35 @@ def download_journal_view(request):
         })
 
     return JsonResponse({'entries': result})
+
+# get dates with journal entry
+@require_GET
+def journal_calendar_dates_view(request):
+    principal = authenticate_bearer(request)
+    if not principal:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sub = principal.claims.get('sub')
+    month_str = request.GET.get('month')  # 'YYYY-MM'
+    if not month_str:
+        return JsonResponse({'error': 'month query param is required (YYYY-MM)'}, status=400)
+
+    try:
+        year, month = map(int, month_str.split('-'))
+    except ValueError:
+        return JsonResponse({'error': 'Invalid month format, expected YYYY-MM'}, status=400)
+
+    start_date = date(year, month, 1).isoformat()
+    last_day = calendar.monthrange(year, month)[1]
+    end_date = date(year, month, last_day).isoformat()
+
+    try:
+        journal_dates = get_user_journal_dates(sub, start_date, end_date + 'T23:59:59')
+        # exercise_dates = get_completed_dates_for_user(sub, start_date, end_date + 'T23:59:59')
+    except Exception as e:
+        return JsonResponse({'error': f'Failed to load calendar dates: {e}'}, status=500)
+
+    return JsonResponse({
+        'journalDates': sorted(journal_dates),
+        # 'exerciseDates': sorted(exercise_dates),
+    })

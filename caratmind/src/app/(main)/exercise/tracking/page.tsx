@@ -18,6 +18,7 @@ import { useTheme } from '@/context/ThemeContext';
 import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
 import {
   getExerciseByDate,
+  getExerciseCalendarDates,
   getExerciseStreak,
   saveRating,
   saveReason,
@@ -55,6 +56,7 @@ export default function ExerciseTrackingPage() {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
+  const [exerciseDates, setExerciseDates] = useState<Date[]>([]);
 
   const loadStreak = async () => {
     if (!accessToken) return;
@@ -74,6 +76,24 @@ export default function ExerciseTrackingPage() {
       setFetchingStreak(false);
     }
   };
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadExerciseDates() {
+      try {
+        const monthStr = format(calendarMonth, 'yyyy-MM');
+        if (accessToken) {
+          const data = await getExerciseCalendarDates(monthStr, accessToken);
+          setExerciseDates(data.excDates.map((d) => parseISO(d)));
+        }
+      } catch {
+        // non-critical
+      }
+    }
+
+    loadExerciseDates();
+  }, [calendarMonth, accessToken]);
 
   const loadTodayExc = async () => {
     if (!accessToken) return;
@@ -616,6 +636,8 @@ export default function ExerciseTrackingPage() {
                     onMonthChange={setCalendarMonth}
                     onSelect={(date) => date && setSelectedDate(date)}
                     captionLayout="dropdown"
+                    modifiers={{ hasExercise: exerciseDates }}
+                    modifiersClassNames={{ hasExercise: 'has-exercise-day' }}
                     className="w-full"
                     style={{ color: 'var(--text)' }}
                     classNames={{

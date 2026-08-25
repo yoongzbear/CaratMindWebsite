@@ -91,3 +91,16 @@ export async function saveReason(
     cache: 'no-store',
   });
 }
+
+export async function getExerciseCalendarDates(
+  month: string,
+  accessToken: string,
+): Promise<{ excDates: string[] }> {
+  return request<{ excDates: string[] }>(
+    `/api/user_exercise/calendar_dates?month=${month}`,
+    {
+      accessToken,
+    },
+  );
+  // return data.entries;
+}

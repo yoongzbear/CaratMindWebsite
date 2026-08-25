@@ -11,7 +11,10 @@ import { toTitleCase } from '@/utils/format';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { getEntriesList } from '@/utils/api/journalApi';
+import {
+  getEntriesList,
+  getJournalCalendarDates,
+} from '@/utils/api/journalApi';
 
 export function PastEntryContent() {
   const { theme } = useTheme();
@@ -21,6 +24,7 @@ export function PastEntryContent() {
   const [fetching, setFetching] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [journalDates, setJournalDates] = useState<Date[]>([]);
 
   // read ?date=YYYY-MM-DD from URL
   const initialDate = (() => {
@@ -54,6 +58,24 @@ export function PastEntryContent() {
 
     loadEntries();
   }, [selectedDate, accessToken]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+
+    async function loadJournalDates() {
+      try {
+        const monthStr = format(calendarMonth, 'yyyy-MM');
+        if (accessToken) {
+          const data = await getJournalCalendarDates(monthStr, accessToken);
+          setJournalDates(data.journalDates.map((d) => parseISO(d)));
+        }
+      } catch {
+        // non-critical, calendar just won't shade
+      }
+    }
+
+    loadJournalDates();
+  }, [calendarMonth, accessToken]);
 
   if (loading) {
     return (
@@ -162,6 +184,8 @@ export function PastEntryContent() {
                     onMonthChange={setCalendarMonth}
                     onSelect={(date) => date && setSelectedDate(date)}
                     captionLayout="dropdown"
+                    modifiers={{ hasJournal: journalDates }}
+                    modifiersClassNames={{ hasJournal: 'has-journal-day' }}
                     className="w-full"
                     style={{ color: 'var(--text)' }}
                     classNames={{
