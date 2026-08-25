@@ -20,12 +20,12 @@ export function OnboardingProvider({
         steps={steps}
         cardComponent={OnboardingCard}
         onComplete={(tourName) => {
-          if (tourName === 'welcome')
-            fetch('/api/onboarding/complete', { method: 'POST' });
+          if (tourName)
+            fetch(`/api/onboarding/${tourName}/complete`, { method: 'POST' });
         }}
         onSkip={(_step, tourName) => {
-          if (tourName === 'welcome')
-            fetch('/api/onboarding/complete', { method: 'POST' });
+          if (tourName)
+            fetch(`/api/onboarding/${tourName}/complete`, { method: 'POST' });
         }}
       >
         <OnboardingStart />

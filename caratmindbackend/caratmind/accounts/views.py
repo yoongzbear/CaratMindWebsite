@@ -148,7 +148,7 @@ def login_view(request):
             'tokens': tokens,
             'profile': {
                 **profile,
-                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+                'onboarding': dynamo_user.get('user_onboarding') if dynamo_user else None,
             },
         })
     except Exception as e:
@@ -256,16 +256,16 @@ def api_me_view(request):
         }
     )
 
-# onboarding complete update
+# onboarding done update
 @csrf_exempt
 @require_http_methods(['PATCH'])
-def complete_onboarding_view(request):
+def complete_onboarding_view(request, page: str):
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
 
     sub = principal.claims.get('sub')
-    update_onboarding(sub, True)  
+    update_onboarding(sub, page, True)  
     return JsonResponse({'allowed': True})
 
 @require_GET

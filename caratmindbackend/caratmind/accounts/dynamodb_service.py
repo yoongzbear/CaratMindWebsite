@@ -22,7 +22,20 @@ def create_user_if_not_exists(user_id: str, username: str, email: str, preferred
                 'username': username,
                 'user_email': email,
                 'preferred_name': preferred_name,
-                'user_complete_onboarding': False,
+                # 'user_complete_onboarding': False,
+                'user_onboarding': {
+                    'home': False,
+                    'new_entry': False,
+                    'edit_entry': False,
+                    'past_entry': False,
+                    'journal_insights': False,
+                    'mood_charts': False,
+                    'exc_track': False,
+                    'exc_catalog': False,
+                    'helpline': False,
+                    'profile': False,
+                    'theme': False,
+                },
                 'user_theme': 'light',
                 'notification_pref': {
                     'journal_reminder': True, 
@@ -55,15 +68,16 @@ def update_preferred_name(user_id: str, preferred_name: str):
     )
 
 # update onboarding completion
-def update_onboarding(user_id: str, onboardingDone: bool):
+def update_onboarding(user_id: str, page: str, done: bool):
     table = _get_table()
 
     table.update_item(
         Key={
             'user_id': user_id,
         },
-        UpdateExpression='SET user_complete_onboarding = :user_complete_onboarding',
-        ExpressionAttributeValues={':user_complete_onboarding': onboardingDone},
+        UpdateExpression='SET user_onboarding.#page = :done',
+        ExpressionAttributeValues={':#page': page},
+        ExpressionAttributeValues={':#done': done},
         ConditionExpression='attribute_exists(user_id)',
     )
 
