@@ -253,21 +253,3 @@ def download_journal_view(request):
         })
 
     return JsonResponse({'entries': result})
-
-# def get_journal_view(request, jrnl_id):
-#     principal = authenticate_bearer(request)
-#     if not principal:
-#         return JsonResponse({'error': 'Unauthorized'}, status=401)
-
-#     sub = principal.claims.get('sub')
-#     entry = get_entry_by_id(jrnl_id)
-
-#     if not entry or entry.get('user_id') != sub:
-#         return JsonResponse({'error': 'Not found'}, status=404)
-
-#     try:
-#         full_text = get_entry_text(entry['jrnl_entry_key'])
-#     except Exception as e:
-#         return JsonResponse({'error': f'Failed to load entry text: {e}'}, status=500)
-
-#     return JsonResponse({**entry, 'entryText': full_text})

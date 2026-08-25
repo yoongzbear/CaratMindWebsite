@@ -88,7 +88,6 @@ class CognitoService:
         if claims.get('token_use') != 'id':
             return None
 
-        # aud = claims.get('aud')
         if claims.get('aud') != self.client_id:
             return None
 
@@ -96,30 +95,7 @@ class CognitoService:
     
     def verify_token(self, token: str) -> Optional[Dict[str, Any]]:
         """Verify access token first, then ID token."""
-        return self.verify_access_token(token) or self.verify_id_token(token)
-    
-    # def get_authorization_url(self) -> str:
-    #     return (
-    #         f"{self.domain}/oauth2/authorize?"
-    #         f"response_type=code&"
-    #         f"client_id={self.client_id}&"
-    #         f"redirect_uri={self.redirect_uri}&"
-    #         f"scope=openid+email+profile"
-    #     )
-    
-    # def exchange_code_for_tokens(self, code: str) -> Optional[Dict[str, Any]]:
-    #     token_url = f"{self.domain}/oauth2/token"
-    #     data = {
-    #         'grant_type': 'authorization_code',
-    #         'client_id': self.client_id,
-    #         'client_secret': self.client_secret,
-    #         'code': code,
-    #         'redirect_uri': self.redirect_uri,
-    #     }
-    #     response = requests.post(token_url, data=data, timeout=10)
-    #     if response.status_code == 200:
-    #         return response.json()
-    #     return None
+        return self.verify_access_token(token) or self.verify_id_token(token)    
     
     def admin_update_preferred_username(self, username: str, preferred_username: str) -> None:
         import boto3
