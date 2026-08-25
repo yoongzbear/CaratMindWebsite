@@ -12,6 +12,7 @@ import { ChevronDown, HelpCircle, Menu, X } from 'lucide-react';
 import { useNextStep } from 'nextstepjs';
 import { getLogoLong, gradientButton } from '../styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import { ONBOARDING_KEY } from '@/utils/onboardingPath';
 
 const NAV_LINKS = [
   {
@@ -26,40 +27,41 @@ const NAV_LINKS = [
     label: 'Coping Exercise',
     children: [
       { label: 'Exercise Tracking', href: '/exercise/tracking' },
-      { label: 'Exercise Catalogue', href: '/exercise/catalogue' },
+      { label: 'Exercise Catalog', href: '/exercise/catalog' },
     ],
   },
   { label: 'Helpline', href: '/helpline' },
 ];
 
 // onboarding quick start
-const pageTours: Record<string, string> = {
-  // '/': 'welcome',
-  '/home': 'home-tour',
-  '/journal/new': 'new-entry-tour',
-  '/journal/past': 'past-entry-tour',
-  '/journal/insight': 'journal-insight-tour',
-  '/mood': 'mood-charts-tour',
-  '/exercise/tracking': 'exercise-track-tour',
-  '/exercise/catalogue': 'exercise-catalogue-tour',
-  '/helpline': 'helpline-tour',
-  '/profile': 'profile-tour',
-  '/theme_select': 'theme-tour',
-};
+// const pageTours: Record<string, string> = {
+//   // '/': 'welcome',
+//   '/home': 'home-tour',
+//   '/journal/new': 'new-entry-tour',
+//   '/journal/past': 'past-entry-tour',
+//   '/journal/insight': 'journal-insight-tour',
+//   '/mood': 'mood-charts-tour',
+//   '/exercise/tracking': 'exercise-track-tour',
+//   '/exercise/catalog': 'exercise-catalog-tour',
+//   '/helpline': 'helpline-tour',
+//   '/profile': 'profile-tour',
+//   '/theme_select': 'theme-tour',
+// };
 
 export function HelpButton() {
   const pathname = usePathname();
   const { startNextStep } = useNextStep();
 
-  let tourName: string | undefined;
+  // let tourName: string | undefined;
+  const tourName = ONBOARDING_KEY[pathname];
 
-  if (pathname.startsWith('/journal/edit')) {
-    tourName = 'edit-entry-tour';
-  } else if (pathname.startsWith('/journal/insight')) {
-    tourName = 'mood-insight-tour';
-  } else {
-    tourName = pageTours[pathname];
-  }
+  // if (pathname.startsWith('/journal/edit')) {
+  //   tourName = 'edit-entry-tour';
+  // } else if (pathname.startsWith('/journal/insight')) {
+  //   tourName = 'mood-insight-tour';
+  // } else {
+  //   tourName = pageTours[pathname];
+  // }
 
   if (!tourName) return null;
 

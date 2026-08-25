@@ -51,7 +51,7 @@ export async function GET() {
         username: meData.user.username,
         email: meData.user.email,
         preferredUsername: meData.user.preferredUsername,
-        completedOnboarding: meData.user.completedOnboarding,
+        onboarding: meData.user.onboarding,
       },
     });
   } catch (error) {

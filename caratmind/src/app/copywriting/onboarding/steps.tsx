@@ -9,6 +9,7 @@ import {
   Check,
   CircleX,
   ClipboardCheck,
+  Download,
   Eraser,
   Flame,
   Funnel,
@@ -815,6 +816,20 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           side: 'top-left',
         },
         {
+          icon: <User />,
+          title: 'Delete Account',
+          content: (
+            <>
+              Click to delete your account. <br />
+              Deleting your account will remove all of your data including your
+              moods and recommended coping exercises.
+            </>
+          ),
+          showControls: true,
+          selector: '#button-delete-account',
+          side: 'top-left',
+        },
+        {
           icon: <Mail />,
           title: 'Email Notification',
           content: (
@@ -828,17 +843,16 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           side: 'top-left',
         },
         {
-          icon: <User />,
-          title: 'Delete Account',
+          icon: <Download />,
+          title: 'Download Journal Insights',
           content: (
             <>
-              Click to delete your account. <br />
-              Deleting your account will remove all of your data including your
-              moods and recommended coping exercises.
+              Click to download all past journal insight. You can download as a
+              TXT file or PDF file.
             </>
           ),
           showControls: true,
-          selector: '#button-delete-account',
+          selector: '#button-download',
           side: 'top-left',
         },
         {

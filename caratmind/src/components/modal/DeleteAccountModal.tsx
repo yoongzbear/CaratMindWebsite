@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { gradientButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { downloadJournalEntry } from '@/utils/api/journalApi';
-import { Download, Loader } from 'lucide-react';
+import { Download, Loader, X } from 'lucide-react';
 import { JournalInsightToDownload } from '@/types/journal';
 import {
   downloadInsightsAsPdf,
@@ -181,6 +181,12 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
                 {...gradientButton(theme)}
               >
                 {!downloading ? <Download /> : <Loader />}
+              </button>
+              <button
+                onClick={() => setShowFormat(false)}
+                {...redButton(theme)}
+              >
+                <X />
               </button>
             </div>
           )}

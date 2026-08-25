@@ -76,8 +76,8 @@ def update_onboarding(user_id: str, page: str, done: bool):
             'user_id': user_id,
         },
         UpdateExpression='SET user_onboarding.#page = :done',
-        ExpressionAttributeValues={':#page': page},
-        ExpressionAttributeValues={':#done': done},
+        ExpressionAttributeNames={'#page': page},
+        ExpressionAttributeValues={':done': done},
         ConditionExpression='attribute_exists(user_id)',
     )
 

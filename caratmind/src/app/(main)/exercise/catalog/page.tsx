@@ -94,7 +94,7 @@ export default function ExerciseCatalogPage() {
             className="text-[clamp(1.38rem,7vw,2rem)] font-bold mt-0 mb-0.5"
             style={{ color: 'var(--text)' }}
           >
-            Coping Exercise Catalogue
+            Coping Exercise Catalog
           </h1>
         </header>
 

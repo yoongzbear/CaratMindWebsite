@@ -4,8 +4,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   request: Request,
-  { params }: { params: { page: string } },
+  { params }: { params: Promise<{ page: string }> },
 ) {
+  const { page } = await params;
   const { refreshToken, username } = await readAuthCookies();
   if (!refreshToken || !username)
     return NextResponse.json({ ok: false }, { status: 401 });
@@ -13,7 +14,7 @@ export async function POST(
   const tokens = await refreshAccessToken(username, refreshToken);
 
   const res = await fetch(
-    `${process.env.DJANGO_API_BASE_URL}/api/accounts/onboarding/${params.page}/complete/`,
+    `${process.env.DJANGO_API_BASE_URL}/api/accounts/onboarding/${page}/complete/`,
     {
       method: 'PATCH',
       headers: { Authorization: `Bearer ${tokens.access_token}` },

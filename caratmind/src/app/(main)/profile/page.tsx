@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { Dices, Download, Loader } from 'lucide-react';
+import { CircleX, Dices, Download, Loader, X } from 'lucide-react';
 import { generateRandomName } from '@/utils/generateName';
 import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
@@ -371,6 +371,7 @@ export default function ProfilePage() {
               {/* download button */}
               {!showFormat ? (
                 <button
+                  id="button-download"
                   onClick={() => setShowFormat(true)}
                   disabled={downloading}
                   {...gradientButton(theme)}
@@ -400,6 +401,12 @@ export default function ProfilePage() {
                     {...gradientButton(theme)}
                   >
                     {!downloading ? <Download /> : <Loader />}
+                  </button>
+                  <button
+                    onClick={() => setShowFormat(false)}
+                    {...redButton(theme)}
+                  >
+                    <X />
                   </button>
                 </div>
               )}

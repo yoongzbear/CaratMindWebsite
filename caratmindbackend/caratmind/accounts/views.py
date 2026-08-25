@@ -198,7 +198,7 @@ def refresh_token_view(request):
             'tokens': tokens,
             'profile': {
                 **profile,
-                'completedOnboarding': dynamo_user.get('user_complete_onboarding') if dynamo_user else None,
+                'onboarding': dynamo_user.get('user_onboarding') if dynamo_user else None,
             },
         })
     except Exception as e:
@@ -238,7 +238,7 @@ def api_me_view(request):
                     'email': principal.email,
                     'sub': sub,
                     'preferredUsername': None,
-                    'completedOnboarding': None,
+                    'onboarding': None,
                 },
             }
         )
@@ -251,7 +251,7 @@ def api_me_view(request):
                 'email': dynamo_user.get('user_email') or principal.email,
                 'sub': sub,
                 'preferredUsername': dynamo_user.get('preferred_name'),
-                'completedOnboarding': dynamo_user.get('user_complete_onboarding'),
+                'onboarding': dynamo_user.get('user_onboarding'),
             },
         }
     )
@@ -260,6 +260,7 @@ def api_me_view(request):
 @csrf_exempt
 @require_http_methods(['PATCH'])
 def complete_onboarding_view(request, page: str):
+    logger.info("page:", page)
     principal = authenticate_bearer(request)
     if not principal:
         return JsonResponse({'allowed': False, 'error': 'Unauthorized'}, status=401)
