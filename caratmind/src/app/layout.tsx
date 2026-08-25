@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { DM_Sans, Geist } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { LayoutShell } from '../components/LayoutShell';
@@ -9,6 +9,10 @@ import '@daypicker/react/style.css';
 import { OnboardingProvider } from '../components/OnboardingProvider';
 import '../styles/themes';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const dmSans = DM_Sans({ subsets: ['latin'] });
 
@@ -34,7 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="light">
+    <html
+      lang="en"
+      data-theme="light"
+      className={cn('font-sans', geist.variable)}
+    >
       <body
         className={dmSans.className}
         style={{
@@ -46,17 +54,19 @@ export default function RootLayout({
           background: '#fff8f8',
         }}
       >
-        <AuthProvider>
-          <ThemeProvider>
-            <OnboardingProvider>
-              <LayoutShell>
-                {children}
-                <HelplineModalProvider />
-              </LayoutShell>
-            </OnboardingProvider>
-            <ClientToastContainer />
-          </ThemeProvider>
-        </AuthProvider>
+        <TooltipProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <OnboardingProvider>
+                <LayoutShell>
+                  {children}
+                  <HelplineModalProvider />
+                </LayoutShell>
+              </OnboardingProvider>
+              <ClientToastContainer />
+            </ThemeProvider>
+          </AuthProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

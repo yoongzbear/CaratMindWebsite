@@ -11,6 +11,13 @@ import { format } from 'date-fns';
 import { gradientButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { downloadJournalEntry } from '@/utils/api/journalApi';
+import { Download, Loader } from 'lucide-react';
+import { JournalInsightToDownload } from '@/types/journal';
+import {
+  downloadInsightsAsPdf,
+  downloadTextFile,
+  formatJournalInsightsAsText,
+} from '@/utils/downloadJournalInsight';
 
 type Props = {
   open: boolean;
@@ -24,46 +31,43 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
 
   const [confirmInput, setConfirmInput] = useState('');
   const [downloading, setDownloading] = useState(false);
+  const [showFormat, setShowFormat] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState<'text' | 'pdf'>('text');
   const [deleting, setDeleting] = useState(false);
 
   const isConfirmed = confirmInput.trim() === user?.username;
 
-  async function handleDownload() {
+  async function handleDownload(fileFormat: 'text' | 'pdf') {
     setDownloading(true);
     try {
       if (accessToken) {
         const data = await downloadJournalEntry(accessToken);
 
-        const entries: { jrnl_created_at: string; entryText: string }[] =
-          data.entries ?? [];
+        const insights: JournalInsightToDownload[] = data.entries ?? [];
 
-        if (entries.length === 0) {
-          toastError('No journal entries to download.');
+        if (insights.length === 0) {
+          toastError('No journal insights to download.');
           return;
         }
 
-        // combine all entries into one .txt file
-        const combined = entries
-          .map(
-            (e) =>
-              `Date: ${format(new Date(e.jrnl_created_at), 'dd/MMMM/yyyy, h:mm a')}\n\n${e.entryText}\n\n${'-'.repeat(40)}\n`,
-          )
-          .join('\n');
-        const blob = new Blob([combined], { type: 'text/plain;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        //   create element to enable download
-        const entriesFile = document.createElement('a');
-        entriesFile.href = url;
-        entriesFile.download = `caratmind_journal_entries_${Date.now()}.txt`;
-        document.body.appendChild(entriesFile);
-        entriesFile.click();
-        entriesFile.remove();
-        URL.revokeObjectURL(url);
+        if (fileFormat === 'pdf') {
+          downloadInsightsAsPdf(
+            insights,
+            `caratmind_journal_insights_${Date.now()}.pdf`,
+          );
+        } else {
+          const combined = formatJournalInsightsAsText(insights);
+          downloadTextFile(
+            combined,
+            `caratmind_journal_insights_${Date.now()}.txt`,
+          );
+        }
 
-        toastSuccess('Journal entries downloaded.');
+        toastSuccess('Journal insights downloaded.');
+        setShowFormat(false);
       }
     } catch {
-      toastError('Something went wrong downloading your entries.');
+      toastError('Something went wrong downloading your journal insights.');
     } finally {
       setDownloading(false);
     }
@@ -98,6 +102,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
 
   function handleClose() {
     setConfirmInput('');
+    setShowFormat(false);
     onClose();
   }
 
@@ -142,21 +147,44 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
           Deleting your account will remove all related data including your
           journal entries. Would you like to download your journal entries?
         </h4>
-        <p
-          className="text-[clamp(0.875rem,1.5vw,1rem)] mt-0 mb-2.5 italic"
-          style={{ color: 'var(--muted)' }}
-        >
-          Journal entries will be downloaded as a .txt file
-        </p>
-        <button
-          onClick={handleDownload}
-          disabled={downloading}
-          {...gradientButton(theme)}
-        >
-          {downloading
-            ? 'Preparing to Download...'
-            : 'Download Journal Entries'}
-        </button>
+
+        <div className="flex flex-col gap-2 w-fit">
+          {/* download button */}
+          {!showFormat ? (
+            <button
+              onClick={() => setShowFormat(true)}
+              disabled={downloading}
+              {...gradientButton(theme)}
+            >
+              Download Journal Insights
+            </button>
+          ) : (
+            <div className="flex gap-2 items-center">
+              {/* dropdown for file type */}
+              <select
+                className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-fit px-3 py-2.25 mt-3 lg:mt-0 rounded-[10px] bg-white cursor-pointer"
+                style={{
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)',
+                }}
+                value={downloadFormat}
+                onChange={(e) =>
+                  setDownloadFormat(e.target.value as 'text' | 'pdf')
+                }
+              >
+                <option value="text">Text File</option>
+                <option value="pdf">PDF File</option>
+              </select>
+              <button
+                onClick={() => handleDownload(downloadFormat)}
+                disabled={downloading}
+                {...gradientButton(theme)}
+              >
+                {!downloading ? <Download /> : <Loader />}
+              </button>
+            </div>
+          )}
+        </div>
 
         <p
           className="text-[clamp(0.875rem,1.5vw,1rem)] mt-4"

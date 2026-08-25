@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     const data = await res.json();
     if (!res.ok) {
       return NextResponse.json(
-        { error: data.error ?? 'Failed to load journal entries.' },
+        { error: data.error ?? 'Failed to load journal insights.' },
         { status: res.status },
       );
     }

@@ -59,99 +59,14 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Links */}
-        <div>
-          <div
-            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
-            style={{
-              color: 'var(--text)',
-            }}
-          >
-            Journal
-          </div>
-          {[
-            { label: 'New Entry', href: '/journal/new' },
-            { label: 'Past Entry', href: '/journal/past' },
-          ].map(({ label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
-              style={{
-                color: 'var(--text)',
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-              }
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-        <div>
-          <div
-            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
-            style={{
-              color: 'var(--text)',
-            }}
-          >
-            Mood
-          </div>
-          {[{ label: 'Mood Dashboard', href: '/mood' }].map(
-            ({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
-                style={{
-                  color: 'var(--text)',
-                }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-                }
-              >
-                {label}
-              </Link>
-            ),
-          )}
-        </div>
-        <div>
-          <div
-            className="text-[clamp(1rem,2vw,1.15rem)] font-extrabold tracking-[0.12em] uppercase mb-3"
-            style={{
-              color: 'var(--text)',
-            }}
-          >
-            Coping Exercise
-          </div>
-          {[
-            { label: 'Exercise Tracking', href: '/exercise_track' },
-            { label: 'Exercise Catalogue', href: '/exercise_catalogue' },
-          ].map(({ label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-[clamp(0.875rem,1.5vw,1rem)] no-underline mb-1.75 font-medium transition-colors duration-130"
-              style={{
-                color: 'var(--text)',
-              }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = 'var(--text)')
-              }
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
+        <p
+          className="m-0 max-w-md text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-left sm:text-right"
+          style={{ color: 'var(--text)' }}
+        >
+          Mental well-being improves through long-term and consistent
+          commitment. Be patient with your progress as mental health improvement
+          may not always be immediate.
+        </p>
       </div>
 
       {/* Disclaimer */}
@@ -164,17 +79,6 @@ export default function Footer() {
           paddingBottom: 'max(1.125rem, env(safe-area-inset-bottom, 0px))',
         }}
       >
-        <p
-          className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
-          style={{
-            color: 'var(--text)',
-          }}
-        >
-          Mental well-being improves through long-term and consistent
-          commitment. Be patient with your progress as mental health improvement
-          may not always be immediate.
-        </p>
-        <br />
         <p
           className="m-0 text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center"
           style={{

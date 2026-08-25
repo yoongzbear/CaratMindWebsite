@@ -1,6 +1,11 @@
 // simplify calling APIs
 
-import { Journal, JournalDetail, StatusKey } from '../../types/journal';
+import {
+  Journal,
+  JournalDetail,
+  JournalInsightToDownload,
+  StatusKey,
+} from '../../types/journal';
 import { request } from './apiUtils';
 
 type JournalStreakResponse = {
@@ -86,16 +91,13 @@ export async function getEntriesList(
   return data.entries;
 }
 
-type JournalEntryToDownload = { jrnl_created_at: string; entryText: string };
-
 export async function downloadJournalEntry(
   accessToken: string,
-): Promise<{ entries: JournalEntryToDownload[] }> {
-  return request<{ entries: JournalEntryToDownload[] }>(
+): Promise<{ entries: JournalInsightToDownload[] }> {
+  return request<{ entries: JournalInsightToDownload[] }>(
     '/api/journal/download',
     {
       accessToken,
     },
   );
-  // return data.entries;
 }

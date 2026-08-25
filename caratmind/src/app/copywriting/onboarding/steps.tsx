@@ -882,7 +882,7 @@ export function buildSteps(isDesktop: boolean): Tour[] {
           content: (
             <>
               Get reminded on basic habits to improve your well-being! Click on
-              the suitable button.
+              the button that fits best.
             </>
           ),
           showControls: true,

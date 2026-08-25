@@ -250,6 +250,8 @@ def download_journal_view(request):
         result.append({
             'jrnl_created_at': entry.get('jrnl_created_at'),
             'entryText': full_text,
+            'mood_name': entry.get('mood_name'),
+            'exc_name': entry.get('exc_name'),
         })
 
     return JsonResponse({'entries': result})

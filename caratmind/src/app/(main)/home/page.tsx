@@ -152,7 +152,7 @@ export default function HomePage() {
 
         {/* banner for basic habits */}
         <div
-          className="rounded-[10px] border mb-4 p-3 flex flex-col sm:flex-row gap-3 sm:items-center"
+          className="rounded-[10px] border mb-4 p-3"
           id="banner"
           style={{
             backgroundColor: 'var(--bg-div)',
@@ -160,52 +160,60 @@ export default function HomePage() {
             border: '1px solid #eef2f9',
           }}
         >
-          {fetchingHabit ? (
-            <h5
-              className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: 'var(--text)' }}
-            >
-              Loading today&apos;s habit...
-            </h5>
-          ) : !habit ? (
-            <h5
-              className="text-[clamp(1rem,3vw,1.5rem)]"
-              style={{ color: 'var(--text)' }}
-            >
-              All habits completed for today! Keep it up for tomorrow.
-            </h5>
-          ) : (
-            <>
+          <h3
+            className="text-[clamp(1.25rem,5vw,1.75rem)] font-semibold tracking-tight"
+            style={{ color: 'var(--text)' }}
+          >
+            Daily Habit
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            {fetchingHabit ? (
               <h5
-                className="flex-1 font-semibold text-[clamp(1rem,3vw,1.5rem)]"
+                className="text-[clamp(1rem,3vw,1.5rem)]"
                 style={{ color: 'var(--text)' }}
               >
-                {habit.hab_question}
+                Loading today&apos;s habit...
               </h5>
-
-              {selectedStatus ? (
-                <p
-                  className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+            ) : !habit ? (
+              <h5
+                className="text-[clamp(1rem,3vw,1.5rem)]"
+                style={{ color: 'var(--text)' }}
+              >
+                All habits completed for today! Keep it up for tomorrow.
+              </h5>
+            ) : (
+              <>
+                <h5
+                  className="flex-1 font-semibold text-[clamp(1rem,3vw,1.5rem)]"
                   style={{ color: 'var(--text)' }}
                 >
-                  {habitMessage[selectedStatus]}
-                </p>
-              ) : (
-                <div className="sm:ml-auto flex gap-3 justify-center sm:justify-end sm:gap-5 flex-wrap">
-                  {habit.hab_actions.map((action) => (
-                    <button
-                      key={action.action}
-                      disabled={submittingAction}
-                      onClick={() => handleActionClick(action)}
-                      {...gradientButton(theme)}
-                    >
-                      {action.action}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+                  {habit.hab_question}
+                </h5>
+
+                {selectedStatus ? (
+                  <p
+                    className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+                    style={{ color: 'var(--text)' }}
+                  >
+                    {habitMessage[selectedStatus]}
+                  </p>
+                ) : (
+                  <div className="sm:ml-auto flex gap-3 justify-center sm:justify-end sm:gap-5 flex-wrap">
+                    {habit.hab_actions.map((action) => (
+                      <button
+                        key={action.action}
+                        disabled={submittingAction}
+                        onClick={() => handleActionClick(action)}
+                        {...gradientButton(theme)}
+                      >
+                        {action.action}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
         {/* cards */}

@@ -5,10 +5,19 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthCard } from '@/components/AuthCard';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { Dices, Eye, EyeOff } from 'lucide-react';
+import { CircleQuestionMark, Dices, Eye, EyeOff } from 'lucide-react';
 import { generateRandomName } from '@/utils/generateName';
 import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  validatePassword,
+  validateConfirmPassword,
+} from '@/utils/validatePassword';
 
 export function RegisterForm({
   requestedNext,
@@ -29,6 +38,11 @@ export function RegisterForm({
   const [sub, setSub] = useState('');
   const [consent, setConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
 
   // not confirmed account login's verification
   useEffect(() => {
@@ -47,6 +61,17 @@ export function RegisterForm({
     }
   }, [searchParams]);
 
+  function handlePasswordChange(value: string) {
+    setPassword(value);
+    setPasswordError(value ? validatePassword(value) : null);
+    setConfirmPasswordError(validateConfirmPassword(value, confirmPassword));
+  }
+
+  function handleConfirmPasswordChange(value: string) {
+    setConfirmPassword(value);
+    setConfirmPasswordError(validateConfirmPassword(password, value));
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!needsConfirmation && !consent) {
@@ -55,6 +80,20 @@ export function RegisterForm({
       );
       return;
     }
+
+    if (!needsConfirmation) {
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        toastError(passwordError);
+        return;
+      }
+      const confirmError = validateConfirmPassword(password, confirmPassword);
+      if (confirmError) {
+        toastError(confirmError);
+        return;
+      }
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch('/api/auth/register', {
@@ -172,16 +211,35 @@ export function RegisterForm({
 
             <div className="w-full sm:flex gap-4">
               <div className="w-full">
-                <label className={labelStyle} style={{ color: 'var(--text)' }}>
-                  Password
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label
+                    className={labelStyle}
+                    style={{ color: 'var(--text)' }}
+                  >
+                    Password
+                  </label>
+                  <Tooltip>
+                    <TooltipTrigger
+                      className="cursor-help"
+                      style={{ color: 'var(--muted)' }}
+                    >
+                      <CircleQuestionMark size={16} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        At least 8 characters, including an uppercase letter, a
+                        lowercase letter, and a number
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <div className={`${inputStyle} relative items-center`}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => handlePasswordChange(e.target.value)}
                     className="w-full border-none focus:outline-none"
                     style={{
                       color: 'var(--text)',
@@ -198,18 +256,44 @@ export function RegisterForm({
                     {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
                   </button>
                 </div>
+                {passwordError && (
+                  <p
+                    className="text-[clamp(0.75rem,1.5vw,0.85rem)] mb-1"
+                    style={{ color: 'red' }}
+                  >
+                    {passwordError}
+                  </p>
+                )}
               </div>
               <div className="w-full">
-                <label className={labelStyle} style={{ color: 'var(--text)' }}>
-                  Confirm Password
-                </label>
+                <div className="flex gap-2 items-center">
+                  <label
+                    className={labelStyle}
+                    style={{ color: 'var(--text)' }}
+                  >
+                    Confirm Password
+                  </label>
+                  <Tooltip>
+                    <TooltipTrigger
+                      className="cursor-help"
+                      style={{ color: 'var(--muted)' }}
+                    >
+                      <CircleQuestionMark size={16} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Must match with Password</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <div className={`${inputStyle} relative items-center`}>
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) =>
+                      handleConfirmPasswordChange(e.target.value)
+                    }
                     className="w-full border-none focus:outline-none"
                     style={{
                       color: 'var(--text)',
@@ -217,15 +301,27 @@ export function RegisterForm({
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword((p) => !p)}
+                    onClick={() => setShowConfirmPassword((p) => !p)}
                     className="absolute right-3 cursor-pointer"
                     style={{
                       color: 'var(--text)',
                     }}
                   >
-                    {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={24} />
+                    ) : (
+                      <Eye size={24} />
+                    )}
                   </button>
                 </div>
+                {confirmPasswordError && (
+                  <p
+                    className="text-[clamp(0.75rem,1.5vw,0.85rem)] mt-1"
+                    style={{ color: 'red' }}
+                  >
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
             </div>
 

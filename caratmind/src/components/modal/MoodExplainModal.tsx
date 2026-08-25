@@ -95,7 +95,7 @@ export default function MoodExplainModal({
             className="text-[clamp(0.875rem,1.5vw,1rem)] mb-1"
             style={{ color: 'var(--muted)' }}
           >
-            Confidence:{' '}
+            Mood Detection Confidence Score:{' '}
             {moodData.mood_confidence
               ? `${(parseFloat(moodData.mood_confidence) * 100).toFixed(0)}%`
               : 'Unknown'}

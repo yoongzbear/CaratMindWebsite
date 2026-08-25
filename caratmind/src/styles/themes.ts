@@ -13,7 +13,7 @@ export type ThemeName =
 export const themes: Record<ThemeName, Record<string, string>> = {
   // default
   light: {
-    text: '#3a4a6b',
+    text: '#000000',
     muted: '#9aa8c4',
     faint: '#b0bcd4',
     border: '#dde4f0',
@@ -140,7 +140,7 @@ export const themes: Record<ThemeName, Record<string, string>> = {
 };
 
 export const buttonGradientColor: Record<ThemeName, string> = {
-  light: 'bg-gradient-to-r from-[#F7CAC9] to-[#92A8D1] text-[#3a4a6b]',
+  light: 'bg-gradient-to-r from-[#F7CAC9] to-[#92A8D1] text-[#000000]',
   dark: 'bg-gradient-to-r from-[#c98f92] to-[#5b6f99] text-white',
   cherryBlossoms: 'bg-gradient-to-r from-[#FBD3E9] to-[#BB377D] text-white',
   ocean: 'bg-gradient-to-r from-[#92A8D1] to-[#60a5fa] text-[#1e3a8a]',

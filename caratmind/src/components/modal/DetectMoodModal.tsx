@@ -22,12 +22,20 @@ export default function DetectMoodModal({ open, onClose }: Props) {
           }}
         />
       </div>
-      <h2
-        className="mt-0 mb-2.5 text-[clamp(1.3rem,6vw,1.85rem)]"
-        style={{ color: 'var(--text)' }}
-      >
-        Detecting your mood and recommending a coping exercise...
-      </h2>
+      <div className="justify-center text-center">
+        <h2
+          className="mt-0 mb-2.5 text-[clamp(1.3rem,6vw,1.85rem)]"
+          style={{ color: 'var(--text)' }}
+        >
+          Detecting your mood and recommending a coping exercise...
+        </h2>
+        <p
+          className="text-[clamp(1rem,3vw,1.5rem)]"
+          style={{ color: 'var(--muted)' }}
+        >
+          This may take awhile. Please wait!
+        </p>
+      </div>
     </Modal>
   );
 }

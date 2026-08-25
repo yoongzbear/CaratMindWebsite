@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { Dices } from 'lucide-react';
+import { Dices, Download, Loader } from 'lucide-react';
 import { generateRandomName } from '@/utils/generateName';
 import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
@@ -18,6 +18,13 @@ import {
 } from '@/utils/api/profileApi';
 import { EmailPreference } from '@/types/notification';
 import NotificationPreferenceModal from '@/components/modal/NotificationPreferenceModal';
+import { downloadJournalEntry } from '@/utils/api/journalApi';
+import { JournalInsightToDownload } from '@/types/journal';
+import {
+  downloadInsightsAsPdf,
+  downloadTextFile,
+  formatJournalInsightsAsText,
+} from '@/utils/downloadJournalInsight';
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, accessToken } = useAuth();
@@ -32,6 +39,9 @@ export default function ProfilePage() {
   const [prefs, setPrefs] = useState<EmailPreference | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [savePref, setSavePref] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [showFormat, setShowFormat] = useState(false);
+  const [downloadFormat, setDownloadFormat] = useState<'text' | 'pdf'>('text');
 
   useEffect(() => {
     if (!accessToken) return;
@@ -101,6 +111,42 @@ export default function ProfilePage() {
   function handleCancel() {
     setEditing(false);
     setError('');
+  }
+
+  async function handleDownload(fileFormat: 'text' | 'pdf') {
+    setDownloading(true);
+    try {
+      if (accessToken) {
+        const data = await downloadJournalEntry(accessToken);
+
+        const insights: JournalInsightToDownload[] = data.entries ?? [];
+
+        if (insights.length === 0) {
+          toastError('No journal insights to download.');
+          return;
+        }
+
+        if (fileFormat === 'pdf') {
+          downloadInsightsAsPdf(
+            insights,
+            `caratmind_journal_insights_${Date.now()}.pdf`,
+          );
+        } else {
+          const combined = formatJournalInsightsAsText(insights);
+          downloadTextFile(
+            combined,
+            `caratmind_journal_insights_${Date.now()}.txt`,
+          );
+        }
+
+        toastSuccess('Journal insights downloaded.');
+        setShowFormat(false);
+      }
+    } catch {
+      toastError('Something went wrong downloading your journal insights.');
+    } finally {
+      setDownloading(false);
+    }
   }
 
   async function handleSavePreference(updatedPref: EmailPreference) {
@@ -291,6 +337,13 @@ export default function ProfilePage() {
                     Edit Name
                   </button>
                 )}
+                <button
+                  onClick={() => setOpenDeleteAccount(true)}
+                  {...redButton(theme)}
+                  id="button-delete-account"
+                >
+                  Delete Account
+                </button>
               </div>
             </div>
 
@@ -313,13 +366,44 @@ export default function ProfilePage() {
             >
               Manage Email Notification
             </button>
-            <button
-              onClick={() => setOpenDeleteAccount(true)}
-              {...redButton(theme)}
-              id="button-delete-account"
-            >
-              Delete Account
-            </button>
+
+            <div className="flex flex-col gap-2 w-fit">
+              {/* download button */}
+              {!showFormat ? (
+                <button
+                  onClick={() => setShowFormat(true)}
+                  disabled={downloading}
+                  {...gradientButton(theme)}
+                >
+                  Download Journal Insights
+                </button>
+              ) : (
+                <div className="flex gap-2 items-center">
+                  {/* dropdown for file type */}
+                  <select
+                    className="flex-1 text-[clamp(0.875rem,1.5vw,1rem)] w-fit px-3 py-2.25 mt-3 lg:mt-0 rounded-[10px] bg-white cursor-pointer"
+                    style={{
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                    value={downloadFormat}
+                    onChange={(e) =>
+                      setDownloadFormat(e.target.value as 'text' | 'pdf')
+                    }
+                  >
+                    <option value="text">Text File</option>
+                    <option value="pdf">PDF File</option>
+                  </select>
+                  <button
+                    onClick={() => handleDownload(downloadFormat)}
+                    disabled={downloading}
+                    {...gradientButton(theme)}
+                  >
+                    {!downloading ? <Download /> : <Loader />}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -20,3 +20,10 @@ export const STATUS_LABEL: Record<StatusKey, string> = {
 };
 
 export type JournalDetail = Journal & { entryText: string };
+
+export type JournalInsightToDownload = {
+  jrnl_created_at: string;
+  entryText: string;
+  mood_name?: string;
+  exc_name?: string;
+};
