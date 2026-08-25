@@ -20,9 +20,9 @@ import { useParams, useRouter } from 'next/navigation';
 import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
 import StreakBadgeModal from '@/components/modal/StreakBadgeModal';
-import { editJournal, getJournalEntry } from '@/lib/api/journalApi';
-import { confirmMood, getMood, saveCorrectMood } from '@/lib/api/moodApi';
-import { getJournalExercise } from '@/lib/api/exerciseApi';
+import { editJournal, getJournalEntry } from '@/utils/api/journalApi';
+import { confirmMood, getMood, saveCorrectMood } from '@/utils/api/moodApi';
+import { getJournalExercise } from '@/utils/api/exerciseApi';
 
 export default function MoodInsightPage() {
   const { theme } = useTheme();

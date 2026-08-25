@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { setAuthCookies } from '@/lib/auth/cookies';
-import { buildSessionPayload } from '@/lib/auth/session-response';
+import { setAuthCookies } from '@/utils/auth/cookies';
+import { buildSessionPayload } from '@/utils/auth/session-response';
 
 export async function POST(request: Request) {
   try {
@@ -19,8 +19,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // const tokens = await signInWithPassword(identifier, password);
-    // const profile = await getUserProfile(tokens.accessToken);
     const res = await fetch(
       `${process.env.DJANGO_API_BASE_URL}/api/accounts/login/`,
       {

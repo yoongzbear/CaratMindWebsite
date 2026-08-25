@@ -15,6 +15,11 @@ const dmSans = DM_Sans({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'CaratMind',
   description: 'Mental Health Support System',
+  icons: {
+    icon: '/assets/CM_mini.png',
+    shortcut: '/assets/CM_mini.png',
+    apple: '/assets/CM_mini.png',
+  },
 };
 
 export const viewport: Viewport = {

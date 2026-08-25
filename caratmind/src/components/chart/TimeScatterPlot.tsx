@@ -23,8 +23,9 @@ import { useRouter } from 'next/navigation';
 import { getMoodStyle, MOOD_ORDER } from '@/utils/moodUtils';
 import { useDailyMoodScatterData } from '@/app/hooks/dailyMoodScatterData';
 import Link from 'next/link';
-import { buttonGradient } from '@/styles/ui';
+import { buttonGradient, gradientButton } from '@/styles/ui';
 import { MoodPoint } from '@/types/mood';
+import { useTheme } from '@/context/ThemeContext';
 
 type Props = {
   moodDate: string;
@@ -42,6 +43,7 @@ export default function TimeScatterPlot({
     mockData,
   );
   const router = useRouter();
+  const { theme } = useTheme();
   const isToday = moodDate === format(new Date(), 'yyyy-MM-dd'); // check if date is current date
 
   // time for start and end of the day
@@ -83,7 +85,8 @@ export default function TimeScatterPlot({
         {isToday && (
           <Link
             href="/journal/new"
-            className={`${buttonGradient} mt-2`}
+            {...gradientButton(theme)}
+            // className={`${buttonGradient} mt-2`}
             // className={`mt-1 inline-flex items-center justify-center gap-1.5 ${buttonGradientColor} border-2 text-white sm:text-[14px] md:text-[16px] font-medium rounded-xl px-5 py-2.5 transition-colors duration-200`}
           >
             Write an entry

@@ -21,7 +21,7 @@ import {
   getExerciseStreak,
   saveRating,
   saveReason,
-} from '@/lib/api/exerciseApi';
+} from '@/utils/api/exerciseApi';
 
 export default function ExerciseTrackingPage() {
   const { theme } = useTheme();

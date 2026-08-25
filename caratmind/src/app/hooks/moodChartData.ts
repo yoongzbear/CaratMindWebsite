@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { getMoodChartData } from '@/lib/api/moodApi';
+import { getMoodChartData } from '@/utils/api/moodApi';
 import { ChartRow } from '@/types/mood';
 
 type Params =

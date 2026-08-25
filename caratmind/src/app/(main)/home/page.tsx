@@ -10,9 +10,9 @@ import { Habit, HabitAction, habitMessage, HabitStatus } from '@/types/habit';
 import { gradientButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { getBadgeMilestone } from '@/utils/format';
-import { getTodayHabit, saveTodayHabit } from '@/lib/api/habitApi';
-import { getJournalStreak } from '@/lib/api/journalApi';
-import { getExerciseStreak } from '@/lib/api/exerciseApi';
+import { getTodayHabit, saveTodayHabit } from '@/utils/api/habitApi';
+import { getJournalStreak } from '@/utils/api/journalApi';
+import { getExerciseStreak } from '@/utils/api/exerciseApi';
 
 export default function HomePage() {
   const { theme } = useTheme();

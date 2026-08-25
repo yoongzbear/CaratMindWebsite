@@ -1,4 +1,6 @@
 import json
+import logging
+import traceback
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -178,6 +180,7 @@ def reason_user_exercise_view(request, uex_id):
 
     return JsonResponse(updated)
 
+logger = logging.getLogger(__name__)
 # get streak
 @require_GET
 def exercise_streak_view(request):
@@ -185,6 +188,14 @@ def exercise_streak_view(request):
     if not principal:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
-    sub = principal.claims.get('sub')
-    result = calc_exc_streak(sub)    
-    return JsonResponse(result)
+    # sub = principal.claims.get('sub')
+    # result = calc_exc_streak(sub)    
+    # return JsonResponse(result)
+    try:
+        sub = principal.claims.get('sub')
+        result = calc_exc_streak(sub)
+        return JsonResponse(result)
+    except Exception:
+        logger.exception("Exercise streak failed")
+        traceback.print_exc()
+        raise

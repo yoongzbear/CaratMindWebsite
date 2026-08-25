@@ -76,8 +76,10 @@ export default function MoodExplainModal({
       <div className="max-h-[80vh] landscape:max-h-[70vh] overflow-y-auto min-h-0 pb-4 [-webkit-overflow-scrolling:touch]">
         <div className="mx-auto text-center w-fit">
           {/* mood emoji */}
-          <div className="relative text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center">
-            {getMoodStyle(moodData?.mood_name).emoji}
+          <div className="flex justify-center">
+            <div className="text-[clamp(1.38rem,10vw,3rem)] z-10 w-18 h-18 flex items-center justify-center leading-none">
+              {getMoodStyle(moodData?.mood_name).emoji}
+            </div>
           </div>
           <h5
             className="m-0 text-[clamp(1rem,3vw,1.5rem)] leading-[1.65] font-bold"

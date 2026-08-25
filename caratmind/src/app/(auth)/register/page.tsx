@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { RegisterForm } from './RegisterForm';
 
 function parseRequestedNext(
@@ -18,5 +19,12 @@ export default async function RegisterPage({
   const sp = await searchParams;
   const requestedNext = parseRequestedNext(sp.next);
 
-  return <RegisterForm requestedNext={requestedNext} />;
+  return (
+    <Suspense
+      fallback={<div className="p-8 text-center">Loading registration...</div>}
+    >
+      <RegisterForm requestedNext={requestedNext ?? null} />
+    </Suspense>
+  );
+  // return <RegisterForm requestedNext={requestedNext} />;
 }

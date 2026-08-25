@@ -1,0 +1,16 @@
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+.git/
+.pytest_cache/
+*.sqlite3
+.env
+node_modules/
+.next/
+media/
+staticfiles/
+
+models/
+*.gguf

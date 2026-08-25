@@ -7,17 +7,6 @@ export async function POST(
   try {
     const { jrnl_id } = await params;
 
-    // const { rating } = (await request.json()) as {
-    //   rating?: number;
-    // };
-
-    // if (!rating || rating == 0) {
-    //   return NextResponse.json(
-    //     { error: 'Rating cannot be empty.' },
-    //     { status: 400 },
-    //   );
-    // }
-
     const authHeader = request.headers.get('authorization');
     const accessToken = authHeader?.replace('Bearer ', '');
 
@@ -33,9 +22,6 @@ export async function POST(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      //   body: JSON.stringify({
-      //     rating,
-      //   }),
       cache: 'no-store',
     });
 

@@ -3,7 +3,7 @@ import { Journal } from '@/types/journal';
 import { useAuth } from '@/context/AuthContext';
 import { toastError } from '@/utils/toast';
 import { format, isValid, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { DayPicker } from '@daypicker/react';
 import Pill from '@/components/Pill';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,9 +11,9 @@ import { toTitleCase } from '@/utils/format';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { buttonGradient } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { getEntriesList } from '@/lib/api/journalApi';
+import { getEntriesList } from '@/utils/api/journalApi';
 
-export default function PastEntryPage() {
+export function PastEntryContent() {
   const { theme } = useTheme();
   const { user, loading, accessToken } = useAuth();
   const isDark = theme === 'dark';
@@ -315,5 +315,19 @@ export default function PastEntryPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function PastEntryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center text-(--muted)">
+          Loading page...
+        </div>
+      }
+    >
+      <PastEntryContent />
+    </Suspense>
   );
 }

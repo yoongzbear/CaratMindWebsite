@@ -8,7 +8,7 @@ import { StatusKey } from '@/types/journal';
 import DetectMoodModal from '@/components/modal/DetectMoodModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
-import { createNewJournal } from '@/lib/api/journalApi';
+import { createNewJournal } from '@/utils/api/journalApi';
 
 export default function NewEntryPage() {
   const { theme } = useTheme();
