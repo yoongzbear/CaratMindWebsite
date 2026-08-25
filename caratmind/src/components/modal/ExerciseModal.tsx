@@ -37,11 +37,12 @@ export default function ExerciseDetailModal({
       width={1000}
       title={
         <>
-          {getExerciseStyle(type).emoji} {name}
+          {getExerciseStyle(type).emoji} {name}{' '}
+          <Pill shaded>{toTitleCase(type)}</Pill>
         </>
       }
     >
-      <div className="max-h-24 lg:max-h-32 overflow-y-auto flex flex-wrap gap-2 mb-3">
+      <div className="h-fit max-h-[10vh] md:max-h-[40vh] overflow-y-auto flex flex-wrap gap-2 mb-3">
         {moods.map((mood) => {
           const moodStyle = getMoodStyle(mood, isDark);
           return (
@@ -57,8 +58,6 @@ export default function ExerciseDetailModal({
         })}
       </div>
 
-      <Pill shaded>{toTitleCase(type)}</Pill>
-
       <p
         className="text-[clamp(0.875rem,1.5vw,1rem)] text-justify"
         style={{ color: 'var(--muted)' }}
@@ -66,7 +65,7 @@ export default function ExerciseDetailModal({
         {desc}
       </p>
 
-      <div className="mt-2 max-h-52 md:max-h-36 landscape:max-h-28 overflow-y-auto min-h-0 pb-4">
+      <div className="mt-2 h-fit max-h-[40vh] overflow-y-auto min-h-0 pb-2">
         <ol className="list-decimal pl-7 space-y-2">
           {steps.map((step, index) => (
             <li

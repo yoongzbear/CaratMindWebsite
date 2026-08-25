@@ -60,7 +60,7 @@ export default function Footer() {
         </div>
 
         <p
-          className="m-0 max-w-md text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-left sm:text-right"
+          className="m-0 max-w-md text-[clamp(0.875rem,1.5vw,1rem)] leading-[1.75] text-center sm:text-right"
           style={{ color: 'var(--text)' }}
         >
           Mental well-being improves through long-term and consistent

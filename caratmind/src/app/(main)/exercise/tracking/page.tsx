@@ -5,7 +5,7 @@ import { Exercise, UserExerciseDetail } from '@/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
-import { Flame, Star } from 'lucide-react';
+import { Check, Flame, Star, X } from 'lucide-react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle } from '@/utils/moodUtils';
@@ -315,25 +315,53 @@ export default function ExerciseTrackingPage() {
                         >
                           {exercise.exc_name}
                         </h5>
-                        {exercise.uex_status === 'completed' && (
-                          <Pill
-                            bgColor={'#f1f8f4'}
-                            borderColor={'#66bb6a'}
-                            textColor={'#2e7d32'}
-                          >
-                            Completed
-                          </Pill>
-                        )}
-                        {exercise.uex_status === 'incomplete' &&
-                          exercise.uex_reason && (
+                        <Pill shaded>{toTitleCase(exercise.exc_type)}</Pill>
+
+                        {/* mobile */}
+                        <div className="flex sm:hidden">
+                          {exercise.uex_status === 'completed' && (
                             <Pill
-                              bgColor={'#fff5f5'}
-                              borderColor={'#e57373'}
-                              textColor={'#c62828'}
+                              bgColor={'#f1f8f4'}
+                              borderColor={'#66bb6a'}
+                              textColor={'#2e7d32'}
                             >
-                              Incomplete
+                              <Check />
                             </Pill>
                           )}
+                          {exercise.uex_status === 'incomplete' &&
+                            exercise.uex_reason && (
+                              <Pill
+                                bgColor={'#fff5f5'}
+                                borderColor={'#e57373'}
+                                textColor={'#c62828'}
+                              >
+                                <X />
+                              </Pill>
+                            )}
+                        </div>
+
+                        {/* desktop */}
+                        <div className="hidden sm:flex">
+                          {exercise.uex_status === 'completed' && (
+                            <Pill
+                              bgColor={'#f1f8f4'}
+                              borderColor={'#66bb6a'}
+                              textColor={'#2e7d32'}
+                            >
+                              Completed
+                            </Pill>
+                          )}
+                          {exercise.uex_status === 'incomplete' &&
+                            exercise.uex_reason && (
+                              <Pill
+                                bgColor={'#fff5f5'}
+                                borderColor={'#e57373'}
+                                textColor={'#c62828'}
+                              >
+                                Incomplete
+                              </Pill>
+                            )}
+                        </div>
                       </div>
 
                       {/* mood pills */}
@@ -419,8 +447,6 @@ export default function ExerciseTrackingPage() {
                                 </div>
                               )}
                             </div>
-
-                            <Pill shaded>{toTitleCase(exercise.exc_type)}</Pill>
                           </div>
                         );
                       })()}
@@ -571,7 +597,6 @@ export default function ExerciseTrackingPage() {
                 style={{ color: 'var(--second-color)' }}
                 onClick={() => {
                   setSelectedDate(todayDate);
-                  // setCalendarMonth(initialDate);
                 }}
               >
                 Today
@@ -688,12 +713,15 @@ export default function ExerciseTrackingPage() {
                           border: '1px solid #eef2f9',
                         }}
                       >
-                        <h5
-                          className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
-                          style={{ color: 'var(--text)' }}
-                        >
-                          {exercise.exc_name}
-                        </h5>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                          <h5
+                            className="text-[clamp(1rem,3vw,2rem)] font-semibold mt-0 mb-0.5"
+                            style={{ color: 'var(--text)' }}
+                          >
+                            {exercise.exc_name}
+                          </h5>
+                          <Pill shaded>{toTitleCase(exercise.exc_type)}</Pill>
+                        </div>
                         <div className="flex gap-3 mb-2">
                           {/* exercise mood and type pills */}
                           {(() => {
@@ -784,10 +812,6 @@ export default function ExerciseTrackingPage() {
                                     </div>
                                   )}
                                 </div>
-
-                                <Pill shaded>
-                                  {toTitleCase(exercise.exc_type)}
-                                </Pill>
                               </div>
                             );
                           })()}

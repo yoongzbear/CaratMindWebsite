@@ -265,12 +265,15 @@ export default function ExerciseCatalogPage() {
                   boxShadow: '0 2px 12px rgba(146,168,209,0.08)',
                 }}
               >
-                <h3
-                  className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-0.5"
-                  style={{ color: 'var(--text)' }}
-                >
-                  {ex.exc_name}
-                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                  <h3
+                    className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-0.5"
+                    style={{ color: 'var(--text)' }}
+                  >
+                    {ex.exc_name}
+                  </h3>
+                  <Pill shaded>{toTitleCase(ex.exc_type)}</Pill>
+                </div>
 
                 <div className="flex gap-3 mb-2">
                   {(() => {
@@ -355,8 +358,6 @@ export default function ExerciseCatalogPage() {
                             </div>
                           )}
                         </div>
-
-                        <Pill shaded>{toTitleCase(ex.exc_type)}</Pill>
                       </div>
                     );
                   })()}
