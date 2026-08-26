@@ -1,4 +1,4 @@
-import { SessionUser } from '@/types/user';
+import { SessionUser, UserOnboarding } from '@/types/user';
 // import type { CognitoTokens, CognitoUserProfile } from '@/lib/cognito/server';
 
 // export type SessionUser = {
@@ -17,7 +17,7 @@ export type UserProfile = {
   username: string;
   email: string;
   preferredUsername: string;
-  completedOnboarding: string;
+  onboarding: UserOnboarding;
 };
 
 export function buildSessionPayload(
@@ -28,7 +28,7 @@ export function buildSessionPayload(
     username: profile.username,
     email: profile.email,
     preferredUsername: profile.preferredUsername,
-    completedOnboarding: profile.completedOnboarding,
+    onboarding: profile.onboarding,
   };
 
   return {

@@ -62,7 +62,7 @@ export async function POST(request: Request) {
           username: profile.username,
           email: profile.email,
           preferredUsername: profile.preferred_username,
-          completedOnboarding: profile.completedOnboarding,
+          onboarding: profile.onboarding,
         },
       ),
     );

@@ -9,7 +9,6 @@ import '@daypicker/react/style.css';
 import { OnboardingProvider } from '../components/OnboardingProvider';
 import '../styles/themes';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
@@ -54,19 +53,17 @@ export default function RootLayout({
           background: '#fff8f8',
         }}
       >
-        <TooltipProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <OnboardingProvider>
-                <LayoutShell>
-                  {children}
-                  <HelplineModalProvider />
-                </LayoutShell>
-              </OnboardingProvider>
-              <ClientToastContainer />
-            </ThemeProvider>
-          </AuthProvider>
-        </TooltipProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <OnboardingProvider>
+              <LayoutShell>
+                {children}
+                <HelplineModalProvider />
+              </LayoutShell>
+            </OnboardingProvider>
+            <ClientToastContainer />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

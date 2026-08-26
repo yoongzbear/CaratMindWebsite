@@ -12,6 +12,13 @@ export default function OnboardingStart() {
   const started = useRef<string | null>(null);
 
   useEffect(() => {
+    console.log('Current user:', user);
+    console.log('Current onboarding:', user?.onboarding);
+    console.log('Path:', pathName);
+    console.log('Onboarding key:', ONBOARDING_KEY[pathName]);
+  }, [user, pathName]);
+
+  useEffect(() => {
     if (loading || !user) return;
     const key = ONBOARDING_KEY[pathName];
     if (!key) return;
