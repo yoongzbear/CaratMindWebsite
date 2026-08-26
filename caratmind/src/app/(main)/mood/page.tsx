@@ -10,6 +10,12 @@ import { styles } from '@/styles/ui';
 import { useAuth } from '@/context/AuthContext';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { CircleQuestionMark } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 export default function MoodPage() {
   const { user, loading } = useAuth();
@@ -49,6 +55,28 @@ export default function MoodPage() {
         <div className="grid lg:grid-cols-2 gap-4 mt-4 mb-3.75">
           {/* stacked bar chart */}
           <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
+            <div className="flex gap-2">
+              <h5
+                className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+                style={{ color: 'var(--text)' }}
+              >
+                Mood Bar Chart
+              </h5>
+              <Popover>
+                <PopoverTrigger
+                  className="cursor-help"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  <CircleQuestionMark />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <p>
+                    View all moods detected on each date. Click on a bar to view
+                    its journal insights.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
             {/* time range */}
             <div id="select-date">
               <DateRangeSelector presets={[7, 30, 90]} onChange={setBarRange} />
@@ -61,6 +89,28 @@ export default function MoodPage() {
 
           {/* scatter plot */}
           <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
+            <div className="flex gap-2">
+              <h5
+                className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+                style={{ color: 'var(--text)' }}
+              >
+                Mood Scatter Plot
+              </h5>
+              <Popover>
+                <PopoverTrigger
+                  className="cursor-help"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  <CircleQuestionMark />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <p>
+                    View overall mood pattern over time. Click a point to view
+                    its journal insights.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
             {/* time range */}
             <DateRangeSelector
               presets={[7, 30, 90]}
@@ -75,12 +125,28 @@ export default function MoodPage() {
           {/* daily scatter plot */}
           <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
             <div className="flex w-full items-center justify-between">
-              <h3
-                className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold"
-                style={{ color: 'var(--text)' }}
-              >
-                Daily Mood
-              </h3>
+              <div className="flex gap-2">
+                <h5
+                  className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+                  style={{ color: 'var(--text)' }}
+                >
+                  Daily Mood Scatter Plot
+                </h5>
+                <Popover>
+                  <PopoverTrigger
+                    className="cursor-help"
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    <CircleQuestionMark />
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <p>
+                      View mood pattern in a day. Click on a point to view its
+                      journal insights.
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              </div>
 
               {/* date */}
               <input
@@ -99,6 +165,28 @@ export default function MoodPage() {
 
           {/* calendar heatmap */}
           <div className="rounded-[14px] border p-4 bg-(--bg-div) shadow-sm">
+            <div className="flex gap-2">
+              <h5
+                className="text-[clamp(1rem,3vw,1.5rem)] font-semibold"
+                style={{ color: 'var(--text)' }}
+              >
+                Mood Calendar
+              </h5>
+              <Popover>
+                <PopoverTrigger
+                  className="cursor-help"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  <CircleQuestionMark />
+                </PopoverTrigger>
+                <PopoverContent>
+                  <p>
+                    View all moods on each date in the calendar. Click on a date
+                    to view its journal insights.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
             <div className="w-full flex justify-center" id="mood-heatmap">
               <CalendarHeatmap />
             </div>

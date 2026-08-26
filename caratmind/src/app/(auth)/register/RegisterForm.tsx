@@ -10,14 +10,14 @@ import { generateRandomName } from '@/utils/generateName';
 import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import {
   validatePassword,
   validateConfirmPassword,
 } from '@/utils/validatePassword';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 export function RegisterForm({
   requestedNext,
@@ -218,26 +218,27 @@ export function RegisterForm({
                   >
                     Password
                   </label>
-                  <Tooltip>
-                    <TooltipTrigger
+                  <Popover>
+                    <PopoverTrigger
                       className="cursor-help"
                       style={{ color: 'var(--muted)' }}
                     >
                       <CircleQuestionMark size={16} />
-                    </TooltipTrigger>
-                    <TooltipContent>
+                    </PopoverTrigger>
+                    <PopoverContent>
                       <p>
                         At least 8 characters, including an uppercase letter, a
                         lowercase letter, and a number
                       </p>
-                    </TooltipContent>
-                  </Tooltip>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className={`${inputStyle} relative items-center`}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
+                    placeholder="Minimum 8 characters"
                     value={password}
                     onChange={(e) => handlePasswordChange(e.target.value)}
                     className="w-full border-none focus:outline-none"
@@ -273,17 +274,17 @@ export function RegisterForm({
                   >
                     Confirm Password
                   </label>
-                  <Tooltip>
-                    <TooltipTrigger
+                  <Popover>
+                    <PopoverTrigger
                       className="cursor-help"
                       style={{ color: 'var(--muted)' }}
                     >
                       <CircleQuestionMark size={16} />
-                    </TooltipTrigger>
-                    <TooltipContent>
+                    </PopoverTrigger>
+                    <PopoverContent>
                       <p>Must match with Password</p>
-                    </TooltipContent>
-                  </Tooltip>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className={`${inputStyle} relative items-center`}>
                   <input

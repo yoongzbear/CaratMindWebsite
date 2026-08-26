@@ -95,8 +95,8 @@ export async function saveReason(
 export async function getExerciseCalendarDates(
   month: string,
   accessToken: string,
-): Promise<{ excDates: string[] }> {
-  return request<{ excDates: string[] }>(
+): Promise<{ exerciseDates: string[] }> {
+  return request<{ exerciseDates: string[] }>(
     `/api/user_exercise/calendar_dates?month=${month}`,
     {
       accessToken,

@@ -5,7 +5,7 @@ import { Exercise, UserExerciseDetail } from '@/types/exercise';
 import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
-import { Check, Flame, Star, X } from 'lucide-react';
+import { Check, Flame, Star, X, CircleQuestionMark } from 'lucide-react';
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle } from '@/utils/moodUtils';
@@ -23,6 +23,11 @@ import {
   saveRating,
   saveReason,
 } from '@/utils/api/exerciseApi';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 export default function ExerciseTrackingPage() {
   const { theme } = useTheme();
@@ -85,11 +90,9 @@ export default function ExerciseTrackingPage() {
         const monthStr = format(calendarMonth, 'yyyy-MM');
         if (accessToken) {
           const data = await getExerciseCalendarDates(monthStr, accessToken);
-          setExerciseDates(data.excDates.map((d) => parseISO(d)));
+          setExerciseDates(data.exerciseDates.map((d) => parseISO(d)));
         }
-      } catch {
-        // non-critical
-      }
+      } catch {}
     }
 
     loadExerciseDates();
@@ -265,12 +268,28 @@ export default function ExerciseTrackingPage() {
           }}
           id="today-exercise"
         >
-          <h3
-            className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
-            style={{ color: 'var(--text)' }}
-          >
-            Today&apos;s Exercise
-          </h3>
+          <div className="flex gap-2 items-center">
+            <h3
+              className="text-[clamp(1.25rem,5vw,1.75rem)] font-bold mt-0 mb-2"
+              style={{ color: 'var(--text)' }}
+            >
+              Today&apos;s Exercise
+            </h3>
+            <Popover>
+              <PopoverTrigger
+                className="cursor-help"
+                style={{ color: 'var(--muted)' }}
+              >
+                <CircleQuestionMark />
+              </PopoverTrigger>
+              <PopoverContent>
+                <p>
+                  Recommended same coping exercise? You may perform them in
+                  separate sessions or once together!
+                </p>
+              </PopoverContent>
+            </Popover>
+          </div>
           <h5
             className="text-[clamp(1rem,3vw,1.5rem)] font-semibold underline"
             style={{ color: 'var(--text)' }}

@@ -270,13 +270,9 @@ html {
 }
 
 /* calendar shade */
-.has-journal-day {
-  background-color: #e8f4fd;
-  border-radius: 9999px;
-}
-
+.has-journal-day,
 .has-exercise-day {
-  background-color: #e8f5e9;
+  background-color: #b0d9b1;
   border-radius: 9999px;
 }
 
