@@ -12,7 +12,7 @@ import { createNewJournal } from '@/utils/api/journalApi';
 
 export default function NewEntryPage() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { accessToken } = useAuth();
   const [entry, setEntry] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [saving, setSaving] = useState(false);

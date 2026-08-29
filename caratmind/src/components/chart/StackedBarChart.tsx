@@ -31,11 +31,9 @@ export default function StackedBarChart({
   height = 320,
   mockData,
 }: Props) {
-  const { accessToken } = useAuth();
-  const { chartData, moods, loading, error } = useMoodChartData(
-    range,
-    mockData,
-  );
+  // const { accessToken } = useAuth();
+  useAuth();
+  const { chartData, moods, loading } = useMoodChartData(range, mockData);
   const router = useRouter();
 
   if (loading) {

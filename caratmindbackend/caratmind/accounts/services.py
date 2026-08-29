@@ -256,5 +256,39 @@ class CognitoService:
             'ExpiredCodeException': 'Verification code has expired. Please request a new one.',
             'TooManyRequestsException': 'Too many attempts. Please wait and try again.',
             'LimitExceededException': 'Too many attempts. Please wait and try again.',
+            'UserNotFoundException': 'Account not found.',
         }
         return mapping.get(name, 'Something went wrong. Please try again.')
+
+    # forgot password
+    # request code
+    def forgot_password(self, username: str) -> dict:
+        client = self._get_client()
+        username = username.strip()
+        kwargs = {'ClientId': self.client_id, 'Username': username}
+        secret_hash = self._calculate_secret_hash(username)
+        if secret_hash:
+            kwargs['SecretHash'] = secret_hash
+
+        response = client.forgot_password(**kwargs)
+        delivery = response.get('CodeDeliveryDetails', {})
+        return {
+            'destination': delivery.get('Destination'),
+            'delivery_medium': delivery.get('DeliveryMedium'),
+        }
+
+    # confirm code and set password
+    def confirm_forgot_password(self, username: str, confirmation_code: str, new_password: str) -> None:
+        client = self._get_client()
+        username = username.strip()
+        kwargs = {
+            'ClientId': self.client_id,
+            'Username': username,
+            'ConfirmationCode': confirmation_code.strip(),
+            'Password': new_password,
+        }
+        secret_hash = self._calculate_secret_hash(username)
+        if secret_hash:
+            kwargs['SecretHash'] = secret_hash
+
+        client.confirm_forgot_password(**kwargs)

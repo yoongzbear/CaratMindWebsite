@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/popover';
 
 export default function MoodPage() {
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
+  useAuth();
   const chartHeight = 320;
   const [barRange, setBarRange] = useState<DateRangeValue>({
     mode: 'days',

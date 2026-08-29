@@ -491,3 +491,60 @@ def update_email_notification_view(request):
         return JsonResponse({'error': str(e)}, status=500)
     
     return JsonResponse(updated.get('notification_pref', prefs))
+
+# forgot password
+@csrf_exempt
+@require_POST
+def forgot_password_view(request):
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    identifier = (body.get('identifier') or '').strip()
+    if not identifier:
+        return JsonResponse({'error': 'Username or email is required.'}, status=400)
+
+    cognito = CognitoService()
+    try:
+        cognito.forgot_password(identifier)
+    except Exception as e:
+        error_name = e.__class__.__name__
+        if error_name != 'UserNotFoundException':
+            logger.error(f'Forgot password error: {error_name}: {e}', exc_info=True)
+    return JsonResponse({
+        'message': 'If an account with that username or email exists, a password reset code has been sent.',
+    })
+
+
+@csrf_exempt
+@require_POST
+def reset_password_view(request):
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    username = (body.get('username') or '').strip()
+    confirmation_code = (body.get('confirmationCode') or '').strip()
+    new_password = body.get('newPassword') or ''
+    confirm_password = body.get('confirmPassword') or ''
+
+    if not username or not confirmation_code or not new_password:
+        return JsonResponse({'error': 'username, confirmationCode and newPassword are required.'}, status=400)
+
+    if new_password != confirm_password:
+        return JsonResponse({'error': 'Passwords do not match.'}, status=400)
+
+    password_error = _validate_password(new_password)
+    if password_error:
+        return JsonResponse({'error': password_error}, status=400)
+
+    cognito = CognitoService()
+    try:
+        cognito.confirm_forgot_password(username, confirmation_code, new_password)
+    except Exception as e:
+        logger.error(f'Reset password error: {e.__class__.__name__}: {e}', exc_info=True)
+        return JsonResponse({'error': cognito.map_cognito_error(e)}, status=400)
+
+    return JsonResponse({'success': True})

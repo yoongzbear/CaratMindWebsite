@@ -18,7 +18,7 @@ import {
 
 export function PastEntryContent() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { loading, accessToken } = useAuth();
   const isDark = theme === 'dark';
   const [entries, setEntries] = useState<Journal[]>([]);
   const [fetching, setFetching] = useState(false);
@@ -69,9 +69,7 @@ export function PastEntryContent() {
           const data = await getJournalCalendarDates(monthStr, accessToken);
           setJournalDates(data.journalDates.map((d) => parseISO(d)));
         }
-      } catch {
-        // non-critical, calendar just won't shade
-      }
+      } catch {}
     }
 
     loadJournalDates();

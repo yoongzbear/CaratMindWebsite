@@ -22,7 +22,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const STORAGE_KEY = 'app-theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { user, loading, accessToken } = useAuth();
+  const { user, accessToken } = useAuth();
   const [theme, setThemeState] = useState<ThemeName>('light');
   const [saving, setSaving] = useState(false);
 

@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { DayPicker } from '@daypicker/react';
 import { format, isSameDay, isValid, parseISO } from 'date-fns';
 import { Check, Flame, Star, X, CircleQuestionMark } from 'lucide-react';
-import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
+import { startTransition, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { getBadgeMilestone, toTitleCase } from '@/utils/format';
@@ -31,9 +31,8 @@ import {
 
 export default function ExerciseTrackingPage() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { accessToken } = useAuth();
   const isDark = theme === 'dark';
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
   const router = useRouter();
 

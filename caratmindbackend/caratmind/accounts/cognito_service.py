@@ -17,5 +17,6 @@ def map_cognito_error(error: Exception) -> str:
         'ExpiredCodeException': 'Verification code has expired. Request a new one.',
         'TooManyRequestsException': 'Too many attempts. Please wait and try again.',
         'LimitExceededException': 'Too many attempts. Please wait and try again.',
+        'UserNotFoundException': 'Account not found.',
     }
     return mapping.get(name, 'Something went wrong. Please try again.')

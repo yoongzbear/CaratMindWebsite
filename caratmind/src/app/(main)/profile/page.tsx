@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { CircleX, Dices, Download, Loader, X } from 'lucide-react';
+import { Dices, Download, Loader, X } from 'lucide-react';
 import { generateRandomName } from '@/utils/generateName';
 import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 import { gradientButton, greyButton, redButton } from '@/styles/ui';
@@ -69,7 +69,6 @@ export default function ProfilePage() {
     startTransition(() => {
       const loadPrefs = async () => {
         const data = await getEmailPreference(accessToken);
-        console.log('data email preference: ', data);
         setPrefs(data);
       };
 
@@ -153,7 +152,6 @@ export default function ProfilePage() {
     setSavePref(true);
     try {
       if (accessToken && prefs) {
-        console.log('selected preference:', prefs);
         await updateEmailPreference(updatedPref, accessToken);
         await refreshUser?.();
         toastSuccess('Preferred email notifications updated.');

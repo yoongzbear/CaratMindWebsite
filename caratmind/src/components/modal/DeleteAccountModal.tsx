@@ -7,7 +7,6 @@ import Modal from './Modal';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { toastError, toastSuccess } from '@/utils/toast';
-import { format } from 'date-fns';
 import { gradientButton, redButton } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 import { downloadJournalEntry } from '@/utils/api/journalApi';

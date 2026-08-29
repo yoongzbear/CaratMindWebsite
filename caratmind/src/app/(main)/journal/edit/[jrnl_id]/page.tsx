@@ -13,7 +13,7 @@ import { editJournal } from '@/utils/api/journalApi';
 export default function EditEntryPage() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { loading, accessToken } = useAuth();
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -54,7 +54,6 @@ export default function EditEntryPage() {
   }, [jrnl_id, accessToken]);
 
   const originalText = journal?.entryText ?? '';
-  const isDirty = entry !== originalText;
 
   // update entry
   async function updateEntry(status: StatusKey) {

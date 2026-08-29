@@ -4,7 +4,12 @@ import { usePathname } from 'next/navigation';
 import Header from './Header';
 import Footer from './Footer';
 
-const AUTH_PATHS = ['/login', '/register'];
+const AUTH_PATHS = [
+  '/login',
+  '/register',
+  '/forget_password',
+  '/reset_password',
+];
 
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

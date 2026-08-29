@@ -6,8 +6,12 @@ const PUBLIC_PATHS = [
   '/',
   '/login',
   '/register',
+  '/forget_password',
+  '/reset_password',
   '/api/auth/login',
   '/api/auth/register',
+  '/api/auth/forgot_pw',
+  '/api/auth/reset_pw',
   '/helpline',
 ];
 

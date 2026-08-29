@@ -110,6 +110,16 @@ export function LoginForm({ requestedNext }: { requestedNext: string | null }) {
           </button>
         </div>
 
+        <div className="flex justify-end mb-2">
+          <Link
+            href="/forget_password"
+            className="text-[0.875rem] hover:underline"
+            style={{ color: 'var(--second-color)' }}
+          >
+            Forgot password?
+          </Link>
+        </div>
+
         <button
           className={`w-full ${buttonGradient(theme)}`}
           type="submit"

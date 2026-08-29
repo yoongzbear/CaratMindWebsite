@@ -23,6 +23,13 @@ type AuthContextValue = {
     init?: RequestInit,
   ) => Promise<Response>;
   refreshUser: () => Promise<void>;
+  forgotPassword: (identifier: string) => Promise<string>;
+  resetPassword: (params: {
+    username: string;
+    confirmationCode: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -150,6 +157,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const forgotPassword = useCallback(async (identifier: string) => {
+    const res = await fetch('/api/auth/forgot_pw', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error ?? 'Failed to send reset code');
+    }
+    return data.message as string;
+  }, []);
+
+  const resetPassword = useCallback(
+    async (params: {
+      username: string;
+      confirmationCode: string;
+      newPassword: string;
+      confirmPassword: string;
+    }) => {
+      const res = await fetch('/api/auth/reset_pw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? 'Failed to reset password');
+      }
+    },
+    [],
+  );
+
   const refreshUser = useCallback(async () => {
     await refreshSession();
   }, [refreshSession]);
@@ -164,6 +204,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       refreshSession,
       authFetch,
       refreshUser,
+      forgotPassword,
+      resetPassword,
     }),
     [
       user,
@@ -174,6 +216,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       refreshSession,
       authFetch,
       refreshUser,
+      forgotPassword,
+      resetPassword,
     ],
   );
 

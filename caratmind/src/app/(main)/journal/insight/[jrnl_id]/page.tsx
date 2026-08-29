@@ -26,16 +26,14 @@ import { getJournalExercise } from '@/utils/api/exerciseApi';
 
 export default function MoodInsightPage() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { loading, accessToken } = useAuth();
   const isDark = theme === 'dark';
   const { jrnl_id } = useParams<{ jrnl_id: string }>();
   const [entry, setEntry] = useState('');
   const router = useRouter();
   const [journal, setJournal] = useState<JournalDetail | null>(null);
   const [fetchingJournal, setFetchingJournal] = useState(false);
-  const [date, setDate] = useState(new Date());
   const [openDetail, setOpenDetail] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
   const [openMoodDetail, setOpenMoodDetail] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [fetchingMoodData, setFetchingMoodData] = useState(false);
@@ -47,11 +45,6 @@ export default function MoodInsightPage() {
   const [openExcDetail, setOpenExcDetail] = useState(false);
   const [detecting, setDetecting] = useState(false);
   const [badge, setBadge] = useState<string | null>(null);
-
-  // const [barRange, setBarRange] = useState<DateRangeValue>({
-  //   mode: 'days',
-  //   days: 7,
-  // });
 
   const checkBadge = async () => {
     try {

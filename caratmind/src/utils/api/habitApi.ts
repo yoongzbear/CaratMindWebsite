@@ -13,7 +13,6 @@ type CreateTodayHabit = {
 };
 
 export async function getTodayHabit(
-  //   jrnl_id: string,
   accessToken: string,
 ): Promise<Habit | null> {
   const data = request<TodayHabitResponse>('/api/habit/today', {

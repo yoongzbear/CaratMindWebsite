@@ -26,5 +26,4 @@ export default async function RegisterPage({
       <RegisterForm requestedNext={requestedNext ?? null} />
     </Suspense>
   );
-  // return <RegisterForm requestedNext={requestedNext} />;
 }

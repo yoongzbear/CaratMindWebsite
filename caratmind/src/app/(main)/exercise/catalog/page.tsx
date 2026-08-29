@@ -8,14 +8,13 @@ import { getMoodStyle, MOOD_EMOJIS } from '@/utils/moodUtils';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import { toastError } from '@/utils/toast';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getExerciseList } from '@/utils/api/exerciseApi';
 
 export default function ExerciseCatalogPage() {
   const { theme } = useTheme();
-  const { user, loading, accessToken } = useAuth();
+  const { accessToken } = useAuth();
   const isDark = theme === 'dark';
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
