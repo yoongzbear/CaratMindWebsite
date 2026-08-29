@@ -16,7 +16,7 @@ from mood.dynamodb_service import calc_negative_mood_streak, delete_mood_by_id
 from mood.services import detect_store_mood
 from notification.dynamodb_service import STREAK_THRESHOLD_DAYS, already_notified, mark_notified
 from notification.ses_service import send_notification
-from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, get_user_journal_dates, update_journal_entry, update_journal_mood_exc
+from .dynamodb_service import calc_journal_streak, create_journal_entry, get_all_entry_user, get_user_journal_dates, local_month_bounds_utc, update_journal_entry, update_journal_mood_exc
 from .s3_service import upload_entry_text
 from django.views.decorators.http import require_GET
 from .dynamodb_service import get_entries_for_user_on_date, get_entry_by_id
@@ -274,12 +274,10 @@ def journal_calendar_dates_view(request):
     except ValueError:
         return JsonResponse({'error': 'Invalid month format, expected YYYY-MM'}, status=400)
 
-    start_date = date(year, month, 1).isoformat()
-    last_day = calendar.monthrange(year, month)[1]
-    end_date = date(year, month, last_day).isoformat()
+    start_date, end_date = local_month_bounds_utc(year, month)
 
     try:
-        journal_dates = get_user_journal_dates(sub, start_date, end_date + 'T23:59:59')
+        journal_dates = get_user_journal_dates(sub, start_date, end_date)
         # exercise_dates = get_completed_dates_for_user(sub, start_date, end_date + 'T23:59:59')
     except Exception as e:
         return JsonResponse({'error': f'Failed to load calendar dates: {e}'}, status=500)

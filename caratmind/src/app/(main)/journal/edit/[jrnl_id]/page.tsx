@@ -117,10 +117,15 @@ export default function EditEntryPage() {
   if (loading || fetchingJournal) {
     return (
       <section
-        className="px-8 py-6 text-center"
-        style={{ color: 'var(--muted)', backgroundColor: 'var(--bg-div)' }}
+        className="min-h-[calc(100vh-140px)] px-8 py-6 text-center"
+        style={{ backgroundColor: 'var(--bg-div)' }}
       >
-        Loading...
+        <h5
+          className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
+          style={{ color: 'var(--text)' }}
+        >
+          Loading...
+        </h5>
       </section>
     );
   }
@@ -128,10 +133,15 @@ export default function EditEntryPage() {
   if (!journal) {
     return (
       <section
-        className="px-8 py-6 text-center"
+        className="min-h-[calc(100vh-140px)] px-8 py-6 text-center"
         style={{ color: 'var(--muted)', backgroundColor: 'var(--bg-div)' }}
       >
-        Entry not found.
+        <h5
+          className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
+          style={{ color: 'var(--text)' }}
+        >
+          Entry not found.
+        </h5>
       </section>
     );
   }

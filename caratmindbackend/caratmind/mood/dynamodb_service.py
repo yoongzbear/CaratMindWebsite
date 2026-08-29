@@ -1,10 +1,26 @@
 import uuid
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 
 import boto3
 from django.conf import settings
+
+LOCAL_TZ = ZoneInfo("Asia/Kuala_Lumpur")
+
+def _to_local_date(iso_timestamp: str) -> str:
+    """UTC ISO timestamp -> local (Asia/KL) calendar date string."""
+    dt = datetime.fromisoformat(iso_timestamp)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(LOCAL_TZ).date().isoformat()
+
+def _local_day_bounds_utc(date_str: str) -> tuple[str, str]:
+    """Local calendar day 00:00:00-23:59:59.999999 -> UTC ISO bounds."""
+    local_start = datetime.fromisoformat(date_str).replace(tzinfo=LOCAL_TZ)
+    local_end = local_start + timedelta(days=1) - timedelta(microseconds=1)
+    return local_start.astimezone(timezone.utc).isoformat(), local_end.astimezone(timezone.utc).isoformat()
 
 def _get_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -94,19 +110,19 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
     """
     table = _get_table()
 
-    if start_date and end_date: 
-        # end of end_date in UTC so the full day is included
-        cutoff_start = f"{start_date}T00:00:00+00:00"
-        cutoff_end = f"{end_date}T23:59:59+00:00"
+    if start_date and end_date:
+        cutoff_start, _ = _local_day_bounds_utc(start_date)
+        _, cutoff_end = _local_day_bounds_utc(end_date)
         filter = (
             Attr('user_id').eq(user_id)
             & Attr('mood_timestamp').gte(cutoff_start)
             & Attr('mood_timestamp').lte(cutoff_end)
         )
     else:
-        cutoff = (
-            datetime.now(timezone.utc) - timedelta(days=days - 1)
-        ).replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+        cutoff_local = (
+            datetime.now(LOCAL_TZ) - timedelta(days=days - 1)
+        ).replace(hour=0, minute=0, second=0, microsecond=0)
+        cutoff = cutoff_local.astimezone(timezone.utc).isoformat()
         filter = Attr('user_id').eq(user_id) & Attr('mood_timestamp').gte(cutoff)
 
     response = table.scan(FilterExpression=filter)

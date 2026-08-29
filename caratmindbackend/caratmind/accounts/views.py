@@ -513,7 +513,7 @@ def forgot_password_view(request):
         if error_name != 'UserNotFoundException':
             logger.error(f'Forgot password error: {error_name}: {e}', exc_info=True)
     return JsonResponse({
-        'message': 'If an account with that username or email exists, a password reset code has been sent.',
+        'message': 'A password reset code has been sent.',
     })
 
 

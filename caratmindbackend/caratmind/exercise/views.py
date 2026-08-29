@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
-from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_completed_dates_for_user, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
+from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_completed_dates_for_user, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, local_month_bounds_utc, update_user_exercise_rating, update_user_exercise_reason
 
 # retrieve coping exercises
 @require_GET
@@ -218,12 +218,10 @@ def exercise_calendar_dates_view(request):
     except ValueError:
         return JsonResponse({'error': 'Invalid month format, expected YYYY-MM'}, status=400)
 
-    start_date = date(year, month, 1).isoformat()
-    last_day = calendar.monthrange(year, month)[1]
-    end_date = date(year, month, last_day).isoformat()
+    start_date, end_date = local_month_bounds_utc(year, month)
 
     try:
-        exercise_dates = get_completed_dates_for_user(sub, start_date, end_date + 'T23:59:59')
+        exercise_dates = get_completed_dates_for_user(sub, start_date, end_date)
     except Exception as e:
         return JsonResponse({'error': f'Failed to load calendar dates: {e}'}, status=500)
 

@@ -12,6 +12,21 @@ from caratmind import settings
 from caratmind.datetime_utils import to_local_date_str, today_local
 from notification.ses_service import send_notification
 
+LOCAL_TZ = ZoneInfo("Asia/Kuala_Lumpur")  
+
+def local_month_bounds_utc(year: int, month: int) -> tuple[str, str]:
+    """Local calendar month -> UTC ISO bounds for the DynamoDB query."""
+    local_start = datetime(year, month, 1, tzinfo=LOCAL_TZ)
+    if month == 12:
+        next_month_start = datetime(year + 1, 1, 1, tzinfo=LOCAL_TZ)
+    else:
+        next_month_start = datetime(year, month + 1, 1, tzinfo=LOCAL_TZ)
+    local_end = next_month_start - timedelta(microseconds=1)
+    return (
+        local_start.astimezone(timezone.utc).isoformat(),
+        local_end.astimezone(timezone.utc).isoformat(),
+    )
+
 def _get_exercise_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
     return resource.Table(settings.DYNAMODB_EXERCISE_TABLE)

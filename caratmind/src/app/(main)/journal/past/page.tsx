@@ -77,11 +77,13 @@ export function PastEntryContent() {
 
   if (loading) {
     return (
-      <section
-        className="text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center"
-        style={{ color: 'var(--muted)' }}
-      >
-        Loading...
+      <section className="min-h-[calc(100vh-140px)] text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center">
+        <h5
+          className="text-[clamp(0.875rem,1.5vw,1rem)] font-medium mt-0.5 mb-2"
+          style={{ color: 'var(--text)' }}
+        >
+          Loading...
+        </h5>
       </section>
     );
   }
@@ -92,7 +94,7 @@ export function PastEntryContent() {
 
   return (
     <section
-      className="pt-4 sm:pt-6 pb-10"
+      className="min-h-[calc(100vh-140px)] pt-4 sm:pt-6 pb-10"
       style={{
         background: 'var(--bg)',
         paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',

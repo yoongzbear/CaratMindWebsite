@@ -8,7 +8,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 
 from accounts.authentication import authenticate_bearer
-from mood.dynamodb_service import calc_negative_mood_streak, confirm_mood, corrected_mood, get_mood_by_id, get_user_recent_moods
+from mood.dynamodb_service import LOCAL_TZ, _to_local_date, calc_negative_mood_streak, confirm_mood, corrected_mood, get_mood_by_id, get_user_recent_moods
 
 # mood by ID
 @require_GET
@@ -88,7 +88,7 @@ def mood_chart_view(request):
         return JsonResponse({'error': f'Failed to load mood chart data: {e}'}, status=500)
 
     # build the date range to display
-    today = datetime.now(timezone.utc).date()
+    today = datetime.now(LOCAL_TZ).date()
     if start_date and end_date:
         start = date.fromisoformat(start_date)
         end = date.fromisoformat(end_date)
@@ -102,7 +102,7 @@ def mood_chart_view(request):
     # count moods per day
     counts = defaultdict(lambda: defaultdict(int))  # counts[date][mood_name] += 1
     for m in moods:
-        date_str = m['mood_timestamp'][:10]
+        date_str = _to_local_date(m['mood_timestamp'])
         mood_name = m.get('mood_name')
         if mood_name:
             counts[date_str][mood_name] += 1
@@ -115,7 +115,7 @@ def mood_chart_view(request):
             row[mood] = counts[date_str].get(mood, 0)
         row['jrnl_ids'] = [
             m['jrnl_id'] for m in moods
-            if m['mood_timestamp'][:10] == date_str and m.get('jrnl_id')
+            if _to_local_date(m['mood_timestamp']) == date_str and m.get('jrnl_id')
         ]
         chart_data.append(row)
 
