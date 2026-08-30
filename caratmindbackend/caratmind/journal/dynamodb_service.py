@@ -8,23 +8,8 @@ from boto3.dynamodb.conditions import Attr, Key
 
 from accounts.dynamodb_service import get_user
 from badge.dynamodb_service import save_badge
-from caratmind.datetime_utils import to_local_date_str
+from caratmind.datetime_utils import local_day_bounds_utc, to_local_date_str
 from notification.ses_service import send_notification
-
-LOCAL_TZ = ZoneInfo("Asia/Kuala_Lumpur")  
-
-def local_month_bounds_utc(year: int, month: int) -> tuple[str, str]:
-    """Local calendar month -> UTC ISO bounds for the DynamoDB query."""
-    local_start = datetime(year, month, 1, tzinfo=LOCAL_TZ)
-    if month == 12:
-        next_month_start = datetime(year + 1, 1, 1, tzinfo=LOCAL_TZ)
-    else:
-        next_month_start = datetime(year, month + 1, 1, tzinfo=LOCAL_TZ)
-    local_end = next_month_start - timedelta(microseconds=1)
-    return (
-        local_start.astimezone(timezone.utc).isoformat(),
-        local_end.astimezone(timezone.utc).isoformat(),
-    )
 
 def _get_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -52,18 +37,18 @@ def get_entries_for_user_on_date(user_id: str, date_str: str) -> list[dict]:
     (an ISO timestamp) starts with that date.
     """
     table = _get_table()
-    response = table.scan(
-        FilterExpression=(
-            Attr('user_id').eq(user_id) & Attr('jrnl_created_at').begins_with(date_str)
-        )
+    start_utc, end_utc = local_day_bounds_utc(date_str)
+    filter_expr = (
+        Attr('user_id').eq(user_id)
+        & Attr('jrnl_created_at').gte(start_utc)
+        & Attr('jrnl_created_at').lte(end_utc)
     )
+    response = table.scan(FilterExpression=filter_expr)
     items = response.get('Items', [])
 
     while 'LastEvaluatedKey' in response:
         response = table.scan(
-            FilterExpression=(
-                Attr('user_id').eq(user_id) & Attr('jrnl_created_at').begins_with(date_str)
-            ),
+            FilterExpression=filter_expr,
             ExclusiveStartKey=response['LastEvaluatedKey'],
         )
         items.extend(response.get('Items', []))

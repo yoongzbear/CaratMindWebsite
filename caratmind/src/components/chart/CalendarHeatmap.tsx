@@ -9,7 +9,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { getMoodStyle } from '@/utils/moodUtils';
 import { toTitleCase } from '@/utils/format';
-import { format } from 'date-fns';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { DateRangeValue } from './DateRangeSelector';
 import { useMoodChartData } from '@/app/hooks/moodChartData';
 import { useRouter } from 'next/navigation';
@@ -18,17 +18,28 @@ import { useMemo, useState } from 'react';
 import { ChartRow } from '@/types/mood';
 
 type Props = {
-  range?: DateRangeValue;
+  // range?: DateRangeValue;
   mockData?: { chartData: ChartRow[]; moods: string[] };
 };
 
 export default function CalendarHeatmap({
-  range = { mode: 'days', days: 30 },
+  // range = { mode: 'days', days: 30 },
   mockData,
 }: Props) {
   const { accessToken } = useAuth();
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date()); // to change month
+
+  const monthRange = useMemo(
+    () => ({
+      mode: 'range' as const,
+      startDate: format(startOfMonth(calendarMonth), 'yyyy-MM-dd'),
+      endDate: format(endOfMonth(calendarMonth), 'yyyy-MM-dd'),
+    }),
+    [calendarMonth],
+  );
   const { chartData, moods, loading, error } = useMoodChartData(
-    range,
+    monthRange,
     mockData,
   );
   const router = useRouter();
@@ -40,9 +51,6 @@ export default function CalendarHeatmap({
   //   const parsed = parseISO(param);
   //   return isValid(parsed) ? parsed : new Date();
   // })();
-
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date()); // to change month
 
   // lookup for chart row
   const dataByDate = useMemo(() => {

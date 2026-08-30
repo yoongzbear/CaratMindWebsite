@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
-from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_completed_dates_for_user, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, local_month_bounds_utc, update_user_exercise_rating, update_user_exercise_reason
+from caratmind.datetime_utils import local_month_bounds_utc
+from exercise.dynamodb_service import calc_exc_streak, get_all_exercises, get_completed_dates_for_user, get_exercise_by_id, get_user_exercise_by_id, get_user_exercises_on_date, update_user_exercise_rating, update_user_exercise_reason
 
 # retrieve coping exercises
 @require_GET

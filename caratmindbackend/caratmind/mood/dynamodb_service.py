@@ -7,20 +7,7 @@ from botocore.exceptions import ClientError
 import boto3
 from django.conf import settings
 
-LOCAL_TZ = ZoneInfo("Asia/Kuala_Lumpur")
-
-def _to_local_date(iso_timestamp: str) -> str:
-    """UTC ISO timestamp -> local (Asia/KL) calendar date string."""
-    dt = datetime.fromisoformat(iso_timestamp)
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(LOCAL_TZ).date().isoformat()
-
-def _local_day_bounds_utc(date_str: str) -> tuple[str, str]:
-    """Local calendar day 00:00:00-23:59:59.999999 -> UTC ISO bounds."""
-    local_start = datetime.fromisoformat(date_str).replace(tzinfo=LOCAL_TZ)
-    local_end = local_start + timedelta(days=1) - timedelta(microseconds=1)
-    return local_start.astimezone(timezone.utc).isoformat(), local_end.astimezone(timezone.utc).isoformat()
+from caratmind.datetime_utils import LOCAL_TZ, local_day_bounds_utc
 
 def _get_table():
     resource = boto3.resource('dynamodb', region_name=settings.DYNAMODB_REGION)
@@ -78,18 +65,18 @@ def corrected_mood(mood_id: str, correct_mood: str) -> dict | None:
 # filter using date 
 def get_user_mood_on_date(user_id: str, date_str: str) -> list[dict]:
     table = _get_table()
-    response = table.scan(
-        FilterExpression=(
-            Attr('user_id').eq(user_id) & Attr('mood_timestamp').begins_with(date_str)
-        )
+    start_utc, end_utc = local_day_bounds_utc(date_str)
+    filter_expr = (
+        Attr('user_id').eq(user_id)
+        & Attr('mood_timestamp').gte(start_utc)
+        & Attr('mood_timestamp').lte(end_utc)
     )
+    response = table.scan(FilterExpression=filter_expr)
     items = response.get('Items', [])
 
     while 'LastEvaluatedKey' in response:
         response = table.scan(
-            FilterExpression=(
-                Attr('user_id').eq(user_id) & Attr('mood_timestamp').begins_with(date_str)
-            ),
+            FilterExpression=filter_expr,
             ExclusiveStartKey=response['LastEvaluatedKey'],
         )
         items.extend(response.get('Items', []))
@@ -111,8 +98,8 @@ def get_user_recent_moods(user_id: str, days: int = 7, start_date: str | None = 
     table = _get_table()
 
     if start_date and end_date:
-        cutoff_start, _ = _local_day_bounds_utc(start_date)
-        _, cutoff_end = _local_day_bounds_utc(end_date)
+        cutoff_start, _ = local_day_bounds_utc(start_date)
+        _, cutoff_end = local_day_bounds_utc(end_date)
         filter = (
             Attr('user_id').eq(user_id)
             & Attr('mood_timestamp').gte(cutoff_start)
