@@ -85,7 +85,6 @@ def create_journal_view(request):
         # detect mood if entry submitted
         if status == 'submitted':            
             detect_store_mood(jrnl_id, sub, entry_text)  
-            # TODO: check helpline trigger
             try:
                 streak = calc_negative_mood_streak(sub)
                 if streak >= STREAK_THRESHOLD_DAYS and not already_notified(sub, 'mood_helpline'):

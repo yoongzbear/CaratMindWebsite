@@ -43,11 +43,6 @@ def get_exercise_by_id(exc_id: str) -> dict | None:
 
 # coping exercises by mood
 def get_exercises_for_mood(mood_name: str) -> list[dict]:
-    """
-    Knowledge-based lookup: exercises whose exc_mood list contains mood_name.
-    Scan is fine at low volume; revisit with a GSI if the table grows large
-    (e.g. a sparse mood->exercise mapping table, or DynamoDB Streams + cache).
-    """
     table = _get_exercise_table()
     response = table.scan(
         FilterExpression=Attr('exc_mood').contains(mood_name)

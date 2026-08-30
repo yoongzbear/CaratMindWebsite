@@ -1,11 +1,9 @@
-# orchestrator: db lookup -> rule -> top-N picks
+# db lookup -> rule -> top-N picks
 
 import logging
-
 from .dynamodb_service import (
     get_default_exercise,
     get_exercises_for_mood,
-    create_exercise_recommendation,
     get_recent_exc_names,
 )
 from .rules import pick_best_exercise
@@ -37,10 +35,5 @@ def recommend_exercise(
     if exercise is None:
         logger.error("Fallback exercise '%s' not found in table", "Basic Breathing Technique")
         return None
-
-    # try:
-    #     create_exercise_recommendation(user_id, jrnl_id, mood_name, exercise)
-    # except Exception:
-    #     logger.exception("Failed to persist exercise recommendation for jrnl_id=%s", jrnl_id)
 
     return exercise

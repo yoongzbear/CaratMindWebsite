@@ -6,9 +6,7 @@ export async function POST(request: Request) {
     const { entry, status } = (await request.json()) as {
       entry?: string;
       status?: StatusKey;
-      //   status?: 'draft' | 'submitted';
     };
-
     if (!entry?.trim()) {
       return NextResponse.json(
         { error: 'Entry cannot be empty.' },
@@ -18,13 +16,11 @@ export async function POST(request: Request) {
     if (status !== 'draft' && status !== 'submitted') {
       return NextResponse.json({ error: 'Invalid status.' }, { status: 400 });
     }
-
     const authHeader = request.headers.get('authorization');
     const accessToken = authHeader?.replace('Bearer ', '');
     if (!accessToken) {
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
     }
-
     const baseUrl = process.env.DJANGO_API_BASE_URL;
     const res = await fetch(`${baseUrl}/api/journal/new`, {
       method: 'POST',
@@ -43,7 +39,6 @@ export async function POST(request: Request) {
         { status: res.status },
       );
     }
-
     return NextResponse.json(data);
   } catch (error) {
     console.error(error);

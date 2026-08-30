@@ -55,7 +55,6 @@ def pick_best_exercise(
     candidates: list[dict],
     *,
     mood_name: str,
-    # is_mixed: bool,
     mood_confidence: float,
     recent_exc_names: list[str],
 ) -> dict | None:
@@ -74,7 +73,6 @@ def pick_best_exercise(
         pool = candidates
 
     priority_list = MOOD_TYPE_PRIORITY.get(mood_name, DEFAULT_TYPE_PRIORITY)
-    # uncertain = is_mixed or mood_confidence < 0.5
     uncertain = mood_confidence < 0.5
 
     def score(c: dict) -> tuple:
