@@ -10,6 +10,14 @@ import { buttonGradient, inputStyle, labelStyle } from '@/styles/ui';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { resetPassword } = useAuth();
@@ -47,98 +55,96 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <Suspense fallback={null}>
-      <AuthCard title="Reset Password">
-        <form onSubmit={onSubmit}>
-          <label className={labelStyle} style={{ color: 'var(--text)' }}>
-            Username / Email
-          </label>
+    <AuthCard title="Reset Password">
+      <form onSubmit={onSubmit}>
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
+          Username / Email
+        </label>
+        <input
+          type="text"
+          autoComplete="username"
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className={inputStyle}
+          style={{ color: 'var(--text)' }}
+          suppressHydrationWarning
+        />
+
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
+          Verification Code
+        </label>
+        <input
+          type="text"
+          inputMode="numeric"
+          required
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className={inputStyle}
+          style={{ color: 'var(--text)' }}
+          suppressHydrationWarning
+        />
+
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
+          New Password
+        </label>
+        <div className={`${inputStyle} relative items-center`}>
           <input
-            type="text"
-            autoComplete="username"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="new-password"
             required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className={inputStyle}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full border-none focus:outline-none"
             style={{ color: 'var(--text)' }}
             suppressHydrationWarning
           />
-
-          <label className={labelStyle} style={{ color: 'var(--text)' }}>
-            Verification Code
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            required
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            className={inputStyle}
-            style={{ color: 'var(--text)' }}
-            suppressHydrationWarning
-          />
-
-          <label className={labelStyle} style={{ color: 'var(--text)' }}>
-            New Password
-          </label>
-          <div className={`${inputStyle} relative items-center`}>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border-none focus:outline-none"
-              style={{ color: 'var(--text)' }}
-              suppressHydrationWarning
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((p) => !p)}
-              className="absolute right-3 cursor-pointer"
-              style={{ color: 'var(--text)' }}
-            >
-              {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-            </button>
-          </div>
-
-          <label className={labelStyle} style={{ color: 'var(--text)' }}>
-            Confirm New Password
-          </label>
-          <div className={`${inputStyle} relative items-center`}>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              autoComplete="new-password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full border-none focus:outline-none"
-              style={{ color: 'var(--text)' }}
-              suppressHydrationWarning
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword((p) => !p)}
-              className="absolute right-3 cursor-pointer"
-              style={{ color: 'var(--text)' }}
-            >
-              {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-            </button>
-          </div>
-
           <button
-            className={`w-full ${buttonGradient(theme)}`}
-            type="submit"
-            disabled={submitting}
-            style={{
-              opacity: submitting ? 0.75 : 1,
-              cursor: submitting ? 'wait' : 'pointer',
-            }}
+            type="button"
+            onClick={() => setShowPassword((p) => !p)}
+            className="absolute right-3 cursor-pointer"
+            style={{ color: 'var(--text)' }}
           >
-            {submitting ? 'Resetting…' : 'Reset Password'}
+            {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
           </button>
-        </form>
-      </AuthCard>
-    </Suspense>
+        </div>
+
+        <label className={labelStyle} style={{ color: 'var(--text)' }}>
+          Confirm New Password
+        </label>
+        <div className={`${inputStyle} relative items-center`}>
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            autoComplete="new-password"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full border-none focus:outline-none"
+            style={{ color: 'var(--text)' }}
+            suppressHydrationWarning
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((p) => !p)}
+            className="absolute right-3 cursor-pointer"
+            style={{ color: 'var(--text)' }}
+          >
+            {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
+          </button>
+        </div>
+
+        <button
+          className={`w-full ${buttonGradient(theme)}`}
+          type="submit"
+          disabled={submitting}
+          style={{
+            opacity: submitting ? 0.75 : 1,
+            cursor: submitting ? 'wait' : 'pointer',
+          }}
+        >
+          {submitting ? 'Resetting…' : 'Reset Password'}
+        </button>
+      </form>
+    </AuthCard>
   );
 }
