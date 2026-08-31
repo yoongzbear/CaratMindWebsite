@@ -47,13 +47,3 @@ def delete_entry_text(user_id: str) -> None:
         # stop if no more pages
         if not response.get("IsTruncated"):
             break
-
-# def delete_entry_text(items):
-#     client = _get_s3_client()
-#     bucket = settings.AWS_S3_JOURNAL_BUCKET
-
-#     for item in items:
-#         client.delete_object(
-#             Bucket=bucket,
-#             Key=item["jrnl_entry_key"]
-#         )

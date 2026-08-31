@@ -14,7 +14,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
@@ -29,11 +28,9 @@ def env_table(base_name: str) -> str:
         return base_name  # USER
     return f"{base_name}_{ENVIRONMENT.upper()}" # USER_STAGING
 
-# SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-v57=r_zu8-t0!zj71b71@1x#2piej!@kw=gf+7t5p*hc=lab3i'
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
@@ -62,15 +59,6 @@ DYNAMODB_HABIT_TABLE= os.getenv('DYNAMODB_HABIT_TABLE')
 DYNAMODB_USER_HABIT_TABLE= env_table('USER_HABIT')
 DYNAMODB_USER_BADGE_TABLE= env_table('USER_BADGE')
 DYNAMODB_NOTIFICATION_TABLE= env_table('NOTIFICATION')
-# DYNAMODB_USERS_TABLE = os.getenv('DYNAMODB_USERS_TABLE')
-# DYNAMODB_JOURNAL_TABLE = os.getenv('DYNAMODB_JOURNAL_TABLE')
-# DYNAMODB_MOOD_TABLE = os.getenv('DYNAMODB_MOOD_TABLE')
-# DYNAMODB_EXERCISE_TABLE = os.getenv('DYNAMODB_EXERCISE_TABLE')
-# DYNAMODB_USER_EXERCISE_TABLE= os.getenv('DYNAMODB_USER_EXERCISE_TABLE')
-# DYNAMODB_HABIT_TABLE= os.getenv('DYNAMODB_HABIT_TABLE')
-# DYNAMODB_USER_HABIT_TABLE= os.getenv('DYNAMODB_USER_HABIT_TABLE')
-# DYNAMODB_USER_BADGE_TABLE= os.getenv('DYNAMODB_USER_BADGE_TABLE')
-# DYNAMODB_NOTIFICATION_TABLE= os.getenv('DYNAMODB_NOTIFICATION_TABLE')
 
 # AWS S3
 AWS_S3_REGION = AWS_DEFAULT_REGION  

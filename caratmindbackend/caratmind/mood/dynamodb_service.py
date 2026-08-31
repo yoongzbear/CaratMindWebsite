@@ -1,6 +1,4 @@
-import uuid
 from datetime import datetime, timedelta, timezone
-from zoneinfo import ZoneInfo
 from boto3.dynamodb.conditions import Attr
 from botocore.exceptions import ClientError
 

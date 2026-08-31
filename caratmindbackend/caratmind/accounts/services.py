@@ -71,7 +71,6 @@ class CognitoService:
         if not claims:
             return None
 
-        # token_use = claims.get('token_use')
         if claims.get('token_use') != 'access':
             return None
 

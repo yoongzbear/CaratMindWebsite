@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta, timezone
 import logging
-import uuid
-from zoneinfo import ZoneInfo
 from botocore.exceptions import ClientError
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
@@ -63,8 +61,7 @@ FALLBACK_EXC_NAME = "Basic Breathing Technique"
 def get_default_exercise() -> dict | None:
     """
     Universal safe default when no mood-matched candidates exist.
-    Looked up by name rather than hardcoded, so editing the row in
-    DynamoDB is reflected automatically.
+    Looked up by name so editing the row in DynamoDB is reflected automatically.
     """
     table = _get_exercise_table()
     response = table.scan(
@@ -81,14 +78,11 @@ def create_exercise_recommendation(user_id: str, jrnl_id: str, exercise: dict) -
         'user_id': user_id,
         'jrnl_id': jrnl_id,
         'exc_id': exercise['exc_id'],
-        # 'mood_name': mood_name,
         'exc_name': exercise['exc_name'],
-        # 'exercises': exercise,  
         'uex_status': 'incomplete',
         'uex_rating': None,
         'uex_reason': None,
         'uex_created_at': datetime.now(timezone.utc).isoformat(),
-        # 'uex_done_date': None
     }
     table.put_item(Item=item)
     return item
@@ -115,10 +109,6 @@ def get_user_exercise_by_id(uex_id: str) -> dict | None:
 
 # user exercises by date
 def get_user_exercises_on_date(user_id: str, date_str: str) -> list[dict]:
-    """
-    date_str is a 'YYYY-MM-DD' string. Matches entries whose uex_created_at
-    (an ISO timestamp) starts with that date.
-    """
     table = _get_user_exercise_table()
     start_utc, end_utc = local_day_bounds_utc(date_str)
     filter_expr = (
@@ -208,7 +198,6 @@ def get_completed_dates_for_user(sub: str, start_date: str, end_date: str) -> se
 logger = logging.getLogger(__name__)
 
 def calc_exc_streak(sub: str) -> dict:
-    # today_local = datetime.fromisoformat(today_local_str()).date()
     today = today_local()
     start_date = (today - timedelta(days=365)).isoformat()
     end_date = (today + timedelta(days=1)).isoformat() 
@@ -260,10 +249,6 @@ def delete_all_user_exercise(user_id: str) -> None:
         )
         items.extend(response.get('Items', []))
 
-    # with table.batch_writer() as batch:
-    #     for item in items:
-    #         # batch.delete_item(Key={'uex_id': item['uex_id']}) 
-    #         batch.delete_item(Key={'jrnl_id': item['jrnl_id']}) 
     for item in items:
         table.delete_item(
             Key={

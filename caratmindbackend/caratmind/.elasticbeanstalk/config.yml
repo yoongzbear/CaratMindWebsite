@@ -1,6 +1,10 @@
 branch-defaults:
   default:
-    environment: caratmind-staging
+    environment: caratmind-backend
+environment-defaults:
+  caratmind-backend:
+    branch: null
+    repository: null
 global:
   application_name: CaratMind-Backend
   branch: null

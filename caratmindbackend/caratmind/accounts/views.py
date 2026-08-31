@@ -4,16 +4,11 @@ import re
 
 import boto3
 from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import login
-from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-# from accounts import cognito_service
 from accounts.services import CognitoService
 from exercise.dynamodb_service import delete_all_user_exercise
 from habit.dynamodb_services import delete_all_user_habit
@@ -390,7 +385,7 @@ def delete_account_view(request):
 
     if errors:
         logger.error("DELETE ACCOUNT ERRORS:", errors) 
-        # data deletion partially failed, not delete the cognito identity
+        # data deletion partially failed, dont delete the cognito identity
         return JsonResponse(
             {'error': 'Failed to delete some account data.', 'details': errors},
             status=500,

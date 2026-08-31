@@ -1,11 +1,9 @@
-
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import random
 import uuid
-from zoneinfo import ZoneInfo
 
 import boto3
-from boto3.dynamodb.conditions import Attr, Key
+from boto3.dynamodb.conditions import Attr
 
 from caratmind import settings
 from caratmind.datetime_utils import today_local
@@ -111,7 +109,6 @@ def select_today_habit(user_id: str) -> dict | None:
     all_habits = get_all_habit()
     today_records = get_today_user_habit(user_id)
 
-    # most recent based on uhab_updated_at (even with same hab_id)
     status_by_habit = {}
     for record in today_records:
         hab_id = record.get('hab_id')
@@ -127,7 +124,6 @@ def select_today_habit(user_id: str) -> dict | None:
     if not candidates:
         return None
 
-    # random
     return random.choice(candidates)
 
 # delete habit records

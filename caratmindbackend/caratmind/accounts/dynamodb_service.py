@@ -11,8 +11,7 @@ def _get_table():
 def create_user_if_not_exists(user_id: str, username: str, email: str, preferred_name: str) -> bool:
     """
     Creates a new user record in DynamoDB keyed by Cognito sub.
-    Returns True if created, False if a record already existed (idempotent —
-    safe to call again on retries).
+    Returns True if created, False if a record already existed
     """
     table = _get_table()
     try:
@@ -22,7 +21,6 @@ def create_user_if_not_exists(user_id: str, username: str, email: str, preferred
                 'username': username,
                 'user_email': email,
                 'preferred_name': preferred_name,
-                # 'user_complete_onboarding': False,
                 'user_onboarding': {
                     'home': False,
                     'new_entry': False,

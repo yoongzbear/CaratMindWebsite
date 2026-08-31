@@ -80,7 +80,7 @@ export default function ProfilePage() {
     return (
       <section
         className="min-h-[calc(100vh-140px)] px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]"
-        style={{ color: 'var(--muted)' }}
+        style={{ color: 'var(--text)' }}
       >
         Loading profile...
       </section>
@@ -90,7 +90,7 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <section className="min-h-[calc(100vh-140px)] px-8 py-6 text-center text-[clamp(1rem,3vw,1.5rem)]">
-        <p style={{ color: 'var(--muted)' }}>You are not signed in.</p>
+        <p style={{ color: 'var(--text)' }}>You are not signed in.</p>
         <Link
           href="/login"
           style={{ color: 'var(--second-color)', fontWeight: 600 }}

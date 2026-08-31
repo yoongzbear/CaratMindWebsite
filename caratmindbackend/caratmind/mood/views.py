@@ -28,7 +28,6 @@ def get_mood_view(request, jrnl_id):
 
     return JsonResponse({**mood})
 
-# NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
 # negative mood streak
 @require_GET
 def negative_mood_streak_view(request):
@@ -39,26 +38,9 @@ def negative_mood_streak_view(request):
     sub = principal.claims.get('sub')
 
     try:
-        # recent_moods = get_user_recent_moods(sub, 7) # 7 days
         streak = calc_negative_mood_streak(sub)
     except Exception as e:
         return JsonResponse({'error': f'Failed to calculate negative mood streak: {e}'}, status=500)
-
-    # # group by calendar date, take the latest mood per day
-    # by_date = {}
-    # for m in recent_moods:
-    #     date_str = m['mood_timestamp'][:10]  # 'YYYY-MM-DD'
-    #     if date_str not in by_date:  # already sorted newest-first
-    #         by_date[date_str] = m['mood_name']
-
-    # # count consecutive negative days, walking backward from today
-    # sorted_dates = sorted(by_date.keys(), reverse=True)
-    # streak = 0
-    # for date_str in sorted_dates:
-    #     if by_date[date_str] in NEGATIVE_MOOD:
-    #         streak += 1
-    #     else:
-    #         break
 
     return JsonResponse({'negative_streak_days': streak})
 
@@ -176,21 +158,11 @@ def confirm_mood_view(request, jrnl_id):
     if user_mood.get('user_id') != sub:
         return JsonResponse({'error': 'Not found'}, status=404)
 
-    # try:
-    #     body = json.loads(request.body)
-    # except json.JSONDecodeError:
-    #     return JsonResponse({'error': 'Invalid JSON body'}, status=400)
-
-    # rating = body.get('rating')
-    # if not rating or not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
-    #     return JsonResponse({'error': 'Rating must be a number between 1 and 5'}, status=400)
-
     try:
         updated = confirm_mood(jrnl_id)
     except Exception as e:
         return JsonResponse({'error': f'Failed to save mood confirmation: {e}'}, status=500)
 
-    # return JsonResponse(updated)
     return JsonResponse({
         "message": "Mood confirmed successfully.",
         "user_mood": updated,
@@ -226,7 +198,6 @@ def corrected_mood_view(request, jrnl_id):
     except Exception as e:
         return JsonResponse({'error': f'Failed to save corrected mood: {e}'}, status=500)
 
-    # return JsonResponse(updated)
     return JsonResponse({
         "message": "Corrected mood saved successfully.",
         "user_mood": updated,

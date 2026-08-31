@@ -346,7 +346,10 @@ export default function PastEntryPage() {
   return (
     <Suspense
       fallback={
-        <div className="text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center text-(--muted)">
+        <div
+          className="min-h-[calc(100vh-140px)] text-[clamp(1rem,3vw,1.5rem)] mt-0 mb-2 px-8 py-6 text-center"
+          style={{ color: 'var(--text)' }}
+        >
           Loading page...
         </div>
       }

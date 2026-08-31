@@ -1,4 +1,3 @@
-# NEGATIVE_MOOD = {'anger', 'annoyance', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'fear', 'grief', 'nervousness', 'remorse', 'sadness'}
 from datetime import datetime, timedelta, timezone
 import logging
 
@@ -136,7 +135,6 @@ def send_weekly_habit(user: dict) -> None:
     logger.info(f"raw_items: {raw_items}")
     summary = list_habit_summary(raw_items)
 
-    # stats = get_user_habit(user['user_id'], start_date, end_date) 
     response = send_notification(user['user_email'], 'habit_summary', {
         'name': user.get('preferred_name', ''),
         'days': summary,

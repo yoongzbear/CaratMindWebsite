@@ -1,15 +1,11 @@
 import json
 
-from django.shortcuts import render
-
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from accounts.authentication import authenticate_bearer
 from habit.dynamodb_services import get_all_habit, save_user_habit, select_today_habit
-
-# Create your views here.
 
 # get all habits
 @require_GET

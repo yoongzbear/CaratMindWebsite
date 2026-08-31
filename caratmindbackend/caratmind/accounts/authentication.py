@@ -3,7 +3,6 @@ from typing import Optional
 
 from .services import CognitoService
 
-
 @dataclass
 class CognitoPrincipal:
     claims: dict
