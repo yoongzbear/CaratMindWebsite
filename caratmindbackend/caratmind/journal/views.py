@@ -87,7 +87,7 @@ def create_journal_view(request):
                 streak = calc_negative_mood_streak(sub)
                 if streak >= STREAK_THRESHOLD_DAYS and not already_notified(sub, 'mood_helpline'):
                     user = get_user(sub) 
-                    send_notification(user['email'], 'mood-helpline', {
+                    send_notification(user['user_email'], 'mood-helpline', {
                         'name': user.get('name', ''),
                         'streak_days': streak,
                     })

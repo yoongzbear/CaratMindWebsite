@@ -220,7 +220,7 @@ def calc_exc_streak(sub: str) -> dict:
     if new_badge:
         try:
             user = get_user(sub)
-            send_notification(user['email'], 'new_badge', {
+            send_notification(user['user_email'], 'new_badge', {
                 'name': user.get('name', ''),
                 'streak': streak,
                 'type': 'exercise',
